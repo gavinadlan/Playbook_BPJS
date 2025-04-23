@@ -33,8 +33,17 @@ export default function EndpointPage() {
       const foundEndpoint = findEndpoint(categoryId, endpointId);
       const foundCategory = findCategory(categoryId);
 
-      if (foundEndpoint) setEndpoint(foundEndpoint);
-      if (foundCategory) setCategory(foundCategory);
+      if (foundEndpoint) {
+        setEndpoint({
+          ...foundEndpoint,
+          requestExample: foundEndpoint.requestExample || {},
+          responseExample: foundEndpoint.responseExample || {},
+        });
+      }
+
+      if (foundCategory) {
+        setCategory(foundCategory);
+      }
     }
   }, [categoryId, endpointId]);
 

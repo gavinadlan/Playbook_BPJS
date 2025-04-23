@@ -11,18 +11,20 @@ import { API_CATEGORIES } from "@/lib/mock-data";
 const DocsSidebar = () => {
   const pathname = usePathname();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [openCategories, setOpenCategories] = useState<Record<string, boolean>>({});
+  const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(
+    {}
+  );
 
   useEffect(() => {
     // Initialize selected category based on current path
-    const categoryId = pathname?.split('/')[2];
+    const categoryId = pathname?.split("/")[2];
     setSelectedCategory(categoryId || null);
 
     // Initialize open categories
     const initialOpenState: Record<string, boolean> = {};
     API_CATEGORIES.forEach((category) => {
-      const isActive = category.endpoints.some(
-        (endpoint) => pathname?.includes(`/docs/${category.id}/${endpoint.id}`)
+      const isActive = category.endpoints.some((endpoint) =>
+        pathname?.includes(`/docs/${category.id}/${endpoint.id}`)
       );
       initialOpenState[category.id] = isActive;
     });
@@ -33,7 +35,7 @@ const DocsSidebar = () => {
     setSelectedCategory(categoryId);
     setOpenCategories((prev) => ({
       ...prev,
-      [categoryId]: true
+      [categoryId]: true,
     }));
   };
 
@@ -54,12 +56,16 @@ const DocsSidebar = () => {
                 onClick={handleBackToAll}
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to all docs
+                Semua Dokumentasi
               </Button>
-              
-              {API_CATEGORIES.filter(category => category.id === selectedCategory).map((category) => (
+
+              {API_CATEGORIES.filter(
+                (category) => category.id === selectedCategory
+              ).map((category) => (
                 <div key={category.id}>
-                  <h2 className="font-semibold mb-2 text-lg">{category.name}</h2>
+                  <h2 className="font-semibold mb-2 text-lg">
+                    {category.name}
+                  </h2>
                   <ul className="space-y-1">
                     {category.endpoints.map((endpoint) => (
                       <li key={endpoint.id}>

@@ -11,9 +11,8 @@ import { API_CATEGORIES } from "@/lib/mock-data";
 const DocsSidebar = () => {
   const pathname = usePathname();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(
-    {}
-  );
+  const [openCategories, setOpenCategories] =
+    useState<Record<string, boolean>>();
 
   useEffect(() => {
     // Initialize selected category based on current path

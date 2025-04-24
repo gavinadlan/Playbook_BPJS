@@ -87,6 +87,7 @@ export default function DocsPage() {
           <section>
             <h2 className="text-2xl font-bold mb-4">Referensi API</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Anggota */}
               <Card>
                 <CardHeader className="pb-2">
                   <div className="h-8 w-8 rounded-md bg-blue-50 p-1.5 mb-2">
@@ -110,6 +111,7 @@ export default function DocsPage() {
                 </CardContent>
               </Card>
 
+              {/* Klaim */}
               <Card>
                 <CardHeader className="pb-2">
                   <div className="h-8 w-8 rounded-md bg-blue-50 p-1.5 mb-2">
@@ -133,6 +135,7 @@ export default function DocsPage() {
                 </CardContent>
               </Card>
 
+              {/* Penyedia */}
               <Card>
                 <CardHeader className="pb-2">
                   <div className="h-8 w-8 rounded-md bg-blue-50 p-1.5 mb-2">
@@ -260,19 +263,19 @@ export default function DocsPage() {
                         className="h-full w-full text-blue-600"
                       >
                         <path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v5Z" />
-                        <path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1" />
+                        <path d="M18 9h2a2 2 0 0 1 2 2v8l-4-4" />
                       </svg>
                     </div>
                     <div>
-                      <h3 className="font-semibold mb-1">Dukungan</h3>
+                      <h3 className="font-semibold mb-1">Kontak Kami</h3>
                       <p className="text-sm text-gray-600 mb-2">
-                        Dapatkan bantuan dari tim dukungan pengembang kami
+                        Hubungi kami untuk dukungan lebih lanjut
                       </p>
                       <Link
-                        href="/docs/support"
+                        href="/docs/contact"
                         className="text-blue-600 hover:underline text-sm font-medium"
                       >
-                        Hubungi Dukungan
+                        Hubungi Kami
                       </Link>
                     </div>
                   </div>

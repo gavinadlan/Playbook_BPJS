@@ -28,13 +28,13 @@ export const API_CATEGORIES: ApiCategory[] = [
         ],
         requestExample: {
           username: "example_user",
-          password: "your_password"
+          password: "your_password",
         },
         responseExample: {
           access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
           token_type: "Bearer",
-          expires_in: 3600
-        }
+          expires_in: 3600,
+        },
       },
       {
         id: "logout",
@@ -45,10 +45,10 @@ export const API_CATEGORIES: ApiCategory[] = [
         parameters: [],
         requestExample: {},
         responseExample: {
-          message: "Successfully logged out"
-        }
-      }
-    ]
+          message: "Successfully logged out",
+        },
+      },
+    ],
   },
   {
     id: "members",
@@ -67,8 +67,8 @@ export const API_CATEGORIES: ApiCategory[] = [
             type: ParameterType.STRING,
             required: true,
             description: "The unique identifier for the member",
-            in: "path"
-          }
+            in: "path",
+          },
         ],
         requestExample: {},
         responseExample: {
@@ -77,8 +77,8 @@ export const API_CATEGORIES: ApiCategory[] = [
           birth_date: "1990-01-01",
           registration_date: "2020-05-15",
           status: "active",
-          membership_type: "standard"
-        }
+          membership_type: "standard",
+        },
       },
       {
         id: "update-member",
@@ -92,30 +92,30 @@ export const API_CATEGORIES: ApiCategory[] = [
             type: ParameterType.STRING,
             required: true,
             description: "The unique identifier for the member",
-            in: "path"
+            in: "path",
           },
           {
             name: "name",
             type: ParameterType.STRING,
             required: false,
-            description: "The member's full name"
+            description: "The member's full name",
           },
           {
             name: "birth_date",
             type: ParameterType.STRING,
             required: false,
-            description: "The member's birth date (YYYY-MM-DD)"
+            description: "The member's birth date (YYYY-MM-DD)",
           },
           {
             name: "membership_type",
             type: ParameterType.STRING,
             required: false,
-            description: "The type of membership"
-          }
+            description: "The type of membership",
+          },
         ],
         requestExample: {
           name: "John Smith",
-          membership_type: "premium"
+          membership_type: "premium",
         },
         responseExample: {
           member_id: "123456789",
@@ -124,8 +124,8 @@ export const API_CATEGORIES: ApiCategory[] = [
           registration_date: "2020-05-15",
           status: "active",
           membership_type: "premium",
-          updated_at: "2023-03-15T14:30:00Z"
-        }
+          updated_at: "2023-03-15T14:30:00Z",
+        },
       },
       {
         id: "list-members",
@@ -139,21 +139,21 @@ export const API_CATEGORIES: ApiCategory[] = [
             type: ParameterType.INTEGER,
             required: false,
             description: "Page number for pagination",
-            defaultValue: "1"
+            defaultValue: "1",
           },
           {
             name: "limit",
             type: ParameterType.INTEGER,
             required: false,
             description: "Number of results per page",
-            defaultValue: "10"
+            defaultValue: "10",
           },
           {
             name: "status",
             type: ParameterType.STRING,
             required: false,
-            description: "Filter by member status (active, inactive, pending)"
-          }
+            description: "Filter by member status (active, inactive, pending)",
+          },
         ],
         requestExample: {},
         responseExample: {
@@ -162,24 +162,24 @@ export const API_CATEGORIES: ApiCategory[] = [
               member_id: "123456789",
               name: "John Doe",
               status: "active",
-              membership_type: "standard"
+              membership_type: "standard",
             },
             {
               member_id: "987654321",
               name: "Jane Smith",
               status: "active",
-              membership_type: "premium"
-            }
+              membership_type: "premium",
+            },
           ],
           pagination: {
             current_page: 1,
             total_pages: 5,
             total_items: 42,
-            items_per_page: 10
-          }
-        }
-      }
-    ]
+            items_per_page: 10,
+          },
+        },
+      },
+    ],
   },
   {
     id: "claims",
@@ -197,44 +197,44 @@ export const API_CATEGORIES: ApiCategory[] = [
             name: "member_id",
             type: ParameterType.STRING,
             required: true,
-            description: "The member's ID"
+            description: "The member's ID",
           },
           {
             name: "provider_id",
             type: ParameterType.STRING,
             required: true,
-            description: "The healthcare provider's ID"
+            description: "The healthcare provider's ID",
           },
           {
             name: "service_date",
             type: ParameterType.STRING,
             required: true,
-            description: "The date of service (YYYY-MM-DD)"
+            description: "The date of service (YYYY-MM-DD)",
           },
           {
             name: "diagnosis_code",
             type: ParameterType.STRING,
             required: true,
-            description: "The ICD-10 diagnosis code"
+            description: "The ICD-10 diagnosis code",
           },
           {
             name: "service_codes",
             type: ParameterType.ARRAY,
             required: true,
-            description: "List of service codes provided"
+            description: "List of service codes provided",
           },
           {
             name: "total_amount",
             type: ParameterType.NUMBER,
             required: true,
-            description: "Total claim amount"
+            description: "Total claim amount",
           },
           {
             name: "notes",
             type: ParameterType.STRING,
             required: false,
-            description: "Additional notes about the claim"
-          }
+            description: "Additional notes about the claim",
+          },
         ],
         requestExample: {
           member_id: "123456789",
@@ -243,14 +243,14 @@ export const API_CATEGORIES: ApiCategory[] = [
           diagnosis_code: "J06.9",
           service_codes: ["99213", "85025"],
           total_amount: 150000,
-          notes: "Follow-up appointment for upper respiratory infection"
+          notes: "Follow-up appointment for upper respiratory infection",
         },
         responseExample: {
           claim_id: "CLM-2023051001",
           status: "pending",
           submission_date: "2023-05-10T15:30:00Z",
-          estimated_processing_time: "3-5 business days"
-        }
+          estimated_processing_time: "3-5 business days",
+        },
       },
       {
         id: "get-claim-status",
@@ -264,8 +264,8 @@ export const API_CATEGORIES: ApiCategory[] = [
             type: ParameterType.STRING,
             required: true,
             description: "The claim ID to check",
-            in: "path"
-          }
+            in: "path",
+          },
         ],
         requestExample: {},
         responseExample: {
@@ -276,141 +276,216 @@ export const API_CATEGORIES: ApiCategory[] = [
           status: "approved",
           approved_amount: 120000,
           payment_date: "2023-05-15",
-          notes: "Approved for standard coverage amount"
-        }
-      }
-    ]
+          notes: "Approved for standard coverage amount",
+        },
+      },
+    ],
   },
+
   {
-    id: "providers",
-    name: "Providers",
-    description: "Healthcare provider management endpoints",
+    id: "billing",
+    name: "Billing",
+    description: "Billing and payment endpoints",
     endpoints: [
       {
-        id: "list-providers",
-        name: "List Providers",
+        id: "get-billing-details",
+        name: "Get Billing Details",
         method: "GET",
-        path: "/api/v1/providers",
-        description: "Retrieve a list of healthcare providers",
+        path: "/api/v1/billing/{billing_id}",
+        description: "Retrieve billing details for a specific user",
         parameters: [
           {
-            name: "location",
+            name: "billing_id",
+            type: ParameterType.STRING,
+            required: true,
+            description: "The billing ID",
+          },
+        ],
+        requestExample: {},
+        responseExample: {
+          billing_id: "BILL-12345",
+          user_id: "USER-98765",
+          amount: 500000,
+          status: "paid",
+          payment_method: "credit_card",
+          transaction_id: "TXN-123456789",
+          date: "2025-04-22",
+        },
+      },
+      {
+        id: "update-billing-status",
+        name: "Update Billing Status",
+        method: "PATCH",
+        path: "/api/v1/billing/{billing_id}",
+        description: "Update the status of a billing record",
+        parameters: [
+          {
+            name: "billing_id",
+            type: ParameterType.STRING,
+            required: true,
+            description: "The billing ID",
+          },
+          {
+            name: "status",
+            type: ParameterType.STRING,
+            required: true,
+            description:
+              "The new status of the billing (e.g., 'paid', 'pending')",
+          },
+        ],
+        requestExample: {
+          status: "paid",
+        },
+        responseExample: {
+          message: "Billing status updated successfully",
+          billing_id: "BILL-12345",
+          status: "paid",
+        },
+      },
+    ],
+  },
+  {
+    id: "facilities",
+    name: "Facilities",
+    description: "Facility information and availability endpoints",
+    endpoints: [
+      {
+        id: "get-facilities",
+        name: "Get Facilities",
+        method: "GET",
+        path: "/api/v1/facilities",
+        description: "Retrieve available facilities",
+        parameters: [
+          {
+            name: "type",
             type: ParameterType.STRING,
             required: false,
-            description: "Filter by provider location (city or region)"
+            description: "Filter by facility type",
           },
-          {
-            name: "specialty",
-            type: ParameterType.STRING,
-            required: false,
-            description: "Filter by medical specialty"
-          },
-          {
-            name: "page",
-            type: ParameterType.INTEGER,
-            required: false,
-            description: "Page number for pagination",
-            defaultValue: "1"
-          },
-          {
-            name: "limit",
-            type: ParameterType.INTEGER,
-            required: false,
-            description: "Number of results per page",
-            defaultValue: "20"
-          }
         ],
         requestExample: {},
         responseExample: {
           data: [
             {
-              provider_id: "HOSP-12345",
-              name: "RS Umum Pusat Jakarta",
+              facility_id: "FAC-12345",
+              name: "Emergency Room",
               type: "hospital",
-              location: "Jakarta",
-              address: "Jl. Diponegoro No. 71, Jakarta Pusat",
-              specialties: ["general", "cardiology", "orthopedics"],
-              contact_number: "021-7654321"
+              available: true,
             },
             {
-              provider_id: "CLIN-54321",
-              name: "Klinik Sehat Sentosa",
+              facility_id: "FAC-54321",
+              name: "X-ray Room",
               type: "clinic",
-              location: "Bandung",
-              address: "Jl. Pasteur No. 11, Bandung",
-              specialties: ["general", "pediatrics"],
-              contact_number: "022-1234567"
-            }
+              available: false,
+            },
           ],
-          pagination: {
-            current_page: 1,
-            total_pages: 8,
-            total_items: 156,
-            items_per_page: 20
-          }
-        }
+        },
       },
+    ],
+  },
+  {
+    id: "referrals",
+    name: "Referrals",
+    description: "Referral and specialist consultation endpoints",
+    endpoints: [
       {
-        id: "get-provider",
-        name: "Get Provider",
-        method: "GET",
-        path: "/api/v1/providers/{provider_id}",
-        description: "Retrieve detailed information about a healthcare provider",
+        id: "create-referral",
+        name: "Create Referral",
+        method: "POST",
+        path: "/api/v1/referrals",
+        description: "Create a new referral for a patient to a specialist",
         parameters: [
+          {
+            name: "patient_id",
+            type: ParameterType.STRING,
+            required: true,
+            description: "The patient's unique ID",
+          },
+          {
+            name: "specialist_id",
+            type: ParameterType.STRING,
+            required: true,
+            description: "The specialist's unique ID",
+          },
+        ],
+        requestExample: {
+          patient_id: "USER-98765",
+          specialist_id: "SPEC-54321",
+        },
+        responseExample: {
+          message: "Referral created successfully",
+          referral_id: "REF-12345",
+        },
+      },
+    ],
+  },
+  {
+    id: "appointments",
+    name: "Appointments",
+    description: "Appointment booking and schedule endpoints",
+    endpoints: [
+      {
+        id: "book-appointment",
+        name: "Book Appointment",
+        method: "POST",
+        path: "/api/v1/appointments",
+        description: "Book a new appointment for a patient",
+        parameters: [
+          {
+            name: "patient_id",
+            type: ParameterType.STRING,
+            required: true,
+            description: "The patient's unique ID",
+          },
           {
             name: "provider_id",
             type: ParameterType.STRING,
             required: true,
-            description: "The provider's unique ID",
-            in: "path"
-          }
+            description: "The healthcare provider's unique ID",
+          },
+          {
+            name: "appointment_date",
+            type: ParameterType.STRING,
+            required: true,
+            description: "The date of the appointment",
+          },
         ],
-        requestExample: {},
-        responseExample: {
+        requestExample: {
+          patient_id: "USER-98765",
           provider_id: "HOSP-12345",
-          name: "RS Umum Pusat Jakarta",
-          type: "hospital",
-          location: "Jakarta",
-          address: "Jl. Diponegoro No. 71, Jakarta Pusat",
-          coordinates: {
-            latitude: -6.1754,
-            longitude: 106.8272
-          },
-          specialties: ["general", "cardiology", "orthopedics", "neurology", "oncology"],
-          facilities: ["emergency", "inpatient", "outpatient", "laboratory", "radiology"],
-          contact_number: "021-7654321",
-          email: "info@rsujakarta.co.id",
-          website: "https://www.rsujakarta.co.id",
-          operating_hours: {
-            monday_to_friday: "07:00 - 22:00",
-            saturday: "07:00 - 18:00",
-            sunday: "08:00 - 16:00"
-          },
-          partnership_level: "premium",
-          registration_date: "2015-03-10"
-        }
-      }
-    ]
-  }
+          appointment_date: "2025-05-15",
+        },
+        responseExample: {
+          message: "Appointment booked successfully",
+          appointment_id: "APPT-12345",
+        },
+      },
+    ],
+  },
 ];
 
-export const findEndpoint = (categoryId: string, endpointId: string): ApiEndpoint | null => {
-  const category = API_CATEGORIES.find(cat => cat.id === categoryId);
+export const findEndpoint = (
+  categoryId: string,
+  endpointId: string
+): ApiEndpoint | null => {
+  const category = API_CATEGORIES.find((cat) => cat.id === categoryId);
   if (!category) return null;
-  
-  return category.endpoints.find(endpoint => endpoint.id === endpointId) || null;
+
+  return (
+    category.endpoints.find((endpoint) => endpoint.id === endpointId) || null
+  );
 };
 
 export const findCategory = (categoryId: string): ApiCategory | null => {
-  return API_CATEGORIES.find(cat => cat.id === categoryId) || null;
+  return API_CATEGORIES.find((cat) => cat.id === categoryId) || null;
 };
 
 export const getAllEndpoints = (): ApiEndpoint[] => {
-  return API_CATEGORIES.flatMap(category => 
-    category.endpoints.map(endpoint => ({
+  return API_CATEGORIES.flatMap((category) =>
+    category.endpoints.map((endpoint) => ({
       ...endpoint,
       categoryId: category.id,
-      categoryName: category.name
+      categoryName: category.name,
     }))
   );
 };

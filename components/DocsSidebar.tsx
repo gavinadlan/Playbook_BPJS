@@ -12,8 +12,9 @@ import { cn } from "@/lib/utils";
 const DocsSidebar = () => {
   const pathname = usePathname();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [openCategories, setOpenCategories] =
-    useState<Record<string, boolean>>();
+  const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(
+    {}
+  );
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // mobile toggle
 
   useEffect(() => {
@@ -51,7 +52,7 @@ const DocsSidebar = () => {
         onClick={() => setIsSidebarOpen(true)}
         variant="ghost"
         size="sm"
-        className="lg:hidden fixed top-4 right-4 z-50" // <-- ubah left-4 ke right-4
+        className="lg:hidden fixed top-4 right-4 z-50"
       >
         <Menu className="w-5 h-5" />
       </Button>
@@ -67,11 +68,12 @@ const DocsSidebar = () => {
         onClick={() => setIsSidebarOpen(false)}
       />
 
+      {/* Sidebar */}
       <aside
         className={cn(
-          "bg-white border-r w-72 lg:w-80 flex-shrink-0 fixed lg:static top-0 left-0 h-full z-50 transition-transform duration-300",
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full",
-          "lg:translate-x-0 lg:relative lg:z-0"
+          "bg-white border-r w-full lg:w-80 flex-shrink-0 fixed lg:static top-0 left-0 h-screen z-40 transition-transform duration-300 border-gray-200", // ganti top-16 jadi top-0, h-screen agar full screen
+          isSidebarOpen ? "translate-y-0" : "-translate-y-full", // Animasi vertikal
+          "lg:translate-y-0 lg:relative lg:z-0"
         )}
       >
         <ScrollArea className="h-full pt-16 lg:pt-0">

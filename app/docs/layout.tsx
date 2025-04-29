@@ -12,9 +12,9 @@ export default function DocsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col lg:flex-row">
+    <div className="flex flex-col lg:flex-row h-screen overflow-hidden">
       <DocsSidebar />
-      <main className="flex-1 p-4">{children}</main>
+      <main className="flex-1 overflow-y-auto p-4">{children}</main>
     </div>
   );
 }

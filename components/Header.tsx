@@ -25,7 +25,7 @@ const Header = () => {
           <div className="relative">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
             <Input
-              placeholder="Search documentation..."
+              placeholder="Cari dokumentasi..."
               className="pl-8 pr-4 w-full"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}

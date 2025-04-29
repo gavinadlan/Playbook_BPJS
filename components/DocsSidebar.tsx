@@ -51,7 +51,7 @@ const DocsSidebar = () => {
         onClick={() => setIsSidebarOpen(true)}
         variant="ghost"
         size="sm"
-        className="lg:hidden fixed top-4 left-4 z-50"
+        className="lg:hidden fixed top-4 right-4 z-50" // <-- ubah left-4 ke right-4
       >
         <Menu className="w-5 h-5" />
       </Button>

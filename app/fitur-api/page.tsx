@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export default function About() {
+export default function FiturApi() {
   return (
     <div className="container mx-auto px-4 py-12 max-w-5xl">
       <div className="space-y-12">

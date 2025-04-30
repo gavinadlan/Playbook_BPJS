@@ -1,114 +1,150 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+"use client";
 
-export default function FiturApi() {
+import { API_CATEGORIES } from "@/lib/mock-data";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
+import { ChevronDown, Search } from "lucide-react";
+
+export default function AboutPage() {
+  const [openCategory, setOpenCategory] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const toggleCategory = (categoryName: string) => {
+    setOpenCategory((prev) => (prev === categoryName ? null : categoryName));
+  };
+
+  const filteredCategories = API_CATEGORIES.filter((category) =>
+    category.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const methodColors: { [key: string]: string } = {
+    GET: "bg-green-100 text-green-800",
+    POST: "bg-blue-100 text-blue-800",
+    PUT: "bg-yellow-100 text-yellow-800",
+    DELETE: "bg-red-100 text-red-800",
+  };
+
   return (
-    <div className="container mx-auto px-4 py-12 max-w-5xl">
-      <div className="space-y-12">
-        <section>
-          <h1 className="text-4xl font-bold mb-6">
-            Tentang Platform API BPJS Kesehatan
-          </h1>
-          <p className="text-lg text-gray-600 leading-relaxed mb-4">
-            Platform API BPJS Kesehatan menyediakan seperangkat alat lengkap
-            bagi pengembang untuk mengintegrasikan dengan sistem asuransi
-            kesehatan nasional Indonesia. API kami memungkinkan pengembang untuk
-            membuat aplikasi yang dapat berinteraksi dengan layanan BPJS
-            Kesehatan, meningkatkan penyampaian layanan kesehatan, dan
-            memperbaiki pengalaman pasien.
-          </p>
-          <p className="text-lg text-gray-600 leading-relaxed">
-            Apakah Anda sedang mengembangkan sistem manajemen rumah sakit,
-            aplikasi klinik, atau solusi kesehatan mobile, platform API kami
-            menawarkan kemampuan yang Anda perlukan untuk terhubung dengan
-            jaringan luas BPJS Kesehatan.
-          </p>
-        </section>
+    <div className="space-y-8">
+      {/* Full-width Banner */}
+      <div className="w-full relative h-96 bg-gray-900">
+        <div className="absolute inset-0 overflow-hidden">
+          <img
+            src="https://png.pngtree.com/thumb_back/fh260/back_our/20190620/ourmid/pngtree-blue-digital-technology-electronic-banner-image_168524.jpg"
+            alt="API Documentation Banner"
+            className="w-full h-full object-cover object-center opacity-90"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-gray-900/40" />
+        </div>
 
-        <section>
-          <h2 className="text-2xl font-bold mb-4">Misi Kami</h2>
-          <p className="text-lg text-gray-600 leading-relaxed">
-            Kami bertujuan untuk meningkatkan aksesibilitas dan efisiensi
-            layanan kesehatan di Indonesia dengan menyediakan solusi API yang
-            kuat, andal, dan aman yang menghubungkan penyedia layanan kesehatan,
-            sistem asuransi, dan pasien. Melalui platform API kami, kami
-            berusaha mendukung tujuan nasional untuk cakupan kesehatan universal
-            dengan memungkinkan integrasi yang mulus dengan layanan BPJS
-            Kesehatan.
-          </p>
-        </section>
+        <div className="relative max-w-7xl mx-auto h-full px-4 flex items-center justify-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center"
+          >
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
+              Dokumentasi API
+            </h1>
+            <p className="text-xl text-white/90 max-w-3xl mx-auto">
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. At
+              corrupti similique quo iusto maxime nobis praesentium non
+              temporibus aspernatur et consequuntur, atque nam eum, vitae
+              necessitatibus accusamus quam deleniti delectus?
+            </p>
+          </motion.div>
+        </div>
+      </div>
 
-        <section>
-          <h2 className="text-2xl font-bold mb-4">Manfaat Platform API</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-            <div className="bg-white p-6 rounded-lg border border-gray-200">
-              <h3 className="text-xl font-semibold mb-2">
-                Untuk Penyedia Layanan Kesehatan
-              </h3>
-              <ul className="space-y-2 text-gray-600 list-disc ml-5">
-                <li>Mempercepat verifikasi pasien</li>
-                <li>Menyederhanakan pengajuan klaim dan pelacakan</li>
-                <li>Meningkatkan efisiensi administrasi</li>
-                <li>Mengurangi pekerjaan kertas dan proses manual</li>
-                <li>Akses informasi kelayakan secara real-time</li>
-              </ul>
-            </div>
-            <div className="bg-white p-6 rounded-lg border border-gray-200">
-              <h3 className="text-xl font-semibold mb-2">
-                Untuk Pengembang Perangkat Lunak
-              </h3>
-              <ul className="space-y-2 text-gray-600 list-disc ml-5">
-                <li>API yang komprehensif dan terdokumentasi dengan baik</li>
-                <li>Mechanisme autentikasi yang aman</li>
-                <li>Endpoint yang konsisten dan dapat diandalkan</li>
-                <li>Lingkungan sandbox untuk pengujian</li>
-                <li>Dukungan untuk berbagai skenario integrasi</li>
-              </ul>
+      {/* Full-width Header Section */}
+      <div className="w-full border-b dark:border-gray-800">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 py-6">
+            <h2 className="text-3xl font-bold bg-gradient-to-r text-[#27447C]">
+              Kategori API
+            </h2>
+            <div className="relative w-full md:w-96">
+              <Search className="absolute left-4 top-3.5 h-5 w-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Cari Kategori..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 ring-primary/50 outline-none transition-all"
+              />
             </div>
           </div>
-        </section>
+        </div>
+      </div>
 
-        <section>
-          <h2 className="text-2xl font-bold mb-4">Cara Memulai</h2>
-          <p className="text-lg text-gray-600 leading-relaxed mb-6">
-            Dokumentasi kami menyediakan semua informasi yang Anda butuhkan
-            untuk mulai mengintegrasikan dengan API BPJS Kesehatan. Mulailah
-            dengan menjelajahi referensi API kami, panduan, dan contoh untuk
-            memahami bagaimana platform kami dapat memenuhi kebutuhan Anda.
-          </p>
-          <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-            <Button asChild>
-              <Link href="/docs">Lihat Dokumentasi</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/docs/authentication">Panduan Autentikasi</Link>
-            </Button>
-          </div>
-        </section>
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 space-y-8 pb-12">
+        <div className="space-y-4">
+          {filteredCategories.map((category) => (
+            <div key={category.name} className="group">
+              <motion.div
+                onClick={() => toggleCategory(category.name)}
+                className="cursor-pointer flex justify-between items-center p-6 rounded-xl bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700"
+                whileHover={{ scale: 1.005 }}
+              >
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                    {category.name}
+                  </h3>
+                  <p className="text-sm text-gray-500 mt-1">
+                    {category.endpoints.length} endpoints available
+                  </p>
+                </div>
+                <ChevronDown
+                  className={`h-6 w-6 transition-transform ${
+                    openCategory === category.name ? "rotate-180" : ""
+                  } text-gray-500`}
+                />
+              </motion.div>
 
-        <section>
-          <h2 className="text-2xl font-bold mb-4">Hubungi Kami</h2>
-          <p className="text-lg text-gray-600 leading-relaxed mb-6">
-            Jika Anda memiliki pertanyaan atau memerlukan bantuan terkait
-            platform API kami, tim dukungan pengembang kami siap membantu.
-            Hubungi kami melalui saluran berikut:
-          </p>
-          <div className="bg-white p-6 rounded-lg border border-gray-200">
-            <div className="space-y-3 text-gray-600">
-              <p>
-                <span className="font-semibold">Email:</span>{" "}
-                api-support@bpjs-kesehatan.go.id
-              </p>
-              <p>
-                <span className="font-semibold">Telepon:</span> +62 21 424-6063
-              </p>
-              <p>
-                <span className="font-semibold">Jam Dukungan:</span>{" "}
-                Senin-Jumat, 08:00-16:00 WIB
-              </p>
+              {openCategory === category.name && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  className="ml-8 pl-4 border-l-2 border-gray-200 dark:border-gray-700 space-y-4 mt-4"
+                >
+                  {category.endpoints.map((endpoint) => (
+                    <Card
+                      key={endpoint.path}
+                      className="hover:shadow-lg transition-shadow duration-200 bg-white dark:bg-gray-800"
+                    >
+                      <CardContent className="p-4">
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                          <div className="flex items-center gap-2">
+                            <span
+                              className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                                methodColors[endpoint.method] ||
+                                "bg-gray-100 text-gray-800"
+                              }`}
+                            >
+                              {endpoint.method}
+                            </span>
+                            <code className="font-mono text-sm text-blue-600 dark:text-blue-400">
+                              {endpoint.path}
+                            </code>
+                          </div>
+                          <button className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium flex items-center gap-1">
+                            View Details{" "}
+                            <ChevronDown className="h-4 w-4 rotate-90" />
+                          </button>
+                        </div>
+                        <p className="text-gray-600 dark:text-gray-300 mt-2 text-sm">
+                          {endpoint.description}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </motion.div>
+              )}
             </div>
-          </div>
-        </section>
+          ))}
+        </div>
       </div>
     </div>
   );

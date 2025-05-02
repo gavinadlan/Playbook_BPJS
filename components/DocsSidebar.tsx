@@ -3,44 +3,19 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  ChevronDown,
-  ChevronRight,
-  ArrowLeft,
-  Menu,
-  X,
-  Search,
-} from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
 import { API_CATEGORIES } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 
 const DocsSidebar = () => {
   const pathname = usePathname();
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(
     {}
   );
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedEndpoint, setSelectedEndpoint] = useState<string | null>(null);
 
-  // Efek untuk mengatur state awal
-  useEffect(() => {
-    const categoryId = pathname?.split("/")[2];
-    setSelectedCategory(categoryId || null);
-
-    const initialOpenState: Record<string, boolean> = {};
-    API_CATEGORIES.forEach((category) => {
-      const isActive = category.endpoints.some((endpoint) =>
-        pathname?.includes(`/docs/${category.id}/${endpoint.id}`)
-      );
-      initialOpenState[category.id] = isActive;
-    });
-    setOpenCategories(initialOpenState);
-  }, [pathname]);
-
-  // Fungsi untuk filter data
   const filteredData = () => {
     if (!searchTerm) return API_CATEGORIES;
 
@@ -59,173 +34,96 @@ const DocsSidebar = () => {
   };
 
   const toggleCategory = (categoryId: string) => {
-    setSelectedCategory(categoryId);
-    setOpenCategories((prev) => ({ ...prev, [categoryId]: true }));
-    setIsSidebarOpen(false);
-  };
-
-  const handleBackToAll = () => {
-    setSelectedCategory(null);
-    setOpenCategories({});
-    setSearchTerm(""); // Reset pencarian saat kembali
+    setOpenCategories((prev) => ({
+      ...prev,
+      [categoryId]: !prev[categoryId],
+    }));
   };
 
   return (
-    <>
-      {/* Mobile toggle button */}
-      <Button
-        onClick={() => setIsSidebarOpen(true)}
-        variant="ghost"
-        size="sm"
-        className="lg:hidden fixed top-4 right-4 z-50"
-      >
-        <Menu className="w-5 h-5" />
-      </Button>
+    <div className="border-b">
+      {/* Search Bar */}
+      <div className="px-4 pt-4">
+        <div className="relative mb-4">
+          <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Cari dokumentasi..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-9 pr-4 py-2 rounded-md border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none text-sm"
+          />
+        </div>
+      </div>
 
-      {/* Sidebar overlay untuk mobile */}
-      <div
-        className={cn(
-          "fixed inset-0 bg-black/30 z-40 transition-opacity lg:hidden",
-          isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-        )}
-        onClick={() => setIsSidebarOpen(false)}
-      />
-
-      {/* Sidebar */}
-      <aside
-        className={cn(
-          "bg-white border-r w-full lg:w-80 flex-shrink-0 fixed lg:static top-0 left-0 h-screen z-40 transition-transform duration-300 border-gray-200",
-          isSidebarOpen ? "translate-y-0" : "-translate-y-full",
-          "lg:translate-y-0 lg:relative lg:z-0"
-        )}
-      >
-        <ScrollArea className="h-full pt-16 lg:pt-0">
-          <nav className="p-4">
-            {/* Search Bar */}
-            <div className="relative mb-4">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Cari dokumentasi..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 rounded-md border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none text-sm"
-              />
-            </div>
-
-            {/* Close Button (mobile only) */}
-            <div className="flex justify-end mb-2 lg:hidden">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsSidebarOpen(false)}
-              >
-                <X className="w-5 h-5" />
-              </Button>
-            </div>
-
-            {selectedCategory ? (
-              <>
-                <Button
-                  variant="ghost"
-                  className="mb-4 text-sm w-full justify-start"
-                  onClick={handleBackToAll}
+      <ScrollArea className="w-full pb-2">
+        <nav className="flex flex-nowrap px-4 gap-4">
+          {filteredData().map((category) => (
+            <div key={category.id} className="flex-shrink-0">
+              <div className="flex flex-col space-y-2">
+                {/* Category Button */}
+                <button
+                  onClick={() => toggleCategory(category.id)}
+                  className={cn(
+                    "flex items-center px-4 py-2 rounded-md text-sm font-medium",
+                    openCategories[category.id]
+                      ? "bg-blue-50 text-blue-600"
+                      : "text-gray-700 hover:bg-gray-100"
+                  )}
                 >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Semua Dokumentasi
-                </Button>
-
-                {filteredData()
-                  .filter((category) => category.id === selectedCategory)
-                  .map((category) => (
-                    <div key={category.id}>
-                      <h2 className="font-semibold mb-2 text-lg">
-                        {category.name}
-                      </h2>
-                      <ul className="space-y-1">
-                        {category.endpoints.map((endpoint) => (
-                          <li key={endpoint.id}>
-                            <Link
-                              href={`/docs/${category.id}/${endpoint.id}`}
-                              className={`flex items-center p-2 rounded-md text-sm ${
-                                pathname ===
-                                `/docs/${category.id}/${endpoint.id}`
-                                  ? "bg-blue-50 text-blue-600 font-medium"
-                                  : "text-gray-700 hover:bg-gray-100"
-                              }`}
-                            >
-                              <span className="flex items-center">
-                                <span
-                                  className={`inline-block w-10 text-xs font-medium rounded mr-2 px-1.5 py-0.5 ${getMethodStyle(
-                                    endpoint.method
-                                  )}`}
-                                >
-                                  {endpoint.method}
-                                </span>
-                                {endpoint.name}
-                              </span>
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-              </>
-            ) : (
-              <ul className="space-y-1">
-                {filteredData().map((category) => (
-                  <li key={category.id} className="pt-2 first:pt-0">
-                    <div
-                      className="flex items-center justify-between p-2 rounded-md cursor-pointer text-sm font-medium hover:bg-gray-100"
-                      onClick={() => toggleCategory(category.id)}
-                    >
-                      <span>{category.name}</span>
-                      <ChevronRight className="h-4 w-4" />
-                    </div>
-
-                    {/* Tampilkan hasil pencarian langsung */}
-                    {searchTerm && (
-                      <ul className="ml-4 mt-1 space-y-1">
-                        {category.endpoints.map((endpoint) => (
-                          <li key={endpoint.id}>
-                            <Link
-                              href={`/docs/${category.id}/${endpoint.id}`}
-                              className={`flex items-center p-2 rounded-md text-sm ${
-                                pathname ===
-                                `/docs/${category.id}/${endpoint.id}`
-                                  ? "bg-blue-50 text-blue-600"
-                                  : "text-gray-600 hover:bg-gray-50"
-                              }`}
-                            >
-                              <span className="flex items-center">
-                                <span
-                                  className={`inline-block w-10 text-xs font-medium rounded mr-2 px-1.5 py-0.5 ${getMethodStyle(
-                                    endpoint.method
-                                  )}`}
-                                >
-                                  {endpoint.method}
-                                </span>
-                                {endpoint.name}
-                              </span>
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
+                  {category.name}
+                  <ChevronDown
+                    className={cn(
+                      "ml-2 h-4 w-4 transition-transform",
+                      openCategories[category.id] && "rotate-180"
                     )}
-                  </li>
-                ))}
+                  />
+                </button>
 
-                {filteredData().length === 0 && (
-                  <div className="text-center text-gray-500 text-sm py-4">
-                    Tidak ditemukan hasil untuk "{searchTerm}"
+                {/* Endpoints */}
+                {openCategories[category.id] && (
+                  <div className="flex flex-nowrap gap-2 ml-2">
+                    {category.endpoints.map((endpoint) => (
+                      <div key={endpoint.id} className="flex-shrink-0">
+                        <Link
+                          href={`/docs/${category.id}/${endpoint.id}`}
+                          onClick={() => setSelectedEndpoint(endpoint.id)}
+                          className={cn(
+                            "flex items-center px-4 py-2 rounded-md text-sm",
+                            pathname === `/docs/${category.id}/${endpoint.id}`
+                              ? "bg-blue-50 text-blue-600 font-medium"
+                              : "text-gray-700 hover:bg-gray-100"
+                          )}
+                        >
+                          <span
+                            className={`inline-block w-12 text-xs text-center font-medium rounded mr-2 px-1.5 py-0.5 ${getMethodStyle(
+                              endpoint.method
+                            )}`}
+                          >
+                            {endpoint.method}
+                          </span>
+                          {endpoint.name}
+                        </Link>
+
+                        {/* Sub Content - Example implementation */}
+                        {selectedEndpoint === endpoint.id && (
+                          <div className="ml-4 mt-2 p-2 bg-gray-50 rounded-md">
+                            {/* Add your sub content components here */}
+                            <div className="text-xs text-gray-600">
+                              Subkonten untuk {endpoint.name}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
                   </div>
                 )}
-              </ul>
-            )}
-          </nav>
-        </ScrollArea>
-      </aside>
-    </>
+              </div>
+            </div>
+          ))}
+        </nav>
+      </ScrollArea>
+    </div>
   );
 };
 

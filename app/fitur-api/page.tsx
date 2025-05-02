@@ -4,7 +4,17 @@ import { API_CATEGORIES } from "@/lib/mock-data";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { ChevronDown, Search } from "lucide-react";
+import {
+  ChevronDown,
+  Search,
+  CheckCircle,
+  PlusCircle,
+  Edit,
+  Trash,
+  Lock,
+  ArrowRight,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function AboutPage() {
   const [openCategory, setOpenCategory] = useState<string | null>(null);
@@ -27,7 +37,7 @@ export default function AboutPage() {
 
   return (
     <div className="space-y-8">
-      {/* Full-width Banner */}
+      {/* Banner Section */}
       <div className="w-full relative h-96 bg-gray-900">
         <div className="absolute inset-0 overflow-hidden">
           <img
@@ -48,22 +58,18 @@ export default function AboutPage() {
               Dokumentasi API
             </h1>
             <p className="text-xl text-white/90 max-w-3xl mx-auto">
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. At
-              corrupti similique quo iusto maxime nobis praesentium non
-              temporibus aspernatur et consequuntur, atque nam eum, vitae
-              necessitatibus accusamus quam deleniti delectus?
+              Integrasikan sistem kesehatan nasional dengan API modern dan aman
+              dari BPJS Kesehatan.
             </p>
           </motion.div>
         </div>
       </div>
 
-      {/* Full-width Header Section */}
-      <div className="w-full border-b dark:border-gray-800">
+      {/* Search Section */}
+      <div className="w-full border-b">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 py-6">
-            <h2 className="text-3xl font-bold bg-gradient-to-r text-[#27447C]">
-              Kategori API
-            </h2>
+            <h2 className="text-3xl font-bold text-[#27447C]">Kategori API</h2>
             <div className="relative w-full md:w-96">
               <Search className="absolute left-4 top-3.5 h-5 w-5 text-gray-400" />
               <input
@@ -71,7 +77,7 @@ export default function AboutPage() {
                 placeholder="Cari Kategori..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 ring-primary/50 outline-none transition-all"
+                className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 ring-[#27447C]/50 outline-none transition-all bg-white"
               />
             </div>
           </div>
@@ -80,20 +86,21 @@ export default function AboutPage() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 space-y-8 pb-12">
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 gap-4">
           {filteredCategories.map((category) => (
             <div key={category.name} className="group">
+              {/* Category Header */}
               <motion.div
                 onClick={() => toggleCategory(category.name)}
-                className="cursor-pointer flex justify-between items-center p-6 rounded-xl bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700"
+                className="cursor-pointer flex justify-between items-center p-6 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow border border-gray-100"
                 whileHover={{ scale: 1.005 }}
               >
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                  <h3 className="text-xl font-semibold text-gray-900">
                     {category.name}
                   </h3>
                   <p className="text-sm text-gray-500 mt-1">
-                    {category.endpoints.length} endpoints available
+                    {category.endpoints.length} endpoints tersedia
                   </p>
                 </div>
                 <ChevronDown
@@ -103,43 +110,82 @@ export default function AboutPage() {
                 />
               </motion.div>
 
+              {/* API Cards Grid */}
               {openCategory === category.name && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
-                  className="ml-8 pl-4 border-l-2 border-gray-200 dark:border-gray-700 space-y-4 mt-4"
+                  className="mt-4"
                 >
-                  {category.endpoints.map((endpoint) => (
-                    <Card
-                      key={endpoint.path}
-                      className="hover:shadow-lg transition-shadow duration-200 bg-white dark:bg-gray-800"
-                    >
-                      <CardContent className="p-4">
-                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                          <div className="flex items-center gap-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {category.endpoints.map((endpoint) => (
+                      <Card
+                        key={endpoint.path}
+                        className="hover:shadow-lg transition-all duration-300 bg-white border border-gray-200 group relative overflow-hidden"
+                      >
+                        <CardContent className="p-6 h-full flex flex-col">
+                          {/* Method Badge */}
+                          <div className="flex items-center justify-between mb-4">
                             <span
-                              className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                              className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
                                 methodColors[endpoint.method] ||
                                 "bg-gray-100 text-gray-800"
                               }`}
                             >
+                              {endpoint.method === "GET" && (
+                                <CheckCircle className="w-4 h-4 mr-2" />
+                              )}
+                              {endpoint.method === "POST" && (
+                                <PlusCircle className="w-4 h-4 mr-2" />
+                              )}
+                              {endpoint.method === "PUT" && (
+                                <Edit className="w-4 h-4 mr-2" />
+                              )}
+                              {endpoint.method === "DELETE" && (
+                                <Trash className="w-4 h-4 mr-2" />
+                              )}
                               {endpoint.method}
                             </span>
-                            <code className="font-mono text-sm text-blue-600 dark:text-blue-400">
-                              {endpoint.path}
-                            </code>
+                            <span className="text-xs text-gray-500">v1.0</span>
                           </div>
-                          <button className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium flex items-center gap-1">
-                            View Details{" "}
-                            <ChevronDown className="h-4 w-4 rotate-90" />
-                          </button>
-                        </div>
-                        <p className="text-gray-600 dark:text-gray-300 mt-2 text-sm">
-                          {endpoint.description}
-                        </p>
-                      </CardContent>
-                    </Card>
-                  ))}
+
+                          {/* API Path */}
+                          <code className="font-mono text-sm text-[#27447C] mb-4 break-words">
+                            /api/v1{endpoint.path}
+                          </code>
+
+                          {/* Description */}
+                          <p className="text-gray-600 text-sm mb-4 flex-1">
+                            {endpoint.description}
+                          </p>
+
+                          {/* Divider */}
+                          <hr className="mb-4 border-gray-200" />
+
+                          {/* Footer */}
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                              <Lock className="w-4 h-4 text-green-600" />
+                              <span className="text-xs text-gray-500">
+                                Secure
+                              </span>
+                            </div>
+                            <Button
+                              variant="outline"
+                              className="text-[#27447C] border-[#27447C] hover:bg-[#27447C]/10"
+                              size="sm"
+                            >
+                              View Details
+                              <ArrowRight className="w-4 h-4 ml-2" />
+                            </Button>
+                          </div>
+
+                          {/* Hover Effect */}
+                          <div className="absolute inset-0 bg-gradient-to-br from-[#27447C]/5 to-white/50 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
                 </motion.div>
               )}
             </div>

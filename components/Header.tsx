@@ -40,7 +40,7 @@ const Header = () => {
                 className={`px-3 ${
                   pathname === "/"
                     ? "text-[#27447C]"
-                    : "text-gray-700 hover:text-[#27447C]"
+                    : "text-gray-900 hover:text-[#27447C]"
                 }`}
               >
                 Home
@@ -52,7 +52,7 @@ const Header = () => {
                 className={`px-3 ${
                   pathname.startsWith("/fitur-api")
                     ? "text-[#27447C]"
-                    : "text-gray-700 hover:text-[#27447C]"
+                    : "text-gray-900 hover:text-[#27447C]"
                 }`}
               >
                 Fitur API
@@ -64,7 +64,7 @@ const Header = () => {
                 className={`px-3 ${
                   pathname.startsWith("/panduan")
                     ? "text-[#27447C]"
-                    : "text-gray-700 hover:text-[#27447C]"
+                    : "text-gray-900 hover:text-[#27447C]"
                 }`}
               >
                 Panduan

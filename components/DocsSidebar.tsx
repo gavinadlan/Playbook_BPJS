@@ -58,9 +58,11 @@ const DocsSidebar = () => {
   };
 
   const toggleCategory = (categoryId: string) => {
+    setOpenCategories((prev) => ({
+      ...prev,
+      [categoryId]: !prev[categoryId],
+    }));
     setSelectedCategory(categoryId);
-    setOpenCategories((prev) => ({ ...prev, [categoryId]: true }));
-    setIsSidebarOpen(false);
   };
 
   const handleBackToAll = () => {
@@ -73,8 +75,8 @@ const DocsSidebar = () => {
     <>
       {/* Mobile Navigation */}
       <div className="lg:hidden border-b">
-        <ScrollArea className="w-full">
-          <nav className="flex flex-nowrap p-4 gap-4">
+        <div className="overflow-x-auto">
+          <nav className="flex flex-nowrap p-4 gap-4 w-max">
             {filteredData().map((category) => (
               <div key={category.id} className="flex-shrink-0">
                 <div className="flex flex-col space-y-2">
@@ -97,7 +99,7 @@ const DocsSidebar = () => {
                   </button>
 
                   {openCategories[category.id] && (
-                    <div className="flex flex-nowrap gap-2 ml-2">
+                    <div className="flex flex-nowrap gap-2 ml-2 overflow-x-auto pb-2">
                       {category.endpoints.map((endpoint) => (
                         <div key={endpoint.id} className="flex-shrink-0">
                           <Link
@@ -127,7 +129,7 @@ const DocsSidebar = () => {
               </div>
             ))}
           </nav>
-        </ScrollArea>
+        </div>
       </div>
 
       {/* Web Navigation */}

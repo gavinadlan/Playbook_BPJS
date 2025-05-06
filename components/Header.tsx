@@ -5,9 +5,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  // Style untuk button aktif
+  const activeButtonStyle = {
+    color: "#27447C",
+  };
 
   return (
     <header className="sticky top-0 left-0 w-full z-50 bg-white border-b border-gray-200">
@@ -27,10 +34,14 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-2">
-            <Button variant="ghost" asChild>
+            <Button variant={pathname === "/" ? "ghost" : "ghost"} asChild>
               <Link
                 href="/"
-                className="text-gray-700 hover:text-[#27447C] px-3"
+                className={`px-3 ${
+                  pathname === "/"
+                    ? "text-[#27447C]"
+                    : "text-gray-700 hover:text-[#27447C]"
+                }`}
               >
                 Home
               </Link>
@@ -38,7 +49,11 @@ const Header = () => {
             <Button variant="ghost" asChild>
               <Link
                 href="/fitur-api"
-                className="text-gray-700 hover:text-[#27447C] px-3"
+                className={`px-3 ${
+                  pathname.startsWith("/fitur-api")
+                    ? "text-[#27447C]"
+                    : "text-gray-700 hover:text-[#27447C]"
+                }`}
               >
                 Fitur API
               </Link>
@@ -46,7 +61,11 @@ const Header = () => {
             <Button variant="ghost" asChild>
               <Link
                 href="/panduan"
-                className="text-gray-700 hover:text-[#27447C] px-3"
+                className={`px-3 ${
+                  pathname.startsWith("/panduan")
+                    ? "text-[#27447C]"
+                    : "text-gray-700 hover:text-[#27447C]"
+                }`}
               >
                 Panduan
               </Link>
@@ -54,7 +73,7 @@ const Header = () => {
           </nav>
         </div>
 
-        {/* Right Section - Login/Register (akan datang) */}
+        {/* Right Section - Hamburger Menu */}
         <div className="flex items-center gap-4">
           {/* Mobile Menu Toggle */}
           <Button
@@ -77,21 +96,33 @@ const Header = () => {
             <nav className="flex flex-col p-4 space-y-2">
               <Link
                 href="/"
-                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md"
+                className={`px-4 py-2 ${
+                  pathname === "/"
+                    ? "text-[#27447C] bg-gray-100"
+                    : "text-gray-700 hover:bg-gray-100"
+                } rounded-md`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Home
               </Link>
               <Link
                 href="/fitur-api"
-                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md"
+                className={`px-4 py-2 ${
+                  pathname.startsWith("/fitur-api")
+                    ? "text-[#27447C] bg-gray-100"
+                    : "text-gray-700 hover:bg-gray-100"
+                } rounded-md`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Fitur API
               </Link>
               <Link
                 href="/panduan"
-                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md"
+                className={`px-4 py-2 ${
+                  pathname.startsWith("/panduan")
+                    ? "text-[#27447C] bg-gray-100"
+                    : "text-gray-700 hover:bg-gray-100"
+                } rounded-md`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Panduan

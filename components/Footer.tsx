@@ -4,23 +4,25 @@ import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#27447C] text-white py-10 px-4">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
-        {/* Kolom Kiri: Logo dan Alamat */}
-        <div className="flex flex-col items-center md:items-start text-center md:text-left">
-          <Image
-            src="/images/logo-white.svg"
-            alt="BPJS Kesehatan"
-            width={300}
-            height={51.15}
-            className="mb-4"
-            priority
-          />
+    <footer className="bg-[#27447C] text-white py-8 px-4 md:py-10">
+      <div className="max-w-7xl mx-auto flex flex-col gap-10 md:grid md:grid-cols-2 md:gap-10">
+        {/* Kolom Kiri: Logo, Alamat, dan Sosial Media */}
+        <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-5">
+          <div className="max-w-[300px]">
+            <Image
+              src="/images/logo-white.svg"
+              alt="BPJS Kesehatan"
+              width={300}
+              height={51.15}
+              className="w-full h-auto"
+              priority
+            />
+          </div>
           <div>
-            <h4 className="text-lg font-semibold">
+            <h4 className="text-base md:text-lg font-semibold mb-2">
               BPJS Kesehatan Head Office
             </h4>
-            <p className="text-sm opacity-90 leading-relaxed">
+            <p className="text-xs md:text-sm opacity-90 leading-relaxed">
               Jl. Letjen Suprapto Kav. 20 No.14
               <br />
               Jakarta Pusat 10510
@@ -28,51 +30,135 @@ export default function Footer() {
               Phone: (021) 421 2938
             </p>
           </div>
+          <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-1">
+            <a href="#" className="hover:opacity-80 transition">
+              <img
+                src="/images/tiktok.svg"
+                alt="Tiktok"
+                width={40}
+                height={40}
+              />
+            </a>
+            <a href="#" className="hover:opacity-80 transition">
+              <img
+                src="/images/facebook.svg"
+                alt="Facebook"
+                width={40}
+                height={40}
+              />
+            </a>
+            <a href="#" className="hover:opacity-80 transition">
+              <img
+                src="/images/x.svg"
+                alt="Twitter / X"
+                width={40}
+                height={40}
+              />
+            </a>
+            <a href="#" className="hover:opacity-80 transition">
+              <img
+                src="/images/instagram.svg"
+                alt="Instagram"
+                width={40}
+                height={40}
+              />
+            </a>
+            <a href="#" className="hover:opacity-80 transition">
+              <img
+                src="/images/youtube.svg"
+                alt="YouTube"
+                width={40}
+                height={40}
+              />
+            </a>
+          </div>
         </div>
 
         {/* Kolom Kanan: Menu Links */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm text-center md:text-left">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm md:grid-cols-3 md:gap-8 text-center md:text-left">
           {/* APIs */}
-          <div>
-            <h5 className="font-semibold text-base mb-2">APIs</h5>
+          <div className="space-y-2">
+            <h5 className="font-semibold text-sm md:text-base mb-1">APIs</h5>
             <ul className="space-y-1 opacity-90">
               <li>
-                <a href="#">Produk API</a>
+                <a href="#" className="hover:text-blue-200">
+                  Produk API
+                </a>
               </li>
               <li>
-                <a href="#">Dokumentasi</a>
+                <a href="#" className="hover:text-blue-200">
+                  Dokumentasi
+                </a>
               </li>
               <li>
-                <a href="#">Sandbox</a>
+                <a href="#" className="hover:text-blue-200">
+                  Sandbox
+                </a>
               </li>
             </ul>
           </div>
 
           {/* Bantuan */}
-          <div>
-            <h5 className="font-semibold text-base mb-2">Bantuan</h5>
+          <div className="space-y-2">
+            <h5 className="font-semibold text-sm md:text-base mb-1">Bantuan</h5>
             <ul className="space-y-1 opacity-90">
               <li>
-                <a href="#">Layanan Pengguna</a>
+                <a href="#" className="hover:text-blue-200">
+                  Layanan Pengguna
+                </a>
               </li>
               <li>
-                <a href="#">FAQ</a>
+                <a href="#" className="hover:text-blue-200">
+                  FAQ
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-blue-200">
+                  Kontak
+                </a>
               </li>
             </ul>
           </div>
 
-          {/* Ikuti Kami */}
-          <div>
-            <h5 className="font-semibold text-base mb-2">Ikuti Kami</h5>
+          {/* Kunjungi Kami */}
+          <div className="space-y-2 sm:col-span-2 md:col-span-1">
+            <h5 className="font-semibold text-sm md:text-base mb-1">
+              Kunjungi Kami
+            </h5>
             <ul className="space-y-1 opacity-90">
               <li>
-                <a href="https://www.bpjs-kesehatan.go.id/#/">
+                <a href="#" className="hover:text-blue-200">
+                  Ayo Mulai
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-blue-200">
+                  Harga
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-blue-200">
+                  Stack Overflow
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.bpjs-kesehatan.go.id/#/"
+                  className="break-words hover:text-blue-200"
+                >
                   bpjs-kesehatan.go.id
                 </a>
               </li>
             </ul>
           </div>
         </div>
+      </div>
+
+      {/* Copyright */}
+      <div className="max-w-7xl mx-auto mt-8 pt-6 border-t border-white/20">
+        <p className="text-xs text-center opacity-80">
+          © {new Date().getFullYear()} BPJS Kesehatan. All rights reserved.
+        </p>
       </div>
     </footer>
   );

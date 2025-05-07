@@ -30,47 +30,78 @@ export default function Footer() {
               Phone: (021) 421 2938
             </p>
           </div>
-          <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-1">
-            <a href="#" className="hover:opacity-80 transition">
-              <img
-                src="/images/tiktok.svg"
-                alt="Tiktok"
-                width={40}
-                height={40}
-              />
-            </a>
-            <a href="#" className="hover:opacity-80 transition">
-              <img
-                src="/images/facebook.svg"
-                alt="Facebook"
-                width={40}
-                height={40}
-              />
-            </a>
-            <a href="#" className="hover:opacity-80 transition">
-              <img
-                src="/images/x.svg"
-                alt="Twitter / X"
-                width={40}
-                height={40}
-              />
-            </a>
-            <a href="#" className="hover:opacity-80 transition">
-              <img
-                src="/images/instagram.svg"
-                alt="Instagram"
-                width={40}
-                height={40}
-              />
-            </a>
-            <a href="#" className="hover:opacity-80 transition">
-              <img
-                src="/images/youtube.svg"
-                alt="YouTube"
-                width={40}
-                height={40}
-              />
-            </a>
+          <div className="flex flex-col items-center md:items-start space-y-2 mt-1">
+            <p className="font-medium text-sm md:text-base">
+              Kunjungi Sosial Media Kami
+            </p>
+
+            <div className="flex flex-wrap justify-center md:justify-start gap-4">
+              <a
+                href="https://www.tiktok.com/@bpjskesehatan_ri?lang=id-ID"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-80 transition"
+              >
+                <img
+                  src="/images/tiktok.svg"
+                  alt="Tiktok"
+                  width={40}
+                  height={40}
+                />
+              </a>
+              <a
+                href="https://web.facebook.com/BPJSKesehatanRI?_rdc=1&_rdr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-80 transition"
+              >
+                <img
+                  src="/images/facebook.svg"
+                  alt="Facebook"
+                  width={40}
+                  height={40}
+                />
+              </a>
+              <a
+                href="https://x.com/BPJSKesehatanRI"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-80 transition"
+              >
+                <img
+                  src="/images/x.svg"
+                  alt="Twitter / X"
+                  width={40}
+                  height={40}
+                />
+              </a>
+              <a
+                href="https://www.instagram.com/bpjskesehatan_ri/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-80 transition"
+              >
+                <img
+                  src="/images/instagram.svg"
+                  alt="Instagram"
+                  width={40}
+                  height={40}
+                />
+              </a>
+              <a
+                href="https://www.youtube.com/@BPJSKesehatan_RI"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-80 transition"
+              >
+                <img
+                  src="/images/youtube.svg"
+                  alt="YouTube"
+                  width={40}
+                  height={40}
+                />
+              </a>
+            </div>
           </div>
         </div>
 
@@ -81,12 +112,12 @@ export default function Footer() {
             <h5 className="font-semibold text-sm md:text-base mb-1">APIs</h5>
             <ul className="space-y-1 opacity-90">
               <li>
-                <a href="#" className="hover:text-blue-200">
+                <a href="/fitur-api" className="hover:text-blue-200">
                   Produk API
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-blue-200">
+                <a href="/docs" className="hover:text-blue-200">
                   Dokumentasi
                 </a>
               </li>
@@ -103,8 +134,8 @@ export default function Footer() {
             <h5 className="font-semibold text-sm md:text-base mb-1">Bantuan</h5>
             <ul className="space-y-1 opacity-90">
               <li>
-                <a href="#" className="hover:text-blue-200">
-                  Layanan Pengguna
+                <a href="/panduan" className="hover:text-blue-200">
+                  panduan
                 </a>
               </li>
               <li>
@@ -144,6 +175,7 @@ export default function Footer() {
               <li>
                 <a
                   href="https://www.bpjs-kesehatan.go.id/#/"
+                  target="blank"
                   className="break-words hover:text-blue-200"
                 >
                   bpjs-kesehatan.go.id

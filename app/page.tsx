@@ -10,217 +10,181 @@ import {
   Mail,
   Phone,
   Clock,
+  Terminal,
+  Code2,
+  Key,
+  Server,
 } from "lucide-react";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 export default function Home() {
   const features = [
+    // Existing features...
+  ];
+
+  const quickStartSteps = [
     {
-      title: "Mudah Digunakan",
-      icon: <ChevronRight className="w-6 h-6 text-[#27447C]" />,
-      description:
-        "API kami dirancang agar mudah dipahami dan cepat diimplementasikan.",
+      title: "Dapatkan API Key",
+      description: "Buat akun developer untuk mendapatkan kredensial API",
+      icon: <Key className="w-6 h-6" />,
     },
     {
-      title: "Dokumentasi Lengkap",
-      icon: <BookOpen className="w-6 h-6 text-[#27447C]" />,
-      description:
-        "Kami menyediakan dokumentasi dan contoh penggunaan untuk semua endpoint.",
+      title: "Autentikasi",
+      description: "Gunakan token Bearer untuk mengakses endpoint",
+      icon: <LockKeyhole className="w-6 h-6" />,
     },
     {
-      title: "Dukungan Developer",
-      icon: <LifeBuoy className="w-6 h-6 text-[#27447C]" />,
-      description:
-        "Tim kami siap membantu kendala teknis Anda selama integrasi berlangsung.",
+      title: "Eksekusi Request",
+      description: "Kirim request ke endpoint API kami",
+      icon: <Terminal className="w-6 h-6" />,
     },
   ];
 
+  const codeExample = `curl --location 'https://api.bpjs-kesehatan.go.id/v1/peserta' \\
+--header 'Authorization: Bearer YOUR_API_KEY' \\
+--header 'Content-Type: application/json' \\
+--data '{
+  "nomorKartu": "0001234567890",
+  "nik": "1234560101010001"
+}'`;
+
   return (
     <div className="bg-gradient-to-b from-[#27447C]/5 to-white">
-      {/* Hero Section */}
-      <section className="min-h-screen flex items-center justify-center px-4 text-center relative overflow-hidden">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-4xl relative z-10"
-        >
-          <h1 className="text-4xl md:text-6xl font-bold text-[#27447C] mb-6 leading-tight">
-            Platform API Resmi <br />
-            <span className="text-[#27447C]">BPJS Kesehatan</span>
-          </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Integrasikan layanan asuransi kesehatan nasional Indonesia ke
-            aplikasi Anda dengan API yang andal dan terpercaya.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link
-              href="/fitur-api"
-              className="inline-flex items-center px-8 py-4 bg-[#27447C] text-white rounded-xl hover:bg-[#1A335F] transition-colors gap-2 shadow-lg hover:shadow-xl"
-            >
-              <ChevronRight className="w-5 h-5" />
-              <span className="font-semibold">Jelajahi Fitur API</span>
-            </Link>
-            <Link
-              href="/docs"
-              className="inline-flex items-center px-8 py-4 border-2 border-[#27447C] text-[#27447C] rounded-xl hover:bg-[#27447C]/10 transition-colors gap-2 shadow-sm hover:shadow-md"
-            >
-              <BookOpen className="w-5 h-5" />
-              <span className="font-semibold">Baca Dokumentasi</span>
-            </Link>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-24 px-4 bg-white">
-        <div className="max-w-7xl mx-auto">
+      <section className="min-h-screen flex items-center px-4 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            className="text-center mb-16"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="relative z-10"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-[#27447C] mb-4">
-              Keunggulan Platform Kami
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Solusi terintegrasi untuk pengembangan aplikasi kesehatan berbasis
-              BPJS Kesehatan
+            <h1 className="text-4xl md:text-6xl font-bold text-[#27447C] mb-6 leading-tight">
+              Integrasikan Layanan Kesehatan Nasional
+              <span className="block text-3xl mt-4 text-[#27447C]/80">
+                API Resmi BPJS Kesehatan
+              </span>
+            </h1>
+            <p className="text-lg text-gray-600 mb-8">
+              Akses data peserta, pembayaran premi, dan layanan kesehatan
+              melalui API terintegrasi
             </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link
+                href="/docs"
+                className="inline-flex items-center px-6 py-3 bg-[#27447C] text-white rounded-lg hover:bg-[#1A335F] gap-2"
+              >
+                <Terminal className="w-5 h-5" />
+                Mulai Integrasi
+              </Link>
+              <Link
+                href="/auth"
+                className="inline-flex items-center px-6 py-3 border border-[#27447C] text-[#27447C] rounded-lg hover:bg-[#27447C]/10 gap-2"
+              >
+                <Key className="w-5 h-5" />
+                Dapatkan API Key
+              </Link>
+            </div>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="relative rounded-xl overflow-hidden shadow-xl"
+          >
+            <div className="bg-[#27447C] p-4 flex items-center justify-between">
+              <div className="flex gap-2">
+                <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <div className="w-3 h-3 rounded-full bg-green-500"></div>
+              </div>
+              <span className="text-white text-sm">Contoh Request</span>
+            </div>
+            <SyntaxHighlighter
+              language="bash"
+              style={atomOneDark}
+              customStyle={{ padding: "1.5rem", fontSize: "0.9rem" }}
+            >
+              {codeExample}
+            </SyntaxHighlighter>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* New Quick Start Section */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-[#27447C] mb-4">
+              Mulai Cepat dalam 3 Langkah
+            </h2>
+            <p className="text-gray-600">
+              Integrasikan API kami dalam hitungan menit
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {quickStartSteps.map((step, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow border border-[#27447C]/20"
+                className="p-6 bg-[#27447C]/5 rounded-xl border border-[#27447C]/10"
               >
-                <div className="w-12 h-12 bg-[#27447C]/10 rounded-xl flex items-center justify-center mb-6">
-                  {feature.icon}
+                <div className="w-12 h-12 bg-[#27447C] rounded-lg flex items-center justify-center mb-4 text-white">
+                  {step.icon}
                 </div>
-                <h3 className="text-xl font-semibold text-[#27447C] mb-4">
-                  {feature.title}
+                <h3 className="text-xl font-semibold text-[#27447C] mb-2">
+                  {step.title}
                 </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {feature.description}
-                </p>
+                <p className="text-gray-600">{step.description}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Getting Started Section */}
-      <section className="py-24 px-4 bg-[#27447C]">
-        <div className="max-w-4xl mx-auto text-center text-white">
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Mulai Integrasi Sekarang
+      {/* New Authentication Section */}
+      <section className="py-24 bg-[#f8fafc]">
+        <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
+          <div className="space-y-6">
+            <h2 className="text-3xl font-bold text-[#27447C]">
+              Autentikasi Aman
             </h2>
-            <p className="text-lg mb-8 opacity-90">
-              Bergabunglah dengan ratusan developer yang sudah menggunakan API
-              kami
+            <p className="text-gray-600">
+              Gunakan OAuth 2.0 untuk mengamankan integrasi Anda. Dapatkan token
+              akses dan refresh token dengan mudah melalui endpoint autentikasi
+              kami.
             </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Link
-                href="/docs"
-                className="inline-flex items-center px-8 py-4 bg-white text-[#27447C] rounded-xl hover:bg-opacity-90 transition-all gap-2 shadow-lg"
-              >
-                <BookOpen className="w-5 h-5" />
-                <span className="font-semibold">Dokumentasi API</span>
-              </Link>
-              <Link
-                href="/docs/authentication"
-                className="inline-flex items-center px-8 py-4 border-2 border-white text-white rounded-xl hover:bg-white/10 transition-colors gap-2"
-              >
-                <LockKeyhole className="w-5 h-5" />
-                <span className="font-semibold">Panduan Keamanan</span>
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section className="py-24 px-4 bg-white">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-[#27447C] mb-4">
-              Butuh Bantuan?
-            </h2>
-            <p className="text-lg text-gray-600">
-              Tim support kami siap membantu Anda 24/7
-            </p>
-          </motion.div>
-
-          <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-[#27447C]/20">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <Mail className="w-6 h-6 text-[#27447C] mt-1" />
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
-                    <p className="text-gray-600">
-                      api-support@bpjs-kesehatan.go.id
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <Phone className="w-6 h-6 text-[#27447C] mt-1" />
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">
-                      Telepon
-                    </h3>
-                    <p className="text-gray-600">+62 21 424-6063</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <Clock className="w-6 h-6 text-[#27447C] mt-1" />
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">
-                      Jam Operasional
-                    </h3>
-                    <p className="text-gray-600">
-                      Senin-Jumat, 08:00 - 16:00 WIB
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-[#27447C]/5 rounded-xl p-6 border border-[#27447C]/10">
-                <h3 className="text-lg font-semibold text-[#27447C] mb-4">
-                  Kirim Pesan Langsung
-                </h3>
-                <form className="space-y-4">
-                  <input
-                    type="text"
-                    placeholder="Nama Anda"
-                    className="w-full px-4 py-3 rounded-lg border border-[#27447C]/20 focus:ring-2 focus:ring-[#27447C] outline-none"
-                  />
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    className="w-full px-4 py-3 rounded-lg border border-[#27447C]/20 focus:ring-2 focus:ring-[#27447C] outline-none"
-                  />
-                  <textarea
-                    placeholder="Pesan Anda"
-                    rows={4}
-                    className="w-full px-4 py-3 rounded-lg border border-[#27447C]/20 focus:ring-2 focus:ring-[#27447C] outline-none"
-                  />
-                  <button
-                    type="submit"
-                    className="w-full bg-[#27447C] text-white py-3 rounded-lg hover:bg-[#1A335F] transition-colors"
-                  >
-                    Kirim Pesan
-                  </button>
-                </form>
-              </div>
-            </div>
+            <Link
+              href="/docs/authentication"
+              className="inline-flex items-center text-[#27447C] font-semibold hover:text-[#1A335F]"
+            >
+              Pelajari Lebih Lanjut
+              <ChevronRight className="w-4 h-4 ml-2" />
+            </Link>
+          </div>
+          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+            <SyntaxHighlighter
+              language="javascript"
+              style={atomOneDark}
+              customStyle={{ padding: "1.5rem", fontSize: "0.9rem" }}
+            >
+              {`// Contoh Autentikasi dengan Node.js
+const getToken = async () => {
+  const response = await fetch('https://api.bpjs-kesehatan.go.id/oauth/token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      client_id: 'CLIENT_ID',
+      client_secret: 'CLIENT_SECRET',
+      grant_type: 'client_credentials'
+    })
+  });
+  return await response.json();
+};`}
+            </SyntaxHighlighter>
           </div>
         </div>
       </section>

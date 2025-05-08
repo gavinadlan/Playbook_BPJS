@@ -30,7 +30,7 @@ const StyledWrapper = styled.div`
   .switch {
     --_switch-bg-clr: rgb(39, 68, 124);
     --_switch-padding: 2px;
-    --_slider-bg-clr: rgb(73, 163, 90); /* tetap hijau */
+    --_slider-bg-clr: rgb(73, 163, 90);
     --_slider-bg-clr-on: rgb(73, 163, 90);
     --_slider-txt-clr: #ffffff;
     --_label-padding: 0.4rem 0.9rem;
@@ -41,11 +41,11 @@ const StyledWrapper = styled.div`
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     border-radius: 9999px;
-    pointer-events: auto; /* pastikan ini */
+    pointer-events: auto;
     position: relative;
     isolation: isolate;
     cursor: pointer;
-    z-index: 10; /* pastikan berada di atas */
+    z-index: 10;
   }
 
   .switch input[type="checkbox"] {
@@ -58,7 +58,7 @@ const StyledWrapper = styled.div`
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border-width: 0;
-    pointer-events: none; /* agar input tidak menghalangi klik */
+    pointer-events: none;
   }
 
   .switch > span {
@@ -77,7 +77,7 @@ const StyledWrapper = styled.div`
   }
 
   .switch::before {
-    background-color: var(--_slider-bg-clr); /* tetap hijau */
+    background-color: var(--_slider-bg-clr);
     inset: var(--_switch-padding) 50% var(--_switch-padding)
       var(--_switch-padding);
     transition: inset 500ms var(--_switch-easing),

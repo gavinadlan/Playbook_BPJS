@@ -13,12 +13,11 @@ const Header = () => {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 left-0 w-full z-50 bg-white border-b border-gray-200">
-      <div className="flex h-16 items-center justify-between px-4 md:px-6">
-        {/* Left Section - Logo + Navigation */}
-        <div className="flex items-center gap-6">
+    <header className="sticky top-0 left-0 w-full z-50 bg-white border-b border-gray-200 h-20">
+      <div className="flex h-full items-stretch justify-between px-4 md:px-6">
+        <div className="flex items-stretch gap-6">
           {/* Logo */}
-          <Link href="/" className="flex-shrink-0">
+          <Link href="/" className="flex-shrink-0 flex items-center">
             <Image
               src="/images/logo.svg"
               alt="BPJS Kesehatan Logo"
@@ -29,7 +28,7 @@ const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-2">
+          <nav className="hidden md:flex items-stretch h-full gap-1">
             <NavLink href="/" label="Home" currentPath={pathname} />
             <NavLink
               href="/fitur-api"
@@ -80,7 +79,6 @@ const Header = () => {
           </Button>
         </div>
       </div>
-
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden border-t border-gray-200 bg-white relative z-0">
@@ -139,7 +137,7 @@ const Header = () => {
   );
 };
 
-// Komponen untuk navigasi desktop (tetap sama dengan warna sebelumnya)
+// Komponen untuk navigasi desktop (diupdate dengan border bawah)
 const NavLink = ({
   href,
   label,
@@ -148,20 +146,30 @@ const NavLink = ({
   href: string;
   label: string;
   currentPath: string;
-}) => (
-  <Button variant="ghost" asChild>
+}) => {
+  const isActive =
+    href === "/" ? currentPath === href : currentPath.startsWith(href);
+
+  return (
     <Link
       href={href}
-      className={`px-3 ${
-        currentPath.startsWith(href)
-          ? "text-[#27447C]"
-          : "text-gray-900 hover:text-[#27447C]"
-      }`}
+      className={`
+        relative flex items-center justify-center h-full px-6
+        font-medium transition-colors
+        ${
+          isActive
+            ? "text-[rgb(39,68,124)]"
+            : "text-gray-600 hover:text-[rgb(39,68,124)]"
+        }
+      `}
     >
       {label}
+      {isActive && (
+        <div className="absolute bottom-0 left-0 w-full h-[4px] bg-[rgb(39,68,124)]" />
+      )}
     </Link>
-  </Button>
-);
+  );
+};
 
 // Komponen untuk navigasi mobile (tetap sama)
 const MobileNavLink = ({
@@ -174,18 +182,23 @@ const MobileNavLink = ({
   label: string;
   currentPath: string;
   onClick: () => void;
-}) => (
-  <Link
-    href={href}
-    onClick={onClick}
-    className={`px-4 py-2 rounded-md ${
-      currentPath.startsWith(href)
-        ? "text-[#27447C] bg-gray-100"
-        : "text-gray-700 hover:bg-gray-100"
-    }`}
-  >
-    {label}
-  </Link>
-);
+}) => {
+  const isActive =
+    href === "/" ? currentPath === href : currentPath.startsWith(href);
+
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className={`px-4 py-3 w-full border-b last:border-b-0 ${
+        isActive
+          ? "text-[rgb(39,68,124)] font-medium border-[rgb(39,68,124)]"
+          : "text-gray-600 border-transparent hover:border-gray-200"
+      }`}
+    >
+      {label}
+    </Link>
+  );
+};
 
 export default Header;

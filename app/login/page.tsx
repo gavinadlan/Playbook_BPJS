@@ -81,7 +81,7 @@ export default function LoginPage() {
                   </Label>
                 </div>
                 <Link
-                  href="/forgot-password"
+                  href="/lupa-password"
                   className="text-sm text-[rgb(73,163,90)] hover:underline"
                 >
                   Lupa password?

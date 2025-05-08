@@ -41,9 +41,26 @@ const Header = () => {
           </nav>
         </div>
 
-        {/* Right Section - Switch & Mobile Menu Toggle */}
+        {/* Right Section - Actions */}
         <div className="flex items-center gap-4">
-          {/* Toggle Filter (dark/light) */}
+          {/* Desktop Buttons */}
+          <div className="hidden md:flex items-center gap-2">
+            <Button
+              variant="outline"
+              className="border-[rgb(39,68,124)] text-[rgb(39,68,124)] hover:bg-[rgb(39,68,124)] hover:text-white transition-colors"
+              asChild
+            >
+              <Link href="/login">Login</Link>
+            </Button>
+            <Button
+              className="bg-[rgb(73,163,90)] hover:bg-[rgb(63,143,80)] text-white transition-colors"
+              asChild
+            >
+              <Link href="/registrasi">Register</Link>
+            </Button>
+          </div>
+
+          {/* Toggle Switch */}
           <div className="hidden md:block relative z-20">
             <Switch />
           </div>
@@ -92,7 +109,27 @@ const Header = () => {
               currentPath={pathname}
               onClick={() => setIsMobileMenuOpen(false)}
             />
-            <div className="pt-2 relative z-20">
+
+            {/* Mobile Buttons */}
+            <div className="flex flex-col gap-2 pt-4">
+              <Button
+                variant="outline"
+                className="w-full border-[rgb(39,68,124)] text-[rgb(39,68,124)] hover:bg-[rgb(39,68,124)] hover:text-white transition-colors"
+                asChild
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <Link href="/login">Login</Link>
+              </Button>
+              <Button
+                className="w-full bg-[rgb(73,163,90)] hover:bg-[rgb(63,143,80)] text-white transition-colors"
+                asChild
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <Link href="/registrasi">Register</Link>
+              </Button>
+            </div>
+
+            <div className="pt-4 relative z-20">
               <Switch />
             </div>
           </nav>
@@ -102,7 +139,7 @@ const Header = () => {
   );
 };
 
-// Komponen untuk navigasi desktop
+// Komponen untuk navigasi desktop (tetap sama dengan warna sebelumnya)
 const NavLink = ({
   href,
   label,
@@ -126,7 +163,7 @@ const NavLink = ({
   </Button>
 );
 
-// Komponen untuk navigasi mobile
+// Komponen untuk navigasi mobile (tetap sama)
 const MobileNavLink = ({
   href,
   label,

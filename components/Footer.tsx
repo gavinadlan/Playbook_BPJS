@@ -20,7 +20,7 @@ export default function Footer() {
           </div>
           <div>
             <h4 className="text-base md:text-lg font-semibold mb-2">
-              BPJS Kesehatan Head Office
+              Kantor Pusat BPJS Kesehatan
             </h4>
             <p className="text-xs md:text-sm opacity-90 leading-relaxed">
               Jl. Letjen Suprapto Kav. 20 No.14
@@ -139,7 +139,7 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-blue-200">
+                <a href="/faq" className="hover:text-blue-200">
                   FAQ
                 </a>
               </li>
@@ -151,27 +151,12 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Kunjungi Kami */}
+          {/* Ikuti Kami */}
           <div className="space-y-2 sm:col-span-2 md:col-span-1">
             <h5 className="font-semibold text-sm md:text-base mb-1">
-              Kunjungi Kami
+              Ikuti Kami
             </h5>
             <ul className="space-y-1 opacity-90">
-              <li>
-                <a href="#" className="hover:text-blue-200">
-                  Ayo Mulai
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-blue-200">
-                  Harga
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-blue-200">
-                  Stack Overflow
-                </a>
-              </li>
               <li>
                 <a
                   href="https://www.bpjs-kesehatan.go.id/#/"

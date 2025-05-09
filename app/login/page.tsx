@@ -25,9 +25,7 @@ export default function LoginPage() {
         <div className="h-full flex items-center justify-center p-12">
           <div className="text-white text-center">
             <h2 className="text-4xl font-bold mb-4">Selamat Datang Kembali</h2>
-            <p className="text-xl">
-              Kelola layanan kesehatan dengan lebih mudah dan efisien
-            </p>
+            <p className="text-xl">Silakan Masuk untuk mulai mengakses</p>
           </div>
         </div>
       </div>

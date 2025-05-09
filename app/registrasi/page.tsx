@@ -26,7 +26,7 @@ export default function RegisterPage() {
           <div className="text-white text-center">
             <h2 className="text-4xl font-bold mb-4">Bergabung Bersama Kami</h2>
             <p className="text-xl">
-              Mulai kelola layanan kesehatan Anda dengan lebih baik
+              Daftarkan dirimu untuk akses API yang andal dan transparan
             </p>
           </div>
         </div>

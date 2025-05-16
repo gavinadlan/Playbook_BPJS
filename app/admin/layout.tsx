@@ -10,6 +10,7 @@ import {
   FileCheck,
   ChevronRight,
   Menu,
+  X,
 } from "lucide-react";
 
 const hideHeaderFooterStyle = `
@@ -26,7 +27,21 @@ export default function AdminLayout({
   const router = useRouter();
   const pathname = usePathname();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check screen size and set initial sidebar state
+  useEffect(() => {
+    const checkScreenSize = () => {
+      const mobile = window.innerWidth < 1024;
+      setIsMobile(mobile);
+      setSidebarOpen(!mobile); // Open sidebar by default on desktop
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
 
   useEffect(() => {
     const checkAuth = () => {
@@ -38,6 +53,13 @@ export default function AdminLayout({
     };
     checkAuth();
   }, [pathname, router]);
+
+  // Close sidebar when navigating on mobile
+  useEffect(() => {
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
+  }, [pathname, isMobile]);
 
   const handleLogout = () => {
     localStorage.removeItem("isAdminLoggedIn");
@@ -77,29 +99,45 @@ export default function AdminLayout({
     </Link>
   );
 
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
   return (
     <>
       <style jsx global>
         {hideHeaderFooterStyle}
       </style>
       <div className="flex min-h-screen bg-gray-50">
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="fixed top-4 left-4 z-50 lg:hidden p-2 rounded-lg bg-gray-800 text-white"
-        >
-          <Menu className="w-6 h-6" />
-        </button>
+        {/* Mobile Menu Button - only show on mobile */}
+        {isMobile && (
+          <button
+            onClick={toggleSidebar}
+            className="fixed top-4 left-4 z-50 p-2 rounded-lg bg-gray-800 text-white shadow-lg"
+            aria-label={sidebarOpen ? "Close menu" : "Open menu"}
+          >
+            {sidebarOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
+          </button>
+        )}
 
-        {/* Sidebar - Fixed height 100vh to ensure full height */}
+        {/* Sidebar with responsive behavior */}
         <AnimatePresence>
           {sidebarOpen && (
             <motion.aside
-              initial={{ x: -300 }}
+              initial={{ x: isMobile ? -300 : 0 }}
               animate={{ x: 0 }}
               exit={{ x: -300 }}
               transition={{ type: "spring", stiffness: 200, damping: 25 }}
-              className="w-64 fixed h-screen z-40 lg:sticky lg:top-0 lg:block bg-gradient-to-b from-[rgb(39,68,124)] to-[rgb(73,163,90)] shadow-xl flex-shrink-0"
+              className={`w-64 z-40 ${
+                isMobile
+                  ? "fixed h-screen shadow-xl"
+                  : "sticky top-0 h-screen flex-shrink-0"
+              } bg-gradient-to-b from-[rgb(39,68,124)] to-[rgb(73,163,90)]`}
+              onClick={isMobile ? (e) => e.stopPropagation() : undefined}
             >
               <div className="flex flex-col h-full p-4 overflow-y-auto">
                 {/* Logo Section */}
@@ -144,13 +182,22 @@ export default function AdminLayout({
           )}
         </AnimatePresence>
 
+        {/* Overlay to close sidebar on mobile when clicking outside */}
+        {isMobile && sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/30 z-30"
+            onClick={toggleSidebar}
+            aria-hidden="true"
+          />
+        )}
+
         {/* Main Content */}
         <main className="flex-1 min-h-screen">
           {/* Content Header */}
           <div className="bg-white shadow-sm">
-            <div className="px-8 py-4 border-b border-gray-100">
+            <div className="px-4 md:px-8 py-4 border-b border-gray-100">
               <div className="flex items-center justify-between">
-                <div>
+                <div className={isMobile ? "ml-10" : ""}>
                   <h1 className="text-xl font-semibold text-gray-800 capitalize">
                     {pathname.split("/").pop()?.replace("-", " ")}
                   </h1>
@@ -184,11 +231,11 @@ export default function AdminLayout({
           </div>
 
           {/* Content Area */}
-          <div className="p-8">
+          <div className="p-4 md:p-8">
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-xl shadow-sm p-6"
+              className="bg-white rounded-xl shadow-sm p-4 md:p-6"
             >
               {children}
             </motion.div>

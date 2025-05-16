@@ -42,9 +42,9 @@ export const PKSViewDialog = ({
             </div>
             <div>
               <h3 className="text-sm font-medium text-gray-500">Status</h3>
-              <p className="text-sm">
+              <div className="text-sm">
                 <StatusBadge status={pks.status} />
-              </p>
+              </div>
             </div>
             <div>
               <h3 className="text-sm font-medium text-gray-500">Company</h3>

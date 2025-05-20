@@ -14,7 +14,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { API_CATEGORIES } from "@/lib/mock-data";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/utils";
 
 const DocsSidebar = () => {
   const pathname = usePathname();

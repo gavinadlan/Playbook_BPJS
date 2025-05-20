@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/utils";
 import { CheckCircle, Clock, XCircle, UserCheck, UserX } from "lucide-react";
 
 type StatusType = "Pending" | "Approved" | "Rejected" | "Active" | "Inactive";

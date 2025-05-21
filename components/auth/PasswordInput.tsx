@@ -24,14 +24,16 @@ export default function PasswordInput({
   onChange,
   name = "password",
   placeholder = "Enter your password",
-  required = false,
+  required = true,
   className,
 }: PasswordInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="space-y-1">
-      <Label htmlFor={id || name}>{label}</Label>
+      <Label htmlFor={id || name} className="text-[rgb(39,68,124)]">
+        {label}
+      </Label>
       <div className="relative">
         <Input
           id={id || name}
@@ -41,12 +43,16 @@ export default function PasswordInput({
           name={name}
           placeholder={placeholder}
           required={required}
-          className={clsx("pr-10", className)}
+          className={clsx(
+            "mt-1 pr-10 border-[rgb(39,68,124)] focus:ring-2 focus:ring-[rgb(73,163,90)]",
+            className
+          )}
         />
         <button
           type="button"
           className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground"
           onClick={() => setShowPassword((prev) => !prev)}
+          tabIndex={-1}
         >
           {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
         </button>

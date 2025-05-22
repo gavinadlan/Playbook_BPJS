@@ -1,46 +1,156 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import AuthLayout from "@/components/auth/AuthLayout";
 import EmailInput from "@/components/auth/EmailInput";
+import PasswordInput from "@/components/auth/PasswordInput";
+import { useRouter } from "next/navigation";
+import Alert from "@/components/ui/Alert";
 
-export default function ForgotPasswordPage() {
+export default function RegisterPage() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const router = useRouter();
+  const [showAlert, setShowAlert] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validasi frontend sederhana
+    if (password !== confirmPassword) {
+      setError("Password tidak cocok");
+      setShowAlert(true);
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password minimal 6 karakter");
+      setShowAlert(true);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await fetch("http://localhost:3001/api/users/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Registrasi gagal");
+      }
+
+      // TAMPILKAN POPUP SUKSES
+      setSuccess("Registrasi berhasil! Silakan cek email untuk verifikasi");
+      setShowAlert(true);
+
+      // Kosongkan form
+      setName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+
+      // JANGAN REDIRECT OTOMATIS - biarkan user menutup popup dulu
+      // router.push("/login?registered=true"); // Hapus baris ini
+    } catch (err: any) {
+      setError(err.message || "Terjadi kesalahan saat registrasi");
+      setShowAlert(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fungsi untuk handle penutupan popup sukses
+  const handleSuccessClose = () => {
+    setShowAlert(false);
+    setSuccess("");
+    // Redirect setelah user menutup popup
+    router.push("/login?registered=true");
+  };
+
+  // Fungsi untuk handle penutupan popup error
+  const handleErrorClose = () => {
+    setShowAlert(false);
+    setError("");
+  };
+
   return (
     <AuthLayout
-      titleLeft="Lupa Password?"
-      descLeft="Masukkan emailmu dan kami akan kirimkan link untuk reset password"
+      titleLeft="Daftar Akun Baru"
+      descLeft="Bergabung dengan komunitas kami untuk pengalaman terbaik"
     >
+      {showAlert && success && (
+        <Alert type="success" message={success} onClose={handleSuccessClose} />
+      )}
+
+      {showAlert && error && (
+        <Alert type="error" message={error} onClose={handleErrorClose} />
+      )}
+
       <div className="text-center">
         <h1 className="text-3xl font-bold text-[rgb(39,68,124)]">
-          Reset Password
+          Buat Akun Baru
         </h1>
         <p className="mt-2 text-gray-600">
-          Masukkan email yang terdaftar untuk menerima link reset
+          Sudah punya akun?{" "}
+          <Link href="/login" className="text-[rgb(73,163,90)] hover:underline">
+            Login disini
+          </Link>
         </p>
       </div>
 
-      <form className="mt-8 space-y-6">
+      <form onSubmit={handleSubmit} className="mt-8 space-y-6">
         <div className="space-y-4">
-          {/* Email input */}
-          <EmailInput />
+          <div className="space-y-2">
+            <label htmlFor="name">Nama Lengkap</label>
+            <input
+              id="name"
+              type="text"
+              placeholder="Nama Lengkap"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="w-full px-3 py-2 border rounded-md mt-1 pr-10 border-[rgb(39,68,124)] focus:ring-2 focus:ring-[rgb(73,163,90)]"
+            />
+          </div>
+
+          <EmailInput
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
+          <PasswordInput
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password (min 6 karakter)"
+          />
+
+          <PasswordInput
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Konfirmasi Password"
+          />
         </div>
 
         <Button
           type="submit"
+          disabled={loading}
           className="w-full bg-[rgb(73,163,90)] hover:bg-[rgb(63,143,80)] text-white py-2 px-4 rounded-md transition-colors"
         >
-          Kirim Link Reset
+          {loading ? "Memproses..." : "Daftar Sekarang"}
         </Button>
-
-        <div className="text-center">
-          <Link
-            href="/login"
-            className="text-sm text-[rgb(73,163,90)] hover:underline"
-          >
-            Kembali ke halaman login
-          </Link>
-        </div>
       </form>
     </AuthLayout>
   );

@@ -1,76 +1,112 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import AuthLayout from "@/components/auth/AuthLayout";
+import EmailInput from "@/components/auth/EmailInput";
+import Alert from "@/components/ui/Alert";
 import Link from "next/link";
 
 export default function ForgotPasswordPage() {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email) {
+      setError("Email wajib diisi.");
+      setShowAlert(true);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await fetch(
+        "http://localhost:3001/api/users/request-reset-password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Gagal mengirim email reset password.");
+      }
+
+      setSuccess("Link reset password telah dikirim ke email kamu.");
+      setShowAlert(true);
+      setEmail("");
+    } catch (err: any) {
+      setError(err.message || "Terjadi kesalahan.");
+      setShowAlert(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSuccessClose = () => {
+    setShowAlert(false);
+    setSuccess("");
+    router.push("/login");
+  };
+
+  const handleErrorClose = () => {
+    setShowAlert(false);
+    setError("");
+  };
+
   return (
-    <div className="min-h-screen flex">
-      {/* Left Decorative Panel */}
-      <div
-        className="hidden lg:block w-1/2 bg-gradient-to-br from-[rgb(39,68,124)] to-[rgb(73,163,90)]"
-        style={{
-          background: `linear-gradient(135deg, rgba(39,68,124,1) 0%, rgba(73,163,90,1) 100%)`,
-        }}
-      >
-        <div className="h-full flex items-center justify-center p-12">
-          <div className="text-white text-center">
-            <h2 className="text-4xl font-bold mb-4">Lupa Password?</h2>
-            <p className="text-xl">
-              Masukkan emailmu dan kami akan kirimkan link untuk reset password
-            </p>
-          </div>
-        </div>
+    <AuthLayout
+      titleLeft="Lupa Password?"
+      descLeft="Masukkan email kamu untuk menerima link reset password"
+    >
+      {showAlert && success && (
+        <Alert type="success" message={success} onClose={handleSuccessClose} />
+      )}
+
+      {showAlert && error && (
+        <Alert type="error" message={error} onClose={handleErrorClose} />
+      )}
+
+      <div className="text-center">
+        <h1 className="text-3xl font-bold text-[rgb(39,68,124)]">
+          Reset Password
+        </h1>
+        <p className="mt-2 text-gray-600">
+          Masukkan email yang terdaftar. Kami akan kirimkan link untuk reset
+          password.
+        </p>
       </div>
 
-      {/* Right Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <div className="w-full max-w-md space-y-8">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-[rgb(39,68,124)]">
-              Reset Password
-            </h1>
-            <p className="mt-2 text-gray-600">
-              Masukkan email yang terdaftar untuk menerima link reset
-            </p>
-          </div>
+      <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+        <EmailInput value={email} onChange={(e) => setEmail(e.target.value)} />
 
-          <form className="mt-8 space-y-6">
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="email" className="text-[rgb(39,68,124)]">
-                  Email
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Email"
-                  className="mt-1 border-[rgb(39,68,124)] focus:ring-2 focus:ring-[rgb(73,163,90)]"
-                  required
-                />
-              </div>
-            </div>
+        <Button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-[rgb(73,163,90)] hover:bg-[rgb(63,143,80)] text-white py-2 px-4 rounded-md transition-colors"
+        >
+          {loading ? "Mengirim..." : "Kirim Link Reset"}
+        </Button>
 
-            <Button
-              type="submit"
-              className="w-full bg-[rgb(73,163,90)] hover:bg-[rgb(63,143,80)] text-white py-2 px-4 rounded-md transition-colors"
-            >
-              Kirim Link Reset
-            </Button>
-
-            <div className="text-center">
-              <Link
-                href="/login"
-                className="text-sm text-[rgb(73,163,90)] hover:underline"
-              >
-                Kembali ke halaman login
-              </Link>
-            </div>
-          </form>
+        <div className="text-center text-sm mt-4">
+          Kembali ke{" "}
+          <Link href="/login" className="text-[rgb(73,163,90)] hover:underline">
+            Halaman Login
+          </Link>
         </div>
-      </div>
-    </div>
+      </form>
+    </AuthLayout>
   );
 }

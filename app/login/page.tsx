@@ -4,16 +4,17 @@ import AuthLayout from "@/components/auth/AuthLayout";
 import PasswordInput from "@/components/auth/PasswordInput";
 import AuthRedirectText from "@/components/auth/AuthRedirectText";
 import EmailInput from "@/components/auth/EmailInput";
-
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { setUser } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -41,10 +42,9 @@ export default function LoginPage() {
         return;
       }
 
-      // simpan user ke localStorage (opsional)
       localStorage.setItem("user", JSON.stringify(data.user));
-
-      router.push("/"); // ganti ke route setelah login sukses
+      setUser(data.user); // Update context
+      router.push("/");
     } catch (err) {
       setError("Terjadi kesalahan. Coba lagi nanti.");
     } finally {

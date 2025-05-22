@@ -1,59 +1,55 @@
-import * as React from "react";
-import { cva, type VariantProps } from "class-variance-authority";
+"use client";
 
-import { cn } from "@/utils/utils";
+import { useEffect, useState } from "react";
+import { CheckCircle2, XCircle, X } from "lucide-react";
 
-const alertVariants = cva(
-  "relative w-full rounded-lg border p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground",
-  {
-    variants: {
-      variant: {
-        default: "bg-background text-foreground",
-        destructive:
-          "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-    },
-  }
-);
+export default function Alert({
+  type,
+  message,
+  onClose,
+}: {
+  type: "success" | "error";
+  message: string;
+  onClose: () => void;
+}) {
+  const [visible, setVisible] = useState(true);
 
-const Alert = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>
->(({ className, variant, ...props }, ref) => (
-  <div
-    ref={ref}
-    role="alert"
-    className={cn(alertVariants({ variant }), className)}
-    {...props}
-  />
-));
-Alert.displayName = "Alert";
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setVisible(false);
+      onClose();
+    }, 5000);
 
-const AlertTitle = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
-  <h5
-    ref={ref}
-    className={cn("mb-1 font-medium leading-none tracking-tight", className)}
-    {...props}
-  />
-));
-AlertTitle.displayName = "AlertTitle";
+    return () => clearTimeout(timer);
+  }, [onClose]);
 
-const AlertDescription = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("text-sm [&_p]:leading-relaxed", className)}
-    {...props}
-  />
-));
-AlertDescription.displayName = "AlertDescription";
+  if (!visible) return null;
 
-export { Alert, AlertTitle, AlertDescription };
+  return (
+    <div
+      className={`fixed top-4 right-4 p-4 rounded-md shadow-lg flex items-center space-x-4 ${
+        type === "success"
+          ? "bg-green-100 border border-green-200"
+          : "bg-red-100 border border-red-200"
+      }`}
+    >
+      {type === "success" ? (
+        <CheckCircle2 className="w-6 h-6 text-green-600" />
+      ) : (
+        <XCircle className="w-6 h-6 text-red-600" />
+      )}
+      <p className={type === "success" ? "text-green-600" : "text-red-600"}>
+        {message}
+      </p>
+      <button
+        onClick={() => {
+          setVisible(false);
+          onClose();
+        }}
+        className="ml-4"
+      >
+        <X className="w-5 h-5 text-gray-500 hover:text-gray-700" />
+      </button>
+    </div>
+  );
+}

@@ -1,17 +1,30 @@
 "use client";
 
-import { useEffect } from "react";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, UserCircle, LogOut } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Switch from "@/components/ui/switch";
+import { useAuth } from "@/context/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { user, setUser } = useAuth();
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+    window.location.href = "/";
+  };
 
   return (
     <header className="sticky top-0 left-0 w-full z-50 bg-white border-b border-gray-200 h-20">
@@ -44,20 +57,49 @@ const Header = () => {
         {/* Right Section - Actions */}
         <div className="flex items-center gap-4">
           {/* Desktop Buttons */}
-          <div className="hidden md:flex items-center gap-2">
-            <Button
-              variant="outline"
-              className="border-[rgb(39,68,124)] text-[rgb(39,68,124)] hover:bg-[rgb(39,68,124)] hover:text-white transition-colors"
-              asChild
-            >
-              <Link href="/login">Login</Link>
-            </Button>
-            <Button
-              className="bg-[rgb(73,163,90)] hover:bg-[rgb(63,143,80)] text-white transition-colors"
-              asChild
-            >
-              <Link href="/registrasi">Register</Link>
-            </Button>
+          <div className="hidden md:flex items-center gap-4">
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger className="focus:outline-none">
+                  <div className="flex items-center gap-2 hover:bg-gray-100 rounded-full px-4 py-2 transition-colors">
+                    <UserCircle className="h-6 w-6 text-[rgb(39,68,124)]" />
+                    <div className="text-left">
+                      <p className="text-sm font-medium text-gray-700">
+                        {user.name}
+                      </p>
+                      {user.email && (
+                        <p className="text-xs text-gray-500">{user.email}</p>
+                      )}
+                    </div>
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="text-red-600 cursor-pointer focus:bg-red-50"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Keluar</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Button
+                  variant="outline"
+                  className="border-[rgb(39,68,124)] text-[rgb(39,68,124)] hover:bg-[rgb(39,68,124)] hover:text-white transition-colors"
+                  asChild
+                >
+                  <Link href="/login">Login</Link>
+                </Button>
+                <Button
+                  className="bg-[rgb(73,163,90)] hover:bg-[rgb(63,143,80)] text-white transition-colors"
+                  asChild
+                >
+                  <Link href="/registrasi">Register</Link>
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Toggle Switch */}
@@ -80,10 +122,23 @@ const Header = () => {
           </Button>
         </div>
       </div>
+
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden border-t border-gray-200 bg-white relative z-0">
           <nav className="flex flex-col p-4 space-y-2">
+            {user && (
+              <div className="flex items-center gap-3 pb-4 border-b border-gray-200">
+                <UserCircle className="h-8 w-8 text-[rgb(39,68,124)]" />
+                <div>
+                  <p className="font-medium text-gray-900">{user.name}</p>
+                  {user.email && (
+                    <p className="text-sm text-gray-500">{user.email}</p>
+                  )}
+                </div>
+              </div>
+            )}
+
             <MobileNavLink
               href="/"
               label="Home"
@@ -111,21 +166,34 @@ const Header = () => {
 
             {/* Mobile Buttons */}
             <div className="flex flex-col gap-2 pt-4">
-              <Button
-                variant="outline"
-                className="w-full border-[rgb(39,68,124)] text-[rgb(39,68,124)] hover:bg-[rgb(39,68,124)] hover:text-white transition-colors"
-                asChild
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <Link href="/login">Login</Link>
-              </Button>
-              <Button
-                className="w-full bg-[rgb(73,163,90)] hover:bg-[rgb(63,143,80)] text-white transition-colors"
-                asChild
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <Link href="/registrasi">Register</Link>
-              </Button>
+              {user ? (
+                <Button
+                  onClick={handleLogout}
+                  variant="ghost"
+                  className="w-full justify-start text-red-600 hover:bg-red-50 hover:text-red-700"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Keluar
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    variant="outline"
+                    className="w-full border-[rgb(39,68,124)] text-[rgb(39,68,124)] hover:bg-[rgb(39,68,124)] hover:text-white transition-colors"
+                    asChild
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Link href="/login">Login</Link>
+                  </Button>
+                  <Button
+                    className="w-full bg-[rgb(73,163,90)] hover:bg-[rgb(63,143,80)] text-white transition-colors"
+                    asChild
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Link href="/registrasi">Register</Link>
+                  </Button>
+                </>
+              )}
             </div>
 
             <div className="pt-4 relative z-20">
@@ -138,7 +206,6 @@ const Header = () => {
   );
 };
 
-// Komponen untuk navigasi desktop (diupdate dengan border bawah)
 const NavLink = ({
   href,
   label,
@@ -172,7 +239,6 @@ const NavLink = ({
   );
 };
 
-// Komponen untuk navigasi mobile (tetap sama)
 const MobileNavLink = ({
   href,
   label,

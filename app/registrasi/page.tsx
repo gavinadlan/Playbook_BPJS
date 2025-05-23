@@ -7,7 +7,7 @@ import AuthLayout from "@/components/auth/AuthLayout";
 import EmailInput from "@/components/auth/EmailInput";
 import PasswordInput from "@/components/auth/PasswordInput";
 import { useRouter } from "next/navigation";
-import Alert from "@/components/ui/Alert";
+import { toast } from "@/components/ui/sonner";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -15,24 +15,18 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const router = useRouter();
-  const [showAlert, setShowAlert] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validasi frontend sederhana
     if (password !== confirmPassword) {
-      setError("Password tidak cocok");
-      setShowAlert(true);
+      toast.error("Password tidak cocok");
       return;
     }
 
     if (password.length < 6) {
-      setError("Password minimal 6 karakter");
-      setShowAlert(true);
+      toast.error("Password minimal 6 karakter");
       return;
     }
 
@@ -52,9 +46,7 @@ export default function RegisterPage() {
         throw new Error(data.message || "Registrasi gagal");
       }
 
-      // TAMPILKAN POPUP SUKSES
-      setSuccess("Registrasi berhasil! Silakan cek email untuk verifikasi");
-      setShowAlert(true);
+      toast.success("Registrasi berhasil! Silakan cek email untuk verifikasi");
 
       // Kosongkan form
       setName("");
@@ -62,28 +54,15 @@ export default function RegisterPage() {
       setPassword("");
       setConfirmPassword("");
 
-      // JANGAN REDIRECT OTOMATIS - biarkan user menutup popup dulu
-      // router.push("/login?registered=true"); // Hapus baris ini
+      // Delay redirect 3 detik biar user sempat baca toast
+      setTimeout(() => {
+        router.push("/login?registered=true");
+      }, 3000);
     } catch (err: any) {
-      setError(err.message || "Terjadi kesalahan saat registrasi");
-      setShowAlert(true);
+      toast.error(err.message || "Terjadi kesalahan saat registrasi");
     } finally {
       setLoading(false);
     }
-  };
-
-  // Fungsi untuk handle penutupan popup sukses
-  const handleSuccessClose = () => {
-    setShowAlert(false);
-    setSuccess("");
-    // Redirect setelah user menutup popup
-    router.push("/login?registered=true");
-  };
-
-  // Fungsi untuk handle penutupan popup error
-  const handleErrorClose = () => {
-    setShowAlert(false);
-    setError("");
   };
 
   return (
@@ -91,14 +70,6 @@ export default function RegisterPage() {
       titleLeft="Daftar Akun Baru"
       descLeft="Bergabung dengan komunitas kami untuk pengalaman terbaik"
     >
-      {showAlert && success && (
-        <Alert type="success" message={success} onClose={handleSuccessClose} />
-      )}
-
-      {showAlert && error && (
-        <Alert type="error" message={error} onClose={handleErrorClose} />
-      )}
-
       <div className="text-center">
         <h1 className="text-3xl font-bold text-[rgb(39,68,124)]">
           Buat Akun Baru

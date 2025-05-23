@@ -5,23 +5,19 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import AuthLayout from "@/components/auth/AuthLayout";
 import EmailInput from "@/components/auth/EmailInput";
-import Alert from "@/components/ui/Alert";
 import Link from "next/link";
+import { toast } from "@/components/ui/sonner";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState("");
-  const [error, setError] = useState("");
-  const [showAlert, setShowAlert] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email) {
-      setError("Email wajib diisi.");
-      setShowAlert(true);
+      toast.error("Email wajib diisi.");
       return;
     }
 
@@ -44,26 +40,17 @@ export default function ForgotPasswordPage() {
         throw new Error(data.message || "Gagal mengirim email reset password.");
       }
 
-      setSuccess("Link reset password telah dikirim ke email kamu.");
-      setShowAlert(true);
+      toast.success("Link reset password telah dikirim ke email kamu.");
       setEmail("");
+
+      setTimeout(() => {
+        router.push("/login");
+      }, 3000);
     } catch (err: any) {
-      setError(err.message || "Terjadi kesalahan.");
-      setShowAlert(true);
+      toast.error(err.message || "Terjadi kesalahan.");
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSuccessClose = () => {
-    setShowAlert(false);
-    setSuccess("");
-    router.push("/login");
-  };
-
-  const handleErrorClose = () => {
-    setShowAlert(false);
-    setError("");
   };
 
   return (
@@ -71,14 +58,6 @@ export default function ForgotPasswordPage() {
       titleLeft="Lupa Password?"
       descLeft="Masukkan email kamu untuk menerima link reset password"
     >
-      {showAlert && success && (
-        <Alert type="success" message={success} onClose={handleSuccessClose} />
-      )}
-
-      {showAlert && error && (
-        <Alert type="error" message={error} onClose={handleErrorClose} />
-      )}
-
       <div className="text-center">
         <h1 className="text-3xl font-bold text-[rgb(39,68,124)]">
           Reset Password

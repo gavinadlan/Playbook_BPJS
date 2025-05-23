@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { Toaster, toast } from "@/components/ui/sonner";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -18,13 +19,12 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
+    if (loading) return;
 
+    setLoading(true);
     try {
       const res = await fetch("http://localhost:3001/api/users/login", {
         method: "POST",
@@ -37,16 +37,21 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.message || "Login gagal.");
+        toast.dismiss();
+        toast.error(data.message || "Login gagal.");
         setLoading(false);
         return;
       }
 
       localStorage.setItem("user", JSON.stringify(data.user));
-      setUser(data.user); // Update context
-      router.push("/");
+      setUser(data.user);
+
+      toast.dismiss();
+      toast.success("Login berhasil!");
+      setTimeout(() => router.push("/"), 2000);
     } catch (err) {
-      setError("Terjadi kesalahan. Coba lagi nanti.");
+      toast.dismiss();
+      toast.error("Terjadi kesalahan. Coba lagi nanti.");
     } finally {
       setLoading(false);
     }
@@ -57,6 +62,14 @@ export default function LoginPage() {
       titleLeft="Selamat Datang Kembali"
       descLeft="Silakan Masuk untuk mulai mengakses"
     >
+      <Toaster
+        position="top-center"
+        closeButton
+        duration={2500}
+        visibleToasts={1}
+        expand={false}
+      />
+
       <div className="text-center">
         <h1 className="text-3xl font-bold text-[rgb(39,68,124)]">
           Masuk ke Akun
@@ -100,14 +113,34 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {error && <p className="text-red-600 text-sm">{error}</p>}
-
         <Button
           type="submit"
           disabled={loading}
           className="w-full bg-[rgb(73,163,90)] hover:bg-[rgb(63,143,80)] text-white py-2 px-4 rounded-md transition-colors"
         >
-          {loading ? "Loading..." : "Masuk"}
+          {loading ? (
+            <span className="flex items-center">
+              <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  fill="none"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+              Memproses...
+            </span>
+          ) : (
+            "Masuk"
+          )}
         </Button>
       </form>
     </AuthLayout>

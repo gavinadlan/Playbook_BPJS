@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import AuthLayout from "@/components/auth/AuthLayout";
 import PasswordInput from "@/components/auth/PasswordInput";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/sonner";
 
 export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
@@ -14,32 +15,28 @@ export default function ResetPasswordPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
 
   useEffect(() => {
     if (!token) {
-      setErrorMsg("⚠️ Token tidak ditemukan di URL");
+      toast.error("⚠️ Token tidak ditemukan di URL");
     }
   }, [token]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMsg("");
-    setSuccessMsg("");
 
     if (!token) {
-      setErrorMsg("⚠️ Token reset password tidak valid");
+      toast.error("⚠️ Token reset password tidak valid");
       return;
     }
 
     if (newPassword.length < 6) {
-      setErrorMsg("⚠️ Password minimal 6 karakter");
+      toast.error("⚠️ Password minimal 6 karakter");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setErrorMsg("⚠️ Konfirmasi password tidak cocok");
+      toast.error("⚠️ Konfirmasi password tidak cocok");
       return;
     }
 
@@ -58,7 +55,6 @@ export default function ResetPasswordPage() {
         }
       );
 
-      // Handle non-JSON response
       const contentType = response.headers.get("content-type");
       if (!contentType?.includes("application/json")) {
         const text = await response.text();
@@ -71,7 +67,7 @@ export default function ResetPasswordPage() {
         throw new Error(data.message || "Gagal reset password");
       }
 
-      setSuccessMsg("✅ Password berhasil direset...");
+      toast.success("✅ Password berhasil direset...");
       setTimeout(() => router.push("/login"), 2000);
     } catch (err: any) {
       let message = "Terjadi kesalahan sistem";
@@ -84,7 +80,7 @@ export default function ResetPasswordPage() {
         message = err.message.replace(/^⚠️\s*/, "");
       }
 
-      setErrorMsg(`⚠️ ${message}`);
+      toast.error(`⚠️ ${message}`);
     } finally {
       setLoading(false);
     }
@@ -122,19 +118,6 @@ export default function ResetPasswordPage() {
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </div>
-
-        {/* Feedback messages */}
-        {errorMsg && (
-          <p className="p-3 bg-red-100 text-red-700 rounded-md text-sm">
-            ⚠️ {errorMsg}
-          </p>
-        )}
-
-        {successMsg && (
-          <p className="p-3 bg-green-100 text-green-700 rounded-md text-sm">
-            ✅ {successMsg}
-          </p>
-        )}
 
         <Button
           type="submit"

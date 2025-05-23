@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import AuthLayout from "@/components/auth/AuthLayout";
 import EmailInput from "@/components/auth/EmailInput";
 import PasswordInput from "@/components/auth/PasswordInput";
+import AuthRedirectText from "@/components/auth/AuthRedirectText";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/sonner";
 
@@ -74,12 +74,11 @@ export default function RegisterPage() {
         <h1 className="text-3xl font-bold text-[rgb(39,68,124)]">
           Buat Akun Baru
         </h1>
-        <p className="mt-2 text-gray-600">
-          Sudah punya akun?{" "}
-          <Link href="/login" className="text-[rgb(73,163,90)] hover:underline">
-            Login disini
-          </Link>
-        </p>
+        <AuthRedirectText
+          text="Sudah punya akun?"
+          linkText="Login disini"
+          href="/login"
+        />
       </div>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-6">

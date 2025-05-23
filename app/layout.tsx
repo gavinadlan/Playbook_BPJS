@@ -26,7 +26,13 @@ export default function RootLayout({
             <main className="flex-grow">{children}</main>
             <Footer />
           </div>
-          <Toaster />
+          <Toaster
+            position="top-center"
+            duration={2500}
+            closeButton
+            visibleToasts={1}
+            expand={false}
+          />
         </AuthProvider>
       </body>
     </html>

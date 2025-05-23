@@ -11,7 +11,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { Toaster, toast } from "@/components/ui/sonner";
+import { toast } from "@/components/ui/sonner";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -62,14 +62,6 @@ export default function LoginPage() {
       titleLeft="Selamat Datang Kembali"
       descLeft="Silakan Masuk untuk mulai mengakses"
     >
-      <Toaster
-        position="top-center"
-        closeButton
-        duration={2500}
-        visibleToasts={1}
-        expand={false}
-      />
-
       <div className="text-center">
         <h1 className="text-3xl font-bold text-[rgb(39,68,124)]">
           Masuk ke Akun

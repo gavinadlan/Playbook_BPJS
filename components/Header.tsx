@@ -4,8 +4,16 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Menu, X, UserCircle, LogOut } from "lucide-react";
-import { usePathname } from "next/navigation";
+import {
+  Menu,
+  X,
+  UserCircle,
+  LogOut,
+  FileText,
+  ClipboardList,
+  FileCode2,
+} from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 import Switch from "@/components/ui/switch";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -18,6 +26,7 @@ import {
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
   const { user, setUser } = useAuth();
 
   const handleLogout = () => {
@@ -74,6 +83,27 @@ const Header = () => {
                   </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem
+                    onClick={() => router.push("/pengajuan-pks")}
+                    className="cursor-pointer"
+                  >
+                    <ClipboardList className="mr-2 h-4 w-4" />
+                    Pengajuan PKS
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => router.push("/pengajuan-saya")}
+                    className="cursor-pointer"
+                  >
+                    <FileText className="mr-2 h-4 w-4" />
+                    Pengajuan Saya
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => router.push("/docs")}
+                    className="cursor-pointer"
+                  >
+                    <FileCode2 className="mr-2 h-4 w-4" />
+                    Dokumentasi API
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={handleLogout}
                     className="text-red-600 cursor-pointer focus:bg-red-50"
@@ -163,6 +193,30 @@ const Header = () => {
               currentPath={pathname}
               onClick={() => setIsMobileMenuOpen(false)}
             />
+
+            {/* Only show these navigation items when user is logged in */}
+            {user && (
+              <>
+                <MobileNavLink
+                  href="/pengajuan-pks"
+                  label="Pengajuan PKS"
+                  currentPath={pathname}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                />
+                <MobileNavLink
+                  href="/pengajuan-saya"
+                  label="Pengajuan Saya"
+                  currentPath={pathname}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                />
+                <MobileNavLink
+                  href="/docs"
+                  label="Dokumentasi API"
+                  currentPath={pathname}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                />
+              </>
+            )}
 
             {/* Mobile Buttons */}
             <div className="flex flex-col gap-2 pt-4">

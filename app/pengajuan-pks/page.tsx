@@ -34,6 +34,9 @@ export default function PengajuanPksPage() {
       const res = await fetch("http://localhost:3001/api/pks", {
         method: "POST",
         body: formData,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
 
       // Handle non-JSON responses

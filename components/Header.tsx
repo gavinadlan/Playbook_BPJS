@@ -31,9 +31,16 @@ const Header = () => {
   const { user, setUser } = useAuth();
 
   const handleLogout = () => {
+    // Hapus cookie auth
+    document.cookie =
+      "isAuthenticated=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+    // Hapus state dan local storage
     localStorage.removeItem("user");
     setUser(null);
-    window.location.href = "/";
+
+    // Redirect ke halaman login
+    window.location.href = "/login";
   };
 
   return (

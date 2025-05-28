@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { authFetch } from "@/utils/api";
 import { Download, Clock, CheckCircle2, XCircle } from "lucide-react";
 
 interface PksSubmission {
@@ -24,13 +25,24 @@ export default function PengajuanSayaPage() {
 
   useEffect(() => {
     if (user?.id) {
-      fetch(`http://localhost:3001/api/pks?userId=${user.id}`)
-        .then((res) => res.json())
-        .then((data) => {
+      authFetch(`http://localhost:3001/api/pks?userId=${user.id}`)
+        .then((res: Response) => {
+          if (res.status === 401) {
+            throw new Error("Unauthorized");
+          }
+          return res.json();
+        })
+        .then((data: PksSubmission[]) => {
           setSubmissions(data);
           setLoading(false);
         })
-        .catch(() => setLoading(false));
+        .catch((error: Error) => {
+          if (error.message === "Unauthorized") {
+            localStorage.removeItem("token");
+            window.location.href = "/login";
+          }
+          setLoading(false);
+        });
     }
   }, [user?.id]);
 

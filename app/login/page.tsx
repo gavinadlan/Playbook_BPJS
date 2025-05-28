@@ -36,6 +36,11 @@ export default function LoginPage() {
 
       const data = await res.json();
 
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        document.cookie = "isAuthenticated=true; path=/;";
+      }
+
       if (!res.ok) {
         toast.dismiss();
         toast.error(data.message || "Login gagal.");

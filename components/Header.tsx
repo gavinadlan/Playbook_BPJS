@@ -21,6 +21,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
 const Header = () => {
@@ -69,47 +70,89 @@ const Header = () => {
           <div className="hidden md:flex items-center gap-4">
             {user ? (
               <DropdownMenu>
-                <DropdownMenuTrigger className="focus:outline-none">
-                  <div className="flex items-center gap-2 hover:bg-gray-100 rounded-full px-4 py-2 transition-colors">
-                    <UserCircle className="h-6 w-6 text-[rgb(39,68,124)]" />
+                <DropdownMenuTrigger className="focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded-full">
+                  <div className="flex items-center gap-2 hover:bg-gray-100 rounded-full px-4 py-2 transition-colors duration-200">
+                    <UserCircle className="h-7 w-7 text-[rgb(39,68,124)]" />
                     <div className="text-left">
-                      <p className="text-sm font-medium text-gray-700">
+                      <p className="text-sm font-semibold text-gray-800">
                         {user.name}
                       </p>
                       {user.email && (
-                        <p className="text-xs text-gray-500">{user.email}</p>
+                        <p className="text-xs text-gray-500 truncate max-w-[160px]">
+                          {user.email}
+                        </p>
                       )}
                     </div>
                   </div>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuContent
+                  align="end"
+                  className="w-64 border-2 border-blue-50 shadow-xl rounded-xl py-2 bg-white"
+                >
                   <DropdownMenuItem
                     onClick={() => router.push("/pengajuan-pks")}
-                    className="cursor-pointer"
+                    className="cursor-pointer px-4 py-3 flex items-center gap-3 text-gray-700 hover:bg-blue-50 transition-colors duration-200"
                   >
-                    <ClipboardList className="mr-2 h-4 w-4" />
-                    Pengajuan PKS
+                    <div className="p-2 bg-blue-100 rounded-lg">
+                      <ClipboardList className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium">Pengajuan PKS</span>
+                      <span className="text-xs text-gray-500">
+                        Ajukan kerja sama baru
+                      </span>
+                    </div>
                   </DropdownMenuItem>
+
                   <DropdownMenuItem
                     onClick={() => router.push("/pengajuan-saya")}
-                    className="cursor-pointer"
+                    className="cursor-pointer px-4 py-3 flex items-center gap-3 text-gray-700 hover:bg-green-50 transition-colors duration-200"
                   >
-                    <FileText className="mr-2 h-4 w-4" />
-                    Pengajuan Saya
+                    <div className="p-2 bg-green-100 rounded-lg">
+                      <FileText className="h-5 w-5 text-green-600" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium">
+                        Pengajuan Saya
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        Lihat status pengajuan
+                      </span>
+                    </div>
                   </DropdownMenuItem>
+
                   <DropdownMenuItem
                     onClick={() => router.push("/docs")}
-                    className="cursor-pointer"
+                    className="cursor-pointer px-4 py-3 flex items-center gap-3 text-gray-700 hover:bg-purple-50 transition-colors duration-200"
                   >
-                    <FileCode2 className="mr-2 h-4 w-4" />
-                    Dokumentasi API
+                    <div className="p-2 bg-purple-100 rounded-lg">
+                      <FileCode2 className="h-5 w-5 text-purple-600" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium">
+                        Dokumentasi API
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        Panduan integrasi sistem
+                      </span>
+                    </div>
                   </DropdownMenuItem>
+
+                  <DropdownMenuSeparator className="my-2 bg-gray-100 h-[2px]" />
+
                   <DropdownMenuItem
                     onClick={handleLogout}
-                    className="text-red-600 cursor-pointer focus:bg-red-50"
+                    className="cursor-pointer px-4 py-3 flex items-center gap-3 text-red-600 hover:bg-red-50 transition-colors duration-200"
                   >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Keluar</span>
+                    <div className="p-2 bg-red-100 rounded-lg">
+                      <LogOut className="h-5 w-5" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium">Keluar</span>
+                      <span className="text-xs text-gray-500">
+                        Akhiri sesi ini
+                      </span>
+                    </div>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

@@ -12,6 +12,7 @@ import {
   FileText,
   ClipboardList,
   FileCode2,
+  LayoutDashboard,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import Switch from "@/components/ui/switch";
@@ -28,19 +29,11 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const { user, setUser } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
 
   const handleLogout = () => {
-    // Hapus cookie auth
-    document.cookie =
-      "isAuthenticated=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-    // Hapus state dan local storage
-    localStorage.removeItem("user");
-    setUser(null);
-
-    // Redirect ke halaman login
-    window.location.href = "/login";
+    logout();
+    router.push("/login");
   };
 
   return (
@@ -96,6 +89,26 @@ const Header = () => {
                   align="end"
                   className="w-64 border-2 border-blue-50 shadow-xl rounded-xl py-2 bg-white"
                 >
+                  {/* Tambahkan menu Admin Dashboard untuk admin */}
+                  {isAdmin && (
+                    <DropdownMenuItem
+                      onClick={() => router.push("/admin/dashboard")}
+                      className="cursor-pointer px-4 py-3 flex items-center gap-3 text-gray-700 hover:bg-blue-50 transition-colors duration-200"
+                    >
+                      <div className="p-2 bg-blue-100 rounded-lg">
+                        <LayoutDashboard className="h-5 w-5 text-blue-600" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium">
+                          Admin Dashboard
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          Kelola sistem
+                        </span>
+                      </div>
+                    </DropdownMenuItem>
+                  )}
+
                   <DropdownMenuItem
                     onClick={() => router.push("/pengajuan-pks")}
                     className="cursor-pointer px-4 py-3 flex items-center gap-3 text-gray-700 hover:bg-blue-50 transition-colors duration-200"
@@ -243,6 +256,16 @@ const Header = () => {
               currentPath={pathname}
               onClick={() => setIsMobileMenuOpen(false)}
             />
+
+            {/* Admin Dashboard link for mobile */}
+            {isAdmin && (
+              <MobileNavLink
+                href="/admin/dashboard"
+                label="Admin Dashboard"
+                currentPath={pathname}
+                onClick={() => setIsMobileMenuOpen(false)}
+              />
+            )}
 
             {/* Only show these navigation items when user is logged in */}
             {user && (

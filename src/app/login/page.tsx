@@ -12,12 +12,20 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/components/ui/sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function LoginPage() {
   const router = useRouter();
   const { setUser } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState<"USER" | "ADMIN">("USER");
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -31,15 +39,10 @@ export default function LoginPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, role }),
       });
 
       const data = await res.json();
-
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-        document.cookie = "isAuthenticated=true; path=/;";
-      }
 
       if (!res.ok) {
         toast.dismiss();
@@ -48,12 +51,37 @@ export default function LoginPage() {
         return;
       }
 
+      // Verifikasi role yang dipilih sesuai dengan role di database
+      if (data.user.role !== role) {
+        toast.error(
+          `Anda tidak memiliki akses sebagai ${
+            role === "ADMIN" ? "admin" : "user"
+          }`
+        );
+        setLoading(false);
+        return;
+      }
+
+      // Simpan token dan user
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        document.cookie = "isAuthenticated=true; path=/;";
+      }
+
       localStorage.setItem("user", JSON.stringify(data.user));
       setUser(data.user);
 
       toast.dismiss();
       toast.success("Login berhasil!");
-      setTimeout(() => router.push("/"), 2000);
+
+      // Redirect berdasarkan role
+      setTimeout(() => {
+        if (role === "ADMIN") {
+          router.push("/admin");
+        } else {
+          router.push("/");
+        }
+      }, 1000);
     } catch (err) {
       toast.dismiss();
       toast.error("Terjadi kesalahan. Coba lagi nanti.");
@@ -80,6 +108,23 @@ export default function LoginPage() {
 
       <form onSubmit={handleLogin} className="mt-8 space-y-6">
         <div className="space-y-4">
+          {/* Tambahkan pemilihan role */}
+          <div>
+            <Label htmlFor="role">Login sebagai</Label>
+            <Select
+              value={role}
+              onValueChange={(value) => setRole(value as "USER" | "ADMIN")}
+            >
+              <SelectTrigger className="w-full mt-1 border-[rgb(39,68,124)] focus:ring-2 focus:ring-[rgb(73,163,90)]">
+                <SelectValue placeholder="Pilih role" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="USER">User</SelectItem>
+                <SelectItem value="ADMIN">Admin</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           <EmailInput
             value={email}
             onChange={(e) => setEmail(e.target.value)}

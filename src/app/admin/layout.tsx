@@ -1,5 +1,5 @@
 "use client";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -12,6 +12,9 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import AdminRoute from "@/components/auth/AdminRoute"; // Tambahkan ini
+import { useAuth } from "@/context/AuthContext"; // Tambahkan ini
+import { toast } from "@/components/ui/sonner"; // Tambahkan ini
 
 const hideHeaderFooterStyle = `
   header, footer {
@@ -24,35 +27,23 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
   const pathname = usePathname();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const { logout } = useAuth(); // Tambahkan ini
 
   // Check screen size and set initial sidebar state
   useEffect(() => {
     const checkScreenSize = () => {
       const mobile = window.innerWidth < 1024;
       setIsMobile(mobile);
-      setSidebarOpen(!mobile); // Open sidebar by default on desktop
+      setSidebarOpen(!mobile);
     };
 
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
-
-  useEffect(() => {
-    const checkAuth = () => {
-      const isAdmin = localStorage.getItem("isAdminLoggedIn") === "true";
-      setIsLoggedIn(isAdmin);
-      if (!isAdmin && pathname !== "/admin") {
-        router.push("/admin");
-      }
-    };
-    checkAuth();
-  }, [pathname, router]);
 
   // Close sidebar when navigating on mobile
   useEffect(() => {
@@ -62,19 +53,9 @@ export default function AdminLayout({
   }, [pathname, isMobile]);
 
   const handleLogout = () => {
-    localStorage.removeItem("isAdminLoggedIn");
-    router.push("/admin");
+    logout();
+    toast.success("Logout berhasil");
   };
-
-  if (!isLoggedIn)
-    return (
-      <>
-        <style jsx global>
-          {hideHeaderFooterStyle}
-        </style>
-        {children}
-      </>
-    );
 
   const NavItem = ({
     href,
@@ -104,12 +85,14 @@ export default function AdminLayout({
   };
 
   return (
-    <>
+    <AdminRoute>
+      {" "}
+      {/* Bungkus dengan AdminRoute */}
       <style jsx global>
         {hideHeaderFooterStyle}
       </style>
       <div className="flex min-h-screen bg-gray-50">
-        {/* Mobile Menu Button - only show on mobile */}
+        {/* Mobile Menu Button */}
         {isMobile && (
           <button
             onClick={toggleSidebar}
@@ -124,7 +107,7 @@ export default function AdminLayout({
           </button>
         )}
 
-        {/* Sidebar with responsive behavior */}
+        {/* Sidebar */}
         <AnimatePresence>
           {sidebarOpen && (
             <motion.aside
@@ -182,7 +165,7 @@ export default function AdminLayout({
           )}
         </AnimatePresence>
 
-        {/* Overlay to close sidebar on mobile when clicking outside */}
+        {/* Overlay for mobile */}
         {isMobile && sidebarOpen && (
           <div
             className="fixed inset-0 bg-black/30 z-30"
@@ -242,6 +225,6 @@ export default function AdminLayout({
           </div>
         </main>
       </div>
-    </>
+    </AdminRoute>
   );
 }

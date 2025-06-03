@@ -1,11 +1,14 @@
 "use client";
-import { useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { toast } from "@/components/ui/sonner";
 
-// Gunakan export default
-export default function useAdminAuth() {
+export default function AdminRoute({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { user, isAdmin } = useAuth();
   const router = useRouter();
 
@@ -20,5 +23,13 @@ export default function useAdminAuth() {
     }
   }, [user, isAdmin, router]);
 
-  return { user, isAdmin };
+  if (!user || !isAdmin) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>Memeriksa akses...</p>
+      </div>
+    );
+  }
+
+  return <>{children}</>;
 }

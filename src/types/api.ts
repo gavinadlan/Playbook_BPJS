@@ -4,7 +4,7 @@ export enum ParameterType {
   NUMBER = "number",
   BOOLEAN = "boolean",
   ARRAY = "array",
-  OBJECT = "object"
+  OBJECT = "object",
 }
 
 export interface Parameter {
@@ -34,4 +34,37 @@ export interface ApiCategory {
   name: string;
   description: string;
   endpoints: ApiEndpoint[];
+}
+
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: "USER" | "ADMIN";
+  lastVisited: string | null; // ISO string dari backend
+  createdAt: string; // ISO string dari backend
+}
+
+export interface ApiResponse<T> {
+  data?: T;
+  message?: string;
+  error?: any;
+}
+
+export interface PKS {
+  id: number;
+  filename: string;
+  path: string;
+  company: string;
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  submittedAt: string;
+  approvedAt?: string;
+  rejectedAt?: string;
+  reason?: string;
+  userId: number;
+  user: {
+    id: number;
+    name?: string;
+    email: string;
+  } | null;
 }

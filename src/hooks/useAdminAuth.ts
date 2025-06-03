@@ -4,8 +4,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/sonner";
 
-// Gunakan export default
-export default function useAdminAuth() {
+export const useAdminAuth = () => {
   const { user, isAdmin } = useAuth();
   const router = useRouter();
 
@@ -21,4 +20,4 @@ export default function useAdminAuth() {
   }, [user, isAdmin, router]);
 
   return { user, isAdmin };
-}
+};

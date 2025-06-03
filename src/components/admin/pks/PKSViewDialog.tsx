@@ -114,7 +114,14 @@ export const PKSViewDialog = ({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Tutup
           </Button>
-          <Button onClick={() => window.open(pks.path, "_blank")}>
+          <Button
+            onClick={() =>
+              window.open(
+                `${process.env.NEXT_PUBLIC_API_URL}${pks.path}`,
+                "_blank"
+              )
+            }
+          >
             <Eye className="h-4 w-4 mr-2" />
             Lihat Dokumen Lengkap
           </Button>

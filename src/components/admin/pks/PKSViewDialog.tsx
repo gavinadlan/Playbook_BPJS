@@ -7,7 +7,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { PKS } from "@/lib/adminData";
+import { PKS } from "@/types/api";
 import { FileText, Eye } from "lucide-react";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 
@@ -28,16 +28,16 @@ export const PKSViewDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>PKS Document Details</DialogTitle>
+          <DialogTitle>Detail Dokumen PKS</DialogTitle>
           <DialogDescription>
-            View the complete information for this PKS document
+            Lihat informasi lengkap untuk dokumen PKS ini
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <h3 className="text-sm font-medium text-gray-500">Document</h3>
+              <h3 className="text-sm font-medium text-gray-500">Dokumen</h3>
               <p className="text-sm">{pks.filename}</p>
             </div>
             <div>
@@ -47,45 +47,49 @@ export const PKSViewDialog = ({
               </div>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-gray-500">Company</h3>
-              <p className="text-sm">{pks.companyName}</p>
+              <h3 className="text-sm font-medium text-gray-500">Perusahaan</h3>
+              <p className="text-sm">{pks.company}</p>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-gray-500">User</h3>
-              <p className="text-sm">{pks.user}</p>
+              <h3 className="text-sm font-medium text-gray-500">Pengguna</h3>
+              <p className="text-sm">{pks.user?.name || "Unknown"}</p>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-gray-500">Type</h3>
-              <p className="text-sm">{pks.type}</p>
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-gray-500">Submitted</h3>
-              <p className="text-sm">{pks.submittedAt}</p>
+              <h3 className="text-sm font-medium text-gray-500">
+                Tanggal Pengajuan
+              </h3>
+              <p className="text-sm">
+                {new Date(pks.submittedAt).toLocaleString("id-ID")}
+              </p>
             </div>
 
-            {pks.status === "Approved" && (
+            {pks.status === "APPROVED" && pks.approvedAt && (
               <div>
                 <h3 className="text-sm font-medium text-gray-500">
-                  Approved On
+                  Disetujui Pada
                 </h3>
-                <p className="text-sm">{pks.approvedAt}</p>
+                <p className="text-sm">
+                  {new Date(pks.approvedAt).toLocaleString("id-ID")}
+                </p>
               </div>
             )}
 
-            {pks.status === "Rejected" && (
+            {pks.status === "REJECTED" && pks.rejectedAt && (
               <>
                 <div>
                   <h3 className="text-sm font-medium text-gray-500">
-                    Rejected On
+                    Ditolak Pada
                   </h3>
-                  <p className="text-sm">{pks.rejectedAt}</p>
+                  <p className="text-sm">
+                    {new Date(pks.rejectedAt).toLocaleString("id-ID")}
+                  </p>
                 </div>
                 <div className="col-span-2">
                   <h3 className="text-sm font-medium text-gray-500">
-                    Reason for Rejection
+                    Alasan Penolakan
                   </h3>
                   <p className="text-sm">
-                    {pks.reason || "No reason provided"}
+                    {pks.reason || "Tidak ada alasan yang diberikan"}
                   </p>
                 </div>
               </>
@@ -94,25 +98,25 @@ export const PKSViewDialog = ({
 
           <div className="mt-4 p-4 bg-gray-50 rounded-md border">
             <h3 className="text-sm font-medium text-gray-500 mb-2">
-              Document Preview
+              Pratinjau Dokumen
             </h3>
             <div className="flex items-center justify-center h-40 bg-gray-100 rounded">
               <FileText className="h-16 w-16 text-gray-400" />
             </div>
             <p className="text-xs text-center text-gray-500 mt-2">
-              Document preview not available. Click below to view the full
-              document.
+              Pratinjau dokumen tidak tersedia. Klik tombol di bawah untuk
+              melihat dokumen lengkap.
             </p>
           </div>
         </div>
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Close
+            Tutup
           </Button>
-          <Button>
+          <Button onClick={() => window.open(pks.path, "_blank")}>
             <Eye className="h-4 w-4 mr-2" />
-            View Full Document
+            Lihat Dokumen Lengkap
           </Button>
         </DialogFooter>
       </DialogContent>

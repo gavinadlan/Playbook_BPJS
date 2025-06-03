@@ -1,25 +1,57 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
-import { adminData } from "@/lib/adminData";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { UsersTable } from "@/components/admin/users/UsersTable";
 import { UsersSearch } from "@/components/admin/users/UsersSearch";
 import { UserPlus } from "lucide-react";
+import { authFetch } from "@/utils/api";
+import { User } from "@/types/api";
+import { toast } from "@/components/ui/sonner";
 
 export default function UsersPage() {
   useAdminAuth();
 
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("all");
 
-  const filteredUsers = adminData.users.filter((user) => {
-    const matchesSearch = Object.values(user).some((value) =>
-      String(value).toLowerCase().includes(searchTerm.toLowerCase())
-    );
+  // Fetch users dari backend
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        setLoading(true);
+        const response = await authFetch(
+          "http://localhost:3001/api/admin/users"
+        );
 
-    const matchesFilter = filter === "all" || user.status === filter;
+        if (!response.ok) {
+          throw new Error("Failed to fetch users");
+        }
+
+        const data = await response.json();
+        setUsers(data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        toast.error("Gagal mengambil data user");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  // Filter users berdasarkan search dan filter
+  const filteredUsers = users.filter((user) => {
+    const matchesSearch =
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.role.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesFilter = filter === "all" || user.role === filter;
 
     return matchesSearch && matchesFilter;
   });
@@ -43,7 +75,13 @@ export default function UsersPage() {
           onFilter={setFilter}
         />
 
-        <UsersTable data={filteredUsers} />
+        {loading ? (
+          <div className="flex justify-center py-8">
+            <div className="text-muted-foreground">Loading users...</div>
+          </div>
+        ) : (
+          <UsersTable data={filteredUsers} />
+        )}
       </div>
     </div>
   );

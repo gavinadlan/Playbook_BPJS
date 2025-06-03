@@ -26,7 +26,7 @@ export const UsersSearch = ({
     <div className="relative w-full max-w-md">
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
       <Input
-        placeholder="Search users..."
+        placeholder="Search users by name, email, or role..."
         className="pl-9"
         value={searchTerm}
         onChange={(e) => onSearch(e.target.value)}
@@ -41,17 +41,16 @@ export const UsersSearch = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Filter by Status</DropdownMenuLabel>
+        <DropdownMenuLabel>Filter by Role</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => onFilter("all")}>All</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onFilter("Active")}>
-          Active
+        <DropdownMenuItem onClick={() => onFilter("all")}>
+          All Roles
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onFilter("Inactive")}>
-          Inactive
+        <DropdownMenuItem onClick={() => onFilter("USER")}>
+          Users
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onFilter("Pending")}>
-          Pending
+        <DropdownMenuItem onClick={() => onFilter("ADMIN")}>
+          Admins
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

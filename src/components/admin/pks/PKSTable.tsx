@@ -14,6 +14,7 @@ import { StatusBadge } from "@/components/shared/StatusBadge";
 import { PKSViewDialog } from "./PKSViewDialog";
 import { updatePKSStatus } from "@/utils/api";
 import { toast } from "@/components/ui/sonner";
+import { ConfirmationDialog } from "@/components/shared/ConfirmationDialog";
 
 interface PKSTableProps {
   data: PKS[];
@@ -24,16 +25,39 @@ export const PKSTable = ({ data, onStatusUpdate }: PKSTableProps) => {
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [selectedPKS, setSelectedPKS] = useState<PKS | null>(null);
 
+  // State untuk dialog konfirmasi
+  const [showApproveDialog, setShowApproveDialog] = useState(false);
+  const [showRejectDialog, setShowRejectDialog] = useState(false);
+  const [rejectReason, setRejectReason] = useState("");
+  const [currentPksId, setCurrentPksId] = useState<number | null>(null);
+
   const handleView = (pks: PKS) => {
     setSelectedPKS(pks);
     setIsViewDialogOpen(true);
   };
 
-  const handleApprove = async (id: number) => {
+  // Buka dialog setujui
+  const openApproveDialog = (id: number) => {
+    setCurrentPksId(id);
+    setShowApproveDialog(true);
+  };
+
+  // Buka dialog tolak
+  const openRejectDialog = (id: number) => {
+    setCurrentPksId(id);
+    setRejectReason(""); // Reset alasan setiap kali dibuka
+    setShowRejectDialog(true);
+  };
+
+  // Konfirmasi setujui
+  const handleConfirmApprove = async () => {
+    if (!currentPksId) return;
+
     try {
-      const updated = await updatePKSStatus(id, "APPROVED");
+      const updated = await updatePKSStatus(currentPksId, "APPROVED");
       onStatusUpdate(updated);
       toast.success("PKS berhasil disetujui");
+      setShowApproveDialog(false);
     } catch (error) {
       toast.error("Gagal menyetujui PKS", {
         description: "Silakan coba lagi",
@@ -41,11 +65,19 @@ export const PKSTable = ({ data, onStatusUpdate }: PKSTableProps) => {
     }
   };
 
-  const handleReject = async (id: number) => {
+  // Konfirmasi tolak
+  const handleConfirmReject = async () => {
+    if (!currentPksId) return;
+
     try {
-      const updated = await updatePKSStatus(id, "REJECTED");
+      const updated = await updatePKSStatus(
+        currentPksId,
+        "REJECTED",
+        rejectReason
+      );
       onStatusUpdate(updated);
       toast.success("PKS berhasil ditolak");
+      setShowRejectDialog(false);
     } catch (error) {
       toast.error("Gagal menolak PKS", {
         description: "Silakan coba lagi",
@@ -75,7 +107,6 @@ export const PKSTable = ({ data, onStatusUpdate }: PKSTableProps) => {
               </TableCell>
               <TableCell>{pks.company}</TableCell>
               <TableCell>{pks.user?.name || "Unknown"}</TableCell>
-              {/* Perbaikan disini */}
               <TableCell>
                 <StatusBadge status={pks.status} />
               </TableCell>
@@ -98,7 +129,7 @@ export const PKSTable = ({ data, onStatusUpdate }: PKSTableProps) => {
                         variant="ghost"
                         size="sm"
                         className="text-green-600"
-                        onClick={() => handleApprove(pks.id)}
+                        onClick={() => openApproveDialog(pks.id)}
                         aria-label={`Setujui ${pks.filename}`}
                       >
                         <CheckCircle className="h-4 w-4" />
@@ -107,7 +138,7 @@ export const PKSTable = ({ data, onStatusUpdate }: PKSTableProps) => {
                         variant="ghost"
                         size="sm"
                         className="text-red-600"
-                        onClick={() => handleReject(pks.id)}
+                        onClick={() => openRejectDialog(pks.id)}
                         aria-label={`Tolak ${pks.filename}`}
                       >
                         <XCircle className="h-4 w-4" />
@@ -125,6 +156,24 @@ export const PKSTable = ({ data, onStatusUpdate }: PKSTableProps) => {
         open={isViewDialogOpen}
         onOpenChange={setIsViewDialogOpen}
         pks={selectedPKS}
+      />
+
+      {/* Dialog Konfirmasi Setujui */}
+      <ConfirmationDialog
+        open={showApproveDialog}
+        onOpenChange={setShowApproveDialog}
+        type="APPROVE"
+        onConfirm={handleConfirmApprove}
+      />
+
+      {/* Dialog Konfirmasi Tolak */}
+      <ConfirmationDialog
+        open={showRejectDialog}
+        onOpenChange={setShowRejectDialog}
+        type="REJECT"
+        reason={rejectReason}
+        onReasonChange={setRejectReason}
+        onConfirm={handleConfirmReject}
       />
     </>
   );

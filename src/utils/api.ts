@@ -52,7 +52,7 @@ export const updatePKSStatus = async (
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ status, reason }),
+      body: JSON.stringify({ status, reason }), // Kirim reason ke backend
     });
 
     if (!response.ok) {

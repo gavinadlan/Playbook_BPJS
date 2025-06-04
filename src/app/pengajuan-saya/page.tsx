@@ -16,6 +16,7 @@ interface PksSubmission {
   status: "PENDING" | "APPROVED" | "REJECTED";
   filename: string;
   path: string;
+  reason?: string;
 }
 
 export default function PengajuanSayaPage() {
@@ -88,16 +89,22 @@ export default function PengajuanSayaPage() {
             {submissions.map((submission) => (
               <div
                 key={submission.id}
-                className="flex items-center justify-between p-4 border rounded-lg"
+                className="flex flex-col md:flex-row md:items-center justify-between p-4 border rounded-lg"
               >
                 <div className="space-y-1">
                   <h3 className="font-medium">{submission.company}</h3>
                   <p className="text-sm text-gray-500">
                     {new Date(submission.submittedAt).toLocaleDateString()}
                   </p>
+
+                  {submission.status === "REJECTED" && submission.reason && (
+                    <p className="text-sm text-red-600">
+                      Alasan ditolak: {submission.reason}
+                    </p>
+                  )}
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 mt-4 md:mt-0">
                   <Badge
                     variant={
                       submission.status === "APPROVED"

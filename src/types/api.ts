@@ -68,3 +68,29 @@ export interface PKS {
     email: string;
   } | null;
 }
+
+export interface DashboardStat {
+  title: string;
+  value: string;
+  change: string;
+  description: string;
+  link: string;
+}
+
+export interface DashboardActivity {
+  user: string;
+  action: string;
+  time: string;
+}
+
+export interface DashboardData {
+  stats: DashboardStat[];
+  activities: DashboardActivity[];
+  summary: {
+    totalUsers: number;
+    totalPks: number;
+    pendingPks: number;
+    approvedPks: number;
+    rejectedPks: number;
+  };
+}

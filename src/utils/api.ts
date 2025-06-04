@@ -1,4 +1,4 @@
-import { PKS } from "@/types/api";
+import { PKS, DashboardData } from "@/types/api";
 
 const BACKEND_BASE_URL = "http://localhost:3001";
 
@@ -62,6 +62,22 @@ export const updatePKSStatus = async (
     return await response.json();
   } catch (error) {
     console.error("Error updating PKS status:", error);
+    throw error;
+  }
+};
+
+export const fetchDashboardData = async (): Promise<DashboardData> => {
+  try {
+    const response = await authFetch("/api/admin/dashboard", { method: "GET" });
+
+    if (!response.ok) {
+      throw new Error("Gagal mengambil data dashboard");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching dashboard data:", error);
     throw error;
   }
 };

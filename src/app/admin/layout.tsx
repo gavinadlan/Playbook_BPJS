@@ -12,9 +12,8 @@ import {
   Menu,
   X,
 } from "lucide-react";
-import AdminRoute from "@/components/auth/AdminRoute"; // Tambahkan ini
-import { useAuth } from "@/context/AuthContext"; // Tambahkan ini
-import { toast } from "@/components/ui/sonner"; // Tambahkan ini
+import { useAuth } from "@/context/AuthContext";
+import { toast } from "@/components/ui/sonner";
 
 const hideHeaderFooterStyle = `
   header, footer {
@@ -30,7 +29,7 @@ export default function AdminLayout({
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const { logout } = useAuth(); // Tambahkan ini
+  const { logout } = useAuth();
 
   // Check screen size and set initial sidebar state
   useEffect(() => {
@@ -85,9 +84,7 @@ export default function AdminLayout({
   };
 
   return (
-    <AdminRoute>
-      {" "}
-      {/* Bungkus dengan AdminRoute */}
+    <>
       <style jsx global>
         {hideHeaderFooterStyle}
       </style>
@@ -225,6 +222,6 @@ export default function AdminLayout({
           </div>
         </main>
       </div>
-    </AdminRoute>
+    </>
   );
 }

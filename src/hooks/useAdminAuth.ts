@@ -1,14 +1,23 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/sonner";
 
 export const useAdminAuth = () => {
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, isLoading } = useAuth();
   const router = useRouter();
+  const [checking, setChecking] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    // mounted loading
+    if (!isMounted || isLoading) return;
+
     if (!user) {
       router.push("/login");
     } else if (!isAdmin) {
@@ -17,7 +26,13 @@ export const useAdminAuth = () => {
         "Akses ditolak: Hanya admin yang dapat mengakses halaman ini"
       );
     }
-  }, [user, isAdmin, router]);
 
-  return { user, isAdmin };
+    setChecking(false);
+  }, [user, isAdmin, isLoading, isMounted, router]);
+
+  return {
+    user,
+    isAdmin,
+    checking: !isMounted || isLoading || checking,
+  };
 };

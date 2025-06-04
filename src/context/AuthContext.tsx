@@ -12,20 +12,22 @@ interface User {
   id: string;
   name: string;
   email: string;
-  role: string; // Tambahkan role
+  role: string;
 }
 
 interface AuthContextType {
   user: User | null;
   setUser: (user: User | null) => void;
-  isAdmin: boolean; // Tambahkan isAdmin
-  logout: () => void; // Tambahkan fungsi logout
+  isAdmin: boolean;
+  logout: () => void;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true); // 🔥 TAMBAHAN: Loading state
 
   // Tambahkan computed property untuk isAdmin
   const isAdmin = user?.role === "ADMIN";
@@ -40,20 +42,38 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
+    const initializeAuth = async () => {
       try {
-        const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
+        const storedUser = localStorage.getItem("user");
+        const storedToken = localStorage.getItem("token");
+
+        if (storedUser && storedToken) {
+          const parsedUser = JSON.parse(storedUser);
+
+          // 🔥 OPTIONAL: Validasi token masih valid (panggil API untuk verify)
+          // const isValidToken = await validateToken(storedToken);
+          // if (!isValidToken) {
+          //   throw new Error("Token expired");
+          // }
+
+          setUser(parsedUser);
+        }
       } catch (error) {
-        console.error("Error parsing user data:", error);
+        console.error("Error initializing auth:", error);
+        // Clear invalid data
         localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        setUser(null);
+      } finally {
+        setIsLoading(false);
       }
-    }
+    };
+
+    initializeAuth();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser, isAdmin, logout }}>
+    <AuthContext.Provider value={{ user, setUser, isAdmin, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

@@ -7,6 +7,7 @@ import {
   useEffect,
   ReactNode,
 } from "react";
+import { toast } from "@/components/ui/sonner";
 
 interface User {
   id: string;
@@ -21,24 +22,57 @@ interface AuthContextType {
   isAdmin: boolean;
   logout: () => void;
   isLoading: boolean;
+  handleApiCall: (url: string, options?: RequestInit) => Promise<any>;
 }
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true); // 🔥 TAMBAHAN: Loading state
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Tambahkan computed property untuk isAdmin
   const isAdmin = user?.role === "ADMIN";
 
-  // Fungsi logout
   const logout = () => {
     setUser(null);
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+    localStorage.removeItem("tokenExpiry");
     document.cookie =
       "isAuthenticated=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  };
+
+  const handleApiCall = async (url: string, options: RequestInit = {}) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const headers = {
+        "Content-Type": "application/json",
+        ...(token && { Authorization: `Bearer ${token}` }),
+        ...options.headers,
+      };
+
+      const response = await fetch(url, {
+        ...options,
+        headers,
+      });
+
+      const data = await response.json();
+
+      if (response.status === 401 && data.expired) {
+        toast.error("Session expired after 12 hours. Please login again.");
+        logout();
+        if (typeof window !== "undefined") {
+          window.location.href = "/login";
+        }
+        return null;
+      }
+
+      return { response, data };
+    } catch (error) {
+      console.error("API call error:", error);
+      throw error;
+    }
   };
 
   useEffect(() => {
@@ -50,20 +84,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (storedUser && storedToken) {
           const parsedUser = JSON.parse(storedUser);
 
-          // 🔥 OPTIONAL: Validasi token masih valid (panggil API untuk verify)
-          // const isValidToken = await validateToken(storedToken);
-          // if (!isValidToken) {
-          //   throw new Error("Token expired");
-          // }
+          const tokenExpiry = localStorage.getItem("tokenExpiry");
+          if (tokenExpiry && new Date() > new Date(tokenExpiry)) {
+            throw new Error("Token expired locally");
+          }
 
           setUser(parsedUser);
         }
       } catch (error) {
         console.error("Error initializing auth:", error);
-        // Clear invalid data
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
-        setUser(null);
+        logout();
       } finally {
         setIsLoading(false);
       }
@@ -73,7 +103,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser, isAdmin, logout, isLoading }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        setUser,
+        isAdmin,
+        logout,
+        isLoading,
+        handleApiCall,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -9,11 +9,11 @@ import { fetchDashboardData } from "@/utils/api";
 import { DashboardData } from "@/types/api";
 import { toast } from "@/components/ui/sonner";
 
-// Icon mapping
+// Pemetaan ikon
 const iconMap = {
-  "Total Users": UsersRound,
-  "Pending PKS": FileCheck,
-  "Approved PKS": BarChart,
+  "Total User": UsersRound,
+  "PKS Tertunda": FileCheck,
+  "PKS Disetujui": BarChart,
 };
 
 export default function DashboardPage() {
@@ -34,7 +34,7 @@ export default function DashboardPage() {
         toast.error("Gagal memuat data dashboard", {
           description: "Silakan coba lagi nanti",
         });
-        console.error("Dashboard error:", err);
+        console.error("Error dashboard:", err);
       } finally {
         setLoading(false);
       }
@@ -67,11 +67,9 @@ export default function DashboardPage() {
   if (error || !dashboardData) {
     return (
       <div className="space-y-8 p-6">
-        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+        <h1 className="text-3xl font-bold">Dashboard Admin</h1>
         <div className="text-center py-8">
-          <p className="text-red-500">
-            {error || "Gagal memuat data dashboard"}
-          </p>
+          <p className="text-red-500">{error || "Gagal memuat data dasbor"}</p>
           <button
             onClick={() => window.location.reload()}
             className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -94,14 +92,21 @@ export default function DashboardPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        Admin Dashboard
+        Dashboard Admin
       </motion.h1>
 
-      {/* Stats Cards */}
+      {/* Kartu Statistik */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {stats.map((stat, index) => {
+          const indonesianTitles: Record<string, string> = {
+            "Total Users": "Total User",
+            "Pending PKS": "PKS Tertunda",
+            "Approved PKS": "PKS Disetujui",
+          };
+
+          const indonesianTitle = indonesianTitles[stat.title] || stat.title;
           const IconComponent =
-            iconMap[stat.title as keyof typeof iconMap] || BarChart;
+            iconMap[indonesianTitle as keyof typeof iconMap] || BarChart;
 
           return (
             <Link key={index} href={stat.link}>
@@ -117,7 +122,7 @@ export default function DashboardPage() {
                         {stat.description}
                       </span>
                     </div>
-                    <h2 className="text-lg font-semibold">{stat.title}</h2>
+                    <h2 className="text-lg font-semibold">{indonesianTitle}</h2>
                     <p className="text-2xl font-bold">{stat.value}</p>
                     <p
                       className={`text-sm ${
@@ -138,14 +143,14 @@ export default function DashboardPage() {
         })}
       </div>
 
-      {/* Activities Section */}
+      {/* Bagian Aktivitas */}
       <motion.div
         className="space-y-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
       >
-        <h2 className="text-xl font-semibold">Recent Activities</h2>
+        <h2 className="text-xl font-semibold">Aktivitas Terbaru</h2>
         {activities.length > 0 ? (
           <ul className="space-y-3">
             {activities.map((activity, idx) => (

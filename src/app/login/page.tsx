@@ -46,7 +46,14 @@ export default function LoginPage() {
 
       if (!res.ok) {
         toast.dismiss();
-        toast.error(data.message || "Login gagal.");
+
+        // Handle specific error types
+        if (res.status === 401 && data.expired) {
+          toast.error("Session expired. Please login again.");
+        } else {
+          toast.error(data.message || "Login gagal.");
+        }
+
         setLoading(false);
         return;
       }
@@ -66,6 +73,10 @@ export default function LoginPage() {
       if (data.token) {
         localStorage.setItem("token", data.token);
         document.cookie = "isAuthenticated=true; path=/;";
+
+        // Optional: Set token expiry reminder
+        const expiryTime = new Date(Date.now() + 12 * 60 * 60 * 1000); // 12 hours
+        localStorage.setItem("tokenExpiry", expiryTime.toISOString());
       }
 
       localStorage.setItem("user", JSON.stringify(data.user));
@@ -85,6 +96,7 @@ export default function LoginPage() {
     } catch (err) {
       toast.dismiss();
       toast.error("Terjadi kesalahan. Coba lagi nanti.");
+      console.error("Login error:", err);
     } finally {
       setLoading(false);
     }

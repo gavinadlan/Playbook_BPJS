@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/shared/StatusBadge";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -42,28 +42,21 @@ const formatLastVisited = (lastVisited: string | null) => {
   return formatDate(lastVisited);
 };
 
-// Fungsi helper untuk status badge berdasarkan lastVisited
-const getStatusBadge = (lastVisited: string | null) => {
-  if (!lastVisited) {
-    return <Badge variant="secondary">Belum Pernah Login</Badge>;
-  }
+// Fungsi helper untuk menentukan status berdasarkan lastVisited
+const getUserStatus = (lastVisited: string | null): "Active" | "Inactive" => {
+  if (!lastVisited) return "Inactive";
 
   const date = new Date(lastVisited);
   const now = new Date();
   const diffTime = Math.abs(now.getTime() - date.getTime());
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-  if (diffDays <= 7) {
-    return (
-      <Badge variant="default" className="bg-green-500">
-        Aktif
-      </Badge>
-    );
-  } else if (diffDays <= 30) {
-    return <Badge variant="secondary">Baru Saja Aktif</Badge>;
-  } else {
-    return <Badge variant="outline">Nonaktif</Badge>;
-  }
+  return diffDays <= 30 ? "Active" : "Inactive";
+};
+
+// Fungsi helper untuk menentukan role badge
+const getRoleBadge = (role: string): "ADMIN" | "USER" => {
+  return role.toUpperCase() === "ADMIN" ? "ADMIN" : "USER";
 };
 
 export const UsersTable = ({ data }: { data: User[] }) => (
@@ -93,13 +86,11 @@ export const UsersTable = ({ data }: { data: User[] }) => (
               <TableCell className="font-medium">{user.name}</TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>
-                <Badge
-                  variant={user.role === "ADMIN" ? "default" : "secondary"}
-                >
-                  {user.role}
-                </Badge>
+                <StatusBadge status={getRoleBadge(user.role)} />
               </TableCell>
-              <TableCell>{getStatusBadge(user.lastVisited)}</TableCell>
+              <TableCell>
+                <StatusBadge status={getUserStatus(user.lastVisited)} />
+              </TableCell>
               <TableCell className="text-muted-foreground">
                 {formatLastVisited(user.lastVisited)}
               </TableCell>

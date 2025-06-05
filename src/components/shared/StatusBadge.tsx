@@ -1,6 +1,14 @@
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Clock, XCircle, UserCheck, UserX } from "lucide-react";
+import {
+  CheckCircle,
+  Clock,
+  XCircle,
+  UserCheck,
+  UserX,
+  Shield,
+  User,
+} from "lucide-react";
 
 type StatusType =
   | "PENDING"
@@ -10,7 +18,13 @@ type StatusType =
   | "Approved"
   | "Rejected"
   | "Active"
-  | "Inactive";
+  | "Inactive"
+  | "ADMIN"
+  | "USER"
+  | "Admin"
+  | "User"
+  | "admin"
+  | "user";
 
 interface StatusBadgeProps {
   status: StatusType;
@@ -42,6 +56,18 @@ const statusConfig: Record<
     icon: <XCircle className="h-4 w-4 mr-1" />,
   },
 
+  // Role configurations
+  ADMIN: {
+    label: "Admin",
+    className: "bg-purple-100 text-purple-800",
+    icon: <Shield className="h-4 w-4 mr-1" />,
+  },
+  USER: {
+    label: "User",
+    className: "bg-blue-100 text-blue-800",
+    icon: <User className="h-4 w-4 mr-1" />,
+  },
+
   // Backward compatibility
   Pending: {
     label: "Menunggu",
@@ -57,6 +83,28 @@ const statusConfig: Record<
     label: "Ditolak",
     className: "bg-red-100 text-red-800",
     icon: <XCircle className="h-4 w-4 mr-1" />,
+  },
+
+  // Role variations for backward compatibility
+  Admin: {
+    label: "Admin",
+    className: "bg-purple-100 text-purple-800",
+    icon: <Shield className="h-4 w-4 mr-1" />,
+  },
+  User: {
+    label: "User",
+    className: "bg-blue-100 text-blue-800",
+    icon: <User className="h-4 w-4 mr-1" />,
+  },
+  admin: {
+    label: "Admin",
+    className: "bg-purple-100 text-purple-800",
+    icon: <Shield className="h-4 w-4 mr-1" />,
+  },
+  user: {
+    label: "User",
+    className: "bg-blue-100 text-blue-800",
+    icon: <User className="h-4 w-4 mr-1" />,
   },
 
   // Status tambahan

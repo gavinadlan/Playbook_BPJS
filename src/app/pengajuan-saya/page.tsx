@@ -5,9 +5,9 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/shared/StatusBadge";
 import { authFetch } from "@/utils/api";
-import { Download, Clock, CheckCircle2, XCircle } from "lucide-react";
+import { Download } from "lucide-react";
 
 interface PksSubmission {
   id: number;
@@ -47,17 +47,6 @@ export default function PengajuanSayaPage() {
     }
   }, [user?.id]);
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "APPROVED":
-        return <CheckCircle2 className="w-4 h-4 text-green-500" />;
-      case "REJECTED":
-        return <XCircle className="w-4 h-4 text-red-500" />;
-      default:
-        return <Clock className="w-4 h-4 text-yellow-500" />;
-    }
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen p-8">
@@ -94,7 +83,9 @@ export default function PengajuanSayaPage() {
                 <div className="space-y-1">
                   <h3 className="font-medium">{submission.company}</h3>
                   <p className="text-sm text-gray-500">
-                    {new Date(submission.submittedAt).toLocaleDateString()}
+                    {new Date(submission.submittedAt).toLocaleDateString(
+                      "id-ID"
+                    )}
                   </p>
 
                   {submission.status === "REJECTED" && submission.reason && (
@@ -105,19 +96,7 @@ export default function PengajuanSayaPage() {
                 </div>
 
                 <div className="flex items-center gap-4 mt-4 md:mt-0">
-                  <Badge
-                    variant={
-                      submission.status === "APPROVED"
-                        ? "success"
-                        : submission.status === "REJECTED"
-                        ? "destructive"
-                        : "warning"
-                    }
-                    className="flex items-center gap-2"
-                  >
-                    {getStatusIcon(submission.status)}
-                    {submission.status}
-                  </Badge>
+                  <StatusBadge status={submission.status} />
 
                   <Button
                     size="sm"

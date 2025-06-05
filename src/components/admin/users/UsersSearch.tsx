@@ -26,7 +26,7 @@ export const UsersSearch = ({
     <div className="relative w-full max-w-md">
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
       <Input
-        placeholder="Search users by name, email, or role..."
+        placeholder="Cari user berdasarkan nama, email, atau role..."
         className="pl-9"
         value={searchTerm}
         onChange={(e) => onSearch(e.target.value)}
@@ -41,16 +41,16 @@ export const UsersSearch = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Filter by Role</DropdownMenuLabel>
+        <DropdownMenuLabel>Filter berdasarkan Role</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => onFilter("all")}>
-          All Roles
+          Semua Role
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onFilter("USER")}>
-          Users
+          User
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onFilter("ADMIN")}>
-          Admins
+          Admin
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

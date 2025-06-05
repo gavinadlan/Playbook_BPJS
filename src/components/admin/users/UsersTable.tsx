@@ -19,7 +19,7 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-// Helper function untuk format tanggal
+// Fungsi helper untuk format tanggal
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString("id-ID", {
     year: "numeric",
@@ -28,24 +28,24 @@ const formatDate = (dateString: string) => {
   });
 };
 
-// Helper function untuk format last visited
+// Fungsi helper untuk format last visited
 const formatLastVisited = (lastVisited: string | null) => {
-  if (!lastVisited) return "Never";
+  if (!lastVisited) return "Tidak pernah";
 
   const date = new Date(lastVisited);
   const now = new Date();
   const diffTime = Math.abs(now.getTime() - date.getTime());
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-  if (diffDays === 1) return "Today";
-  if (diffDays <= 7) return `${diffDays} days ago`;
+  if (diffDays === 1) return "Hari ini";
+  if (diffDays <= 7) return `${diffDays} hari yang lalu`;
   return formatDate(lastVisited);
 };
 
-// Helper function untuk status badge berdasarkan lastVisited
+// Fungsi helper untuk status badge berdasarkan lastVisited
 const getStatusBadge = (lastVisited: string | null) => {
   if (!lastVisited) {
-    return <Badge variant="secondary">Never Logged In</Badge>;
+    return <Badge variant="secondary">Belum Pernah Login</Badge>;
   }
 
   const date = new Date(lastVisited);
@@ -56,13 +56,13 @@ const getStatusBadge = (lastVisited: string | null) => {
   if (diffDays <= 7) {
     return (
       <Badge variant="default" className="bg-green-500">
-        Active
+        Aktif
       </Badge>
     );
   } else if (diffDays <= 30) {
-    return <Badge variant="secondary">Recently Active</Badge>;
+    return <Badge variant="secondary">Baru Saja Aktif</Badge>;
   } else {
-    return <Badge variant="outline">Inactive</Badge>;
+    return <Badge variant="outline">Nonaktif</Badge>;
   }
 };
 
@@ -71,20 +71,20 @@ export const UsersTable = ({ data }: { data: User[] }) => (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Name</TableHead>
+          <TableHead>Nama</TableHead>
           <TableHead>Email</TableHead>
           <TableHead>Role</TableHead>
           <TableHead>Status</TableHead>
-          <TableHead>Last Visited</TableHead>
-          <TableHead>Created At</TableHead>
-          <TableHead className="w-[70px]">Actions</TableHead>
+          <TableHead>Terakhir Dikunjungi</TableHead>
+          <TableHead>Dibuat Pada</TableHead>
+          <TableHead className="w-[70px]">Aksi</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {data.length === 0 ? (
           <TableRow>
             <TableCell colSpan={7} className="h-24 text-center">
-              No users found.
+              Tidak ada user yang ditemukan.
             </TableCell>
           </TableRow>
         ) : (
@@ -110,7 +110,7 @@ export const UsersTable = ({ data }: { data: User[] }) => (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="h-8 w-8 p-0">
-                      <span className="sr-only">Open menu</span>
+                      <span className="sr-only">Buka menu</span>
                       <MoreHorizontal className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -121,7 +121,7 @@ export const UsersTable = ({ data }: { data: User[] }) => (
                         console.log("Edit user", user.id);
                       }}
                     >
-                      Edit
+                      Ubah
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => {
@@ -130,7 +130,7 @@ export const UsersTable = ({ data }: { data: User[] }) => (
                       }}
                       className="text-red-600"
                     >
-                      Delete
+                      Hapus
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

@@ -122,10 +122,8 @@ export default function AdminLayout({
               <div className="flex flex-col h-full p-4 overflow-y-auto">
                 {/* Logo Section */}
                 <div className="mb-8 px-2 py-4 border-b border-white/10">
-                  <h2 className="text-xl font-bold text-white">Admin Portal</h2>
-                  <p className="text-sm text-white/80 mt-1">
-                    Management System
-                  </p>
+                  <h2 className="text-xl font-bold text-white">Portal Admin</h2>
+                  <p className="text-sm text-white/80 mt-1">Manajemen Sistem</p>
                 </div>
 
                 {/* Navigation */}
@@ -138,12 +136,12 @@ export default function AdminLayout({
                   <NavItem
                     href="/admin/users"
                     icon={Users}
-                    text="User Management"
+                    text="Manajemen User"
                   />
                   <NavItem
                     href="/admin/pks"
                     icon={FileCheck}
-                    text="PKS Approval"
+                    text="Manajemen PKS"
                   />
                 </nav>
 

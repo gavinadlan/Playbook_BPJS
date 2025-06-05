@@ -18,7 +18,7 @@ export default function UsersPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("all");
 
-  // Fetch users dari backend
+  // Ambil data user dari backend
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -28,13 +28,13 @@ export default function UsersPage() {
         );
 
         if (!response.ok) {
-          throw new Error("Failed to fetch users");
+          throw new Error("Gagal mengambil data user");
         }
 
         const data = await response.json();
         setUsers(data);
       } catch (error) {
-        console.error("Error fetching users:", error);
+        console.error("Error mengambil data user:", error);
         toast.error("Gagal mengambil data user");
       } finally {
         setLoading(false);
@@ -44,7 +44,7 @@ export default function UsersPage() {
     fetchUsers();
   }, []);
 
-  // Filter users berdasarkan search dan filter
+  // Filter user berdasarkan pencarian dan filter
   const filteredUsers = users.filter((user) => {
     const matchesSearch =
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -58,15 +58,7 @@ export default function UsersPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="User Management"
-        description="Manage system users and permissions"
-        action={{
-          text: "Add User",
-          href: "/admin/users/new",
-          icon: <UserPlus className="h-4 w-4" />,
-        }}
-      />
+      <PageHeader title="Manajemen User" description="Kelola user sistem" />
 
       <div className="space-y-4">
         <UsersSearch
@@ -77,7 +69,7 @@ export default function UsersPage() {
 
         {loading ? (
           <div className="flex justify-center py-8">
-            <div className="text-muted-foreground">Loading users...</div>
+            <div className="text-muted-foreground">Memuat data user...</div>
           </div>
         ) : (
           <UsersTable data={filteredUsers} />

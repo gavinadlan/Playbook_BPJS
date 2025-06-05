@@ -19,7 +19,7 @@ export default function PKSPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch data dari backend
+  // Ambil data dari backend
   useEffect(() => {
     const loadPKSData = async () => {
       try {
@@ -38,7 +38,7 @@ export default function PKSPage() {
     loadPKSData();
   }, []);
 
-  // Handle update status dari child component
+  // Handle update status dari komponen anak
   const handleStatusUpdate = (updatedPKS: PKS) => {
     setPksData((prev) =>
       prev.map((pks) => (pks.id === updatedPKS.id ? updatedPKS : pks))
@@ -78,15 +78,15 @@ export default function PKSPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="PKS Management"
-        description="Manage partnership agreements and approvals"
+        title="Manajemen PKS"
+        description="Kelola perjanjian kerjasama dan persetujuan"
       />
 
       <Card>
         <CardHeader className="pb-3">
           <div className="flex flex-col sm:flex-row justify-between gap-4">
             <div>
-              <h2 className="text-lg font-semibold">PKS Documents</h2>
+              <h2 className="text-lg font-semibold">Dokumen PKS</h2>
               <p className="text-sm text-muted-foreground">
                 Menampilkan {filteredPKS.length} dokumen
               </p>

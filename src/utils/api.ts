@@ -1,4 +1,4 @@
-import { PKS, DashboardData } from "@/types/api";
+import { PKS, DashboardData, User } from "@/types/api";
 
 const BACKEND_BASE_URL = "http://localhost:3001";
 
@@ -14,7 +14,9 @@ export const authFetch = async (
   }
 
   const isBackendAPI =
-    url.startsWith("/api/pks") || url.startsWith("/api/admin");
+    url.startsWith("/api/pks") ||
+    url.startsWith("/api/admin") ||
+    url.startsWith("/api/users");
 
   const finalUrl = isBackendAPI ? `${BACKEND_BASE_URL}${url}` : url;
 
@@ -25,6 +27,7 @@ export const authFetch = async (
   });
 };
 
+// PKS Functions
 export const fetchPKSData = async (): Promise<PKS[]> => {
   try {
     const response = await authFetch("/api/admin/pks", { method: "GET" });
@@ -52,7 +55,7 @@ export const updatePKSStatus = async (
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ status, reason }), // Kirim reason ke backend
+      body: JSON.stringify({ status, reason }),
     });
 
     if (!response.ok) {
@@ -66,6 +69,7 @@ export const updatePKSStatus = async (
   }
 };
 
+// Dashboard Functions
 export const fetchDashboardData = async (): Promise<DashboardData> => {
   try {
     const response = await authFetch("/api/admin/dashboard", { method: "GET" });
@@ -78,6 +82,85 @@ export const fetchDashboardData = async (): Promise<DashboardData> => {
     return data;
   } catch (error) {
     console.error("Error fetching dashboard data:", error);
+    throw error;
+  }
+};
+
+// User Management Functions
+export const fetchUsersData = async (): Promise<User[]> => {
+  try {
+    const response = await authFetch("/api/admin/users", { method: "GET" });
+
+    if (!response.ok) {
+      throw new Error("Gagal mengambil data users");
+    }
+
+    const result = await response.json();
+    return result.data || result;
+  } catch (error) {
+    console.error("Error fetching users data:", error);
+    throw error;
+  }
+};
+
+export const fetchUserById = async (id: number): Promise<User> => {
+  try {
+    const response = await authFetch(`/api/admin/users/${id}`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      throw new Error("Gagal mengambil data user");
+    }
+
+    const result = await response.json();
+    return result.data || result;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    throw error;
+  }
+};
+
+export const updateUser = async (
+  id: number,
+  userData: Partial<
+    Pick<User, "name" | "email" | "role"> & { password?: string }
+  >
+): Promise<User> => {
+  try {
+    const response = await authFetch(`/api/admin/users/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Gagal mengupdate user");
+    }
+
+    const result = await response.json();
+    return result.data || result;
+  } catch (error) {
+    console.error("Error updating user:", error);
+    throw error;
+  }
+};
+
+export const deleteUser = async (id: number): Promise<void> => {
+  try {
+    const response = await authFetch(`/api/admin/users/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Gagal menghapus user");
+    }
+  } catch (error) {
+    console.error("Error deleting user:", error);
     throw error;
   }
 };

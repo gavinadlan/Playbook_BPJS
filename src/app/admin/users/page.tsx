@@ -5,9 +5,8 @@ import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { UsersTable } from "@/components/admin/users/UsersTable";
 import { UsersSearch } from "@/components/admin/users/UsersSearch";
-import { UserPlus } from "lucide-react";
-import { authFetch } from "@/utils/api";
 import { User } from "@/types/api";
+import { fetchUsersData } from "@/utils/api";
 import { toast } from "@/components/ui/sonner";
 
 export default function UsersPage() {
@@ -18,30 +17,22 @@ export default function UsersPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("all");
 
-  // Ambil data user dari backend
+  // Fungsi untuk memuat data user
+  const loadUsers = async () => {
+    try {
+      setLoading(true);
+      const data = await fetchUsersData();
+      setUsers(data);
+    } catch (error) {
+      console.error("Error memuat data user:", error);
+      toast.error("Gagal memuat data user");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        setLoading(true);
-        const response = await authFetch(
-          "http://localhost:3001/api/admin/users"
-        );
-
-        if (!response.ok) {
-          throw new Error("Gagal mengambil data user");
-        }
-
-        const data = await response.json();
-        setUsers(data);
-      } catch (error) {
-        console.error("Error mengambil data user:", error);
-        toast.error("Gagal mengambil data user");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUsers();
+    loadUsers();
   }, []);
 
   // Filter user berdasarkan pencarian dan filter
@@ -72,7 +63,7 @@ export default function UsersPage() {
             <div className="text-muted-foreground">Memuat data user...</div>
           </div>
         ) : (
-          <UsersTable data={filteredUsers} />
+          <UsersTable data={filteredUsers} onUserUpdated={loadUsers} />
         )}
       </div>
     </div>

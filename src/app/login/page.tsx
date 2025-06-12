@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react"; // Tambahkan impor ini
 import AuthLayout from "@/components/auth/AuthLayout";
 import PasswordInput from "@/components/auth/PasswordInput";
 import AuthRedirectText from "@/components/auth/AuthRedirectText";
@@ -8,7 +9,6 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/components/ui/sonner";
@@ -19,17 +19,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginSchema } from "@/lib/schemas";
 
 export default function LoginPage() {
   const router = useRouter();
   const { setUser } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState<"USER" | "ADMIN">("USER");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // Gunakan useState di sini
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+  } = useForm({
+    resolver: zodResolver(LoginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      role: "USER" as "USER" | "ADMIN",
+    },
+  });
+
+  const role = watch("role");
+
+  const onSubmit = async (formData: any) => {
     if (loading) return;
 
     setLoading(true);
@@ -39,30 +55,23 @@ export default function LoginPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password, role }),
+        body: JSON.stringify({ ...formData }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
         toast.dismiss();
-
-        // Handle specific error types
-        if (res.status === 401 && data.expired) {
-          toast.error("Session expired. Please login again.");
-        } else {
-          toast.error(data.message || "Login gagal.");
-        }
-
+        toast.error(data.message || "Login gagal.");
         setLoading(false);
         return;
       }
 
       // Verifikasi role yang dipilih sesuai dengan role di database
-      if (data.user.role !== role) {
+      if (data.user.role !== formData.role) {
         toast.error(
           `Anda tidak memiliki akses sebagai ${
-            role === "ADMIN" ? "admin" : "user"
+            formData.role === "ADMIN" ? "admin" : "user"
           }`
         );
         setLoading(false);
@@ -87,7 +96,7 @@ export default function LoginPage() {
 
       // Redirect berdasarkan role
       setTimeout(() => {
-        if (role === "ADMIN") {
+        if (formData.role === "ADMIN") {
           router.push("/admin");
         } else {
           router.push("/");
@@ -118,14 +127,15 @@ export default function LoginPage() {
         />
       </div>
 
-      <form onSubmit={handleLogin} className="mt-8 space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">
         <div className="space-y-4">
-          {/* Tambahkan pemilihan role */}
           <div>
             <Label htmlFor="role">Login sebagai</Label>
             <Select
               value={role}
-              onValueChange={(value) => setRole(value as "USER" | "ADMIN")}
+              onValueChange={(value) =>
+                setValue("role", value as "USER" | "ADMIN")
+              }
             >
               <SelectTrigger className="w-full mt-1 border-[rgb(39,68,124)] focus:ring-2 focus:ring-[rgb(73,163,90)]">
                 <SelectValue placeholder="Pilih role" />
@@ -137,18 +147,11 @@ export default function LoginPage() {
             </Select>
           </div>
 
-          <EmailInput
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <EmailInput {...register("email")} error={errors.email?.message} />
 
           <PasswordInput
-            id="password"
-            label="Password"
-            placeholder="Password"
-            className="mt-1 border-[rgb(39,68,124)] focus:ring-2 focus:ring-[rgb(73,163,90)]"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            {...register("password")}
+            error={errors.password?.message}
           />
 
           <div className="flex items-center justify-between">

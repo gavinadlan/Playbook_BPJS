@@ -101,12 +101,12 @@ export default function PengajuanSayaPage() {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() =>
-                      window.open(
-                        `http://localhost:3001${submission.path}`,
-                        "_blank"
-                      )
-                    }
+                    onClick={() => {
+                      const url = submission.path.startsWith("http")
+                        ? submission.path
+                        : `http://localhost:3001${submission.path}`;
+                      window.open(url, "_blank");
+                    }}
                   >
                     <Download className="w-4 h-4 mr-2" />
                     Dokumen

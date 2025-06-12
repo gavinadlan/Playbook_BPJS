@@ -1,8 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-const Switch = ({ onToggle }: { onToggle?: (isChecked: boolean) => void }) => {
-  const [isChecked, setIsChecked] = useState(false);
+interface SwitchProps {
+  checked?: boolean;
+  onToggle?: (isChecked: boolean) => void;
+}
+
+const Switch = ({ checked = false, onToggle }: SwitchProps) => {
+  const [isChecked, setIsChecked] = useState(checked);
+
+  useEffect(() => {
+    setIsChecked(checked);
+  }, [checked]);
 
   const handleChange = () => {
     const newChecked = !isChecked;

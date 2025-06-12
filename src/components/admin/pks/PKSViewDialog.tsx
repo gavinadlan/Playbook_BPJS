@@ -115,12 +115,12 @@ export const PKSViewDialog = ({
             Tutup
           </Button>
           <Button
-            onClick={() =>
-              window.open(
-                `${process.env.NEXT_PUBLIC_API_URL}${pks.path}`,
-                "_blank"
-              )
-            }
+            onClick={() => {
+              const finalUrl = pks.path.startsWith("http")
+                ? pks.path
+                : `${process.env.NEXT_PUBLIC_API_URL}${pks.path}`;
+              window.open(finalUrl, "_blank");
+            }}
           >
             <Eye className="h-4 w-4 mr-2" />
             Lihat Dokumen Lengkap

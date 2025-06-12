@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export enum ParameterType {
   STRING = "string",
   INTEGER = "integer",
@@ -41,8 +43,8 @@ export interface User {
   name: string;
   email: string;
   role: "USER" | "ADMIN";
-  lastVisited: string | null; // ISO string dari backend
-  createdAt: string; // ISO string dari backend
+  lastVisited: string | null;
+  createdAt: string;
 }
 
 export interface ApiResponse<T> {
@@ -94,3 +96,53 @@ export interface DashboardData {
     rejectedPks: number;
   };
 }
+
+// Skema untuk response login
+export const LoginResponseSchema = z.object({
+  message: z.string().optional(),
+  user: z.object({
+    id: z.number(),
+    name: z.string(),
+    email: z.string(),
+    role: z.enum(["USER", "ADMIN"]),
+  }),
+  token: z.string(),
+});
+
+// Type untuk LoginResponse
+export type LoginResponse = z.infer<typeof LoginResponseSchema>;
+
+// Skema untuk response registrasi
+export const RegisterResponseSchema = z.object({
+  message: z.string(),
+});
+
+// Skema untuk response error umum
+export const ErrorResponseSchema = z.object({
+  message: z.string(),
+  error: z.any().optional(),
+});
+
+// Skema untuk response PKS
+export const PKSResponseSchema = z.object({
+  id: z.number(),
+  filename: z.string(),
+  path: z.string(),
+  company: z.string(),
+  status: z.enum(["PENDING", "APPROVED", "REJECTED"]),
+  submittedAt: z.string(),
+  approvedAt: z.string().optional(),
+  rejectedAt: z.string().optional(),
+  reason: z.string().optional(),
+  userId: z.number(),
+});
+
+// Skema untuk response user
+export const UserResponseSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  email: z.string(),
+  role: z.enum(["USER", "ADMIN"]),
+  lastVisited: z.string().nullable(),
+  createdAt: z.string(),
+});

@@ -22,6 +22,17 @@ import { useState } from "react";
 import { deleteUser } from "@/utils/api";
 import { toast } from "sonner";
 import { EditUserModal } from "./UserModal";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import Loader from "@/components/ui/loading";
 
 // Fungsi helper untuk format tanggal
 const formatDate = (dateString: string) => {
@@ -73,24 +84,30 @@ export const UsersTable = ({ data, onUserUpdated }: UsersTableProps) => {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
 
+  // State untuk konfirmasi penghapusan
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<User | null>(null);
+
   const handleEditUser = (user: User) => {
     setEditingUser(user);
     setShowEditModal(true);
   };
 
-  const handleDeleteUser = async (user: User) => {
-    const isConfirmed = window.confirm(
-      `Apakah Anda yakin ingin menghapus user "${user.name}"?\nTindakan ini tidak dapat dibatalkan.`
-    );
+  const handleDeleteClick = (user: User) => {
+    setUserToDelete(user);
+    setShowDeleteDialog(true);
+  };
 
-    if (!isConfirmed) return;
+  const handleConfirmDelete = async () => {
+    if (!userToDelete) return;
 
     try {
-      setLoadingDelete(user.id);
+      setLoadingDelete(userToDelete.id);
+      setShowDeleteDialog(false);
 
-      await deleteUser(user.id);
+      await deleteUser(userToDelete.id);
 
-      toast.success(`User "${user.name}" berhasil dihapus`);
+      toast.success(`User "${userToDelete.name}" berhasil dihapus`);
 
       // Refresh data
       if (onUserUpdated) {
@@ -101,6 +118,7 @@ export const UsersTable = ({ data, onUserUpdated }: UsersTableProps) => {
       toast.error(error.message || "Gagal menghapus user. Silakan coba lagi.");
     } finally {
       setLoadingDelete(null);
+      setUserToDelete(null);
     }
   };
 
@@ -160,7 +178,7 @@ export const UsersTable = ({ data, onUserUpdated }: UsersTableProps) => {
                           Ubah
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => handleDeleteUser(user)}
+                          onClick={() => handleDeleteClick(user)}
                           className="text-red-600 cursor-pointer"
                           disabled={loadingDelete === user.id}
                         >
@@ -191,6 +209,53 @@ export const UsersTable = ({ data, onUserUpdated }: UsersTableProps) => {
           }
         }}
       />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent className="max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-red-600">
+              Konfirmasi Penghapusan
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              <>
+                Apakah Anda yakin ingin menghapus user{" "}
+                <span className="font-semibold text-foreground">
+                  {userToDelete?.name}
+                </span>
+                ?<br />
+                <span className="text-red-500 block mt-2">
+                  Tindakan ini tidak dapat dibatalkan. Semua data yang terkait
+                  dengan user ini akan dihapus secara permanen.
+                </span>
+              </>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-gray-300 hover:bg-gray-100">
+              Batal
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmDelete}
+              className="bg-red-600 hover:bg-red-700 focus:ring-red-500"
+            >
+              Ya, Hapus
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Overlay loader untuk penghapusan */}
+      {loadingDelete !== null && (
+        <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50">
+          <div className="flex flex-col items-center">
+            <Loader />
+            <p className="mt-4 text-white text-lg font-medium">
+              Menghapus user...
+            </p>
+          </div>
+        </div>
+      )}
     </>
   );
 };

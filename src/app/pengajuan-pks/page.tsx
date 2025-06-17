@@ -175,6 +175,7 @@ export default function PengajuanPksPage() {
                   {file && (
                     <div className="mt-2 flex items-center justify-between bg-gray-50 p-3 rounded-md">
                       <span className="text-sm text-gray-600">{file.name}</span>
+
                       <button
                         type="button"
                         onClick={() => setFile(null)}

@@ -38,7 +38,7 @@ export const PKSViewDialog = ({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <h3 className="text-sm font-medium text-gray-500">Dokumen</h3>
-              <p className="text-sm">{pks.filename}</p>
+              <p className="text-sm">{pks.originalName}</p>
             </div>
             <div>
               <h3 className="text-sm font-medium text-gray-500">Status</h3>

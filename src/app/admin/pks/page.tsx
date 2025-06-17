@@ -50,7 +50,7 @@ export default function PKSPage() {
     const userName = pks.user?.name?.toLowerCase() || "unknown";
 
     const matchesSearch =
-      pks.filename.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      pks.originalName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       pks.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
       userName.includes(searchTerm.toLowerCase());
 

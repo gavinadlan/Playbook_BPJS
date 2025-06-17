@@ -103,7 +103,7 @@ export const PKSTable = ({ data, onStatusUpdate }: PKSTableProps) => {
             <TableRow key={pks.id}>
               <TableCell className="flex items-center gap-2">
                 <FileText className="h-4 w-4 text-muted-foreground" />
-                {pks.filename}
+                {pks.originalName}
               </TableCell>
               <TableCell>{pks.company}</TableCell>
               <TableCell>{pks.user?.name || "Unknown"}</TableCell>
@@ -119,7 +119,7 @@ export const PKSTable = ({ data, onStatusUpdate }: PKSTableProps) => {
                     variant="ghost"
                     size="sm"
                     onClick={() => handleView(pks)}
-                    aria-label={`Lihat detail ${pks.filename}`}
+                    aria-label={`Lihat detail ${pks.originalName}`}
                   >
                     <Eye className="h-4 w-4" />
                   </Button>
@@ -130,7 +130,7 @@ export const PKSTable = ({ data, onStatusUpdate }: PKSTableProps) => {
                         size="sm"
                         className="text-green-600"
                         onClick={() => openApproveDialog(pks.id)}
-                        aria-label={`Setujui ${pks.filename}`}
+                        aria-label={`Setujui ${pks.originalName}`}
                       >
                         <CheckCircle className="h-4 w-4" />
                       </Button>
@@ -139,7 +139,7 @@ export const PKSTable = ({ data, onStatusUpdate }: PKSTableProps) => {
                         size="sm"
                         className="text-red-600"
                         onClick={() => openRejectDialog(pks.id)}
-                        aria-label={`Tolak ${pks.filename}`}
+                        aria-label={`Tolak ${pks.originalName}`}
                       >
                         <XCircle className="h-4 w-4" />
                       </Button>

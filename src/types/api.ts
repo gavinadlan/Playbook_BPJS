@@ -55,6 +55,7 @@ export interface ApiResponse<T> {
 
 export interface PKS {
   id: number;
+  originalName: string;
   filename: string;
   path: string;
   company: string;

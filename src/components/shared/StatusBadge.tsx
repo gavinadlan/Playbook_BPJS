@@ -109,12 +109,12 @@ const statusConfig: Record<
 
   // Status tambahan
   Active: {
-    label: "Aktif",
+    label: "Terverifikasi",
     className: "bg-green-100 text-green-800",
     icon: <UserCheck className="h-4 w-4 mr-1" />,
   },
   Inactive: {
-    label: "Tidak Aktif",
+    label: "Belum Verifikasi",
     className: "bg-gray-100 text-gray-800",
     icon: <UserX className="h-4 w-4 mr-1" />,
   },

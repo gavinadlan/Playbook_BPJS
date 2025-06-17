@@ -7,6 +7,7 @@ import AuthLayout from "@/components/auth/AuthLayout";
 import EmailInput from "@/components/auth/EmailInput";
 import Link from "next/link";
 import { toast } from "@/components/ui/sonner";
+import Loader from "@/components/ui/loading";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -58,6 +59,16 @@ export default function ForgotPasswordPage() {
       titleLeft="Lupa Password?"
       descLeft="Masukkan email kamu untuk menerima link reset password"
     >
+      {/* Overlay loader */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50">
+          <div className="flex flex-col items-center">
+            <Loader />
+            <p className="mt-4 text-white text-lg font-medium">Mengirim...</p>
+          </div>
+        </div>
+      )}
+
       <div className="text-center">
         <h1 className="text-3xl font-bold text-[rgb(39,68,124)]">
           Reset Password
@@ -76,7 +87,7 @@ export default function ForgotPasswordPage() {
           disabled={loading}
           className="w-full bg-[rgb(73,163,90)] hover:bg-[rgb(63,143,80)] text-white py-2 px-4 rounded-md transition-colors"
         >
-          {loading ? "Mengirim..." : "Kirim Link Reset"}
+          Kirim Link Reset
         </Button>
 
         <div className="text-center text-sm mt-4">

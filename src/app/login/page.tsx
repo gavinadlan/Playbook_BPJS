@@ -22,6 +22,7 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchema } from "@/lib/schemas";
+import Loader from "@/components/ui/loading";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -50,6 +51,8 @@ export default function LoginPage() {
 
     setLoading(true);
     try {
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
       const res = await fetch("http://localhost:3001/api/users/login", {
         method: "POST",
         headers: {
@@ -116,6 +119,16 @@ export default function LoginPage() {
       titleLeft="Selamat Datang Kembali"
       descLeft="Silakan Masuk untuk mulai mengakses"
     >
+      {/* Overlay loading di tengah halaman */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50">
+          <div className="flex flex-col items-center">
+            <Loader />
+            <p className="mt-4 text-white text-lg font-medium">Memproses...</p>
+          </div>
+        </div>
+      )}
+
       <div className="text-center">
         <h1 className="text-3xl font-bold text-[rgb(39,68,124)]">
           Masuk ke Akun
@@ -175,29 +188,7 @@ export default function LoginPage() {
           disabled={loading}
           className="w-full bg-[rgb(73,163,90)] hover:bg-[rgb(63,143,80)] text-white py-2 px-4 rounded-md transition-colors"
         >
-          {loading ? (
-            <span className="flex items-center">
-              <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                  fill="none"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                />
-              </svg>
-              Memproses...
-            </span>
-          ) : (
-            "Masuk"
-          )}
+          {loading ? "Memproses..." : "Masuk"}
         </Button>
       </form>
     </AuthLayout>

@@ -8,6 +8,7 @@ import PasswordInput from "@/components/auth/PasswordInput";
 import AuthRedirectText from "@/components/auth/AuthRedirectText";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/sonner";
+import Loader from "@/components/ui/loading";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -70,6 +71,16 @@ export default function RegisterPage() {
       titleLeft="Daftar Akun Baru"
       descLeft="Bergabung dengan komunitas kami untuk pengalaman terbaik"
     >
+      {/* Overlay loader */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50">
+          <div className="flex flex-col items-center">
+            <Loader />
+            <p className="mt-4 text-white text-lg font-medium">Memproses...</p>
+          </div>
+        </div>
+      )}
+
       <div className="text-center">
         <h1 className="text-3xl font-bold text-[rgb(39,68,124)]">
           Buat Akun Baru
@@ -119,7 +130,7 @@ export default function RegisterPage() {
           disabled={loading}
           className="w-full bg-[rgb(73,163,90)] hover:bg-[rgb(63,143,80)] text-white py-2 px-4 rounded-md transition-colors"
         >
-          {loading ? "Memproses..." : "Daftar Sekarang"}
+          Daftar Sekarang
         </Button>
       </form>
     </AuthLayout>

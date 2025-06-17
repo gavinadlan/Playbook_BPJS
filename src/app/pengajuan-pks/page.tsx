@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/sonner";
+import Loader from "@/components/ui/loading";
 
 export default function PengajuanPksPage() {
   const { user } = useAuth();
@@ -62,6 +63,16 @@ export default function PengajuanPksPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-8 bg-gradient-to-br from-[#f7fafc] to-[#ebf4f8]">
+      {/* Overlay loader */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50">
+          <div className="flex flex-col items-center">
+            <Loader />
+            <p className="mt-4 text-white text-lg font-medium">Mengirim...</p>
+          </div>
+        </div>
+      )}
+
       <Card className="w-full max-w-2xl shadow-xl rounded-xl border-0 bg-white">
         <div className="p-8 space-y-6">
           <div className="text-center space-y-2">
@@ -175,33 +186,7 @@ export default function PengajuanPksPage() {
               disabled={loading}
               className="w-full h-12 bg-[#27447C] hover:bg-[#1D3566] text-white font-medium rounded-lg transition-all"
             >
-              {loading ? (
-                <div className="flex items-center gap-2">
-                  <svg
-                    className="animate-spin h-5 w-5 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  <span>Mengirim...</span>
-                </div>
-              ) : (
-                "Ajukan PKS"
-              )}
+              Ajukan PKS
             </Button>
           </form>
         </div>

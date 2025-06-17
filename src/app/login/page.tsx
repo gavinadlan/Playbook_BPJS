@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react"; // Tambahkan impor ini
+import { useState } from "react";
 import AuthLayout from "@/components/auth/AuthLayout";
 import PasswordInput from "@/components/auth/PasswordInput";
 import AuthRedirectText from "@/components/auth/AuthRedirectText";
@@ -27,7 +27,7 @@ import Loader from "@/components/ui/loading";
 export default function LoginPage() {
   const router = useRouter();
   const { setUser } = useAuth();
-  const [loading, setLoading] = useState(false); // Gunakan useState di sini
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -50,9 +50,10 @@ export default function LoginPage() {
     if (loading) return;
 
     setLoading(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+    const startTime = Date.now();
+    const MIN_LOADING_TIME = 600;
 
+    try {
       const res = await fetch("http://localhost:3001/api/users/login", {
         method: "POST",
         headers: {
@@ -64,21 +65,16 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        toast.dismiss();
-        toast.error(data.message || "Login gagal.");
-        setLoading(false);
-        return;
+        throw new Error(data.message || "Login gagal.");
       }
 
-      // Verifikasi role yang dipilih sesuai dengan role di database
+      // Verifikasi role
       if (data.user.role !== formData.role) {
-        toast.error(
+        throw new Error(
           `Anda tidak memiliki akses sebagai ${
             formData.role === "ADMIN" ? "admin" : "user"
           }`
         );
-        setLoading(false);
-        return;
       }
 
       // Simpan token dan user
@@ -94,8 +90,16 @@ export default function LoginPage() {
       localStorage.setItem("user", JSON.stringify(data.user));
       setUser(data.user);
 
-      toast.dismiss();
       toast.success("Login berhasil!");
+
+      // Hitung sisa waktu minimal loading
+      const elapsed = Date.now() - startTime;
+      const remaining = MIN_LOADING_TIME - elapsed;
+
+      // Tunggu sisa waktu jika proses terlalu cepat
+      if (remaining > 0) {
+        await new Promise((resolve) => setTimeout(resolve, remaining));
+      }
 
       // Redirect berdasarkan role
       setTimeout(() => {
@@ -105,9 +109,16 @@ export default function LoginPage() {
           router.push("/");
         }
       }, 1000);
-    } catch (err) {
-      toast.dismiss();
-      toast.error("Terjadi kesalahan. Coba lagi nanti.");
+    } catch (err: any) {
+      // Hitung sisa waktu minimal loading untuk error
+      const elapsed = Date.now() - startTime;
+      const remaining = MIN_LOADING_TIME - elapsed;
+
+      if (remaining > 0) {
+        await new Promise((resolve) => setTimeout(resolve, remaining));
+      }
+
+      toast.error(err.message || "Terjadi kesalahan. Coba lagi nanti.");
       console.error("Login error:", err);
     } finally {
       setLoading(false);

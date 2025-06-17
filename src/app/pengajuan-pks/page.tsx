@@ -25,6 +25,9 @@ export default function PengajuanPksPage() {
       return;
     }
 
+    const startTime = Date.now(); // Catat waktu mulai
+    const MIN_LOADING_TIME = 1000; // Minimal loading 1 detik
+
     const formData = new FormData();
     formData.append("company", company);
     formData.append("file", file);
@@ -51,6 +54,15 @@ export default function PengajuanPksPage() {
       if (!res.ok) {
         toast.error(data.message || "Gagal mengajukan PKS.");
       } else {
+        // Hitung sisa waktu minimal loading
+        const elapsedTime = Date.now() - startTime;
+        const remainingTime = MIN_LOADING_TIME - elapsedTime;
+
+        // Tunggu sisa waktu jika proses terlalu cepat
+        if (remainingTime > 0) {
+          await new Promise((resolve) => setTimeout(resolve, remainingTime));
+        }
+
         toast.success("Pengajuan PKS berhasil dikirim!");
         router.push("/pengajuan-pks/success");
       }

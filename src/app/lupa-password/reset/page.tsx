@@ -6,6 +6,7 @@ import AuthLayout from "@/components/auth/AuthLayout";
 import PasswordInput from "@/components/auth/PasswordInput";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/sonner";
+import Loader from "@/components/ui/loading"; 
 
 export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
@@ -40,9 +41,11 @@ export default function ResetPasswordPage() {
       return;
     }
 
-    try {
-      setLoading(true);
+    setLoading(true);
+    const startTime = Date.now();
+    const MIN_LOADING_TIME = 600;
 
+    try {
       const response = await fetch(
         "http://localhost:3001/api/users/reset-password",
         {
@@ -67,9 +70,26 @@ export default function ResetPasswordPage() {
         throw new Error(data.message || "Gagal reset password");
       }
 
+      // Hitung sisa waktu minimal loading
+      const elapsed = Date.now() - startTime;
+      const remaining = MIN_LOADING_TIME - elapsed;
+      
+      // Tunggu sisa waktu jika proses terlalu cepat
+      if (remaining > 0) {
+        await new Promise((resolve) => setTimeout(resolve, remaining));
+      }
+
       toast.success("✅ Password berhasil direset...");
       setTimeout(() => router.push("/login"), 2000);
     } catch (err: any) {
+      // Hitung sisa waktu minimal loading untuk error
+      const elapsed = Date.now() - startTime;
+      const remaining = MIN_LOADING_TIME - elapsed;
+      
+      if (remaining > 0) {
+        await new Promise((resolve) => setTimeout(resolve, remaining));
+      }
+
       let message = "Terjadi kesalahan sistem";
 
       if (err.message.includes("Failed to fetch")) {
@@ -91,6 +111,16 @@ export default function ResetPasswordPage() {
       titleLeft="Reset Password"
       descLeft="Masukkan password baru untuk akunmu"
     >
+      {/* Overlay loader */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50">
+          <div className="flex flex-col items-center">
+            <Loader />
+            <p className="mt-4 text-white text-lg font-medium">Memproses...</p>
+          </div>
+        </div>
+      )}
+
       <div className="text-center">
         <h1 className="text-3xl font-bold text-[rgb(39,68,124)]">
           Atur Ulang Password
@@ -124,29 +154,7 @@ export default function ResetPasswordPage() {
           className="w-full bg-[rgb(73,163,90)] hover:bg-[rgb(63,143,80)] text-white py-2 px-4 rounded-md transition-colors disabled:opacity-50"
           disabled={loading}
         >
-          {loading ? (
-            <span className="flex items-center justify-center">
-              <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                  fill="none"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                />
-              </svg>
-              Memproses...
-            </span>
-          ) : (
-            "Reset Password"
-          )}
+          Reset Password
         </Button>
       </form>
     </AuthLayout>

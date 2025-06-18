@@ -8,6 +8,7 @@ import { UsersSearch } from "@/components/admin/users/UsersSearch";
 import { User } from "@/types/api";
 import { fetchUsersData } from "@/utils/api";
 import { toast } from "@/components/ui/sonner";
+import { Skeleton } from "@/components/ui/skeleton"; // Import skeleton
 
 export default function UsersPage() {
   useAdminAuth();
@@ -52,15 +53,40 @@ export default function UsersPage() {
       <PageHeader title="Manajemen User" description="Kelola user sistem" />
 
       <div className="space-y-4">
-        <UsersSearch
-          searchTerm={searchTerm}
-          onSearch={setSearchTerm}
-          onFilter={setFilter}
-        />
-
+        {/* Loading state untuk search bar */}
         {loading ? (
-          <div className="flex justify-center py-8">
-            <div className="text-muted-foreground">Memuat data user...</div>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Skeleton className="h-10 w-full sm:w-64" />
+            <Skeleton className="h-10 w-32" />
+          </div>
+        ) : (
+          <UsersSearch
+            searchTerm={searchTerm}
+            onSearch={setSearchTerm}
+            onFilter={setFilter}
+          />
+        )}
+
+        {/* Loading state untuk tabel */}
+        {loading ? (
+          <div className="space-y-4">
+            {/* Header tabel */}
+            <div className="flex gap-4">
+              <Skeleton className="h-8 w-1/4" />
+              <Skeleton className="h-8 w-1/4" />
+              <Skeleton className="h-8 w-1/4" />
+              <Skeleton className="h-8 w-1/4" />
+            </div>
+
+            {/* Baris data */}
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="flex gap-4">
+                <Skeleton className="h-12 w-1/4" />
+                <Skeleton className="h-12 w-1/4" />
+                <Skeleton className="h-12 w-1/4" />
+                <Skeleton className="h-12 w-1/4" />
+              </div>
+            ))}
           </div>
         ) : (
           <UsersTable data={filteredUsers} onUserUpdated={loadUsers} />

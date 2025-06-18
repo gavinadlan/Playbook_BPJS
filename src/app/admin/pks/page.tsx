@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { fetchPKSData } from "@/utils/api";
 import { PKS } from "@/types/api";
 import { toast } from "@/components/ui/sonner";
+import { Skeleton } from "@/components/ui/skeleton"; // Import skeleton
 
 export default function PKSPage() {
   useAdminAuth();
@@ -67,10 +68,6 @@ export default function PKSPage() {
     rejected: pksData.filter((p) => p.status === "REJECTED").length,
   };
 
-  if (loading) {
-    return <div className="text-center py-8">Memuat data...</div>;
-  }
-
   if (error) {
     return <div className="text-center py-8 text-red-500">{error}</div>;
   }
@@ -84,26 +81,65 @@ export default function PKSPage() {
 
       <Card>
         <CardHeader className="pb-3">
-          <div className="flex flex-col sm:flex-row justify-between gap-4">
-            <div>
-              <h2 className="text-lg font-semibold">Dokumen PKS</h2>
-              <p className="text-sm text-muted-foreground">
-                Menampilkan {filteredPKS.length} dokumen
-              </p>
+          {loading ? (
+            <div className="space-y-4">
+              <div className="flex justify-between">
+                <div className="space-y-2">
+                  <Skeleton className="h-6 w-48" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
+                <div className="flex gap-2">
+                  <Skeleton className="h-10 w-40" />
+                  <Skeleton className="h-10 w-32" />
+                </div>
+              </div>
             </div>
-            <div className="flex flex-wrap gap-2 items-center">
-              <PKSSearch searchTerm={searchTerm} onSearch={setSearchTerm} />
-              <PKSFilterTabs
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
-                counts={counts}
-              />
+          ) : (
+            <div className="flex flex-col sm:flex-row justify-between gap-4">
+              <div>
+                <h2 className="text-lg font-semibold">Dokumen PKS</h2>
+                <p className="text-sm text-muted-foreground">
+                  Menampilkan {filteredPKS.length} dokumen
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2 items-center">
+                <PKSSearch searchTerm={searchTerm} onSearch={setSearchTerm} />
+                <PKSFilterTabs
+                  activeTab={activeTab}
+                  onTabChange={setActiveTab}
+                  counts={counts}
+                />
+              </div>
             </div>
-          </div>
+          )}
         </CardHeader>
 
         <CardContent>
-          <PKSTable data={filteredPKS} onStatusUpdate={handleStatusUpdate} />
+          {loading ? (
+            <div className="space-y-4">
+              {/* Header tabel */}
+              <div className="flex gap-4">
+                <Skeleton className="h-8 w-1/5" />
+                <Skeleton className="h-8 w-1/5" />
+                <Skeleton className="h-8 w-1/5" />
+                <Skeleton className="h-8 w-1/5" />
+                <Skeleton className="h-8 w-1/5" />
+              </div>
+
+              {/* Baris data */}
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="flex gap-4">
+                  <Skeleton className="h-12 w-1/5" />
+                  <Skeleton className="h-12 w-1/5" />
+                  <Skeleton className="h-12 w-1/5" />
+                  <Skeleton className="h-12 w-1/5" />
+                  <Skeleton className="h-12 w-1/5" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <PKSTable data={filteredPKS} onStatusUpdate={handleStatusUpdate} />
+          )}
         </CardContent>
       </Card>
     </div>

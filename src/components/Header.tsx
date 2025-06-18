@@ -15,7 +15,6 @@ import {
   LayoutDashboard,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import Switch from "@/components/ui/switch";
 import { useAuth } from "@/context/AuthContext";
 import {
   DropdownMenu,
@@ -33,21 +32,32 @@ const Header = () => {
 
   const handleLogout = () => {
     logout();
+    setIsMobileMenuOpen(false);
     router.push("/login");
   };
 
+  // Tutup mobile menu saat navigasi
+  const handleMobileNavClick = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   return (
-    <header className="sticky top-0 left-0 w-full z-50 bg-white border-b border-gray-200 h-20">
-      <div className="flex h-full items-stretch justify-between px-4 md:px-6">
+    <header className="sticky top-0 left-0 w-full z-50 bg-white border-b border-gray-200 h-20 shadow-sm">
+      <div className="flex h-full items-stretch justify-between px-4 md:px-6 max-w-7xl mx-auto">
         <div className="flex items-stretch gap-6">
           {/* Logo */}
-          <Link href="/" className="flex-shrink-0 flex items-center">
+          <Link
+            href="/"
+            className="flex-shrink-0 flex items-center"
+            aria-label="Home"
+          >
             <Image
               src="/images/logo.svg"
               alt="BPJS Kesehatan Logo"
-              width={120}
-              height={32}
+              width={140}
+              height={40}
               className="h-8 w-auto"
+              priority
             />
           </Link>
 
@@ -70,15 +80,18 @@ const Header = () => {
           <div className="hidden md:flex items-center gap-4">
             {user ? (
               <DropdownMenu>
-                <DropdownMenuTrigger className="focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded-full">
+                <DropdownMenuTrigger
+                  className="focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded-full"
+                  aria-label="Menu pengguna"
+                >
                   <div className="flex items-center gap-2 hover:bg-gray-100 rounded-full px-4 py-2 transition-colors duration-200">
                     <UserCircle className="h-7 w-7 text-[rgb(39,68,124)]" />
                     <div className="text-left">
-                      <p className="text-sm font-semibold text-gray-800">
+                      <p className="text-sm font-semibold text-gray-800 truncate max-w-[140px]">
                         {user.name}
                       </p>
                       {user.email && (
-                        <p className="text-xs text-gray-500 truncate max-w-[160px]">
+                        <p className="text-xs text-gray-500 truncate max-w-[140px]">
                           {user.email}
                         </p>
                       )}
@@ -87,13 +100,12 @@ const Header = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="end"
-                  className="w-64 border-2 border-blue-50 shadow-xl rounded-xl py-2 bg-white"
+                  className="min-w-[280px] border-2 border-blue-50 shadow-xl rounded-xl py-2 bg-white"
                 >
-                  {/* Tambahkan menu Admin Dashboard untuk admin */}
                   {isAdmin && (
                     <DropdownMenuItem
                       onClick={() => router.push("/admin/dashboard")}
-                      className="cursor-pointer px-4 py-3 flex items-center gap-3 text-gray-700 hover:bg-blue-50 transition-colors duration-200"
+                      className="cursor-pointer px-4 py-3 flex items-center gap-3 text-gray-700 hover:bg-blue-50 transition-colors duration-200 focus:bg-blue-50"
                     >
                       <div className="p-2 bg-blue-100 rounded-lg">
                         <LayoutDashboard className="h-5 w-5 text-blue-600" />
@@ -111,7 +123,7 @@ const Header = () => {
 
                   <DropdownMenuItem
                     onClick={() => router.push("/pengajuan-pks")}
-                    className="cursor-pointer px-4 py-3 flex items-center gap-3 text-gray-700 hover:bg-blue-50 transition-colors duration-200"
+                    className="cursor-pointer px-4 py-3 flex items-center gap-3 text-gray-700 hover:bg-blue-50 transition-colors duration-200 focus:bg-blue-50"
                   >
                     <div className="p-2 bg-blue-100 rounded-lg">
                       <ClipboardList className="h-5 w-5 text-blue-600" />
@@ -126,7 +138,7 @@ const Header = () => {
 
                   <DropdownMenuItem
                     onClick={() => router.push("/pengajuan-saya")}
-                    className="cursor-pointer px-4 py-3 flex items-center gap-3 text-gray-700 hover:bg-green-50 transition-colors duration-200"
+                    className="cursor-pointer px-4 py-3 flex items-center gap-3 text-gray-700 hover:bg-green-50 transition-colors duration-200 focus:bg-green-50"
                   >
                     <div className="p-2 bg-green-100 rounded-lg">
                       <FileText className="h-5 w-5 text-green-600" />
@@ -143,7 +155,7 @@ const Header = () => {
 
                   <DropdownMenuItem
                     onClick={() => router.push("/docs")}
-                    className="cursor-pointer px-4 py-3 flex items-center gap-3 text-gray-700 hover:bg-purple-50 transition-colors duration-200"
+                    className="cursor-pointer px-4 py-3 flex items-center gap-3 text-gray-700 hover:bg-purple-50 transition-colors duration-200 focus:bg-purple-50"
                   >
                     <div className="p-2 bg-purple-100 rounded-lg">
                       <FileCode2 className="h-5 w-5 text-purple-600" />
@@ -162,7 +174,7 @@ const Header = () => {
 
                   <DropdownMenuItem
                     onClick={handleLogout}
-                    className="cursor-pointer px-4 py-3 flex items-center gap-3 text-red-600 hover:bg-red-50 transition-colors duration-200"
+                    className="cursor-pointer px-4 py-3 flex items-center gap-3 text-red-600 hover:bg-red-50 transition-colors duration-200 focus:bg-red-50"
                   >
                     <div className="p-2 bg-red-100 rounded-lg">
                       <LogOut className="h-5 w-5" />
@@ -180,13 +192,13 @@ const Header = () => {
               <>
                 <Button
                   variant="outline"
-                  className="border-[rgb(39,68,124)] text-[rgb(39,68,124)] hover:bg-[rgb(39,68,124)] hover:text-white transition-colors"
+                  className="border-[rgb(39,68,124)] text-[rgb(39,68,124)] hover:bg-[rgb(39,68,124)] hover:text-white transition-colors focus:ring-2 focus:ring-[rgb(39,68,124)] focus:ring-offset-2"
                   asChild
                 >
                   <Link href="/login">Login</Link>
                 </Button>
                 <Button
-                  className="bg-[rgb(73,163,90)] hover:bg-[rgb(63,143,80)] text-white transition-colors"
+                  className="bg-[rgb(73,163,90)] hover:bg-[rgb(63,143,80)] text-white transition-colors focus:ring-2 focus:ring-[rgb(63,143,80)] focus:ring-offset-2"
                   asChild
                 >
                   <Link href="/registrasi">Register</Link>
@@ -195,22 +207,18 @@ const Header = () => {
             )}
           </div>
 
-          {/* Toggle Switch */}
-          <div className="hidden md:block relative z-20">
-            <Switch />
-          </div>
-
           {/* Mobile Menu Toggle */}
           <Button
             variant="ghost"
             size="icon"
             className="md:hidden relative z-10"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label={isMobileMenuOpen ? "Tutup menu" : "Buka menu"}
           >
             {isMobileMenuOpen ? (
-              <X className="h-5 w-5" />
+              <X className="h-6 w-6" />
             ) : (
-              <Menu className="h-5 w-5" />
+              <Menu className="h-6 w-6" />
             )}
           </Button>
         </div>
@@ -218,113 +226,113 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-t border-gray-200 bg-white relative z-0">
-          <nav className="flex flex-col p-4 space-y-2">
+        <div className="md:hidden border-t border-gray-200 bg-white relative z-50 max-h-[80vh] overflow-y-auto">
+          <nav className="flex flex-col">
             {user && (
-              <div className="flex items-center gap-3 pb-4 border-b border-gray-200">
-                <UserCircle className="h-8 w-8 text-[rgb(39,68,124)]" />
+              <div className="flex items-center gap-3 p-4 border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                <UserCircle className="h-9 w-9 text-[rgb(39,68,124)]" />
                 <div>
-                  <p className="font-medium text-gray-900">{user.name}</p>
+                  <p className="font-medium text-gray-900 truncate max-w-[200px]">
+                    {user.name}
+                  </p>
                   {user.email && (
-                    <p className="text-sm text-gray-500">{user.email}</p>
+                    <p className="text-sm text-gray-500 truncate max-w-[200px]">
+                      {user.email}
+                    </p>
                   )}
                 </div>
               </div>
             )}
 
-            <MobileNavLink
-              href="/"
-              label="Home"
-              currentPath={pathname}
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
-            <MobileNavLink
-              href="/fitur-api"
-              label="Fitur API"
-              currentPath={pathname}
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
-            <MobileNavLink
-              href="/panduan"
-              label="Panduan"
-              currentPath={pathname}
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
-            <MobileNavLink
-              href="/faq"
-              label="FAQ"
-              currentPath={pathname}
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
-
-            {/* Admin Dashboard link for mobile */}
-            {isAdmin && (
+            <div className="p-2 space-y-1">
               <MobileNavLink
-                href="/admin/dashboard"
-                label="Admin Dashboard"
+                href="/"
+                label="Home"
                 currentPath={pathname}
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={handleMobileNavClick}
               />
-            )}
+              <MobileNavLink
+                href="/fitur-api"
+                label="Fitur API"
+                currentPath={pathname}
+                onClick={handleMobileNavClick}
+              />
+              <MobileNavLink
+                href="/panduan"
+                label="Panduan"
+                currentPath={pathname}
+                onClick={handleMobileNavClick}
+              />
+              <MobileNavLink
+                href="/faq"
+                label="FAQ"
+                currentPath={pathname}
+                onClick={handleMobileNavClick}
+              />
 
-            {/* Only show these navigation items when user is logged in */}
-            {user && (
-              <>
-                <MobileNavLink
-                  href="/pengajuan-pks"
-                  label="Pengajuan PKS"
-                  currentPath={pathname}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                />
-                <MobileNavLink
-                  href="/pengajuan-saya"
-                  label="Pengajuan Saya"
-                  currentPath={pathname}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                />
-                <MobileNavLink
-                  href="/docs"
-                  label="Dokumentasi API"
-                  currentPath={pathname}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                />
-              </>
-            )}
-
-            {/* Mobile Buttons */}
-            <div className="flex flex-col gap-2 pt-4">
-              {user ? (
-                <Button
-                  onClick={handleLogout}
-                  variant="ghost"
-                  className="w-full justify-start text-red-600 hover:bg-red-50 hover:text-red-700"
-                >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Keluar
-                </Button>
-              ) : (
+              {/* Menu khusus pengguna */}
+              {user && (
                 <>
-                  <Button
-                    variant="outline"
-                    className="w-full border-[rgb(39,68,124)] text-[rgb(39,68,124)] hover:bg-[rgb(39,68,124)] hover:text-white transition-colors"
-                    asChild
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <Link href="/login">Login</Link>
-                  </Button>
-                  <Button
-                    className="w-full bg-[rgb(73,163,90)] hover:bg-[rgb(63,143,80)] text-white transition-colors"
-                    asChild
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <Link href="/registrasi">Register</Link>
-                  </Button>
+                  {isAdmin && (
+                    <MobileNavLink
+                      href="/admin/dashboard"
+                      label="Admin Dashboard"
+                      currentPath={pathname}
+                      onClick={handleMobileNavClick}
+                    />
+                  )}
+                  <MobileNavLink
+                    href="/pengajuan-pks"
+                    label="Pengajuan PKS"
+                    currentPath={pathname}
+                    onClick={handleMobileNavClick}
+                  />
+                  <MobileNavLink
+                    href="/pengajuan-saya"
+                    label="Pengajuan Saya"
+                    currentPath={pathname}
+                    onClick={handleMobileNavClick}
+                  />
+                  <MobileNavLink
+                    href="/docs"
+                    label="Dokumentasi API"
+                    currentPath={pathname}
+                    onClick={handleMobileNavClick}
+                  />
                 </>
               )}
             </div>
 
-            <div className="pt-4 relative z-20">
-              <Switch />
+            {/* Mobile Buttons */}
+            <div className="p-4 border-t border-gray-100">
+              {user ? (
+                <Button
+                  onClick={handleLogout}
+                  variant="ghost"
+                  className="w-full justify-start text-red-600 hover:bg-red-50 hover:text-red-700 px-4 py-3"
+                >
+                  <LogOut className="mr-3 h-5 w-5" />
+                  <span className="font-medium">Keluar</span>
+                </Button>
+              ) : (
+                <div className="grid grid-cols-2 gap-3">
+                  <Button
+                    variant="outline"
+                    className="border-[rgb(39,68,124)] text-[rgb(39,68,124)] hover:bg-[rgb(39,68,124)] hover:text-white transition-colors"
+                    asChild
+                    onClick={handleMobileNavClick}
+                  >
+                    <Link href="/login">Login</Link>
+                  </Button>
+                  <Button
+                    className="bg-[rgb(73,163,90)] hover:bg-[rgb(63,143,80)] text-white transition-colors"
+                    asChild
+                    onClick={handleMobileNavClick}
+                  >
+                    <Link href="/registrasi">Register</Link>
+                  </Button>
+                </div>
+              )}
             </div>
           </nav>
         </div>
@@ -349,18 +357,19 @@ const NavLink = ({
     <Link
       href={href}
       className={`
-        relative flex items-center justify-center h-full px-6
+        relative flex items-center justify-center h-full px-5
         font-medium transition-colors
         ${
           isActive
-            ? "text-[rgb(39,68,124)]"
+            ? "text-[rgb(39,68,124)] font-semibold"
             : "text-gray-600 hover:text-[rgb(39,68,124)]"
         }
       `}
+      aria-current={isActive ? "page" : undefined}
     >
       {label}
       {isActive && (
-        <div className="absolute bottom-0 left-0 w-full h-[4px] bg-[rgb(39,68,124)]" />
+        <div className="absolute bottom-0 left-0 w-full h-[4px] bg-[rgb(39,68,124)] rounded-t" />
       )}
     </Link>
   );
@@ -384,11 +393,16 @@ const MobileNavLink = ({
     <Link
       href={href}
       onClick={onClick}
-      className={`px-4 py-3 w-full border-b last:border-b-0 ${
-        isActive
-          ? "text-[rgb(39,68,124)] font-medium border-[rgb(39,68,124)]"
-          : "text-gray-600 border-transparent hover:border-gray-200"
-      }`}
+      className={`
+        px-4 py-3 rounded-lg mx-2 flex items-center
+        text-base font-medium transition-colors
+        ${
+          isActive
+            ? "bg-blue-50 text-[rgb(39,68,124)]"
+            : "text-gray-700 hover:bg-gray-100"
+        }
+      `}
+      aria-current={isActive ? "page" : undefined}
     >
       {label}
     </Link>

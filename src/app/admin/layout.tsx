@@ -6,12 +6,6 @@ import AdminSidebar from "@/components/admin/layout/AdminSidebar";
 import { useAuth } from "@/context/AuthContext";
 import { Menu, X } from "lucide-react";
 
-const hideHeaderFooterStyle = `
-  header, footer {
-    display: none !important;
-  }
-`;
-
 export default function AdminLayout({
   children,
 }: {
@@ -46,9 +40,6 @@ export default function AdminLayout({
 
   return (
     <>
-      <style jsx global>
-        {hideHeaderFooterStyle}
-      </style>
       <div className="flex min-h-screen bg-gray-50">
         {/* Mobile Menu Button */}
         {isMobile && (

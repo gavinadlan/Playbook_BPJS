@@ -6,10 +6,14 @@ import { ReactNode } from "react";
 export default function ClientLayoutWrapper({
   children,
 }: {
-  children: (isAdminPage: boolean) => ReactNode;
+  children: ReactNode;
 }) {
   const pathname = usePathname();
-  const isAdminPage = pathname?.startsWith("/admin");
+  const isAdminPage = pathname?.startsWith("/admin") ?? false;
 
-  return <>{children(isAdminPage)}</>;
+  return (
+    <div className={isAdminPage ? "admin-layout" : "main-layout"}>
+      {children}
+    </div>
+  );
 }

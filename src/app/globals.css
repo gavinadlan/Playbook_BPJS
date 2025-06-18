@@ -97,3 +97,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+.admin-layout .non-admin-header,
+.admin-layout .non-admin-footer {
+  display: none;
+}

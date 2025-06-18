@@ -9,7 +9,7 @@ import {
 } from "react";
 import { toast } from "@/components/ui/sonner";
 
-interface User {
+export interface User {
   id: string;
   name: string;
   email: string;

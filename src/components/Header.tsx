@@ -23,12 +23,13 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const { user, logout, isAdmin } = useAuth();
+  const { user, logout, isAdmin, isLoading } = useAuth(); // Gunakan isLoading dari context
 
   const handleLogout = () => {
     logout();
@@ -36,7 +37,6 @@ const Header = () => {
     router.push("/login");
   };
 
-  // Tutup mobile menu saat navigasi
   const handleMobileNavClick = () => {
     setIsMobileMenuOpen(false);
   };
@@ -78,7 +78,16 @@ const Header = () => {
         <div className="flex items-center gap-4">
           {/* Desktop Buttons */}
           <div className="hidden md:flex items-center gap-4">
-            {user ? (
+            {isLoading ? (
+              // Skeleton untuk desktop saat loading
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-7 w-7 rounded-full" />
+                <div className="space-y-1">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-3 w-32" />
+                </div>
+              </div>
+            ) : user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger
                   className="focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded-full"
@@ -228,7 +237,16 @@ const Header = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden border-t border-gray-200 bg-white relative z-50 max-h-[80vh] overflow-y-auto">
           <nav className="flex flex-col">
-            {user && (
+            {isLoading ? (
+              // Skeleton untuk mobile saat loading
+              <div className="flex items-center gap-3 p-4 border-b border-gray-200">
+                <Skeleton className="h-9 w-9 rounded-full" />
+                <div className="space-y-1">
+                  <Skeleton className="h-5 w-32" />
+                  <Skeleton className="h-4 w-40" />
+                </div>
+              </div>
+            ) : user ? (
               <div className="flex items-center gap-3 p-4 border-b border-gray-200 hover:bg-gray-50 transition-colors">
                 <UserCircle className="h-9 w-9 text-[rgb(39,68,124)]" />
                 <div>
@@ -242,7 +260,7 @@ const Header = () => {
                   )}
                 </div>
               </div>
-            )}
+            ) : null}
 
             <div className="p-2 space-y-1">
               <MobileNavLink
@@ -271,7 +289,7 @@ const Header = () => {
               />
 
               {/* Menu khusus pengguna */}
-              {user && (
+              {user && !isLoading && (
                 <>
                   {isAdmin && (
                     <MobileNavLink
@@ -305,7 +323,13 @@ const Header = () => {
 
             {/* Mobile Buttons */}
             <div className="p-4 border-t border-gray-100">
-              {user ? (
+              {isLoading ? (
+                // Skeleton untuk tombol mobile saat loading
+                <div className="grid grid-cols-2 gap-3">
+                  <Skeleton className="h-10 rounded-md" />
+                  <Skeleton className="h-10 rounded-md" />
+                </div>
+              ) : user ? (
                 <Button
                   onClick={handleLogout}
                   variant="ghost"

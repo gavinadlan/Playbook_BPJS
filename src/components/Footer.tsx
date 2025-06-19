@@ -116,16 +116,6 @@ export default function Footer() {
                   Produk API
                 </a>
               </li>
-              <li>
-                <a href="/docs" className="hover:text-blue-200">
-                  Dokumentasi
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-blue-200">
-                  Sandbox
-                </a>
-              </li>
             </ul>
           </div>
 

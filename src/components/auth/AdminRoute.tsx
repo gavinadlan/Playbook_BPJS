@@ -1,10 +1,9 @@
 "use client";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { toast } from "@/components/ui/sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useMounted } from "@/hooks/useMounted";
 
 export default function AdminRoute({
   children,
@@ -13,11 +12,9 @@ export default function AdminRoute({
 }) {
   const { user, isAdmin, isLoading } = useAuth();
   const router = useRouter();
-  const [checking, setChecking] = useState(true);
-  const isMounted = useMounted();
 
   useEffect(() => {
-    if (!isMounted || isLoading) return;
+    if (isLoading) return;
 
     if (!user) {
       router.push("/login");
@@ -29,14 +26,10 @@ export default function AdminRoute({
       toast.error(
         "Akses ditolak: Hanya admin yang dapat mengakses halaman ini"
       );
-      return;
     }
+  }, [user, isAdmin, isLoading, router]);
 
-    setChecking(false);
-  }, [user, isAdmin, isLoading, isMounted, router]);
-
-  //  Show skeleton
-  if (!isMounted || isLoading || checking) {
+  if (isLoading || !user || !isAdmin) {
     return (
       <div className="p-8 animate-pulse">
         <Skeleton className="w-full h-10 mb-4" />

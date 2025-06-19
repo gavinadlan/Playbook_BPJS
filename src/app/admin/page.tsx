@@ -3,11 +3,25 @@
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LayoutDashboard, Users, FileCheck, Settings } from "lucide-react";
+import { LayoutDashboard, Users, FileCheck } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { toast } from "@/components/ui/sonner";
 
 export default function AdminPage() {
   const { isAdmin, user, checking } = useAdminAuth();
+  const router = useRouter();
+
+  // Fallback protection jika layout gagal
+  useEffect(() => {
+    if (!checking && !isAdmin) {
+      toast.error(
+        "Akses ditolak: Hanya admin yang dapat mengakses halaman ini"
+      );
+      router.replace("/");
+    }
+  }, [isAdmin, checking, router]);
 
   if (checking) {
     return (
@@ -15,6 +29,22 @@ export default function AdminPage() {
         <Skeleton className="w-1/3 h-8" />
         <Skeleton className="w-full h-6" />
         <Skeleton className="w-2/3 h-6" />
+      </div>
+    );
+  }
+
+  // Jika bukan admin, tampilkan pesan error
+  if (!isAdmin) {
+    return (
+      <div className="p-8 text-center">
+        <h2 className="text-2xl font-bold text-red-600 mb-4">Akses Ditolak</h2>
+        <p>Anda tidak memiliki izin untuk mengakses halaman ini</p>
+        <button
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
+          onClick={() => router.push("/")}
+        >
+          Kembali ke Beranda
+        </button>
       </div>
     );
   }

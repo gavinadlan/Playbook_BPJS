@@ -14,6 +14,7 @@ export interface User {
   name: string;
   email: string;
   role: string;
+  isAdmin?: boolean;
 }
 
 interface AuthContextType {
@@ -31,6 +32,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Hitung isAdmin berdasarkan role
   const isAdmin = user?.role === "ADMIN";
 
   const logout = () => {
@@ -84,12 +86,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (storedUser && storedToken) {
           const parsedUser = JSON.parse(storedUser);
 
+          // Tambahkan properti isAdmin
+          const userWithAdmin = {
+            ...parsedUser,
+            isAdmin: parsedUser.role === "ADMIN",
+          };
+
           const tokenExpiry = localStorage.getItem("tokenExpiry");
           if (tokenExpiry && new Date() > new Date(tokenExpiry)) {
             throw new Error("Token expired locally");
           }
 
-          setUser(parsedUser);
+          setUser(userWithAdmin);
         }
       } catch (error) {
         console.error("Error initializing auth:", error);

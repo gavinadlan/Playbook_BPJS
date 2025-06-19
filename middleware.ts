@@ -4,7 +4,12 @@ export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const isAuthenticated = request.cookies.get("isAuthenticated")?.value;
 
-  const protectedRoutes = ["/docs", "/pengajuan-saya", "/pengajuan-pks"];
+  const protectedRoutes = [
+    "/docs",
+    "/pengajuan-saya",
+    "/pengajuan-pks",
+    "/admin", // Pastikan ini ada
+  ];
 
   const isProtected = protectedRoutes.some((route) => path.startsWith(route));
 
@@ -16,5 +21,10 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/docs/:path*", "/pengajuan-saya/:path*", "/pengajuan-pks/:path*"],
+  matcher: [
+    "/docs/:path*",
+    "/pengajuan-saya/:path*",
+    "/pengajuan-pks/:path*",
+    "/admin/:path*", // Pastikan ini ada
+  ],
 };

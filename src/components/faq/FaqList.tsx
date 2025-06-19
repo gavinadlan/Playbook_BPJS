@@ -1,6 +1,7 @@
 "use client";
 
 import FaqItem from "./FaqItem";
+import { AnimatePresence, LayoutGroup } from "framer-motion";
 
 interface Faq {
   question: string;
@@ -27,15 +28,19 @@ export default function FaqList({
 
   return (
     <div className="max-w-3xl mx-auto space-y-4">
-      {filteredFaqs.map((faq, idx) => (
-        <FaqItem
-          key={idx}
-          question={faq.question}
-          answer={faq.answer}
-          isOpen={openIndex === idx}
-          onToggle={() => toggleIndex(idx)}
-        />
-      ))}
+      <LayoutGroup>
+        <AnimatePresence initial={false}>
+          {filteredFaqs.map((faq, idx) => (
+            <FaqItem
+              key={idx}
+              question={faq.question}
+              answer={faq.answer}
+              isOpen={openIndex === idx}
+              onToggle={() => toggleIndex(idx)}
+            />
+          ))}
+        </AnimatePresence>
+      </LayoutGroup>
     </div>
   );
 }

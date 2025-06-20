@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import DocsIntro from "@/components/docs/DocsIntro";
@@ -15,17 +15,19 @@ export default function DocsPage() {
   const { user, isLoading: contextLoading } = useAuth();
   const router = useRouter();
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const toastShown = useRef(false);
 
   useEffect(() => {
-    // Jika sudah selesai loading context dan user tidak ada
-    if (!contextLoading && !user) {
+    // Redirect jika user tidak terautentikasi
+    if (!contextLoading && !user && !toastShown.current) {
+      toastShown.current = true;
       setIsRedirecting(true);
-      toast.error("Anda harus login untuk mengakses dokumentasi");
+      toast.error("Akses memerlukan login");
       router.replace("/login");
     }
   }, [user, contextLoading, router]);
 
-  // Jika sedang loading context atau sedang redirect
+  // Menampilkan loader selama pengecekan
   if (contextLoading || isRedirecting) {
     return (
       <div className="fixed inset-0 bg-white flex items-center justify-center z-50">
@@ -34,7 +36,7 @@ export default function DocsPage() {
     );
   }
 
-  // Hanya render konten jika user ada
+  // Menampilkan konten hanya jika user terautentikasi
   if (user) {
     return (
       <main className="container mx-auto px-4 py-12">
@@ -47,6 +49,5 @@ export default function DocsPage() {
     );
   }
 
-  // Fallback: tidak render apa-apa (seharusnya tidak sampai di sini)
   return null;
 }

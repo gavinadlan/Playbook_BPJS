@@ -25,19 +25,6 @@ export default function FiturApiPage() {
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 py-12 space-y-8">
-        <div className="max-w-md mx-auto mb-8 relative">
-          <input
-            type="text"
-            placeholder="Cari fitur API..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 ring-[#27447C]/50 outline-none transition-all"
-          />
-          <motion.div className="absolute top-3 left-3 text-gray-400 select-none">
-            🔍
-          </motion.div>
-        </div>
-
         <ApiCategoryList
           categories={API_CATEGORIES}
           openCategory={openCategory}

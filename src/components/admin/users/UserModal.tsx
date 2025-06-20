@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { updateUser } from "@/utils/api";
 import { toast } from "sonner";
+import { UpdateUserSchema } from "@/lib/schemas";
 
 interface EditUserModalProps {
   user: User | null;
@@ -41,6 +42,7 @@ export const EditUserModal = ({
     password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Reset form ketika user berubah
   useEffect(() => {
@@ -51,6 +53,7 @@ export const EditUserModal = ({
         role: user.role,
         password: "",
       });
+      setErrors({});
     }
   }, [user]);
 
@@ -60,6 +63,26 @@ export const EditUserModal = ({
     if (!user) return;
 
     try {
+      // Validasi dengan Zod
+      const result = UpdateUserSchema.safeParse(formData);
+
+      if (!result.success) {
+        const newErrors: Record<string, string> = {};
+        result.error.errors.forEach((err) => {
+          const path = err.path[0];
+          newErrors[path] = err.message;
+        });
+        setErrors(newErrors);
+
+        // Tampilkan toast error pertama
+        const firstError = result.error.errors[0];
+        toast.error(`⚠️ ${firstError.message}`);
+        return;
+      }
+
+      // Jika validasi sukses, reset error
+      setErrors({});
+
       setIsLoading(true);
 
       // Siapkan data untuk update (hanya yang berubah)
@@ -101,6 +124,7 @@ export const EditUserModal = ({
           role: "USER",
           password: "",
         });
+        setErrors({});
       }, 200);
     }
   };
@@ -124,7 +148,11 @@ export const EditUserModal = ({
               }
               required
               disabled={isLoading}
+              className={errors.name ? "border-red-500" : ""}
             />
+            {errors.name && (
+              <p className="text-red-500 text-sm">{errors.name}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -138,7 +166,11 @@ export const EditUserModal = ({
               }
               required
               disabled={isLoading}
+              className={errors.email ? "border-red-500" : ""}
             />
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -171,10 +203,11 @@ export const EditUserModal = ({
               }
               placeholder="Kosongkan jika tidak ingin mengubah password"
               disabled={isLoading}
+              className={errors.password ? "border-red-500" : ""}
             />
-            <p className="text-sm text-muted-foreground">
-              Kosongkan jika tidak ingin mengubah password
-            </p>
+            {errors.password && (
+              <p className="text-red-500 text-sm">{errors.password}</p>
+            )}
           </div>
 
           <div className="flex justify-end space-x-2 pt-4">

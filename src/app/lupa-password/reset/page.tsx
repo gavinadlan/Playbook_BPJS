@@ -6,7 +6,8 @@ import AuthLayout from "@/components/auth/AuthLayout";
 import PasswordInput from "@/components/auth/PasswordInput";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/sonner";
-import Loader from "@/components/ui/loading"; 
+import Loader from "@/components/ui/loading";
+import { ResetPasswordSchema } from "@/lib/schemas";
 
 export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
@@ -16,6 +17,7 @@ export default function ResetPasswordPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (!token) {
@@ -31,21 +33,33 @@ export default function ResetPasswordPage() {
       return;
     }
 
-    if (newPassword.length < 6) {
-      toast.error("⚠️ Password minimal 6 karakter");
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      toast.error("⚠️ Konfirmasi password tidak cocok");
-      return;
-    }
-
-    setLoading(true);
-    const startTime = Date.now();
+    // Deklarasikan di sini agar bisa diakses di seluruh blok
     const MIN_LOADING_TIME = 600;
+    const startTime = Date.now();
 
     try {
+      // Validasi dengan Zod
+      const result = ResetPasswordSchema.safeParse({
+        newPassword,
+        confirmPassword,
+      });
+
+      if (!result.success) {
+        const newErrors: Record<string, string> = {};
+        result.error.errors.forEach((err) => {
+          const path = err.path[0];
+          newErrors[path] = err.message;
+        });
+        setErrors(newErrors);
+
+        const firstError = result.error.errors[0];
+        toast.error(`⚠️ ${firstError.message}`);
+        return;
+      }
+
+      setErrors({});
+      setLoading(true);
+
       const response = await fetch(
         "http://localhost:3001/api/users/reset-password",
         {
@@ -73,8 +87,7 @@ export default function ResetPasswordPage() {
       // Hitung sisa waktu minimal loading
       const elapsed = Date.now() - startTime;
       const remaining = MIN_LOADING_TIME - elapsed;
-      
-      // Tunggu sisa waktu jika proses terlalu cepat
+
       if (remaining > 0) {
         await new Promise((resolve) => setTimeout(resolve, remaining));
       }
@@ -85,7 +98,7 @@ export default function ResetPasswordPage() {
       // Hitung sisa waktu minimal loading untuk error
       const elapsed = Date.now() - startTime;
       const remaining = MIN_LOADING_TIME - elapsed;
-      
+
       if (remaining > 0) {
         await new Promise((resolve) => setTimeout(resolve, remaining));
       }
@@ -111,7 +124,6 @@ export default function ResetPasswordPage() {
       titleLeft="Reset Password"
       descLeft="Masukkan password baru untuk akunmu"
     >
-      {/* Overlay loader */}
       {loading && (
         <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50">
           <div className="flex flex-col items-center">
@@ -138,6 +150,7 @@ export default function ResetPasswordPage() {
             placeholder="Masukkan password baru (minimal 6 karakter)"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
+            error={errors.newPassword}
           />
 
           <PasswordInput
@@ -146,6 +159,7 @@ export default function ResetPasswordPage() {
             placeholder="Konfirmasi password baru"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            error={errors.confirmPassword}
           />
         </div>
 

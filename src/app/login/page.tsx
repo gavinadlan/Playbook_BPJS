@@ -35,6 +35,7 @@ export default function LoginPage() {
     formState: { errors },
     setValue,
     watch,
+    reset,
   } = useForm({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -54,12 +55,16 @@ export default function LoginPage() {
     const MIN_LOADING_TIME = 600;
 
     try {
+      // Kirim data login tanpa role ke backend
       const res = await fetch("http://localhost:3001/api/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...formData }),
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
       });
 
       const data = await res.json();
@@ -68,21 +73,41 @@ export default function LoginPage() {
         throw new Error(data.message || "Login gagal.");
       }
 
-      // Verifikasi role
+      // PERBAIKAN: Pindahkan pengecekan role SETELAH berhasil login
       if (data.user.role !== formData.role) {
+        // Simpan user data sementara untuk penanganan khusus
+        const tempUser = {
+          id: data.user.id,
+          name: data.user.name,
+          email: data.user.email,
+          role: data.user.role,
+        };
+
+        // Clear token karena role tidak sesuai
+        localStorage.removeItem("token");
+        document.cookie =
+          "isAuthenticated=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+        // Reset form role
+        reset({ ...formData, role: data.user.role });
+
         throw new Error(
-          `Anda tidak memiliki akses sebagai ${
-            formData.role === "ADMIN" ? "admin" : "user"
-          }`
+          `Akun Anda adalah ${
+            data.user.role === "ADMIN" ? "Admin" : "User"
+          }, ` +
+            `tetapi Anda mencoba login sebagai ${
+              formData.role === "ADMIN" ? "Admin" : "User"
+            }. ` +
+            `Role telah disesuaikan, silakan coba login kembali.`
         );
       }
 
-      // Simpan token dan user
+      // Lanjutkan jika role sesuai
       if (data.token) {
         localStorage.setItem("token", data.token);
         document.cookie = "isAuthenticated=true; path=/;";
 
-        // Optional: Set token expiry reminder
+        // Set token expiry reminder
         const expiryTime = new Date(Date.now() + 12 * 60 * 60 * 1000); // 12 hours
         localStorage.setItem("tokenExpiry", expiryTime.toISOString());
       }
@@ -103,7 +128,7 @@ export default function LoginPage() {
 
       // Redirect berdasarkan role
       setTimeout(() => {
-        if (formData.role === "ADMIN") {
+        if (data.user.role === "ADMIN") {
           router.push("/admin");
         } else {
           router.push("/");
@@ -118,7 +143,18 @@ export default function LoginPage() {
         await new Promise((resolve) => setTimeout(resolve, remaining));
       }
 
-      toast.error(err.message || "Terjadi kesalahan. Coba lagi nanti.");
+      // Tampilkan toast dengan tombol action
+      toast.error(err.message || "Terjadi kesalahan. Coba lagi nanti.", {
+        action: {
+          label: "Coba Lagi",
+          onClick: () => {
+            // Tidak perlu reset form, cukup aktifkan kembali
+            setLoading(false);
+          },
+        },
+        duration: 10000,
+      });
+
       console.error("Login error:", err);
     } finally {
       setLoading(false);

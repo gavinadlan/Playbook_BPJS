@@ -9,6 +9,7 @@ import AuthRedirectText from "@/components/auth/AuthRedirectText";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/sonner";
 import Loader from "@/components/ui/loading";
+import { RegisterSchema } from "@/lib/schemas";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -16,22 +17,38 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
-      toast.error("Password tidak cocok");
-      return;
-    }
-
-    if (password.length < 6) {
-      toast.error("Password minimal 6 karakter");
-      return;
-    }
-
     try {
+      // Validasi dengan Zod (termasuk konfirmasi password)
+      const result = RegisterSchema.safeParse({
+        name,
+        email,
+        password,
+        confirmPassword,
+      });
+
+      if (!result.success) {
+        const newErrors: Record<string, string> = {};
+        result.error.errors.forEach((err) => {
+          const path = err.path[0];
+          newErrors[path] = err.message;
+        });
+        setErrors(newErrors);
+
+        // Tampilkan toast error pertama
+        const firstError = result.error.errors[0];
+        toast.error(`⚠️ ${firstError.message}`);
+        return;
+      }
+
+      // Jika validasi sukses, reset error
+      setErrors({});
+
       setLoading(true);
       const response = await fetch("http://localhost:3001/api/users/register", {
         method: "POST",
@@ -103,25 +120,33 @@ export default function RegisterPage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="w-full px-3 py-2 border rounded-md mt-1 pr-10 border-[rgb(39,68,124)] focus:ring-2 focus:ring-[rgb(73,163,90)]"
+              className={`w-full px-3 py-2 border rounded-md mt-1 pr-10 border-[rgb(39,68,124)] focus:ring-2 focus:ring-[rgb(73,163,90)] ${
+                errors.name ? "border-red-500" : ""
+              }`}
             />
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+            )}
           </div>
 
           <EmailInput
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            error={errors.email}
           />
 
           <PasswordInput
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password (min 6 karakter)"
+            error={errors.password}
           />
 
           <PasswordInput
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Konfirmasi Password"
+            error={errors.confirmPassword}
           />
         </div>
 

@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/sonner";
 import Loader from "@/components/ui/loading";
+import { PengajuanPKSSchema } from "@/lib/schemas";
 
 export default function PengajuanPksPage() {
   const { user } = useAuth();
@@ -17,24 +18,44 @@ export default function PengajuanPksPage() {
   const [company, setCompany] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!company || !file) {
-      toast.error("Semua field harus diisi!");
-      return;
-    }
 
-    const startTime = Date.now(); // Catat waktu mulai
-    const MIN_LOADING_TIME = 1000; // Minimal loading 1 detik
-
-    const formData = new FormData();
-    formData.append("company", company);
-    formData.append("file", file);
-    formData.append("userId", String(user?.id));
-
-    setLoading(true);
     try {
+      // Validasi dengan Zod
+      const result = PengajuanPKSSchema.safeParse({
+        company,
+        file: file as File,
+      });
+
+      if (!result.success) {
+        const newErrors: Record<string, string> = {};
+        result.error.errors.forEach((err) => {
+          const path = err.path[0];
+          newErrors[path] = err.message;
+        });
+        setErrors(newErrors);
+
+        // Tampilkan toast error pertama
+        const firstError = result.error.errors[0];
+        toast.error(`⚠️ ${firstError.message}`);
+        return;
+      }
+
+      // Jika validasi sukses, reset error
+      setErrors({});
+
+      const startTime = Date.now();
+      const MIN_LOADING_TIME = 1000;
+
+      const formData = new FormData();
+      formData.append("company", company);
+      formData.append("file", file as File);
+      formData.append("userId", String(user?.id));
+
+      setLoading(true);
       const res = await fetch("http://localhost:3001/api/pks", {
         method: "POST",
         body: formData,
@@ -119,12 +140,18 @@ export default function PengajuanPksPage() {
                   placeholder="Contoh: PT. Contoh Perusahaan"
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
-                  className="mt-1 focus:border-[#27447C] focus:ring-1 focus:ring-[#27447C]"
+                  className={`mt-1 focus:border-[#27447C] focus:ring-1 focus:ring-[#27447C] ${
+                    errors.company ? "border-red-500" : ""
+                  }`}
                 />
-                {!company && (
-                  <p className="mt-1 text-sm text-red-500">
-                    Harap masukkan nama instansi/perusahaan
-                  </p>
+                {errors.company ? (
+                  <p className="mt-1 text-sm text-red-500">{errors.company}</p>
+                ) : (
+                  !company && (
+                    <p className="mt-1 text-sm text-red-500">
+                      Harap masukkan nama instansi/perusahaan
+                    </p>
+                  )
                 )}
               </div>
 
@@ -185,10 +212,14 @@ export default function PengajuanPksPage() {
                       </button>
                     </div>
                   )}
-                  {!file && (
-                    <p className="mt-1 text-sm text-red-500">
-                      Harap upload dokumen PKS
-                    </p>
+                  {errors.file ? (
+                    <p className="mt-1 text-sm text-red-500">{errors.file}</p>
+                  ) : (
+                    !file && (
+                      <p className="mt-1 text-sm text-red-500">
+                        Harap upload dokumen PKS
+                      </p>
+                    )
                   )}
                 </div>
               </div>

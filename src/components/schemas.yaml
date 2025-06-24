@@ -1,0 +1,49 @@
+components:
+  schemas:
+    ReferensiKelasResponse:
+      type: object
+      properties:
+        metadata:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            totalitems:
+              type: integer
+        response:
+          type: object
+          properties:
+            list:
+              type: array
+              items:
+                $ref: "#/components/schemas/Kelas"
+
+    Kelas:
+      type: object
+      properties:
+        kodekelas:
+          type: string
+        namakelas:
+          type: string
+
+    UpdateBedRequest:
+      type: object
+      properties:
+        kodekelas:
+          type: string
+        koderuang:
+          type: string
+        namaruang:
+          type: string
+        kapasitas:
+          type: string
+        tersedia:
+          type: string
+        tersediapria:
+          type: string
+        tersediawanita:
+          type: string
+        tersediapriawanita:
+          type: string

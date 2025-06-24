@@ -1,0 +1,47 @@
+openapi: 3.0.0
+info:
+  title: API BPJS Kesehatan
+  version: 1.0.0
+  description: Dokumentasi Resmi Web Service BPJS Kesehatan
+
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id
+    description: Server Development
+
+tags:
+  - name: Aplicares
+    description: Layanan Aplicares
+  - name: VClaim
+    description: Layanan VClaim
+  - name: AntreanRS
+    description: Layanan Antrean Rumah Sakit
+  - name: Apotek
+    description: Layanan Apotek
+  - name: PCare
+    description: Layanan PCare
+  - name: AntreanFKTP
+    description: Layanan Antrean FKTP
+  - name: i-Care
+    description: Layanan i-Care JKN
+  - name: RekamMedis
+    description: Layanan eRekam Medis
+
+# Sementara hanya include aplicares yang sudah ada isinya
+paths:
+  $ref: "./services/aplicares.yaml#/paths"
+
+# Nanti setelah services lain sudah diisi, gunakan struktur seperti ini:
+# paths:
+#   # Merge semua paths dari services yang berbeda
+#   <<:
+#     - $ref: './services/aplicares.yaml#/paths'
+#     - $ref: './services/vclaim.yaml#/paths'
+#     - $ref: './services/antreanrs.yaml#/paths'
+#     - $ref: './services/apotek.yaml#/paths'
+#     - $ref: './services/pcare.yaml#/paths'
+#     - $ref: './services/antreanfktp.yaml#/paths'
+#     - $ref: './services/icare.yaml#/paths'
+#     - $ref: './services/rekammedis.yaml#/paths'
+
+components:
+  $ref: "./components/schemas.yaml#/components"

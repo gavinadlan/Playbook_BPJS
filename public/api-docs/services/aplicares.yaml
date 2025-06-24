@@ -1,0 +1,435 @@
+paths:
+  /aplicaresws/rest/ref/kelas:
+    get:
+      tags: [Aplicares]
+      summary: Referensi Kamar
+      description: |
+        **Fungsi:** Referensi Kamar
+        **Method:** GET
+        **Format:** Json
+        **Content-Type:** application/json
+
+        **Contoh Response:**
+        ```json
+        {
+          "metadata": {
+            "code": 1,
+            "message": "OK",
+            "totalitems": 16
+          },
+          "response": {
+            "list": [
+              {"kodekelas": "NON", "namakelas": "-"},
+              {"kodekelas": "VVP", "namakelas": "VVIP"}
+            ]
+          }
+        }
+        ```
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 1
+                      message:
+                        type: string
+                        example: "OK"
+                      totalitems:
+                        type: integer
+                        example: 16
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kodekelas:
+                              type: string
+                              example: "VVP"
+                            namakelas:
+                              type: string
+                              example: "VVIP"
+              example:
+                metadata:
+                  code: 1
+                  message: "OK"
+                  totalitems: 16
+                response:
+                  list:
+                    - kodekelas: "NON"
+                      namakelas: "-"
+                    - kodekelas: "VVP"
+                      namakelas: "VVIP"
+
+  /aplicaresws/rest/bed/update/{kodeppk}:
+    post:
+      tags: [Aplicares]
+      summary: Update Ketersediaan Tempat Tidur
+      description: |
+        **Fungsi:** Update Ketersediaan Tempat Tidur
+        **Method:** POST
+        **Format:** Json
+        **Content-Type:** application/json
+
+        **Contoh Request:**
+        ```json
+        {
+          "kodekelas": "VIP",
+          "koderuang": "RG01",
+          "namaruang": "Ruang Anggrek VIP",
+          "kapasitas": "20",
+          "tersedia": "10",
+          "tersediapria": "0",
+          "tersediawanita": "0",
+          "tersediapriawanita": "0"
+        }
+        ```
+      parameters:
+        - name: kodeppk
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "PPK001"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - kodekelas
+                - koderuang
+                - namaruang
+                - kapasitas
+                - tersedia
+              properties:
+                kodekelas:
+                  type: string
+                  example: "VIP"
+                koderuang:
+                  type: string
+                  example: "RG01"
+                namaruang:
+                  type: string
+                  example: "Ruang Anggrek VIP"
+                kapasitas:
+                  type: string
+                  example: "20"
+                tersedia:
+                  type: string
+                  example: "10"
+                tersediapria:
+                  type: string
+                  example: "0"
+                tersediawanita:
+                  type: string
+                  example: "0"
+                tersediapriawanita:
+                  type: string
+                  example: "0"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 1
+                      message:
+                        type: string
+                        example: "Update berhasil"
+              example:
+                metadata:
+                  code: 1
+                  message: "Update berhasil"
+
+  /aplicaresws/rest/bed/create/{kodeppk}:
+    post:
+      tags: [Aplicares]
+      summary: Ruangan Baru
+      description: |
+        **Fungsi:** Insert Ruangan Baru
+        **Method:** POST
+        **Format:** Json
+        **Content-Type:** application/json
+
+        **Contoh Request:**
+        ```json
+        {
+          "kodekelas": "VIP",
+          "koderuang": "RG01",
+          "namaruang": "Ruang Anggrek VIP",
+          "kapasitas": "20",
+          "tersedia": "10",
+          "tersediapria": "0",
+          "tersediawanita": "0",
+          "tersediapriawanita": "0"
+        }
+        ```
+      parameters:
+        - name: kodeppk
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "PPK001"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - kodekelas
+                - koderuang
+                - namaruang
+                - kapasitas
+                - tersedia
+              properties:
+                kodekelas:
+                  type: string
+                  example: "VIP"
+                koderuang:
+                  type: string
+                  example: "RG01"
+                namaruang:
+                  type: string
+                  example: "Ruang Anggrek VIP"
+                kapasitas:
+                  type: string
+                  example: "20"
+                tersedia:
+                  type: string
+                  example: "10"
+                tersediapria:
+                  type: string
+                  example: "0"
+                tersediawanita:
+                  type: string
+                  example: "0"
+                tersediapriawanita:
+                  type: string
+                  example: "0"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 1
+                      message:
+                        type: string
+                        example: "Ruangan berhasil ditambahkan"
+              example:
+                metadata:
+                  code: 1
+                  message: "Ruangan berhasil ditambahkan"
+
+  /aplicaresws/rest/bed/read/{kodeppk}/{start}/{limit}:
+    get:
+      tags: [Aplicares]
+      summary: Ketersediaan Kamar RS
+      description: |
+        **Fungsi:** Melihat Data Ketersediaan Kamar RS
+        **Method:** GET
+        **Format:** Json
+        **Accept:** application/json
+
+        **Contoh Response:**
+        ```json
+        {
+          "metadata": {
+            "code": 1,
+            "message": "OK",
+            "totalitems": 5
+          },
+          "response": {
+            "list": [
+              {
+                "kodekelas": "VIP",
+                "koderuang": "RG01",
+                "namaruang": "Ruang Anggrek VIP",
+                "kapasitas": "20",
+                "tersedia": "10",
+                "tersediapria": "0",
+                "tersediawanita": "0",
+                "tersediapriawanita": "0"
+              }
+            ]
+          }
+        }
+        ```
+      parameters:
+        - name: kodeppk
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "PPK001"
+        - name: start
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 1
+        - name: limit
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 10
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 1
+                      message:
+                        type: string
+                        example: "OK"
+                      totalitems:
+                        type: integer
+                        example: 5
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kodekelas:
+                              type: string
+                              example: "VIP"
+                            koderuang:
+                              type: string
+                              example: "RG01"
+                            namaruang:
+                              type: string
+                              example: "Ruang Anggrek VIP"
+                            kapasitas:
+                              type: string
+                              example: "20"
+                            tersedia:
+                              type: string
+                              example: "10"
+                            tersediapria:
+                              type: string
+                              example: "0"
+                            tersediawanita:
+                              type: string
+                              example: "0"
+                            tersediapriawanita:
+                              type: string
+                              example: "0"
+              example:
+                metadata:
+                  code: 1
+                  message: "OK"
+                  totalitems: 5
+                response:
+                  list:
+                    - kodekelas: "VIP"
+                      koderuang: "RG01"
+                      namaruang: "Ruang Anggrek VIP"
+                      kapasitas: "20"
+                      tersedia: "10"
+                      tersediapria: "0"
+                      tersediawanita: "0"
+                      tersediapriawanita: "0"
+
+  /aplicaresws/rest/bed/delete/{kodeppk}:
+    post:
+      tags: [Aplicares]
+      summary: Hapus Ruangan
+      description: |
+        **Fungsi:** Hapus Ruangan
+        **Method:** POST
+        **Format:** Json
+        **Content-Type:** application/json
+
+        **Contoh Request:**
+        ```json
+        {
+          "kodekelas": "VIP",
+          "koderuang": "RG01"
+        }
+        ```
+      parameters:
+        - name: kodeppk
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "PPK001"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - kodekelas
+                - koderuang
+              properties:
+                kodekelas:
+                  type: string
+                  example: "VIP"
+                koderuang:
+                  type: string
+                  example: "RG01"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 1
+                      message:
+                        type: string
+                        example: "Ruangan berhasil dihapus"
+              example:
+                metadata:
+                  code: 1
+                  message: "Ruangan berhasil dihapus"

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, ChevronRight, ArrowLeft, Search, X } from "lucide-react";
+import { ChevronDown, ChevronRight, ArrowLeft, Search } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +14,7 @@ import Loader from "@/components/ui/loading";
 import { cn } from "@/utils/utils";
 import type { ApiCategory, ApiEndpoint } from "@/lib/api-docs-loader";
 
+// Tambahkan interface untuk props
 interface DocsSidebarProps {
   onCloseMobile?: () => void;
 }
@@ -30,7 +31,7 @@ const DocsSidebar = ({ onCloseMobile }: DocsSidebarProps) => {
     Record<string, boolean>
   >({});
 
-  // Load initial data
+  // Load categories
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
@@ -49,7 +50,7 @@ const DocsSidebar = ({ onCloseMobile }: DocsSidebarProps) => {
     loadData();
   }, []);
 
-  // Set initial selected category from URL
+  // Set initial selected category based on URL
   useEffect(() => {
     if (apiCategories.length > 0 && pathname) {
       const pathParts = pathname.split("/");
@@ -58,6 +59,31 @@ const DocsSidebar = ({ onCloseMobile }: DocsSidebarProps) => {
       }
     }
   }, [pathname, apiCategories]);
+
+  // Load endpoints for a category
+  const loadCategoryEndpoints = async (categoryId: string) => {
+    if (!endpoints[categoryId]) {
+      try {
+        const endpointsData = await loadEndpointsForCategory(categoryId);
+        setEndpoints((prev) => ({
+          ...prev,
+          [categoryId]: endpointsData,
+        }));
+      } catch (err) {
+        console.error(`Failed to load endpoints for ${categoryId}:`, err);
+        setError(`Gagal memuat endpoint untuk ${categoryId}`);
+      }
+    }
+  };
+
+  // Mobile: Toggle category
+  const toggleMobileCategory = async (categoryId: string) => {
+    await loadCategoryEndpoints(categoryId);
+    setMobileOpenCategories((prev) => ({
+      ...prev,
+      [categoryId]: !prev[categoryId],
+    }));
+  };
 
   const getMethodStyle = (method: string) => {
     switch (method) {
@@ -77,46 +103,11 @@ const DocsSidebar = ({ onCloseMobile }: DocsSidebarProps) => {
   };
 
   const handleCategorySelect = async (categoryId: string) => {
-    if (!endpoints[categoryId]) {
-      try {
-        const endpointsData = await loadEndpointsForCategory(categoryId);
-        setEndpoints((prev) => ({
-          ...prev,
-          [categoryId]: endpointsData,
-        }));
-      } catch (err) {
-        console.error(`Failed to load endpoints for ${categoryId}:`, err);
-        setError(`Gagal memuat endpoint untuk ${categoryId}`);
-      }
-    }
-
-    if (onCloseMobile) {
-      onCloseMobile();
-    }
+    await loadCategoryEndpoints(categoryId);
+    setSelectedCategory(categoryId);
   };
 
-  const toggleMobileCategory = (categoryId: string) => {
-    if (!endpoints[categoryId]) {
-      loadEndpointsForCategory(categoryId)
-        .then((endpointsData) => {
-          setEndpoints((prev) => ({
-            ...prev,
-            [categoryId]: endpointsData,
-          }));
-        })
-        .catch((err) => {
-          console.error(`Failed to load endpoints for ${categoryId}:`, err);
-          setError(`Gagal memuat endpoint untuk ${categoryId}`);
-        });
-    }
-
-    setMobileOpenCategories((prev) => ({
-      ...prev,
-      [categoryId]: !prev[categoryId],
-    }));
-  };
-
-  if (isLoading) {
+  if (isLoading && !selectedCategory) {
     return (
       <div className="flex justify-center items-center h-full">
         <Loader />
@@ -125,20 +116,20 @@ const DocsSidebar = ({ onCloseMobile }: DocsSidebarProps) => {
   }
 
   if (error) {
-    return <div className="p-4 text-center text-red-500">{error}</div>;
+    return (
+      <div className="p-4 text-center text-red-500">
+        {error}
+        <Button className="mt-2" onClick={() => window.location.reload()}>
+          Coba Lagi
+        </Button>
+      </div>
+    );
   }
 
   return (
     <>
       {/* Mobile Navigation */}
       <div className="lg:hidden border-b">
-        <div className="flex justify-between items-center">
-          {onCloseMobile && (
-            <button onClick={onCloseMobile}>
-              <X className="h-6 w-6" />
-            </button>
-          )}
-        </div>
         <div className="overflow-x-auto">
           <nav className="flex flex-nowrap p-4 gap-4 w-max">
             {apiCategories.map((category) => (
@@ -168,13 +159,13 @@ const DocsSidebar = ({ onCloseMobile }: DocsSidebarProps) => {
                         <div key={endpoint.id} className="flex-shrink-0">
                           <Link
                             href={`/docs/${category.id}/${endpoint.id}`}
-                            onClick={() => onCloseMobile?.()}
                             className={cn(
                               "flex items-center px-4 py-2 rounded-md text-sm",
                               pathname === `/docs/${category.id}/${endpoint.id}`
                                 ? "bg-blue-50 text-blue-600 font-medium"
                                 : "text-gray-700 hover:bg-gray-100"
                             )}
+                            onClick={() => onCloseMobile?.()}
                           >
                             <span
                               className={`inline-block w-12 text-xs text-center font-medium rounded mr-2 px-1.5 py-0.5 ${getMethodStyle(
@@ -198,7 +189,7 @@ const DocsSidebar = ({ onCloseMobile }: DocsSidebarProps) => {
 
       {/* Desktop Navigation */}
       <div className="hidden lg:block bg-white border-r w-80 flex-shrink-0 h-screen sticky top-0">
-        <ScrollArea className="h-full">
+        <ScrollArea className="h-full pt-16 lg:pt-0">
           <nav className="p-4">
             <div className="relative mb-4">
               <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
@@ -262,7 +253,11 @@ const DocsSidebar = ({ onCloseMobile }: DocsSidebarProps) => {
                         </ul>
                       ) : (
                         <div className="text-center py-4 text-gray-500">
-                          Tidak ada endpoint tersedia
+                          {isLoading ? (
+                            <Loader />
+                          ) : (
+                            "Tidak ada endpoint tersedia"
+                          )}
                         </div>
                       )}
                     </div>

@@ -41,16 +41,24 @@ const CATEGORY_FILE_MAP: Record<string, string> = {
   rekammedis: "rekammedis",
 };
 
-const apiDataCache: Record<string, any> = {};
+// Perbaikan 1: Definisikan tipe yang lebih spesifik untuk cache
+interface ApiDataCache {
+  categories?: ApiCategory[];
+  categoriesTimestamp?: number;
+  [key: string]: any; // Tetap butuh index signature untuk properti dinamis
+}
+
+const apiDataCache: ApiDataCache = {};
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes cache
 
 export async function loadApiCategories(): Promise<ApiCategory[]> {
-  // Check cache validity
+  // Perbaikan 2: Tambahkan pengecekan undefined untuk timestamp
   if (
-    apiDataCache.categories &&
-    Date.now() - apiDataCache.categoriesTimestamp < CACHE_TTL
+    apiDataCache["categories"] &&
+    apiDataCache["categoriesTimestamp"] !== undefined &&
+    Date.now() - apiDataCache["categoriesTimestamp"] < CACHE_TTL
   ) {
-    return apiDataCache.categories;
+    return apiDataCache["categories"];
   }
 
   try {
@@ -75,9 +83,8 @@ export async function loadApiCategories(): Promise<ApiCategory[]> {
       };
     });
 
-    // Update cache with timestamp
-    apiDataCache.categories = categories;
-    apiDataCache.categoriesTimestamp = Date.now();
+    apiDataCache["categories"] = categories;
+    apiDataCache["categoriesTimestamp"] = Date.now();
 
     return categories;
   } catch (error) {
@@ -90,13 +97,19 @@ export async function loadEndpointsForCategory(
   categoryId: string
 ): Promise<ApiEndpoint[]> {
   const cacheKey = `endpoints-${categoryId}`;
+  const timestampKey = `${cacheKey}-timestamp`;
 
-  // Check cache validity
+  // Perbaikan 3: Gunakan asertion tipe untuk akses cache
+  const cachedEndpoints = apiDataCache[cacheKey] as ApiEndpoint[] | undefined;
+  const cachedTimestamp = apiDataCache[timestampKey] as number | undefined;
+
+  // Perbaikan 4: Tambahkan pengecekan undefined untuk timestamp
   if (
-    apiDataCache[cacheKey] &&
-    Date.now() - apiDataCache[`${cacheKey}-timestamp`] < CACHE_TTL
+    cachedEndpoints &&
+    cachedTimestamp !== undefined &&
+    Date.now() - cachedTimestamp < CACHE_TTL
   ) {
-    return apiDataCache[cacheKey];
+    return cachedEndpoints;
   }
 
   try {
@@ -129,17 +142,69 @@ export async function loadEndpointsForCategory(
         // Generate unique ID for endpoint
         const endpointId = `${method}-${path.replace(/[^a-zA-Z0-9]/g, "-")}`;
 
-        // Extract examples if available
-        let requestExample, responseExample;
-        try {
-          requestExample =
-            details.requestBody?.content?.["application/json"]?.example;
-          const successResponse =
-            details.responses?.["200"]?.content?.["application/json"];
-          responseExample =
-            successResponse?.example || successResponse?.schema?.example;
-        } catch (e) {
-          console.warn(`Error extracting examples for ${endpointId}`, e);
+        // Extract request example from description if available
+        let requestExample = null;
+        const requestMatch = details.description?.match(
+          /```json\n([\s\S]*?)\n```/
+        );
+        if (requestMatch) {
+          try {
+            requestExample = JSON.parse(requestMatch[1]);
+          } catch (e) {
+            console.warn(`Error parsing request example for ${endpointId}`, e);
+          }
+        }
+
+        // If not found in description, try from requestBody
+        if (!requestExample) {
+          try {
+            requestExample =
+              details.requestBody?.content?.["application/json"]?.example ||
+              details.requestBody?.content?.["application/json"]?.schema
+                ?.example;
+          } catch (e) {
+            console.warn(
+              `Error extracting request example for ${endpointId}`,
+              e
+            );
+          }
+        }
+
+        // Extract response example
+        let responseExample = null;
+        const responseMatch = details.description?.match(
+          /```json\n([\s\S]*?)\n```/g
+        );
+        if (responseMatch && responseMatch.length > 1) {
+          try {
+            responseExample = JSON.parse(responseMatch[1]);
+          } catch (e) {
+            console.warn(`Error parsing response example for ${endpointId}`, e);
+          }
+        }
+
+        // If not found in description, try from response schema
+        if (!responseExample) {
+          try {
+            const successResponse =
+              details.responses?.["200"]?.content?.["application/json"];
+            responseExample =
+              successResponse?.example ||
+              successResponse?.schema?.example ||
+              (successResponse?.schema?.properties &&
+                Object.entries(successResponse.schema.properties).reduce(
+                  (acc, [key, prop]: [string, any]) => {
+                    acc[key] = prop.example;
+                    return acc;
+                  },
+                  {} as Record<string, any>
+                ));
+          } catch (e) {
+            console.warn(
+              `Error extracting response example for ${endpointId}`,
+              e
+            );
+          }
         }
 
         endpoints.push({
@@ -168,9 +233,8 @@ export async function loadEndpointsForCategory(
       }
     }
 
-    // Update cache with timestamp
     apiDataCache[cacheKey] = endpoints;
-    apiDataCache[`${cacheKey}-timestamp`] = Date.now();
+    apiDataCache[timestampKey] = Date.now();
 
     return endpoints;
   } catch (error) {
@@ -179,7 +243,6 @@ export async function loadEndpointsForCategory(
   }
 }
 
-// Utility function to clear cache
 export function clearApiDocsCache() {
   Object.keys(apiDataCache).forEach((key) => {
     delete apiDataCache[key];

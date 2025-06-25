@@ -37,6 +37,7 @@ export default function EndpointPage({ endpoint }: EndpointPageProps) {
       method: "",
       format: "",
       contentType: "",
+      contohRequest: "",
       contohResponse: "",
     };
 
@@ -53,15 +54,32 @@ export default function EndpointPage({ endpoint }: EndpointPageProps) {
     if (formatMatch) info.format = formatMatch[1].trim();
     if (contentTypeMatch) info.contentType = contentTypeMatch[1].trim();
 
-    // Extract JSON example dari description
-    const jsonMatch = description.match(/```json\n([\s\S]*?)\n```/);
-    if (jsonMatch) {
+    // Extract JSON examples dari description
+    const jsonMatches = description.match(/```json\n([\s\S]*?)\n```/g);
+
+    if (jsonMatches) {
       try {
-        // Format JSON dengan proper indentation
-        const jsonObj = JSON.parse(jsonMatch[1]);
-        info.contohResponse = JSON.stringify(jsonObj, null, 2);
+        // Contoh request (biasanya pertama)
+        if (jsonMatches.length > 0) {
+          const jsonText = jsonMatches[0].replace(/```json\n|\n```/g, "");
+          try {
+            info.contohRequest = JSON.stringify(JSON.parse(jsonText), null, 2);
+          } catch {
+            info.contohRequest = jsonText;
+          }
+        }
+
+        // Contoh response (biasanya kedua)
+        if (jsonMatches.length > 1) {
+          const jsonText = jsonMatches[1].replace(/```json\n|\n```/g, "");
+          try {
+            info.contohResponse = JSON.stringify(JSON.parse(jsonText), null, 2);
+          } catch {
+            info.contohResponse = jsonText;
+          }
+        }
       } catch (e) {
-        info.contohResponse = jsonMatch[1];
+        console.error("Error parsing JSON examples", e);
       }
     }
 
@@ -70,6 +88,15 @@ export default function EndpointPage({ endpoint }: EndpointPageProps) {
 
   const descInfo = parseDescription(endpoint.description);
   const baseUrl = "https://apijkn-dev.bpjs-kesehatan.go.id";
+
+  // Prioritaskan contoh dari loader, fallback ke description
+  const contohRequest = endpoint.requestExample
+    ? JSON.stringify(endpoint.requestExample, null, 2)
+    : descInfo.contohRequest;
+
+  const contohResponse = endpoint.responseExample
+    ? JSON.stringify(endpoint.responseExample, null, 2)
+    : descInfo.contohResponse;
 
   return (
     <section className="p-6 bg-white rounded shadow-md max-w-4xl mx-auto">
@@ -135,24 +162,24 @@ export default function EndpointPage({ endpoint }: EndpointPageProps) {
       )}
 
       {/* Contoh Request jika ada */}
-      {endpoint.requestExample && (
+      {contohRequest && (
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-3">Contoh Request</h2>
           <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
             <pre className="text-sm">
-              <code>{JSON.stringify(endpoint.requestExample, null, 2)}</code>
+              <code>{contohRequest}</code>
             </pre>
           </div>
         </div>
       )}
 
       {/* Response example jika ada */}
-      {descInfo.contohResponse && (
+      {contohResponse && (
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-3">Contoh Response</h2>
           <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
             <pre className="text-sm">
-              <code>{descInfo.contohResponse}</code>
+              <code>{contohResponse}</code>
             </pre>
           </div>
         </div>

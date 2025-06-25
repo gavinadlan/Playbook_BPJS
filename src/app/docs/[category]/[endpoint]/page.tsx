@@ -47,7 +47,6 @@ export default function Page() {
     return (
       <div className="flex justify-center items-center h-screen">
         <Loader />
-        <span className="ml-3">Memuat detail endpoint...</span>
       </div>
     );
   }

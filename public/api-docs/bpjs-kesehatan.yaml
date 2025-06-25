@@ -34,7 +34,6 @@ paths:
 # paths:
 #   # Merge semua paths dari services yang berbeda
 #   <<:
-#     - $ref: './services/aplicares.yaml#/paths'
 #     - $ref: './services/vclaim.yaml#/paths'
 #     - $ref: './services/antreanrs.yaml#/paths'
 #     - $ref: './services/apotek.yaml#/paths'
@@ -44,4 +43,7 @@ paths:
 #     - $ref: './services/rekammedis.yaml#/paths'
 
 components:
-  $ref: "./components/schemas.yaml#/components"
+  schemas:
+    $ref: "./components/schemas.yaml#/components/schemas"
+  parameters:
+    $ref: "./components/parameters.yaml#/parameters"

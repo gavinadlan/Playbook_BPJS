@@ -41,18 +41,16 @@ const CATEGORY_FILE_MAP: Record<string, string> = {
   rekammedis: "rekammedis",
 };
 
-// Perbaikan 1: Definisikan tipe yang lebih spesifik untuk cache
 interface ApiDataCache {
   categories?: ApiCategory[];
   categoriesTimestamp?: number;
-  [key: string]: any; // Tetap butuh index signature untuk properti dinamis
+  [key: string]: any;
 }
 
 const apiDataCache: ApiDataCache = {};
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes cache
 
 export async function loadApiCategories(): Promise<ApiCategory[]> {
-  // Perbaikan 2: Tambahkan pengecekan undefined untuk timestamp
   if (
     apiDataCache["categories"] &&
     apiDataCache["categoriesTimestamp"] !== undefined &&
@@ -99,11 +97,9 @@ export async function loadEndpointsForCategory(
   const cacheKey = `endpoints-${categoryId}`;
   const timestampKey = `${cacheKey}-timestamp`;
 
-  // Perbaikan 3: Gunakan asertion tipe untuk akses cache
   const cachedEndpoints = apiDataCache[cacheKey] as ApiEndpoint[] | undefined;
   const cachedTimestamp = apiDataCache[timestampKey] as number | undefined;
 
-  // Perbaikan 4: Tambahkan pengecekan undefined untuk timestamp
   if (
     cachedEndpoints &&
     cachedTimestamp !== undefined &&

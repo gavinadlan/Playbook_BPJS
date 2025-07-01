@@ -13,6 +13,7 @@ import {
   ClipboardList,
   FileCode2,
   LayoutDashboard,
+  Play,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
@@ -179,6 +180,23 @@ const Header = () => {
                     </div>
                   </DropdownMenuItem>
 
+                  <DropdownMenuItem
+                    onClick={() => router.push("/test-api")}
+                    className="cursor-pointer px-4 py-3 flex items-center gap-3 text-gray-700 hover:bg-orange-50 transition-colors duration-200 focus:bg-orange-50"
+                  >
+                    <div className="p-2 bg-orange-100 rounded-lg">
+                      <Play className="h-5 w-5 text-orange-600" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium">
+                        Test API
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        Test endpoint secara langsung
+                      </span>
+                    </div>
+                  </DropdownMenuItem>
+
                   <DropdownMenuSeparator className="my-2 bg-gray-100 h-[2px]" />
 
                   <DropdownMenuItem
@@ -314,6 +332,12 @@ const Header = () => {
                   <MobileNavLink
                     href="/docs"
                     label="Dokumentasi API"
+                    currentPath={pathname}
+                    onClick={handleMobileNavClick}
+                  />
+                  <MobileNavLink
+                    href="/test-api"
+                    label="Test API"
                     currentPath={pathname}
                     onClick={handleMobileNavClick}
                   />

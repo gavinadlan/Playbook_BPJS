@@ -1,32 +1,27 @@
+openapi: 3.0.0
+info:
+  title: Aplicares API
+  version: 1.0.0
+  description: Layanan Aplicares untuk manajemen aplikasi dan ketersediaan kamar
+
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id
+    description: Server Development
+
+tags:
+  - name: Ketersediaan Kamar
+    description: Endpoint untuk manajemen ketersediaan kamar rumah sakit
+
 paths:
   /aplicaresws/rest/ref/kelas:
     get:
-      tags: [Aplicares]
+      tags:
+        - Ketersediaan Kamar
       summary: Referensi Kamar
-      description: |
-        **Fungsi:** Referensi Kamar
-        **Method:** GET
-        **Format:** Json
-        **Content-Type:** application/json
-
-        **Contoh Response:**
-        ```json
-        {
-          "metadata": {
-            "code": 1,
-            "message": "OK",
-            "totalitems": 16
-          },
-          "response": {
-            "list": [
-              {"kodekelas": "NON", "namakelas": "-"},
-              {"kodekelas": "VVP", "namakelas": "VVIP"}
-            ]
-          }
-        }
-        ```
+      description: Mendapatkan referensi kelas kamar
+      operationId: getRefKelas
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -55,10 +50,10 @@ paths:
                           properties:
                             kodekelas:
                               type: string
-                              example: "VVP"
+                              example: "NON"
                             namakelas:
                               type: string
-                              example: "VVIP"
+                              example: "-"
               example:
                 metadata:
                   code: 1
@@ -73,34 +68,18 @@ paths:
 
   /aplicaresws/rest/bed/update/{kodeppk}:
     post:
-      tags: [Aplicares]
+      tags:
+        - Ketersediaan Kamar
       summary: Update Ketersediaan Tempat Tidur
-      description: |
-        **Fungsi:** Update Ketersediaan Tempat Tidur
-        **Method:** POST
-        **Format:** Json
-        **Content-Type:** application/json
-
-        **Contoh Request:**
-        ```json
-        {
-          "kodekelas": "VIP",
-          "koderuang": "RG01",
-          "namaruang": "Ruang Anggrek VIP",
-          "kapasitas": "20",
-          "tersedia": "10",
-          "tersediapria": "0",
-          "tersediawanita": "0",
-          "tersediapriawanita": "0"
-        }
-        ```
+      description: Update ketersediaan tempat tidur untuk rumah sakit
+      operationId: updateBedAvailability
       parameters:
         - name: kodeppk
           in: path
           required: true
           schema:
             type: string
-            example: "PPK001"
+          description: Kode PPK rumah sakit
       requestBody:
         required: true
         content:
@@ -116,80 +95,67 @@ paths:
               properties:
                 kodekelas:
                   type: string
+                  description: Kode kelas ruang rawat sesuai dengan mapping BPJS Kesehatan
                   example: "VIP"
                 koderuang:
                   type: string
+                  description: Kode ruangan Rumah Sakit
                   example: "RG01"
                 namaruang:
                   type: string
+                  description: Nama ruang rawat Rumah Sakit
                   example: "Ruang Anggrek VIP"
                 kapasitas:
                   type: string
+                  description: Kapasitas ruang Rumah Sakit
                   example: "20"
                 tersedia:
                   type: string
+                  description: Jumlah tempat tidur yang kosong
                   example: "10"
                 tersediapria:
                   type: string
+                  description: Jumlah tempat tidur kosong untuk laki-laki
                   example: "0"
                 tersediawanita:
                   type: string
+                  description: Jumlah tempat tidur kosong untuk perempuan
                   example: "0"
                 tersediapriawanita:
                   type: string
+                  description: Jumlah tempat tidur kosong untuk laki-laki atau perempuan
                   example: "0"
+            example:
+              kodekelas: "VIP"
+              koderuang: "RG01"
+              namaruang: "Ruang Anggrek VIP"
+              kapasitas: "20"
+              tersedia: "10"
+              tersediapria: "0"
+              tersediawanita: "0"
+              tersediapriawanita: "0"
       responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  metadata:
-                    type: object
-                    properties:
-                      code:
-                        type: integer
-                        example: 1
-                      message:
-                        type: string
-                        example: "Update berhasil"
-              example:
-                metadata:
-                  code: 1
-                  message: "Update berhasil"
+        '200':
+          description: Update berhasil
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
 
   /aplicaresws/rest/bed/create/{kodeppk}:
     post:
-      tags: [Aplicares]
+      tags:
+        - Ketersediaan Kamar
       summary: Ruangan Baru
-      description: |
-        **Fungsi:** Insert Ruangan Baru
-        **Method:** POST
-        **Format:** Json
-        **Content-Type:** application/json
-
-        **Contoh Request:**
-        ```json
-        {
-          "kodekelas": "VIP",
-          "koderuang": "RG01",
-          "namaruang": "Ruang Anggrek VIP",
-          "kapasitas": "20",
-          "tersedia": "10",
-          "tersediapria": "0",
-          "tersediawanita": "0",
-          "tersediapriawanita": "0"
-        }
-        ```
+      description: Insert ruangan baru
+      operationId: createBed
       parameters:
         - name: kodeppk
           in: path
           required: true
           schema:
             type: string
-            example: "PPK001"
+          description: Kode PPK rumah sakit
       requestBody:
         required: true
         content:
@@ -205,107 +171,85 @@ paths:
               properties:
                 kodekelas:
                   type: string
+                  description: Kode kelas ruang rawat sesuai dengan mapping BPJS Kesehatan
                   example: "VIP"
                 koderuang:
                   type: string
+                  description: Kode ruangan Rumah Sakit
                   example: "RG01"
                 namaruang:
                   type: string
+                  description: Nama ruang rawat Rumah Sakit
                   example: "Ruang Anggrek VIP"
                 kapasitas:
                   type: string
+                  description: Kapasitas ruang Rumah Sakit
                   example: "20"
                 tersedia:
                   type: string
+                  description: Jumlah tempat tidur yang kosong
                   example: "10"
                 tersediapria:
                   type: string
+                  description: Jumlah tempat tidur kosong untuk laki-laki
                   example: "0"
                 tersediawanita:
                   type: string
+                  description: Jumlah tempat tidur kosong untuk perempuan
                   example: "0"
                 tersediapriawanita:
                   type: string
+                  description: Jumlah tempat tidur kosong untuk laki-laki atau perempuan
                   example: "0"
+            example:
+              kodekelas: "VIP"
+              koderuang: "RG01"
+              namaruang: "Ruang Anggrek VIP"
+              kapasitas: "20"
+              tersedia: "10"
+              tersediapria: "0"
+              tersediawanita: "0"
+              tersediapriawanita: "0"
       responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  metadata:
-                    type: object
-                    properties:
-                      code:
-                        type: integer
-                        example: 1
-                      message:
-                        type: string
-                        example: "Ruangan berhasil ditambahkan"
-              example:
-                metadata:
-                  code: 1
-                  message: "Ruangan berhasil ditambahkan"
+        '201':
+          description: Ruangan berhasil dibuat
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
 
   /aplicaresws/rest/bed/read/{kodeppk}/{start}/{limit}:
     get:
-      tags: [Aplicares]
+      tags:
+        - Ketersediaan Kamar
       summary: Ketersediaan Kamar RS
-      description: |
-        **Fungsi:** Melihat Data Ketersediaan Kamar RS
-        **Method:** GET
-        **Format:** Json
-        **Accept:** application/json
-
-        **Contoh Response:**
-        ```json
-        {
-          "metadata": {
-            "code": 1,
-            "message": "OK",
-            "totalitems": 5
-          },
-          "response": {
-            "list": [
-              {
-                "kodekelas": "VIP",
-                "koderuang": "RG01",
-                "namaruang": "Ruang Anggrek VIP",
-                "kapasitas": "20",
-                "tersedia": "10",
-                "tersediapria": "0",
-                "tersediawanita": "0",
-                "tersediapriawanita": "0"
-              }
-            ]
-          }
-        }
-        ```
+      description: Melihat data ketersediaan kamar rumah sakit
+      operationId: readBedAvailability
       parameters:
         - name: kodeppk
           in: path
           required: true
           schema:
             type: string
-            example: "PPK001"
+          description: Kode PPK rumah sakit
         - name: start
           in: path
           required: true
           schema:
             type: integer
             minimum: 1
-            example: 1
+          description: Nomor baris awal (dimulai dari 1)
+          example: 1
         - name: limit
           in: path
           required: true
           schema:
             type: integer
             minimum: 1
-            example: 10
+          description: Jumlah data yang ditampilkan
+          example: 10
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -317,13 +261,10 @@ paths:
                     properties:
                       code:
                         type: integer
-                        example: 1
                       message:
                         type: string
-                        example: "OK"
                       totalitems:
                         type: integer
-                        example: 5
                   response:
                     type: object
                     properties:
@@ -334,68 +275,39 @@ paths:
                           properties:
                             kodekelas:
                               type: string
-                              example: "VIP"
                             koderuang:
                               type: string
-                              example: "RG01"
                             namaruang:
                               type: string
-                              example: "Ruang Anggrek VIP"
                             kapasitas:
                               type: string
-                              example: "20"
                             tersedia:
                               type: string
-                              example: "10"
                             tersediapria:
                               type: string
-                              example: "0"
                             tersediawanita:
                               type: string
-                              example: "0"
                             tersediapriawanita:
                               type: string
-                              example: "0"
-              example:
-                metadata:
-                  code: 1
-                  message: "OK"
-                  totalitems: 5
-                response:
-                  list:
-                    - kodekelas: "VIP"
-                      koderuang: "RG01"
-                      namaruang: "Ruang Anggrek VIP"
-                      kapasitas: "20"
-                      tersedia: "10"
-                      tersediapria: "0"
-                      tersediawanita: "0"
-                      tersediapriawanita: "0"
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
 
   /aplicaresws/rest/bed/delete/{kodeppk}:
     post:
-      tags: [Aplicares]
+      tags:
+        - Ketersediaan Kamar
       summary: Hapus Ruangan
-      description: |
-        **Fungsi:** Hapus Ruangan
-        **Method:** POST
-        **Format:** Json
-        **Content-Type:** application/json
-
-        **Contoh Request:**
-        ```json
-        {
-          "kodekelas": "VIP",
-          "koderuang": "RG01"
-        }
-        ```
+      description: Hapus ruangan dari sistem
+      operationId: deleteBed
       parameters:
         - name: kodeppk
           in: path
           required: true
           schema:
             type: string
-            example: "PPK001"
+          description: Kode PPK rumah sakit
       requestBody:
         required: true
         content:
@@ -408,28 +320,67 @@ paths:
               properties:
                 kodekelas:
                   type: string
+                  description: Kode kelas ruang rawat sesuai dengan mapping BPJS Kesehatan
                   example: "VIP"
                 koderuang:
                   type: string
+                  description: Kode ruangan Rumah Sakit
                   example: "RG01"
+            example:
+              kodekelas: "VIP"
+              koderuang: "RG01"
       responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  metadata:
-                    type: object
-                    properties:
-                      code:
-                        type: integer
-                        example: 1
-                      message:
-                        type: string
-                        example: "Ruangan berhasil dihapus"
-              example:
-                metadata:
-                  code: 1
-                  message: "Ruangan berhasil dihapus"
+        '200':
+          description: Ruangan berhasil dihapus
+        '400':
+          description: Bad Request
+        '404':
+          description: Ruangan tidak ditemukan
+        '500':
+          description: Internal Server Error
+
+components:
+  schemas:
+    BedAvailability:
+      type: object
+      required:
+        - kodekelas
+        - koderuang
+        - namaruang
+        - kapasitas
+        - tersedia
+      properties:
+        kodekelas:
+          type: string
+          description: Kode kelas ruang rawat
+        koderuang:
+          type: string
+          description: Kode ruangan
+        namaruang:
+          type: string
+          description: Nama ruang rawat
+        kapasitas:
+          type: string
+          description: Kapasitas ruang
+        tersedia:
+          type: string
+          description: Jumlah tempat tidur kosong
+        tersediapria:
+          type: string
+          description: Jumlah tempat tidur kosong untuk laki-laki
+        tersediawanita:
+          type: string
+          description: Jumlah tempat tidur kosong untuk perempuan
+        tersediapriawanita:
+          type: string
+          description: Jumlah tempat tidur kosong untuk laki-laki atau perempuan
+
+    KelasReference:
+      type: object
+      properties:
+        kodekelas:
+          type: string
+          description: Kode kelas
+        namakelas:
+          type: string
+          description: Nama kelas

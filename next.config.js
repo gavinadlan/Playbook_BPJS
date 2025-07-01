@@ -6,6 +6,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // Disable React Strict Mode untuk menghindari warning dari Swagger UI
+  reactStrictMode: false,
   webpack: (config) => {
     config.module.rules.push({
       test: /\.ya?ml$/,

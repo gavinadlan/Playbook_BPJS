@@ -1,0 +1,660 @@
+openapi: 3.0.0
+info:
+  title: VClaim Monitoring
+  version: 1.0.0
+  description: Monitoring data klaim dan kunjungan
+
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev
+    description: Server Development
+
+tags:
+  - name: Monitoring
+    description: Monitoring data klaim dan kunjungan
+
+components:
+  securitySchemes:
+    vclaimAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    vclaimTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    vclaimSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
+
+  schemas:
+    MonitoringKunjunganResponse:
+      type: object
+      properties:
+        metaData:
+          type: object
+          properties:
+            code:
+              type: string
+              example: "200"
+            message:
+              type: string
+              example: "Sukses"
+        response:
+          type: object
+          properties:
+            sep:
+              type: array
+              items:
+                type: object
+                properties:
+                  noSep:
+                    type: string
+                    example: "0301R00110170000004"
+                  noRujukan:
+                    type: string
+                    example: "0301U01108180200084"
+                  tglSep:
+                    type: string
+                    format: date
+                    example: "2017-10-01"
+                  tglPlgSep:
+                    type: string
+                    format: date
+                    example: "2017-10-03"
+                  jnsPelayanan:
+                    type: string
+                    example: "R.Inap"
+                  kelasRawat:
+                    type: string
+                    example: "2"
+                  nama:
+                    type: string
+                    example: "HANIF ABDURRAHMAN"
+                  noKartu:
+                    type: string
+                    example: "0001819122189"
+                  diagnosa:
+                    type: string
+                    example: "K65.0"
+                  poli:
+                    type: string
+                    nullable: true
+
+    MonitoringKlaimResponse:
+      type: object
+      properties:
+        metaData:
+          type: object
+          properties:
+            code:
+              type: string
+              example: "200"
+            message:
+              type: string
+              example: "Sukses"
+        response:
+          type: object
+          properties:
+            klaim:
+              type: array
+              items:
+                type: object
+                properties:
+                  noSEP:
+                    type: string
+                    example: "0301R00109170001280"
+                  noFPK:
+                    type: string
+                    example: ""
+                  tglSep:
+                    type: string
+                    format: date
+                    example: "2017-09-02"
+                  tglPulang:
+                    type: string
+                    format: date
+                    example: "2017-09-02"
+                  jnsPelayanan:
+                    type: string
+                    example: "1"
+                  kelasRawat:
+                    type: string
+                    example: "3"
+                  poli:
+                    type: string
+                    example: "Hemodialisa"
+                  diagnosa:
+                    type: string
+                    example: "K65.0"
+                  peserta:
+                    type: object
+                    properties:
+                      nama:
+                        type: string
+                        example: "NUR"
+                      noKartu:
+                        type: string
+                        example: "0033681422715"
+                      noMR:
+                        type: string
+                        example: "974956"
+                  Inacbg:
+                    type: object
+                    properties:
+                      kode:
+                        type: string
+                        example: "N-3-15-0"
+                      nama:
+                        type: string
+                        example: "DIALYSIS"
+                  biaya:
+                    type: object
+                    properties:
+                      byPengajuan:
+                        type: string
+                        example: "991200"
+                      bySetujui:
+                        type: string
+                        example: "0"
+                      byTarifGruper:
+                        type: string
+                        example: "991200"
+                      byTarifRS:
+                        type: string
+                        example: "1170689"
+                      byTopup:
+                        type: string
+                        example: "0"
+                  status:
+                    type: string
+                    example: "Proses Verifikasi"
+
+paths:
+  /vclaim-rest/Monitoring/Kunjungan/Tanggal/{tanggal}/JnsPelayanan/{jnsPelayanan}:
+    get:
+      tags:
+        - Monitoring
+      summary: Data Kunjungan
+      description: Data Kunjungan berdasarkan tanggal SEP dan jenis pelayanan
+      operationId: getMonitoringKunjungan
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      parameters:
+        - name: tanggal
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal SEP format yyyy-mm-dd
+          example: "2017-10-01"
+        - name: jnsPelayanan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Jenis Pelayanan (1. Inap 2. Jalan)
+          example: "1"
+      responses:
+        '200':
+          description: Data kunjungan berhasil diambil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitoringKunjunganResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "Sukses"
+                response:
+                  sep:
+                    - noSep: "0301R00110170000004"
+                      noRujukan: "0301U01108180200084"
+                      tglSep: "2017-10-01"
+                      tglPlgSep: "2017-10-03"
+                      jnsPelayanan: "R.Inap"
+                      kelasRawat: "2"
+                      nama: "HANIF ABDURRAHMAN"
+                      noKartu: "0001819122189"
+                      diagnosa: "K65.0"
+                      poli: null
+                    - noSep: "0301R00110170000005"
+                      noRujukan: "0301U01108180200184"
+                      tglSep: "2017-10-01"
+                      tglPlgSep: "2017-10-10"
+                      jnsPelayanan: "R.Inap"
+                      kelasRawat: "3"
+                      nama: "ASRIZAL"
+                      noKartu: "0002283324674"
+                      diagnosa: "I50.0"
+                      poli: null
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /vclaim-rest/Monitoring/Klaim/Tanggal/{tanggal}/JnsPelayanan/{jnsPelayanan}/Status/{status}:
+    get:
+      tags:
+        - Monitoring
+      summary: Data Klaim
+      description: Data Klaim berdasarkan tanggal pulang, jenis pelayanan, dan status
+      operationId: getMonitoringKlaim
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      parameters:
+        - name: tanggal
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal Pulang format yyyy-mm-dd
+          example: "2017-09-02"
+        - name: jnsPelayanan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Jenis Pelayanan (1. Inap 2. Jalan)
+          example: "1"
+        - name: status
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Status Klaim (1. Proses Verifikasi 2. Pending Verifikasi 3. Klaim)
+          example: "1"
+      responses:
+        '200':
+          description: Data klaim berhasil diambil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitoringKlaimResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "Sukses"
+                response:
+                  klaim:
+                    - noSEP: "0301R00109170001280"
+                      noFPK: ""
+                      tglSep: "2017-09-02"
+                      tglPulang: "2017-09-02"
+                      jnsPelayanan: "1"
+                      kelasRawat: "3"
+                      poli: "Hemodialisa"
+                      diagnosa: "K65.0"
+                      peserta:
+                        nama: "NUR"
+                        noKartu: "0033681422715"
+                        noMR: "974956"
+                      Inacbg:
+                        kode: "N-3-15-0"
+                        nama: "DIALYSIS"
+                      biaya:
+                        byPengajuan: "991200"
+                        bySetujui: "0"
+                        byTarifGruper: "991200"
+                        byTarifRS: "1170689"
+                        byTopup: "0"
+                      status: "Proses Verifikasi"
+                    - noSEP: "0301R00109170000094"
+                      noFPK: ""
+                      tglSep: "2017-09-02"
+                      tglPulang: "2017-09-02"
+                      jnsPelayanan: "1"
+                      kelasRawat: "3"
+                      poli: "Hemodialisa"
+                      diagnosa: "K65.0"
+                      peserta:
+                        nama: "YUH"
+                        noKartu: "0223416974628"
+                        noMR: "878410"
+                      Inacbg:
+                        kode: "N-3-15-0"
+                        nama: "DIALYSIS"
+                      biaya:
+                        byPengajuan: "991200"
+                        bySetujui: "0"
+                        byTarifGruper: "991200"
+                        byTarifRS: "1015000"
+                        byTopup: "0"
+                      status: "Proses Verifikasi"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /vclaim-rest/monitoring/HistoriPelayanan/NoKartu/{noKartu}/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
+    get:
+      tags:
+        - Monitoring
+      summary: Data Histori Pelayanan Peserta
+      description: Histori Pelayanan Per Peserta berdasarkan nomor kartu dan rentang tanggal
+      operationId: getHistoriPelayanan
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      parameters:
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: No.Kartu Peserta
+          example: "0001160271256"
+        - name: tglMulai
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tgl Mulai Pencarian (yyyy-mmdd)
+          example: "2018-07-01"
+        - name: tglAkhir
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tgl Akhir Pencarian (yyyy-mmdd)
+          example: "2018-08-31"
+      responses:
+        '200':
+          description: Data histori pelayanan berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "Sukses"
+                  response:
+                    type: object
+                    properties:
+                      histori:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            noSep:
+                              type: string
+                              example: "0301R0110818V200084"
+                            noRujukan:
+                              type: string
+                              example: "0301U01108180200084"
+                            tglSep:
+                              type: string
+                              format: date
+                              example: "2018-07-09"
+                            tglPlgSep:
+                              type: string
+                              format: date
+                              example: "2018-07-11"
+                            jnsPelayanan:
+                              type: string
+                              example: "1"
+                            kelasRawat:
+                              type: string
+                              example: "Kelas 1"
+                            namaPeserta:
+                              type: string
+                              example: "STAMI"
+                            noKartu:
+                              type: string
+                              example: "0001160271256"
+                            poli:
+                              type: string
+                              example: ""
+                            ppkPelayanan:
+                              type: string
+                              example: "RS YOS SUDARSO"
+                            diagnosa:
+                              type: string
+                              example: "A00.1 - Cholera due to Vibrio cholerae 01, biovar eltor"
+              example:
+                metaData:
+                  code: "200"
+                  message: "Sukses"
+                response:
+                  histori:
+                    - noSep: "0301R0110818V200084"
+                      noRujukan: "0301U01108180200084"
+                      tglSep: "2018-07-09"
+                      tglPlgSep: "2018-07-11"
+                      jnsPelayanan: "1"
+                      kelasRawat: "Kelas 1"
+                      namaPeserta: "STAMI"
+                      noKartu: "0001160271256"
+                      poli: ""
+                      ppkPelayanan: "RS YOS SUDARSO"
+                      diagnosa: "A00.1 - Cholera due to Vibrio cholerae 01, biovar eltor"
+                    - noSep: "0301R0110818V100085"
+                      noRujukan: "0301U01108180201084"
+                      tglSep: "2018-08-09"
+                      tglPlgSep: "2018-08-09"
+                      jnsPelayanan: "2"
+                      kelasRawat: null
+                      namaPeserta: "STAMI"
+                      noKartu: "0001160271256"
+                      poli: ""
+                      ppkPelayanan: "RS YOS SUDARSO"
+                      diagnosa: "A00.1 - Cholera due to Vibrio cholerae 01, biovar eltor"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /vclaim-rest/monitoring/JasaRaharja/JnsPelayanan/{jnsPelayanan}/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
+    get:
+      tags:
+        - Monitoring
+      summary: Data Klaim Jaminan Jasa Raharja
+      description: Monitoring Klaim Jasa Raharja berdasarkan jenis pelayanan dan rentang tanggal
+      operationId: getJasaRaharja
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      parameters:
+        - name: jnsPelayanan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Jenis Pelayanan (1. Rawat Inap, 2. Rawat Jalan)
+          example: "2"
+        - name: tglMulai
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tgl Mulai Pencarian (yyyy-mmdd)
+          example: "2018-08-01"
+        - name: tglAkhir
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tgl Akhir Pencarian (yyyy-mmdd)
+          example: "2018-08-31"
+      responses:
+        '200':
+          description: Data klaim Jasa Raharja berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "Sukses"
+                  response:
+                    type: object
+                    properties:
+                      jaminan:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            sep:
+                              type: object
+                              properties:
+                                noSEP:
+                                  type: string
+                                  example: "0301R0110818V100085"
+                                tglSEP:
+                                  type: string
+                                  format: date
+                                  example: "2018-08-09"
+                                tglPlgSEP:
+                                  type: string
+                                  format: date
+                                  example: "2018-08-09"
+                                noMr:
+                                  type: string
+                                  example: "AA-01-11"
+                                jnsPelayanan:
+                                  type: string
+                                  example: "2"
+                                poli:
+                                  type: string
+                                  example: "INT"
+                                diagnosa:
+                                  type: string
+                                  example: "A00.1"
+                                peserta:
+                                  type: object
+                                  properties:
+                                    noKartu:
+                                      type: string
+                                      example: "0001161271256"
+                                    nama:
+                                      type: string
+                                      example: "JASA RAHARJA"
+                                    noMR:
+                                      type: string
+                                      example: "AA-01-11"
+                            jasaRaharja:
+                              type: object
+                              properties:
+                                tglKejadian:
+                                  type: string
+                                  format: date
+                                  example: "2018-08-09"
+                                noRegister:
+                                  type: string
+                                  example: "AA-JR-0801"
+                                ketStatusDijamin:
+                                  type: string
+                                  example: "Dijamin"
+                                ketStatusDikirim:
+                                  type: string
+                                  example: "Sukses"
+                                biayaDijamin:
+                                  type: string
+                                  example: "100000"
+                                plafon:
+                                  type: string
+                                  example: "20000000"
+                                jmlDibayar:
+                                  type: string
+                                  example: "10000"
+                                resultsJasaRaharja:
+                                  type: string
+                                  example: "Sukses"
+              example:
+                metaData:
+                  code: "200"
+                  message: "Sukses"
+                response:
+                  jaminan:
+                    - sep:
+                        noSEP: "0301R0110818V100085"
+                        tglSEP: "2018-08-09"
+                        tglPlgSEP: "2018-08-09"
+                        noMr: "AA-01-11"
+                        jnsPelayanan: "2"
+                        poli: "INT"
+                        diagnosa: "A00.1"
+                        peserta:
+                          noKartu: "0001161271256"
+                          nama: "JASA RAHARJA"
+                          noMR: "AA-01-11"
+                      jasaRaharja:
+                        tglKejadian: "2018-08-09"
+                        noRegister: "AA-JR-0801"
+                        ketStatusDijamin: "Dijamin"
+                        ketStatusDikirim: "Sukses"
+                        biayaDijamin: "100000"
+                        plafon: "20000000"
+                        jmlDibayar: "10000"
+                        resultsJasaRaharja: "Sukses"
+                    - sep:
+                        noSEP: "0301R0110818V100185"
+                        tglSEP: "2018-08-09"
+                        tglPlgSEP: "2018-08-09"
+                        noMr: "AA-01-11"
+                        jnsPelayanan: "2"
+                        poli: "INT"
+                        diagnosa: "A00.1"
+                        peserta:
+                          noKartu: "0003361271256"
+                          nama: "JASA RAHARJA"
+                          noMR: "AA-01-11"
+                      jasaRaharja:
+                        tglKejadian: "2018-08-09"
+                        noRegister: "AA-JR-0801"
+                        ketStatusDijamin: "Dijamin"
+                        ketStatusDikirim: "Sukses"
+                        biayaDijamin: "100000"
+                        plafon: "20000000"
+                        jmlDibayar: "10000"
+                        resultsJasaRaharja: "Sukses"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error 

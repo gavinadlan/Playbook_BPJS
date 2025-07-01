@@ -1,0 +1,832 @@
+openapi: 3.0.0
+info:
+  title: VClaim PRB
+  version: 1.0.0
+  description: Pembuatan Rujuk Balik
+
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev
+    description: Server Development
+
+tags:
+  - name: PRB
+    description: Pembuatan Rujuk Balik
+
+components:
+  securitySchemes:
+    vclaimAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    vclaimTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    vclaimSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
+
+  schemas:
+    PRBRequest:
+      type: object
+      properties:
+        request:
+          type: object
+          properties:
+            t_prb:
+              $ref: '#/components/schemas/PRBData'
+
+    PRBData:
+      type: object
+      required:
+        - noSep
+        - noKartu
+        - alamat
+        - email
+        - programPRB
+        - kodeDPJP
+        - keterangan
+        - saran
+        - user
+        - obat
+      properties:
+        noSep:
+          type: string
+          description: Nomor SEP rawat jalan
+          example: "1101R0070118V999006"
+        noKartu:
+          type: string
+          description: Nomor kartu peserta
+          example: "0009999979951"
+        alamat:
+          type: string
+          description: Alamat lengkap peserta
+          example: "Jln. Medan Merdekah"
+        email:
+          type: string
+          description: Alamat email
+          example: "email@gmail.com"
+        programPRB:
+          type: string
+          description: Kode program PRB dari referensi
+          example: "09"
+        kodeDPJP:
+          type: string
+          description: Kode DPJP dari referensi
+          example: "27590"
+        keterangan:
+          type: string
+          description: Keterangan
+          example: "Kecapekan kerja"
+        saran:
+          type: string
+          description: Saran dokter pemberi rujuk balik
+          example: "Pasien harus olahraga bersama setiap minggu dan cuti, edukasi agar jangan disuruh kerja terus, lama lama stress."
+        user:
+          type: string
+          description: User harus diisi numeric
+          example: "1234567"
+        obat:
+          type: array
+          items:
+            type: object
+            properties:
+              kdObat:
+                type: string
+                description: Kode obat generik dari referensi
+                example: "00196120124"
+              signa1:
+                type: string
+                description: Signa 1
+                example: "1"
+              signa2:
+                type: string
+                description: Signa 2
+                example: "1"
+              jmlObat:
+                type: string
+                description: Jumlah obat
+                example: "11"
+
+    PRBUpdateRequest:
+      type: object
+      properties:
+        request:
+          type: object
+          properties:
+            t_prb:
+              $ref: '#/components/schemas/PRBUpdateData'
+
+    PRBUpdateData:
+      type: object
+      required:
+        - noSrb
+        - noSep
+        - alamat
+        - email
+        - kodeDPJP
+        - keterangan
+        - saran
+        - user
+        - obat
+      properties:
+        noSrb:
+          type: string
+          description: Nomor Surat Rujuk Balik (SRB)
+          example: "9118924"
+        noSep:
+          type: string
+          description: Nomor SEP
+          example: "0301R0011117V000008"
+        alamat:
+          type: string
+          description: Alamat lengkap pasien
+          example: "jl. Merdekah"
+        email:
+          type: string
+          description: Alamat email pasien
+          example: "emailkudisadap@gmail.com"
+        kodeDPJP:
+          type: string
+          description: Kode dokter DPJP dari referensi
+          example: "271190"
+        keterangan:
+          type: string
+          description: Keterangan pasien
+          example: "Capek Kerja"
+        saran:
+          type: string
+          description: Saran dari dokter DPJP
+          example: "Pasien harus Cuti,Kecapekan Kerja dan Kerja."
+        user:
+          type: string
+          description: User entri harus diisi numerik
+          example: "123456"
+        obat:
+          type: array
+          items:
+            type: object
+            properties:
+              kdObat:
+                type: string
+                description: Kode obat generik dari referensi
+                example: "00196999124"
+              signa1:
+                type: string
+                description: Signa 1
+                example: "3"
+              signa2:
+                type: string
+                description: Signa 2
+                example: "1"
+              jmlObat:
+                type: string
+                description: Jumlah obat
+                example: "5"
+
+    PRBDeleteRequest:
+      type: object
+      properties:
+        request:
+          type: object
+          properties:
+            t_prb:
+              type: object
+              properties:
+                noSrb:
+                  type: string
+                  description: Nomor Surat Rujuk Balik (SRB)
+                  example: "91141924"
+                noSep:
+                  type: string
+                  description: Nomor SEP
+                  example: "0301R0011117V000008"
+                user:
+                  type: string
+                  description: User entri harus diisi numerik
+                  example: "123456"
+
+    PRBResponse:
+      type: object
+      properties:
+        metaData:
+          type: object
+          properties:
+            code:
+              type: string
+              example: "200"
+            message:
+              type: string
+              example: "Sukses"
+        response:
+          oneOf:
+            - type: string
+              example: "94111924"
+            - type: object
+              properties:
+                DPJP:
+                  type: object
+                  properties:
+                    kode:
+                      type: string
+                      example: "27510"
+                    nama:
+                      type: string
+                      example: "Suwito, dr. Sp.PD"
+                keterangan:
+                  type: string
+                  example: "Capek Kerja"
+                noSRB:
+                  type: string
+                  example: "94111924"
+                obat:
+                  type: object
+                  properties:
+                    list:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          jmlObat:
+                            type: string
+                            example: "1"
+                          nmObat:
+                            type: string
+                            example: "Vitamin B1 (Thiamin HCl) tab 50 mg"
+                          signa:
+                            type: string
+                            example: "1 x 1"
+                peserta:
+                  type: object
+                  properties:
+                    alamat:
+                      type: string
+                      example: "Jl. Medan Merdekah"
+                    asalFaskes:
+                      type: object
+                      properties:
+                        kode:
+                          type: string
+                          example: "01691101"
+                        nama:
+                          type: string
+                          example: "Klinik KALIGANGSAS"
+                    email:
+                      type: string
+                      example: "email@gmail.com"
+                    kelamin:
+                      type: string
+                      example: "P"
+                    nama:
+                      type: string
+                      example: "SITI JUBAEDAH"
+                    noKartu:
+                      type: string
+                      example: "000999979951"
+                    noTelepon:
+                      type: string
+                      example: "081234567890"
+                    tglLahir:
+                      type: string
+                      format: date
+                      example: "1945-09-06"
+                programPRB:
+                  type: string
+                  example: "Systemic Lupus Erythematosus"
+                saran:
+                  type: string
+                  example: "Pasien harus cuti setiap minggu, edukasi agar jangan disuruh kerja terus, lama lama stress.."
+                tglSRB:
+                  type: string
+                  format: date
+                  example: "2018-01-08"
+
+    PRBSearchResponse:
+      type: object
+      properties:
+        metaData:
+          type: object
+          properties:
+            code:
+              type: string
+              example: "200"
+            message:
+              type: string
+              example: "Sukses"
+        response:
+          type: object
+          properties:
+            prb:
+              oneOf:
+                - type: object
+                  properties:
+                    DPJP:
+                      type: object
+                      properties:
+                        kode:
+                          type: string
+                          example: "275190"
+                        nama:
+                          type: string
+                          example: "Marwoto, dr. Sp.PD"
+                    noSEP:
+                      type: string
+                      example: "1101R0070118V999996"
+                    noSRB:
+                      type: string
+                      example: "9419118"
+                    obat:
+                      type: object
+                      properties:
+                        obat:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              jmlObat:
+                                type: string
+                                example: "5"
+                              kdObat:
+                                type: string
+                                example: "00019990017"
+                              nmObat:
+                                type: string
+                                example: "Analog Insulin Long Acting inj 100 UI/ml"
+                              signa1:
+                                type: string
+                                example: "3"
+                              signa2:
+                                type: string
+                                example: "1"
+                    peserta:
+                      type: object
+                      properties:
+                        alamat:
+                          type: string
+                          example: "Jl. Merdekah"
+                        asalFaskes:
+                          type: object
+                          properties:
+                            kode:
+                              type: string
+                              example: "016999901"
+                            nama:
+                              type: string
+                              example: "Klinik KALI ADEM"
+                        email:
+                          type: string
+                          example: "emailkudisadap@gmail.com"
+                        kelamin:
+                          type: string
+                          example: "P"
+                        nama:
+                          type: string
+                          example: "SITI RONALDO"
+                        noKartu:
+                          type: string
+                          example: "0054679979951"
+                        noTelepon:
+                          type: string
+                          example: "089101999101"
+                        tglLahir:
+                          type: string
+                          format: date
+                          example: "1949-09-06"
+                    programPRB:
+                      type: object
+                      properties:
+                        kode:
+                          type: string
+                          example: "01"
+                        nama:
+                          type: string
+                          example: "Diabetes Mellitus"
+                    keterangan:
+                      type: string
+                      example: "Kecapekan Kerja"
+                    saran:
+                      type: string
+                      example: "Pasien Harus Cuti, Kebanyakan Kerja"
+                    tglSRB:
+                      type: string
+                      format: date
+                      example: "2018-01-08"
+                - type: object
+                  properties:
+                    list:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          DPJP:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "2759111"
+                              nama:
+                                type: string
+                                example: "Marwoto,dr. Sp.PD"
+                          noSEP:
+                            type: string
+                            example: "1101R0070118V110086"
+                          noSRB:
+                            type: string
+                            example: "9419118"
+                          peserta:
+                            type: object
+                            properties:
+                              alamat:
+                                type: string
+                                example: "Jl. Merdekah"
+                              email:
+                                type: string
+                                example: "emailkudisadap@gmail.com"
+                              nama:
+                                type: string
+                                example: "SITI RONALD"
+                              noKartu:
+                                type: string
+                                example: "0011079979951"
+                              noTelepon:
+                                type: string
+                                example: "081728191919191"
+                          programPRB:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "01"
+                              nama:
+                                type: string
+                                example: "Diabetes Mellitus"
+                          keterangan:
+                            type: string
+                            example: "Alergi Cuti"
+                          saran:
+                            type: string
+                            example: "Pasien Wajib Berlibur, Jangan Disuruh Kerja"
+                          tglSRB:
+                            type: string
+                            format: date
+                            example: "2018-01-08"
+
+paths:
+  /vclaim-rest/PRB/insert:
+    post:
+      tags:
+        - PRB
+      summary: Insert PRB
+      description: Insert Rujuk balik
+      operationId: insertPRB
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PRBRequest'
+            example:
+              request:
+                t_prb:
+                  noSep: "1101R0070118V999006"
+                  noKartu: "0009999979951"
+                  alamat: "Jln. Medan Merdekah"
+                  email: "email@gmail.com"
+                  programPRB: "09"
+                  kodeDPJP: "27590"
+                  keterangan: "Kecapekan kerja"
+                  saran: "Pasien harus olahraga bersama setiap minggu dan cuti, edukasi agar jangan disuruh kerja terus, lama lama stress."
+                  user: "1234567"
+                  obat:
+                    - kdObat: "00196120124"
+                      signa1: "1"
+                      signa2: "1"
+                      jmlObat: "11"
+                    - kdObat: "00011220018"
+                      signa1: "1"
+                      signa2: "1"
+                      jmlObat: "10"
+      responses:
+        '200':
+          description: PRB berhasil diinsert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PRBResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "Sukses"
+                response:
+                  DPJP:
+                    kode: "27510"
+                    nama: "Suwito, dr. Sp.PD"
+                  keterangan: "Capek Kerja"
+                  noSRB: "94111924"
+                  obat:
+                    list:
+                      - jmlObat: "1"
+                        nmObat: "Vitamin B1 (Thiamin HCl) tab 50 mg"
+                        signa: "1 x 1"
+                      - jmlObat: "1"
+                        nmObat: "Analog Insulin Mix Acting Inj 100 UI/ml"
+                        signa: "1 x 1"
+                  peserta:
+                    alamat: "Jl. Medan Merdekah"
+                    asalFaskes:
+                      kode: "01691101"
+                      nama: "Klinik KALIGANGSAS"
+                    email: "email@gmail.com"
+                    kelamin: "P"
+                    nama: "SITI JUBAEDAH"
+                    noKartu: "000999979951"
+                    noTelepon: "081234567890"
+                    tglLahir: "1945-09-06"
+                  programPRB: "Systemic Lupus Erythematosus"
+                  saran: "Pasien harus cuti setiap minggu, edukasi agar jangan disuruh kerja terus, lama lama stress.."
+                  tglSRB: "2018-01-08"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /vclaim-rest/PRB/Update:
+    put:
+      tags:
+        - PRB
+      summary: Update PRB
+      description: Update PRB
+      operationId: updatePRB
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PRBUpdateRequest'
+            example:
+              request:
+                t_prb:
+                  noSrb: "9118924"
+                  noSep: "0301R0011117V000008"
+                  alamat: "jl. Merdekah"
+                  email: "emailkudisadap@gmail.com"
+                  kodeDPJP: "271190"
+                  keterangan: "Capek Kerja"
+                  saran: "Pasien harus Cuti,Kecapekan Kerja dan Kerja."
+                  user: "123456"
+                  obat:
+                    - kdObat: "00196999124"
+                      signa1: "3"
+                      signa2: "1"
+                      jmlObat: "5"
+                    - kdObat: "00011999918"
+                      signa1: "3"
+                      signa2: "1"
+                      jmlObat: "10"
+      responses:
+        '200':
+          description: PRB berhasil diupdate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PRBResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "OK"
+                response: "9111924"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /vclaim-rest/PRB/Delete:
+    delete:
+      tags:
+        - PRB
+      summary: Hapus PRB
+      description: Hapus Data PRB
+      operationId: deletePRB
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PRBDeleteRequest'
+            example:
+              request:
+                t_prb:
+                  noSrb: "91141924"
+                  noSep: "0301R0011117V000008"
+                  user: "123456"
+      responses:
+        '200':
+          description: PRB berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PRBResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "OK"
+                response: "941111924"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /vclaim-rest/prb/{noSrb}/nosep/{noSep}:
+    get:
+      tags:
+        - PRB
+      summary: Pencarian Data PRB berdasarkan Nomor SRB
+      description: Pencarian data PRB (Rujuk Balik) Berdasarkan Nomor SRB
+      operationId: getPRBByNoSRB
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      parameters:
+        - name: noSrb
+          in: path
+          required: true
+          schema:
+            type: string
+          description: No. SRB Peserta
+          example: "9419118"
+        - name: noSep
+          in: path
+          required: true
+          schema:
+            type: string
+          description: No. SEP
+          example: "1101R0070118V999996"
+      responses:
+        '200':
+          description: Data PRB berhasil diambil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PRBSearchResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "Sukses"
+                response:
+                  prb:
+                    DPJP:
+                      kode: "275190"
+                      nama: "Marwoto, dr. Sp.PD"
+                    noSEP: "1101R0070118V999996"
+                    noSRB: "9419118"
+                    obat:
+                      obat:
+                        - jmlObat: "5"
+                          kdObat: "00019990017"
+                          nmObat: "Analog Insulin Long Acting inj 100 UI/ml"
+                          signa1: "3"
+                          signa2: "1"
+                        - jmlObat: "10"
+                          kdObat: "00078990062"
+                          nmObat: "Human Insulin Long Acting penfill 3 ml"
+                          signa1: "3"
+                          signa2: "1"
+                    peserta:
+                      alamat: "Jl. Merdekah"
+                      asalFaskes:
+                        kode: "016999901"
+                        nama: "Klinik KALI ADEM"
+                      email: "emailkudisadap@gmail.com"
+                      kelamin: "P"
+                      nama: "SITI RONALDO"
+                      noKartu: "0054679979951"
+                      noTelepon: "089101999101"
+                      tglLahir: "1949-09-06"
+                    programPRB:
+                      kode: "01"
+                      nama: "Diabetes Mellitus"
+                    keterangan: "Kecapekan Kerja"
+                    saran: "Pasien Harus Cuti, Kebanyakan Kerja"
+                    tglSRB: "2018-01-08"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /vclaim-rest/prb/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
+    get:
+      tags:
+        - PRB
+      summary: Pencarian Data PRB berdasarkan Tanggal SRB
+      description: Pencarian data PRB (Rujuk Balik) Berdasarkan Tanggal SRB
+      operationId: getPRBByTanggal
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      parameters:
+        - name: tglMulai
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tgl. Mulai (yyyy-mm-dd)
+          example: "2018-01-01"
+        - name: tglAkhir
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tgl. Akhir (yyyy-mm-dd)
+          example: "2018-01-31"
+      responses:
+        '200':
+          description: Data PRB berhasil diambil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PRBSearchResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "OK"
+                response:
+                  prb:
+                    list:
+                      - DPJP:
+                          kode: "2759111"
+                          nama: "Marwoto,dr. Sp.PD"
+                        noSEP: "1101R0070118V110086"
+                        noSRB: "9419118"
+                        peserta:
+                          alamat: "Jl. Merdekah"
+                          email: "emailkudisadap@gmail.com"
+                          nama: "SITI RONALD"
+                          noKartu: "0011079979951"
+                          noTelepon: "081728191919191"
+                        programPRB:
+                          kode: "01"
+                          nama: "Diabetes Mellitus"
+                        keterangan: "Alergi Cuti"
+                        saran: "Pasien Wajib Berlibur, Jangan Disuruh Kerja"
+                        tglSRB: "2018-01-08"
+                      - DPJP:
+                          kode: "2759111"
+                          nama: "Marwoto,dr. Sp.PD"
+                        noSEP: "1101R0070118V110086"
+                        noSRB: "9419118"
+                        peserta:
+                          alamat: "Jl. Merdekah"
+                          email: "emailkudisadap@gmail.com"
+                          nama: "SITI RONALD"
+                          noKartu: "0011079979951"
+                          noTelepon: "081728191919191"
+                        programPRB:
+                          kode: "01"
+                          nama: "Diabetes Mellitus"
+                        keterangan: "Alergi Cuti"
+                        saran: "Pasien Wajib Berlibur, Jangan Disuruh Kerja"
+                        tglSRB: "2018-01-08"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error 

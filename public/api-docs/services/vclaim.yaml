@@ -1,597 +1,2353 @@
-paths:
-  # Endpoint untuk Create Signature
-  /vclaim/auth/signature:
-    get:
-      tags: [VClaim]
-      summary: Create Signature
-      description: |
-        ## Overview
+openapi: 3.0.0
+info:
+  title: VClaim API - Complete
+  version: 1.0.0
+  description: |
+    API VClaim untuk pengelolaan klaim BPJS Kesehatan
+    
+    ## Authentication
+    Semua endpoint memerlukan header authentication:
+    - `X-cons-id`: Consumer ID dari BPJS Kesehatan
+    - `X-timestamp`: Generated unix-based timestamp
+    - `X-signature`: Generated signature dengan pola HMAC-256
+    - `user_key`: User key untuk akses webservice
+    
+    ## Signature Generation
+    ```
+    signature = HMAC-SHA256(consId + "&" + timestamp, secretKey)
+    ```
+    
+    ## Decryption
+    Response yang dienkripsi menggunakan AES-256-CBC dengan:
+    - Key: 16 karakter pertama dari secretKey
+    - IV: 16 karakter terakhir dari secretKey
 
-        Secara umum, hampir setiap pemanggilan web-service, harus dicantumkan beberapa variabel yang dibutuhkan untuk menambahkan informasi ataupun untuk proses validasi yang dikirim pada HTTP Header, antara lain:
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev
+    description: Server Development
 
-        | # | Nama Header | Nilai | Keterangan |
-        |---|-------------|--------|------------|
-        | 1 | X-cons-id | 743627386 | consumer ID dari BPJS Kesehatan |
-        | 2 | X-timestamp | 234234234 | generated unix-based timestamp |
-        | 3 | X-signature | DogC5UiQurNcigrBdQ3QN5oYvXeUF5E82I/LHUcI9v0= | generated signature dengan pola HMAC-256 |
-        | 4 | user_key | d795b04f4a72d74fae727be9da0xxxxx | user_key untuk akses webservice |
+tags:
+  - name: LPK
+    description: Lembar Pengajuan Klaim
+  - name: Monitoring
+    description: Monitoring data klaim dan kunjungan
+  - name: Peserta
+    description: Data peserta BPJS Kesehatan
+  - name: PRB
+    description: Pembuatan Rujuk Balik
 
-        ### Penjelasan Header
+components:
+  securitySchemes:
+    vclaimAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    vclaimTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    vclaimSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
 
-        1. **X-cons-id**, merupakan kode consumer (pengakses web-service). Kode ini akan diberikan oleh BPJS Kesehatan.
-
-        2. **X-timestamp**, merupakan waktu yang akan di-generate oleh client saat ingin memanggil setiap service. Format waktu ini ditulis dengan format unix-based-time (berisi angka, tidak dalam format tanggal sebagaimana mestinya). Format waktu menggunakan Coordinated Universal Time (UTC), dalam penggunaannya untuk mendapatkan timestamp, rumus yang digunakan adalah (local time in UTC timezone in seconds) - (1970-01-01 in seconds).
-
-        3. **X-signature**, merupakan hasil dari pembuatan signature yang dibuat oleh client. Signature yang digunakan menggunakan pola HMAC-SHA256.
-
-        4. **user_key**, merupakan key untuk mengakses webservice. Setiap service consumer memiliki user_key masing-masing.
-
-        ### Consumer Information
-
-        Untuk dapat mengakses web-service dari BPJS Kesehatan (service provider), pemanggil web service (service consumer) akan mendapatkan:
-        - Consumer ID
-        - Consumer Secret
-
-        Informasi Consumer Secret, hanya disimpan oleh service consumer. Tidak dikirim ke server web-service, hal ini untuk menjaga pengamanan yang lebih baik. Sedangkan kebutuhan Consumer Secret ini adalah untuk men-generate Signature (X-signature).
-
-        ### Contoh Pembuatan Signature
-
-        **Contoh:**
-        - consumerID : 1234
-        - consumerSecret : pwd
-        - timestamp : 433223232
-        - variabel1 : consumerID&timestamp
-        - variabel1 : 1234&433223232
-
-        ### SIGNATURE
-
-        Metode signature yang digunakan adalah menggunakan HMAC-SHA256, dimana parameter saat generate signature dibutuhkan parameter message dan key.
-
-        **Contoh hasil generate HMAC-SHA256:**
-        - message : aaa
-        - key : bbb
-        - hasil generate HMAC-SHA256 : 20BKS3PWnD3XU4JbSSZvVlGi2WWnDa8Sv9uHJ+wsELA=
-
-        *Diatas adalah hasil generate dari server BPJS Kesehatan*
-
-        **Formula:**
-        - Signature : HMAC-256(value : key)
-        - value : variabel1
-        - key : consumerSecret
-        - Signature : HMAC-256(variabel1 : consumerSecret)
-
-        ## Contoh Pembuatan Signature
-
-        ### JAVA
-        ```java
-        import java.io.ByteArrayOutputStream;
-        import java.io.IOException;
-        import java.io.UnsupportedEncodingException;
-        import java.net.URLEncoder;
-        import java.security.GeneralSecurityException;
-
-        import javax.crypto.Mac;
-        import javax.crypto.spec.SecretKeySpec;
-
-        import org.springframework.security.crypto.codec.Base64;
-
-        public class BpjsApi {
-
-            public static void main(String[] args) throws GeneralSecurityException, IOException {
-
-                String secretKey = "secretKey";
-                String salt = "0123456789";
-
-                String generateHmacSHA256Signature = generateHmacSHA256Signature(salt, secretKey);
-                System.out.println("Signature: " + generateHmacSHA256Signature);
-
-                String urlEncodedSign = URLEncoder.encode(generateHmacSHA256Signature, "UTF-8");
-
-                System.out.println("Url encoded value: " + urlEncodedSign);
-            }
-
-            public static String generateHmacSHA256Signature(String data, String key) throws GeneralSecurityException {
-                byte[] hmacData = null;
-
-                try {
-                    SecretKeySpec secretKey = new SecretKeySpec(key.getBytes("UTF-8"), "HmacSHA256");
-                    Mac mac = Mac.getInstance("HmacSHA256");
-                    mac.init(secretKey);
-                    hmacData = mac.doFinal(data.getBytes("UTF-8"));
-                    return new Base64Encoder().encode(hmacData);
-                } catch (UnsupportedEncodingException e) {
-                    throw new GeneralSecurityException(e);
-                }
-            }
-        }
-        ```
-
-        ### PHP
-        ```php
-        <?php 
-           $data = "testtesttest";
-           $secretKey = "secretkey";
-                 // Computes the timestamp
-                  date_default_timezone_set('UTC');
-                  $tStamp = strval(time()-strtotime('1970-01-01 00:00:00'));
-                   // Computes the signature by hashing the salt with the secret key as the key
-           $signature = hash_hmac('sha256', $data."&".$tStamp, $secretKey, true);
-         
-           // base64 encode…
-           $encodedSignature = base64_encode($signature);
-         
-           // urlencode…
-           // $encodedSignature = urlencode($encodedSignature);
-         
-           echo "X-cons-id: " .$data ." ";
-           echo "X-timestamp:" .$tStamp ." ";
-           echo "X-signature: " .$encodedSignature;
-        ?>
-        ```
-
-        ### C#
-        ```csharp
-        namespace BpjsIntegration
-        {
-            class Program
-            {
-         
-                static void Main()
-                {
-                    var data = "testtesttest";
-                    var secretKey = "secretkey";
-         
-                    // Initialize the keyed hash object using the secret key as the key
-                    HMACSHA256 hashObject = new HMACSHA256(Encoding.UTF8.GetBytes(secretKey));
-         
-                    // Computes the signature by hashing the salt with the secret key as the key
-                    var signature = hashObject.ComputeHash(Encoding.UTF8.GetBytes(data));
-         
-                    // Base 64 Encode
-                    var encodedSignature = Convert.ToBase64String(signature);
-         
-                    // URLEncode
-                    // encodedSignature = System.Web.HttpUtility.UrlEncode(encodedSignature);
-         
-                    Console.WriteLine("Voila! A signature: " + encodedSignature);
-         
-                    Console.ReadKey();
-         
-                }
-            }
-        }
-        ```
-
-        ### VB.Net
-        ```vb
-        Imports System.Security.Cryptography
-        Imports System.Text
-
-        Namespace BpjsIntegration
-            Class Program
-
-                Private Shared Sub Main()
-                    Dim data = "testtesttest"
-                    Dim secretKey = "secretkey"
-
-                    ' Initialize the keyed hash object using the secret key as the key
-                    Dim hashObject As New HMACSHA256(Encoding.UTF8.GetBytes(secretKey))
-
-                    ' Computes the signature by hashing the salt with the secret key as the key
-                    Dim signature = hashObject.ComputeHash(Encoding.UTF8.GetBytes(data))
-
-                    ' Base 64 Encode
-                    Dim encodedSignature = Convert.ToBase64String(signature)
-
-                    ' URLEncode
-                    ' encodedSignature = System.Web.HttpUtility.UrlEncode(encodedSignature)
-
-                    Console.WriteLine("Voila! A signature: " & encodedSignature)
-
-                    Console.ReadKey()
-
-                End Sub
-            End Class
-        End Namespace
-        ```
-
-        ### Ruby
-        ```ruby
-        # Required Libraries
-        require 'openssl'
-        require 'base64'
-        require 'URI'
-         
-        data = "testtesttest"
-        secret_key = "secretkey"
-         
-        # URL encode
-        def urlncode(string)
-        URI.escape(string, Regexp.new("[Generating an API Signature^#{URI::PATTERN::UNRESERVED}]"))
-        end
-         
-        # Computes the signature by hashing the salt with the secret key as the key
-        hash = OpenSSL::HMAC.digest('sha256', secret_key, data)
-         
-        # base64 encode...
-        # signature = urlncode(Base64.encode64(hash));
-        ```
-
-        ### Python
-        ```python
-        import hashlib
-        import random
-        import base64
-        import urllib
-        import hmac
-         
-        data = "testtesttest"
-        secretkey = "secretkey"
-         
-        # Computes the signature by hashing the data with the secret key as the key
-        signature = hmac.new(secretkey, msg=data, digestmod=hashlib.sha256).digest()
-         
-        # base64 encode...
-        encodedSignature = base64.encodestring(signature).replace('\n', '')
-         
-        # urlencode...
-        # encodedSignature = urllib.quote(encodedSignature)
-         
-        print "Voila! A signature: " + encodedSignature
-        ```
-
-        ### Cocoa (iOS & Mac)
-        ```objc
-        -(NSUInteger)GenerateSalt
-        {
-            // random number (change the modulus to the length you'd like)
-            NSUInteger r = arc4random() % 100000;
-            return r;
-        }
-         
-        -(NSString *)GenerateSignatureUsingSalt:(NSUInteger)salt
-        {
-            /*
-             Make sure you import:
-             */
-         
-            NSString *key = SECRET_KEY;                                            // define your Secret Key string
-            NSString *data = [NSString stringWithFormat:"%u", salt];            // convert your random number
-         
-            const char *cKey  = [key cStringUsingEncoding:NSUTF8StringEncoding];
-            const char *cData = [data cStringUsingEncoding:NSUTF8StringEncoding];
-         
-            unsigned char cHMAC[CC_SHA256_DIGEST_LENGTH];
-         
-            // Hash the salt with the secret key
-            CCHmac(kCCHmacAlgSHA256, cKey, strlen(cKey), cData, strlen(cData), cHMAC);
-         
-            // Create a data structure
-            NSData *HMAC = [[NSData alloc] initWithBytes:cHMAC
-                                                  length:sizeof(cHMAC)];
-         
-            // Base64-encode the signature
-            NSString *hash = [HMAC base64Encoding];
-          
-            return signatureURL;
-         
-        }
-        ```
-      parameters:
-        - name: consumer_id
-          in: query
-          required: true
-          schema:
-            type: string
-            example: "1234"
-          description: Consumer ID yang diberikan oleh BPJS Kesehatan
-        - name: timestamp
-          in: query
-          required: true
-          schema:
-            type: string
-            example: "433223232"
-          description: Unix-based timestamp dalam UTC
-      responses:
-        "200":
-          description: Signature berhasil digenerate
-          content:
-            text/plain:
-              schema:
+  schemas:
+    # LPK Schemas
+    VClaimRequest:
+      type: object
+      properties:
+        request:
+          type: object
+          properties:
+            t_lpk:
+              $ref: '#/components/schemas/LPKData'
+    
+    LPKData:
+      type: object
+      required:
+        - noSep
+        - tglMasuk
+        - tglKeluar
+        - jaminan
+        - poli
+        - perawatan
+        - diagnosa
+        - procedure
+        - rencanaTL
+        - DPJP
+        - user
+      properties:
+        noSep:
+          type: string
+          description: Nomor SEP
+          example: "0301R0011017V000015"
+        tglMasuk:
+          type: string
+          format: date
+          description: Tanggal masuk format yyyy-mm-dd
+          example: "2017-10-30"
+        tglKeluar:
+          type: string
+          format: date
+          description: Tanggal keluar format yyyy-mm-dd
+          example: "2017-10-30"
+        jaminan:
+          type: string
+          description: Penjamin (1. JKN)
+          example: "1"
+        poli:
+          type: object
+          properties:
+            poli:
+              type: string
+              description: Kode poli dari referensi poli
+              example: "INT"
+        perawatan:
+          type: object
+          properties:
+            ruangRawat:
+              type: string
+              description: Ruang rawat dari referensi ruang rawat
+              example: "1"
+            kelasRawat:
+              type: string
+              description: Kelas rawat dari referensi kelas rawat
+              example: "1"
+            spesialistik:
+              type: string
+              description: Spesialistik dari referensi spesialistik
+              example: "1"
+            caraKeluar:
+              type: string
+              description: Cara keluar dari referensi cara keluar
+              example: "1"
+            kondisiPulang:
+              type: string
+              description: Kondisi pulang dari referensi kondisi pulang
+              example: "1"
+        diagnosa:
+          type: array
+          items:
+            type: object
+            properties:
+              kode:
                 type: string
-                example: "DogC5UiQurNcigrBdQ3QN5oYvXeUF5E82I/LHUcI9v0="
-        "400":
-          description: Parameter tidak valid
-          content:
-            application/json:
-              schema:
+                description: Kode diagnosa dari referensi diagnosa
+                example: "N88.0"
+              level:
+                type: string
+                description: Level diagnosa (1.Primer 2.Sekunder)
+                example: "1"
+        procedure:
+          type: array
+          items:
+            type: object
+            properties:
+              kode:
+                type: string
+                description: Kode procedure dari referensi procedure/tindakan
+                example: "00.82"
+        rencanaTL:
+          type: object
+          properties:
+            tindakLanjut:
+              type: string
+              description: Tindak lanjut (1:Diperbolehkan Pulang, 2:Pemeriksaan Penunjang, 3:Dirujuk Ke, 4:Kontrol Kembali)
+              example: "1"
+            dirujukKe:
+              type: object
+              properties:
+                kodePPK:
+                  type: string
+                  description: Kode faskes dari referensi faskes
+                  example: ""
+            kontrolKembali:
+              type: object
+              properties:
+                tglKontrol:
+                  type: string
+                  format: date
+                  description: Tanggal kontrol kembali format yyyy-mm-dd
+                  example: "2017-11-10"
+                poli:
+                  type: string
+                  description: Kode poli dari referensi poli
+                  example: ""
+        DPJP:
+          type: string
+          description: Kode dokter DPJP dari referensi dokter
+          example: "3"
+        user:
+          type: string
+          description: User pemakai
+          example: "Coba Ws"
+
+    VClaimResponse:
+      type: object
+      properties:
+        metaData:
+          type: object
+          properties:
+            code:
+              type: string
+              example: "200"
+            message:
+              type: string
+              example: "OK"
+        response:
+          oneOf:
+            - type: string
+              example: "0301R0011017V000015"
+            - type: object
+              properties:
+                lpk:
+                  type: object
+                  properties:
+                    list:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/LPKResponseData'
+
+    LPKResponseData:
+      type: object
+      properties:
+        noSep:
+          type: string
+          example: "0301R0011017V000014"
+        tglMasuk:
+          type: string
+          format: date
+          example: "2017-10-30"
+        tglKeluar:
+          type: string
+          format: date
+          example: "2017-10-30"
+        jnsPelayanan:
+          type: string
+          example: "1"
+        peserta:
+          type: object
+          properties:
+            nama:
+              type: string
+              example: "123456"
+            noKartu:
+              type: string
+              example: "0000000001231"
+            noMR:
+              type: string
+              example: "123456"
+            tglLahir:
+              type: string
+              format: date
+              example: "2008-02-05"
+            kelamin:
+              type: string
+              example: "L"
+        poli:
+          type: object
+          properties:
+            eksekutif:
+              type: string
+              example: "0"
+            poli:
+              type: object
+              properties:
+                kode:
+                  type: string
+                  example: "INT"
+        perawatan:
+          type: object
+          properties:
+            ruangRawat:
+              type: object
+              properties:
+                kode:
+                  type: string
+                  example: "3"
+                nama:
+                  type: string
+                  example: "Ruang Melati I"
+            kelasRawat:
+              type: object
+              properties:
+                kode:
+                  type: string
+                  example: "1"
+                nama:
+                  type: string
+                  example: "VVIP"
+            spesialistik:
+              type: object
+              properties:
+                kode:
+                  type: string
+                  example: "1"
+                nama:
+                  type: string
+                  example: "Spesialis Penyakit dalam"
+            caraKeluar:
+              type: object
+              properties:
+                kode:
+                  type: string
+                  example: "1"
+                nama:
+                  type: string
+                  example: "Atas Persetujuan Dokter"
+            kondisiPulang:
+              type: object
+              properties:
+                kode:
+                  type: string
+                  example: "1"
+                nama:
+                  type: string
+                  example: "Sembuh"
+        diagnosa:
+          type: object
+          properties:
+            list:
+              type: array
+              items:
                 type: object
                 properties:
-                  error:
+                  level:
                     type: string
-                    example: "Consumer ID dan timestamp wajib diisi"
+                    example: "1"
+                  list:
+                    type: object
+                    properties:
+                      kode:
+                        type: string
+                        example: "N88.1"
+                      nama:
+                        type: string
+                        example: "Old laceration of cervix uteri"
+        procedure:
+          type: object
+          properties:
+            list:
+              type: array
+              items:
+                type: object
+                properties:
+                  list:
+                    type: object
+                    properties:
+                      kode:
+                        type: string
+                        example: "00.82"
+                      nama:
+                        type: string
+                        example: "Revision of knee replacement, femoral component"
+        DPJP:
+          type: object
+          properties:
+            dokter:
+              type: object
+              properties:
+                kode:
+                  type: string
+                  example: "3"
+                nama:
+                  type: string
+                  example: "Satro Jadhit, dr"
+        rencanaTL:
+          type: object
+          nullable: true
 
-  # Endpoint untuk How to Decrypt
-  /vclaim/decrypt:
+    # Peserta Schemas
+    PesertaResponse:
+      type: object
+      properties:
+        metaData:
+          type: object
+          properties:
+            code:
+              type: string
+              example: "200"
+            message:
+              type: string
+              example: "OK"
+        response:
+          type: object
+          properties:
+            peserta:
+              type: object
+              properties:
+                nama:
+                  type: string
+                  example: "TRI M"
+                nik:
+                  type: string
+                  example: "3319022010810007"
+                noKartu:
+                  type: string
+                  example: "0011336526592"
+                sex:
+                  type: string
+                  example: "L"
+                tglLahir:
+                  type: string
+                  format: date
+                  example: "1981-10-10"
+                tglCetakKartu:
+                  type: string
+                  format: date
+                  example: "2016-02-12"
+                tglTAT:
+                  type: string
+                  format: date
+                  example: "2014-12-31"
+                tglTMT:
+                  type: string
+                  format: date
+                  example: "2008-10-01"
+                pisa:
+                  type: string
+                  example: "1"
+                statusPeserta:
+                  type: object
+                  properties:
+                    kode:
+                      type: string
+                      example: "0"
+                    keterangan:
+                      type: string
+                      example: "AKTIF"
+                jenisPeserta:
+                  type: object
+                  properties:
+                    kode:
+                      type: string
+                      example: "13"
+                    keterangan:
+                      type: string
+                      example: "PEGAWAI SWASTA"
+                hakKelas:
+                  type: object
+                  properties:
+                    kode:
+                      type: string
+                      example: "1"
+                    keterangan:
+                      type: string
+                      example: "KELAS I"
+                provUmum:
+                  type: object
+                  properties:
+                    kdProvider:
+                      type: string
+                      example: "0138U020"
+                    nmProvider:
+                      type: string
+                      example: "KPRJ PALA MEDIKA"
+                cob:
+                  type: object
+                  properties:
+                    nmAsuransi:
+                      type: string
+                      nullable: true
+                    noAsuransi:
+                      type: string
+                      nullable: true
+                    tglTAT:
+                      type: string
+                      format: date
+                      nullable: true
+                    tglTMT:
+                      type: string
+                      format: date
+                      nullable: true
+                informasi:
+                  type: object
+                  properties:
+                    dinsos:
+                      type: string
+                      nullable: true
+                    noSKTM:
+                      type: string
+                      nullable: true
+                    prolanisPRB:
+                      type: string
+                      nullable: true
+                mr:
+                  type: object
+                  properties:
+                    noMR:
+                      type: string
+                      nullable: true
+                    noTelepon:
+                      type: string
+                      nullable: true
+                umur:
+                  type: object
+                  properties:
+                    umurSaatPelayanan:
+                      type: string
+                      example: "35 tahun ,1 bulan ,11 hari"
+                    umurSekarang:
+                      type: string
+                      example: "35 tahun ,2 bulan ,10 hari"
+
+    # PRB Schemas
+    PRBRequest:
+      type: object
+      properties:
+        request:
+          type: object
+          properties:
+            t_prb:
+              $ref: '#/components/schemas/PRBData'
+
+    PRBData:
+      type: object
+      required:
+        - noSep
+        - noKartu
+        - alamat
+        - email
+        - programPRB
+        - kodeDPJP
+        - keterangan
+        - saran
+        - user
+        - obat
+      properties:
+        noSep:
+          type: string
+          description: Nomor SEP rawat jalan
+          example: "1101R0070118V999006"
+        noKartu:
+          type: string
+          description: Nomor kartu peserta
+          example: "0009999979951"
+        alamat:
+          type: string
+          description: Alamat lengkap peserta
+          example: "Jln. Medan Merdekah"
+        email:
+          type: string
+          description: Alamat email
+          example: "email@gmail.com"
+        programPRB:
+          type: string
+          description: Kode program PRB dari referensi
+          example: "09"
+        kodeDPJP:
+          type: string
+          description: Kode DPJP dari referensi
+          example: "27590"
+        keterangan:
+          type: string
+          description: Keterangan
+          example: "Kecapekan kerja"
+        saran:
+          type: string
+          description: Saran dokter pemberi rujuk balik
+          example: "Pasien harus olahraga bersama setiap minggu dan cuti, edukasi agar jangan disuruh kerja terus, lama lama stress."
+        user:
+          type: string
+          description: User harus diisi numeric
+          example: "1234567"
+        obat:
+          type: array
+          items:
+            type: object
+            properties:
+              kdObat:
+                type: string
+                description: Kode obat generik dari referensi
+                example: "00196120124"
+              signa1:
+                type: string
+                description: Signa 1
+                example: "1"
+              signa2:
+                type: string
+                description: Signa 2
+                example: "1"
+              jmlObat:
+                type: string
+                description: Jumlah obat
+                example: "11"
+
+    PRBUpdateRequest:
+      type: object
+      properties:
+        request:
+          type: object
+          properties:
+            t_prb:
+              $ref: '#/components/schemas/PRBUpdateData'
+
+    PRBUpdateData:
+      type: object
+      required:
+        - noSrb
+        - noSep
+        - alamat
+        - email
+        - kodeDPJP
+        - keterangan
+        - saran
+        - user
+        - obat
+      properties:
+        noSrb:
+          type: string
+          description: Nomor Surat Rujuk Balik (SRB)
+          example: "9118924"
+        noSep:
+          type: string
+          description: Nomor SEP
+          example: "0301R0011117V000008"
+        alamat:
+          type: string
+          description: Alamat lengkap pasien
+          example: "jl. Merdekah"
+        email:
+          type: string
+          description: Alamat email pasien
+          example: "emailkudisadap@gmail.com"
+        kodeDPJP:
+          type: string
+          description: Kode dokter DPJP dari referensi
+          example: "271190"
+        keterangan:
+          type: string
+          description: Keterangan pasien
+          example: "Capek Kerja"
+        saran:
+          type: string
+          description: Saran dari dokter DPJP
+          example: "Pasien harus Cuti,Kecapekan Kerja dan Kerja."
+        user:
+          type: string
+          description: User entri harus diisi numerik
+          example: "123456"
+        obat:
+          type: array
+          items:
+            type: object
+            properties:
+              kdObat:
+                type: string
+                description: Kode obat generik dari referensi
+                example: "00196999124"
+              signa1:
+                type: string
+                description: Signa 1
+                example: "3"
+              signa2:
+                type: string
+                description: Signa 2
+                example: "1"
+              jmlObat:
+                type: string
+                description: Jumlah obat
+                example: "5"
+
+    PRBDeleteRequest:
+      type: object
+      properties:
+        request:
+          type: object
+          properties:
+            t_prb:
+              type: object
+              properties:
+                noSrb:
+                  type: string
+                  description: Nomor Surat Rujuk Balik (SRB)
+                  example: "91141924"
+                noSep:
+                  type: string
+                  description: Nomor SEP
+                  example: "0301R0011117V000008"
+                user:
+                  type: string
+                  description: User entri harus diisi numerik
+                  example: "123456"
+
+    PRBResponse:
+      type: object
+      properties:
+        metaData:
+          type: object
+          properties:
+            code:
+              type: string
+              example: "200"
+            message:
+              type: string
+              example: "Sukses"
+        response:
+          oneOf:
+            - type: string
+              example: "94111924"
+            - type: object
+              properties:
+                DPJP:
+                  type: object
+                  properties:
+                    kode:
+                      type: string
+                      example: "27510"
+                    nama:
+                      type: string
+                      example: "Suwito, dr. Sp.PD"
+                keterangan:
+                  type: string
+                  example: "Capek Kerja"
+                noSRB:
+                  type: string
+                  example: "94111924"
+                obat:
+                  type: object
+                  properties:
+                    list:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          jmlObat:
+                            type: string
+                            example: "1"
+                          nmObat:
+                            type: string
+                            example: "Vitamin B1 (Thiamin HCl) tab 50 mg"
+                          signa:
+                            type: string
+                            example: "1 x 1"
+                peserta:
+                  type: object
+                  properties:
+                    alamat:
+                      type: string
+                      example: "Jl. Medan Merdekah"
+                    asalFaskes:
+                      type: object
+                      properties:
+                        kode:
+                          type: string
+                          example: "01691101"
+                        nama:
+                          type: string
+                          example: "Klinik KALIGANGSAS"
+                    email:
+                      type: string
+                      example: "email@gmail.com"
+                    kelamin:
+                      type: string
+                      example: "P"
+                    nama:
+                      type: string
+                      example: "SITI JUBAEDAH"
+                    noKartu:
+                      type: string
+                      example: "000999979951"
+                    noTelepon:
+                      type: string
+                      example: "081234567890"
+                    tglLahir:
+                      type: string
+                      format: date
+                      example: "1945-09-06"
+                programPRB:
+                  type: string
+                  example: "Systemic Lupus Erythematosus"
+                saran:
+                  type: string
+                  example: "Pasien harus cuti setiap minggu, edukasi agar jangan disuruh kerja terus, lama lama stress.."
+                tglSRB:
+                  type: string
+                  format: date
+                  example: "2018-01-08"
+
+    PRBSearchResponse:
+      type: object
+      properties:
+        metaData:
+          type: object
+          properties:
+            code:
+              type: string
+              example: "200"
+            message:
+              type: string
+              example: "Sukses"
+        response:
+          type: object
+          properties:
+            prb:
+              oneOf:
+                - type: object
+                  properties:
+                    DPJP:
+                      type: object
+                      properties:
+                        kode:
+                          type: string
+                          example: "275190"
+                        nama:
+                          type: string
+                          example: "Marwoto, dr. Sp.PD"
+                    noSEP:
+                      type: string
+                      example: "1101R0070118V999996"
+                    noSRB:
+                      type: string
+                      example: "9419118"
+                    obat:
+                      type: object
+                      properties:
+                        obat:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              jmlObat:
+                                type: string
+                                example: "5"
+                              kdObat:
+                                type: string
+                                example: "00019990017"
+                              nmObat:
+                                type: string
+                                example: "Analog Insulin Long Acting inj 100 UI/ml"
+                              signa1:
+                                type: string
+                                example: "3"
+                              signa2:
+                                type: string
+                                example: "1"
+                    peserta:
+                      type: object
+                      properties:
+                        alamat:
+                          type: string
+                          example: "Jl. Merdekah"
+                        asalFaskes:
+                          type: object
+                          properties:
+                            kode:
+                              type: string
+                              example: "016999901"
+                            nama:
+                              type: string
+                              example: "Klinik KALI ADEM"
+                        email:
+                          type: string
+                          example: "emailkudisadap@gmail.com"
+                        kelamin:
+                          type: string
+                          example: "P"
+                        nama:
+                          type: string
+                          example: "SITI RONALDO"
+                        noKartu:
+                          type: string
+                          example: "0054679979951"
+                        noTelepon:
+                          type: string
+                          example: "089101999101"
+                        tglLahir:
+                          type: string
+                          format: date
+                          example: "1949-09-06"
+                      programPRB:
+                        type: object
+                        properties:
+                          kode:
+                            type: string
+                            example: "01"
+                          nama:
+                            type: string
+                            example: "Diabetes Mellitus"
+                      keterangan:
+                        type: string
+                        example: "Kecapekan Kerja"
+                      saran:
+                        type: string
+                        example: "Pasien Harus Cuti, Kebanyakan Kerja"
+                      tglSRB:
+                        type: string
+                        format: date
+                        example: "2018-01-08"
+                - type: object
+                  properties:
+                    list:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          DPJP:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "2759111"
+                              nama:
+                                type: string
+                                example: "Marwoto,dr. Sp.PD"
+                          noSEP:
+                            type: string
+                            example: "1101R0070118V110086"
+                          noSRB:
+                            type: string
+                            example: "9419118"
+                          peserta:
+                            type: object
+                            properties:
+                              alamat:
+                                type: string
+                                example: "Jl. Merdekah"
+                              email:
+                                type: string
+                                example: "emailkudisadap@gmail.com"
+                              nama:
+                                type: string
+                                example: "SITI RONALD"
+                              noKartu:
+                                type: string
+                                example: "0011079979951"
+                              noTelepon:
+                                type: string
+                                example: "081728191919191"
+                          programPRB:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "01"
+                              nama:
+                                type: string
+                                example: "Diabetes Mellitus"
+                          keterangan:
+                            type: string
+                            example: "Alergi Cuti"
+                          saran:
+                            type: string
+                            example: "Pasien Wajib Berlibur, Jangan Disuruh Kerja"
+                          tglSRB:
+                            type: string
+                            format: date
+                            example: "2018-01-08"
+
+paths:
+  # LPK Endpoints
+  /vclaim-rest/LPK/insert:
     post:
-      tags: [VClaim]
-      summary: How to Decrypt
-      description: |
-        ## Overview
-
-        Response kembalian dari web service vclaim sudah dalam bentuk compress dan terenkripsi.
-
-        **Kompresi service menggunakan metode:** Lz-string  
-        **Enkripsi menggunakan metode:** AES 256 (mode CBC) - SHA256 dan key enkripsi: consid + conspwd + timestamp request (concatenate string)
-
-        ### Langkah proses dalam melakukan decrypt data response sebagai berikut:
-        1. **Dekripsi:** AES 256 (mode CBC) - SHA256
-        2. **Dekompresi:** Lz-string (decompressFromEncodedURIComponent)
-
-        **Key:** consid + conspwd + timestamp request (concatenate string)
-
-        ## Contoh Penggunaan Decrypt Service
-
-        ### JAVA
-        ```java
-        import java.nio.charset.StandardCharsets;
-        import java.security.InvalidAlgorithmParameterException;
-        import java.security.InvalidKeyException;
-        import java.security.MessageDigest;
-        import java.security.NoSuchAlgorithmException;
-        import java.util.Base64;
-
-        import javax.crypto.BadPaddingException;
-        import javax.crypto.Cipher;
-        import javax.crypto.IllegalBlockSizeException;
-        import javax.crypto.NoSuchPaddingException;
-        import javax.crypto.SecretKey;
-        import javax.crypto.spec.IvParameterSpec;
-        import javax.crypto.spec.SecretKeySpec;
-
-        import id.go.bpjskesehatan.arsws.entitas.AesKeySpec;
-
-        public class Enc {
-
-            public static final String ALGORITHM = "AES/CBC/PKCS5Padding";
-
-            public static AesKeySpec generateKey(String key) 
-                    throws NoSuchPaddingException, NoSuchAlgorithmException,
-                    InvalidAlgorithmParameterException, InvalidKeyException,
-                    BadPaddingException, IllegalBlockSizeException {
-                
-                MessageDigest digest = MessageDigest.getInstance("SHA-256");
-                byte[] _hashKey = digest.digest(key.getBytes(StandardCharsets.UTF_8));
-                byte[] _hashIv = new byte[16];
-                for (int i = 0; i < 16; i++) {
-                    _hashIv[i] = _hashKey[i];
-                }
-            
-                AesKeySpec aesKeySpec = new AesKeySpec();
-                SecretKeySpec _key = new SecretKeySpec(_hashKey, "AES");
-                IvParameterSpec _iv = new IvParameterSpec(_hashIv);
-                aesKeySpec.setKey(_key);
-                aesKeySpec.setIv(_iv);
-                return aesKeySpec;
-            }
-
-            public static String decrypt(String cipherText, SecretKeySpec key, IvParameterSpec iv) 
-                    throws NoSuchPaddingException, NoSuchAlgorithmException,
-                    InvalidAlgorithmParameterException, InvalidKeyException,
-                    BadPaddingException, IllegalBlockSizeException {
-                
-                Cipher cipher = Cipher.getInstance(ALGORITHM);
-                cipher.init(Cipher.DECRYPT_MODE, key, iv);
-                byte[] plainText = cipher.doFinal(Base64.getDecoder().decode(cipherText));
-                return new String(plainText);
-            }
-            
-            String respon = LZString.decompressFromEncodedURIComponent(lzString);
-        }
-        ```
-
-        ### PHP
-        ```php
-        <?php 
-            require_once 'vendor/autoload.php';
-
-            // function decrypt
-            function stringDecrypt($key, $string){
-                
-          
-                $encrypt_method = 'AES-256-CBC';
-
-                // hash
-                $key_hash = hex2bin(hash('sha256', $key));
-          
-                // iv - encrypt method AES-256-CBC expects 16 bytes - else you will get a warning
-                $iv = substr(hex2bin(hash('sha256', $key)), 0, 16);
-
-                $output = openssl_decrypt(base64_decode($string), $encrypt_method, $key_hash, OPENSSL_RAW_DATA, $iv);
-          
-                return $output;
-            }
-
-            // function lzstring decompress 
-            // download libraries lzstring : https://github.com/nullpunkt/lz-string-php
-            function decompress($string){
-          
-                return \LZCompressor\LZString::decompressFromEncodedURIComponent($string);
-
-            }
-        ?>
-        ```
-
-        ### C#
-        ```csharp
-        namespace BpjsIntegration
-        {
-            class Program
-            {
-         
-                public string Decrypt(string key, string data)
-                {
-                    string decData = null;
-                    byte[][] keys = GetHashKeys(key);
-
-                    try
-                    {
-                        decData = DecryptStringFromBytes_Aes(data, keys[0], keys[1]);
-                    }
-                    catch (CryptographicException) { }
-                    catch (ArgumentNullException) { }
-
-                    return decData;
-                }
-
-                private static string DecryptStringFromBytes_Aes(string cipherTextString, byte[] Key, byte[] IV)
-                {
-                    byte[] cipherText = Convert.FromBase64String(cipherTextString);
-
-                    if (cipherText == null || cipherText.Length <= 0)
-                        throw new ArgumentNullException("cipherText");
-                    if (Key == null || Key.Length <= 0)
-                        throw new ArgumentNullException("Key");
-                    if (IV == null || IV.Length <= 0)
-                        throw new ArgumentNullException("IV");
-
-                    string plaintext = null;
-
-                    using (Aes aesAlg = Aes.Create())
-                    {
-                        aesAlg.Key = Key;
-                        aesAlg.IV = IV;
-
-                        ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
-
-                        using (MemoryStream msDecrypt = new MemoryStream(cipherText))
-                        {
-                            using (CryptoStream csDecrypt =
-                                    new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
-                            {
-                                using (StreamReader srDecrypt = new StreamReader(csDecrypt))
-                                {
-                                    plaintext = srDecrypt.ReadToEnd();
-                                }
-                            }
-                        }
-                    }
-                    return plaintext;
-                }
-
-            private byte[][] GetHashKeys(string key)
-            //public byte[][] GetHashKeys(string key)
-            {
-                byte[][] result = new byte[2][];
-                Encoding enc = Encoding.UTF8;
-
-                SHA256 sha2 = new SHA256CryptoServiceProvider();
-
-                byte[] rawKey = enc.GetBytes(key);
-                byte[] rawIV = enc.GetBytes(key);
-
-                byte[] hashKey = sha2.ComputeHash(rawKey);
-                byte[] hashIV = sha2.ComputeHash(rawIV);
-
-                Array.Resize(ref hashIV, 16);
-
-                result[0] = hashKey;
-                result[1] = hashIV;
-
-                return result;
-            }
-
-                ///Decrypted
-                string LZDecrypted = _security.Decrypt(key, textenc);
-                string result = LZString.decompressFromEncodedURIComponent(LZDecrypted);   
-
-            }   
-        }
-
-        //source: https://msdn.microsoft.com/de-de/library/system.security.cryptography.aes(v=vs.110).aspx
-        ```
-
-        ### Python
-        ```python
-        import hashlib
-        from Crypto.Cipher import AES
-        from Crypto.Util.Padding import pad, unpad
-        import base64
-        import lzstring
-
-
-        def decrypt(key, txt_enc):
-
-            x = lzstring.LZString()
-
-            key_hash = hashlib.sha256(key.encode('utf-8')).digest()
-
-            mode = AES.MODE_CBC
-
-            # decrypt
-            decryptor = AES.new(key_hash[0:32], mode, IV=key_hash[0:16])
-            plain = decryptor.decrypt(base64.b64decode(txt_enc))
-            decompress = x.decompressFromEncodedURIComponent(plain.decode('utf-8'))
-
-            return decompress
-        ```
+      tags:
+        - LPK
+      summary: Insert LPK
+      description: Insert Lembar Pengajuan Klaim
+      operationId: insertLPK
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
       requestBody:
         required: true
         content:
-          application/json:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VClaimRequest'
+            example:
+              request:
+                t_lpk:
+                  noSep: "0301R0011017V000015"
+                  tglMasuk: "2017-10-30"
+                  tglKeluar: "2017-10-30"
+                  jaminan: "1"
+                  poli:
+                    poli: "INT"
+                  perawatan:
+                    ruangRawat: "1"
+                    kelasRawat: "1"
+                    spesialistik: "1"
+                    caraKeluar: "1"
+                    kondisiPulang: "1"
+                  diagnosa:
+                    - kode: "N88.0"
+                      level: "1"
+                    - kode: "A00.1"
+                      level: "2"
+                  procedure:
+                    - kode: "00.82"
+                    - kode: "00.83"
+                  rencanaTL:
+                    tindakLanjut: "1"
+                    dirujukKe:
+                      kodePPK: ""
+                    kontrolKembali:
+                      tglKontrol: "2017-11-10"
+                      poli: ""
+                  DPJP: "3"
+                  user: "Coba Ws"
+      responses:
+        '200':
+          description: LPK berhasil diinsert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VClaimResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "OK"
+                response: "0301R0011017V000015"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /vclaim-rest/LPK/update:
+    put:
+      tags:
+        - LPK
+      summary: Update LPK
+      description: Update Lembar Pengajuan Klaim
+      operationId: updateLPK
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VClaimRequest'
+            example:
+              request:
+                t_lpk:
+                  noSep: "0301R0011017V000015"
+                  tglMasuk: "2017-10-30"
+                  tglKeluar: "2017-10-30"
+                  jaminan: "1"
+                  poli:
+                    poli: "INT"
+                  perawatan:
+                    ruangRawat: "1"
+                    kelasRawat: "1"
+                    spesialistik: "1"
+                    caraKeluar: "1"
+                    kondisiPulang: "1"
+                  diagnosa:
+                    - kode: "N88.0"
+                      level: "1"
+                    - kode: "A00.1"
+                      level: "2"
+                  procedure:
+                    - kode: "00.82"
+                    - kode: "00.83"
+                  rencanaTL:
+                    tindakLanjut: "1"
+                    dirujukKe:
+                      kodePPK: ""
+                    kontrolKembali:
+                      tglKontrol: "2017-11-10"
+                      poli: ""
+                  DPJP: "3"
+                  user: "Coba Ws"
+      responses:
+        '200':
+          description: LPK berhasil diupdate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VClaimResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "OK"
+                response: "0301R0011017V000015"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /vclaim-rest/LPK/delete:
+    delete:
+      tags:
+        - LPK
+      summary: Delete LPK
+      description: Delete Lembar Pengajuan Klaim
+      operationId: deleteLPK
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
             schema:
               type: object
-              required:
-                - encrypted_data
-                - consid
-                - conspwd
-                - timestamp
               properties:
-                encrypted_data:
-                  type: string
-                  description: Data terenkripsi dari VClaim dalam format base64
-                  example: "U2FsdGVkX1/6lDpQ7KJZ5r4sD3a2+4xHQ=="
-                consid:
-                  type: string
-                  description: Consumer ID
-                  example: "12345"
-                conspwd:
-                  type: string
-                  description: Consumer Secret/Password
-                  example: "password_rahasia"
-                timestamp:
-                  type: string
-                  description: Timestamp yang digunakan saat request (concatenate dengan consid + conspwd)
-                  example: "433223232"
+                request:
+                  type: object
+                  properties:
+                    t_lpk:
+                      type: object
+                      properties:
+                        noSep:
+                          type: string
+                          description: Nomor SEP
+                          example: "0301R0011017V000015"
+            example:
+              request:
+                t_lpk:
+                  noSep: "0301R0011017V000015"
       responses:
-        "200":
-          description: Data berhasil didekripsi
+        '200':
+          description: LPK berhasil didelete
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VClaimResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "OK"
+                response: "0301R0011017V000015"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /vclaim-rest/LPK/TglMasuk/{tglMasuk}/JnsPelayanan/{jnsPelayanan}:
+    get:
+      tags:
+        - LPK
+      summary: Data Lembar Pengajuan Klaim
+      description: Pencarian data LPK berdasarkan tanggal masuk dan jenis pelayanan
+      operationId: getLPKData
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      parameters:
+        - name: tglMasuk
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal Masuk format yyyy-MM-dd
+          example: "2017-10-30"
+        - name: jnsPelayanan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Jenis Pelayanan (1. Inap 2.Jalan)
+          example: "1"
+      responses:
+        '200':
+          description: Data LPK berhasil diambil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VClaimResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "OK"
+                response:
+                  lpk:
+                    list:
+                      - noSep: "0301R0011017V000014"
+                        tglMasuk: "2017-10-30"
+                        tglKeluar: "2017-10-30"
+                        jnsPelayanan: "1"
+                        peserta:
+                          nama: "123456"
+                          noKartu: "0000000001231"
+                          noMR: "123456"
+                          tglLahir: "2008-02-05"
+                          kelamin: "L"
+                        poli:
+                          eksekutif: "0"
+                          poli:
+                            kode: "INT"
+                        perawatan:
+                          ruangRawat:
+                            kode: "3"
+                            nama: "Ruang Melati I"
+                          kelasRawat:
+                            kode: "1"
+                            nama: "VVIP"
+                          spesialistik:
+                            kode: "1"
+                            nama: "Spesialis Penyakit dalam"
+                          caraKeluar:
+                            kode: "1"
+                            nama: "Atas Persetujuan Dokter"
+                          kondisiPulang:
+                            kode: "1"
+                            nama: "Sembuh"
+                        diagnosa:
+                          list:
+                            - level: "1"
+                              list:
+                                kode: "N88.1"
+                                nama: "Old laceration of cervix uteri"
+                            - level: "2"
+                              list:
+                                kode: "A00.1"
+                                nama: "Cholera due to Vibrio cholerae 01, biovar eltor"
+                        procedure:
+                          list:
+                            - list:
+                                kode: "00.82"
+                                nama: "Revision of knee replacement, femoral component"
+                            - list:
+                                kode: "00.83"
+                                nama: "Revision of knee replacement,patellar component"
+                        DPJP:
+                          dokter:
+                            kode: "3"
+                            nama: "Satro Jadhit, dr"
+                        rencanaTL: null
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  # Peserta Endpoints
+  /vclaim-rest/Peserta/nokartu/{noKartu}/tglSEP/{tglSEP}:
+    get:
+      tags:
+        - Peserta
+      summary: Data Peserta berdasarkan No.Kartu BPJS
+      description: Pencarian data peserta BPJS Kesehatan berdasarkan nomor kartu
+      operationId: getPesertaByNoKartu
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      parameters:
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kartu
+          example: "0011336526592"
+        - name: tglSEP
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal Pelayanan/SEP format yyyy-MM-dd
+          example: "2017-10-30"
+      responses:
+        '200':
+          description: Data peserta berhasil diambil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PesertaResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "OK"
+                response:
+                  peserta:
+                    cob:
+                      nmAsuransi: null
+                      noAsuransi: null
+                      tglTAT: null
+                      tglTMT: null
+                    hakKelas:
+                      keterangan: "KELAS I"
+                      kode: "1"
+                    informasi:
+                      dinsos: null
+                      noSKTM: null
+                      prolanisPRB: null
+                    jenisPeserta:
+                      keterangan: "PEGAWAI SWASTA"
+                      kode: "13"
+                    mr:
+                      noMR: null
+                      noTelepon: null
+                    nama: "TRI M"
+                    nik: "3319022010810007"
+                    noKartu: "0011336526592"
+                    pisa: "1"
+                    provUmum:
+                      kdProvider: "0138U020"
+                      nmProvider: "KPRJ PALA MEDIKA"
+                    sex: "L"
+                    statusPeserta:
+                      keterangan: "AKTIF"
+                      kode: "0"
+                    tglCetakKartu: "2016-02-12"
+                    tglLahir: "1981-10-10"
+                    tglTAT: "2014-12-31"
+                    tglTMT: "2008-10-01"
+                    umur:
+                      umurSaatPelayanan: "35 tahun ,1 bulan ,11 hari"
+                      umurSekarang: "35 tahun ,2 bulan ,10 hari"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /vclaim-rest/Peserta/nik/{nik}/tglSEP/{tglSEP}:
+    get:
+      tags:
+        - Peserta
+      summary: Data Peserta berdasarkan NIK
+      description: Pencarian data peserta berdasarkan NIK Kependudukan
+      operationId: getPesertaByNIK
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      parameters:
+        - name: nik
+          in: path
+          required: true
+          schema:
+            type: string
+          description: NIK KTP
+          example: "3319022010810007"
+        - name: tglSEP
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal Pelayanan/SEP format yyyy-MM-dd
+          example: "2017-10-30"
+      responses:
+        '200':
+          description: Data peserta berhasil diambil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PesertaResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "OK"
+                response:
+                  peserta:
+                    cob:
+                      nmAsuransi: null
+                      noAsuransi: null
+                      tglTAT: null
+                      tglTMT: null
+                    hakKelas:
+                      keterangan: "KELAS I"
+                      kode: "1"
+                    informasi:
+                      dinsos: null
+                      noSKTM: null
+                      prolanisPRB: null
+                    jenisPeserta:
+                      keterangan: "PEGAWAI SWASTA"
+                      kode: "13"
+                    mr:
+                      noMR: null
+                      noTelepon: null
+                    nama: "TRI M"
+                    nik: "3319022010810007"
+                    noKartu: "0011336526592"
+                    pisa: "1"
+                    provUmum:
+                      kdProvider: "0138U020"
+                      nmProvider: "KPRJ PALA MEDIKA"
+                    sex: "L"
+                    statusPeserta:
+                      keterangan: "AKTIF"
+                      kode: "0"
+                    tglCetakKartu: "2016-02-12"
+                    tglLahir: "1981-10-10"
+                    tglTAT: "2014-12-31"
+                    tglTMT: "2008-10-01"
+                    umur:
+                      umurSaatPelayanan: "35 tahun ,1 bulan ,11 hari"
+                      umurSekarang: "35 tahun ,2 bulan ,10 hari"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  # Monitoring Endpoints
+  /vclaim-rest/Monitoring/Kunjungan/Tanggal/{tanggal}/JnsPelayanan/{jnsPelayanan}:
+    get:
+      tags:
+        - Monitoring
+      summary: Data Kunjungan
+      description: Data Kunjungan berdasarkan tanggal SEP dan jenis pelayanan
+      operationId: getMonitoringKunjungan
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      parameters:
+        - name: tanggal
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal SEP format yyyy-mm-dd
+          example: "2017-10-01"
+        - name: jnsPelayanan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Jenis Pelayanan (1. Inap 2. Jalan)
+          example: "1"
+      responses:
+        '200':
+          description: Data kunjungan berhasil diambil
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  decrypted_data:
-                    type: string
-                    description: Data hasil dekripsi dalam format JSON
-                    example: '{"metadata": {"code": 1, "message": "OK"}, "response": {"peserta": {...}}}'
-        "400":
-          description: Parameter tidak valid atau dekripsi gagal
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "Sukses"
+                  response:
+                    type: object
+                    properties:
+                      sep:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            noSep:
+                              type: string
+                              example: "0301R00110170000004"
+                            noRujukan:
+                              type: string
+                              example: "0301U01108180200084"
+                            tglSep:
+                              type: string
+                              format: date
+                              example: "2017-10-01"
+                            tglPlgSep:
+                              type: string
+                              format: date
+                              example: "2017-10-03"
+                            jnsPelayanan:
+                              type: string
+                              example: "R.Inap"
+                            kelasRawat:
+                              type: string
+                              example: "2"
+                            nama:
+                              type: string
+                              example: "HANIF ABDURRAHMAN"
+                            noKartu:
+                              type: string
+                              example: "0001819122189"
+                            diagnosa:
+                              type: string
+                              example: "K65.0"
+                            poli:
+                              type: string
+                              nullable: true
+              example:
+                metaData:
+                  code: "200"
+                  message: "Sukses"
+                response:
+                  sep:
+                    - noSep: "0301R00110170000004"
+                      noRujukan: "0301U01108180200084"
+                      tglSep: "2017-10-01"
+                      tglPlgSep: "2017-10-03"
+                      jnsPelayanan: "R.Inap"
+                      kelasRawat: "2"
+                      nama: "HANIF ABDURRAHMAN"
+                      noKartu: "0001819122189"
+                      diagnosa: "K65.0"
+                      poli: null
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /vclaim-rest/Monitoring/Klaim/Tanggal/{tanggal}/JnsPelayanan/{jnsPelayanan}/Status/{status}:
+    get:
+      tags:
+        - Monitoring
+      summary: Data Klaim
+      description: Data Klaim berdasarkan tanggal pulang, jenis pelayanan, dan status
+      operationId: getMonitoringKlaim
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      parameters:
+        - name: tanggal
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal Pulang format yyyy-mm-dd
+          example: "2017-09-02"
+        - name: jnsPelayanan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Jenis Pelayanan (1. Inap 2. Jalan)
+          example: "1"
+        - name: status
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Status Klaim (1. Proses Verifikasi 2. Pending Verifikasi 3. Klaim)
+          example: "1"
+      responses:
+        '200':
+          description: Data klaim berhasil diambil
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  error:
-                    type: string
-                    example: "Gagal mendekripsi data. Periksa parameter input."
-        "500":
-          description: Internal server error
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "Sukses"
+                  response:
+                    type: object
+                    properties:
+                      klaim:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            noSEP:
+                              type: string
+                              example: "0301R00109170001280"
+                            noFPK:
+                              type: string
+                              example: ""
+                            tglSep:
+                              type: string
+                              format: date
+                              example: "2017-09-02"
+                            tglPulang:
+                              type: string
+                              format: date
+                              example: "2017-09-02"
+                            jnsPelayanan:
+                              type: string
+                              example: "1"
+                            kelasRawat:
+                              type: string
+                              example: "3"
+                            poli:
+                              type: string
+                              example: "Hemodialisa"
+                            diagnosa:
+                              type: string
+                              example: "K65.0"
+                            peserta:
+                              type: object
+                              properties:
+                                nama:
+                                  type: string
+                                  example: "NUR"
+                                noKartu:
+                                  type: string
+                                  example: "0033681422715"
+                                noMR:
+                                  type: string
+                                  example: "974956"
+                            Inacbg:
+                              type: object
+                              properties:
+                                kode:
+                                  type: string
+                                  example: "N-3-15-0"
+                                nama:
+                                  type: string
+                                  example: "DIALYSIS"
+                            biaya:
+                              type: object
+                              properties:
+                                byPengajuan:
+                                  type: string
+                                  example: "991200"
+                                bySetujui:
+                                  type: string
+                                  example: "0"
+                                byTarifGruper:
+                                  type: string
+                                  example: "991200"
+                                byTarifRS:
+                                  type: string
+                                  example: "1170689"
+                                byTopup:
+                                  type: string
+                                  example: "0"
+                            status:
+                              type: string
+                              example: "Proses Verifikasi"
+              example:
+                metaData:
+                  code: "200"
+                  message: "Sukses"
+                response:
+                  klaim:
+                    - noSEP: "0301R00109170001280"
+                      noFPK: ""
+                      tglSep: "2017-09-02"
+                      tglPulang: "2017-09-02"
+                      jnsPelayanan: "1"
+                      kelasRawat: "3"
+                      poli: "Hemodialisa"
+                      diagnosa: "K65.0"
+                      peserta:
+                        nama: "NUR"
+                        noKartu: "0033681422715"
+                        noMR: "974956"
+                      Inacbg:
+                        kode: "N-3-15-0"
+                        nama: "DIALYSIS"
+                      biaya:
+                        byPengajuan: "991200"
+                        bySetujui: "0"
+                        byTarifGruper: "991200"
+                        byTarifRS: "1170689"
+                        byTopup: "0"
+                      status: "Proses Verifikasi"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  # PRB Endpoints
+  /vclaim-rest/PRB/insert:
+    post:
+      tags:
+        - PRB
+      summary: Insert PRB
+      description: Insert Rujuk balik
+      operationId: insertPRB
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PRBRequest'
+            example:
+              request:
+                t_prb:
+                  noSep: "1101R0070118V999006"
+                  noKartu: "0009999979951"
+                  alamat: "Jln. Medan Merdekah"
+                  email: "email@gmail.com"
+                  programPRB: "09"
+                  kodeDPJP: "27590"
+                  keterangan: "Kecapekan kerja"
+                  saran: "Pasien harus olahraga bersama setiap minggu dan cuti, edukasi agar jangan disuruh kerja terus, lama lama stress."
+                  user: "1234567"
+                  obat:
+                    - kdObat: "00196120124"
+                      signa1: "1"
+                      signa2: "1"
+                      jmlObat: "11"
+                    - kdObat: "00011220018"
+                      signa1: "1"
+                      signa2: "1"
+                      jmlObat: "10"
+      responses:
+        '200':
+          description: PRB berhasil diinsert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PRBResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "Sukses"
+                response:
+                  DPJP:
+                    kode: "27510"
+                    nama: "Suwito, dr. Sp.PD"
+                  keterangan: "Capek Kerja"
+                  noSRB: "94111924"
+                  obat:
+                    list:
+                      - jmlObat: "1"
+                        nmObat: "Vitamin B1 (Thiamin HCl) tab 50 mg"
+                        signa: "1 x 1"
+                      - jmlObat: "1"
+                        nmObat: "Analog Insulin Mix Acting Inj 100 UI/ml"
+                        signa: "1 x 1"
+                  peserta:
+                    alamat: "Jl. Medan Merdekah"
+                    asalFaskes:
+                      kode: "01691101"
+                      nama: "Klinik KALIGANGSAS"
+                    email: "email@gmail.com"
+                    kelamin: "P"
+                    nama: "SITI JUBAEDAH"
+                    noKartu: "000999979951"
+                    noTelepon: "081234567890"
+                    tglLahir: "1945-09-06"
+                  programPRB:
+                    kode: "Systemic Lupus Erythematosus"
+                    saran: "Pasien harus cuti setiap minggu, edukasi agar jangan disuruh kerja terus, lama lama stress.."
+                    tglSRB: "2018-01-08"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /vclaim-rest/PRB/Update:
+    put:
+      tags:
+        - PRB
+      summary: Update PRB
+      description: Update PRB
+      operationId: updatePRB
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PRBUpdateRequest'
+            example:
+              request:
+                t_prb:
+                  noSrb: "9118924"
+                  noSep: "0301R0011117V000008"
+                  alamat: "jl. Merdekah"
+                  email: "emailkudisadap@gmail.com"
+                  kodeDPJP: "271190"
+                  keterangan: "Capek Kerja"
+                  saran: "Pasien harus Cuti,Kecapekan Kerja dan Kerja."
+                  user: "123456"
+                  obat:
+                    - kdObat: "00196999124"
+                      signa1: "3"
+                      signa2: "1"
+                      jmlObat: "5"
+                    - kdObat: "00011999918"
+                      signa1: "3"
+                      signa2: "1"
+                      jmlObat: "10"
+      responses:
+        '200':
+          description: PRB berhasil diupdate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PRBResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "OK"
+                response: "9111924"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /vclaim-rest/PRB/Delete:
+    delete:
+      tags:
+        - PRB
+      summary: Hapus PRB
+      description: Hapus Data PRB
+      operationId: deletePRB
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PRBDeleteRequest'
+            example:
+              request:
+                t_prb:
+                  noSrb: "91141924"
+                  noSep: "0301R0011117V000008"
+                  user: "123456"
+      responses:
+        '200':
+          description: PRB berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PRBResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "OK"
+                response: "941111924"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /vclaim-rest/prb/{noSrb}/nosep/{noSep}:
+    get:
+      tags:
+        - PRB
+      summary: Pencarian Data PRB berdasarkan Nomor SRB
+      description: Pencarian data PRB (Rujuk Balik) Berdasarkan Nomor SRB
+      operationId: getPRBByNoSRB
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      parameters:
+        - name: noSrb
+          in: path
+          required: true
+          schema:
+            type: string
+          description: No. SRB Peserta
+          example: "9419118"
+        - name: noSep
+          in: path
+          required: true
+          schema:
+            type: string
+          description: No. SEP
+          example: "1101R0070118V999996"
+      responses:
+        '200':
+          description: Data PRB berhasil diambil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PRBSearchResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "Sukses"
+                response:
+                  prb:
+                    DPJP:
+                      kode: "275190"
+                      nama: "Marwoto, dr. Sp.PD"
+                    noSEP: "1101R0070118V999996"
+                    noSRB: "9419118"
+                    obat:
+                      obat:
+                        - jmlObat: "5"
+                          kdObat: "00019990017"
+                          nmObat: "Analog Insulin Long Acting inj 100 UI/ml"
+                          signa1:
+                            type: string
+                            example: "3"
+                          signa2:
+                            type: string
+                            example: "1"
+                        - jmlObat: "10"
+                          kdObat: "00078990062"
+                          nmObat: "Human Insulin Long Acting penfill 3 ml"
+                          signa1:
+                            type: string
+                            example: "3"
+                          signa2:
+                            type: string
+                            example: "1"
+                    peserta:
+                      alamat: "Jl. Merdekah"
+                      asalFaskes:
+                        kode: "016999901"
+                        nama: "Klinik KALI ADEM"
+                      email: "emailkudisadap@gmail.com"
+                      kelamin: "P"
+                      nama: "SITI RONALDO"
+                      noKartu: "0054679979951"
+                      noTelepon: "089101999101"
+                      tglLahir: "1949-09-06"
+                    programPRB:
+                      kode: "01"
+                      nama: "Diabetes Mellitus"
+                    keterangan: "Kecapekan Kerja"
+                    saran: "Pasien Harus Cuti, Kebanyakan Kerja"
+                    tglSRB: "2018-01-08"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /vclaim-rest/prb/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
+    get:
+      tags:
+        - PRB
+      summary: Pencarian Data PRB berdasarkan Tanggal SRB
+      description: Pencarian data PRB (Rujuk Balik) Berdasarkan Tanggal SRB
+      operationId: getPRBByTanggal
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      parameters:
+        - name: tglMulai
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tgl. Mulai (yyyy-mm-dd)
+          example: "2018-01-01"
+        - name: tglAkhir
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tgl. Akhir (yyyy-mm-dd)
+          example: "2018-01-31"
+      responses:
+        '200':
+          description: Data PRB berhasil diambil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PRBSearchResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "OK"
+                response:
+                  prb:
+                    list:
+                      - DPJP:
+                          kode: "2759111"
+                          nama: "Marwoto,dr. Sp.PD"
+                        noSEP: "1101R0070118V110086"
+                        noSRB: "9419118"
+                        peserta:
+                          alamat: "Jl. Merdekah"
+                          email: "emailkudisadap@gmail.com"
+                          nama: "SITI RONALD"
+                          noKartu: "0011079979951"
+                          noTelepon: "089101999101"
+                        programPRB:
+                          kode: "01"
+                          nama: "Diabetes Mellitus"
+                        keterangan: "Alergi Cuti"
+                        saran: "Pasien Wajib Berlibur, Jangan Disuruh Kerja"
+                        tglSRB: "2018-01-08"
+                      - DPJP:
+                          kode: "2759111"
+                          nama: "Marwoto,dr. Sp.PD"
+                        noSEP: "1101R0070118V110086"
+                        noSRB: "9419118"
+                        peserta:
+                          alamat: "Jl. Merdekah"
+                          email: "emailkudisadap@gmail.com"
+                          nama: "SITI RONALD"
+                          noKartu: "0011079979951"
+                          noTelepon: "089101999101"
+                        programPRB:
+                          kode: "01"
+                          nama: "Diabetes Mellitus"
+                        keterangan: "Alergi Cuti"
+                        saran: "Pasien Wajib Berlibur, Jangan Disuruh Kerja"
+                        tglSRB: "2018-01-08"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /vclaim-rest/monitoring/HistoriPelayanan/NoKartu/{noKartu}/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
+    get:
+      tags:
+        - Monitoring
+      summary: Data Histori Pelayanan Peserta
+      description: Histori Pelayanan Per Peserta berdasarkan nomor kartu dan rentang tanggal
+      operationId: getHistoriPelayanan
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      parameters:
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: No.Kartu Peserta
+          example: "0001160271256"
+        - name: tglMulai
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tgl Mulai Pencarian (yyyy-mmdd)
+          example: "2018-07-01"
+        - name: tglAkhir
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tgl Akhir Pencarian (yyyy-mmdd)
+          example: "2018-08-31"
+      responses:
+        '200':
+          description: Data histori pelayanan berhasil diambil
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  error:
-                    type: string
-                    example: "Terjadi kesalahan dalam proses dekripsi"
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "Sukses"
+                  response:
+                    type: object
+                    properties:
+                      histori:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            noSep:
+                              type: string
+                              example: "0301R0110818V200084"
+                            noRujukan:
+                              type: string
+                              example: "0301U01108180200084"
+                            tglSep:
+                              type: string
+                              format: date
+                              example: "2018-07-09"
+                            tglPlgSep:
+                              type: string
+                              format: date
+                              example: "2018-07-11"
+                            jnsPelayanan:
+                              type: string
+                              example: "1"
+                            kelasRawat:
+                              type: string
+                              example: "Kelas 1"
+                            namaPeserta:
+                              type: string
+                              example: "STAMI"
+                            noKartu:
+                              type: string
+                              example: "0001160271256"
+                            poli:
+                              type: string
+                              example: ""
+                            ppkPelayanan:
+                              type: string
+                              example: "RS YOS SUDARSO"
+                            diagnosa:
+                              type: string
+                              example: "A00.1 - Cholera due to Vibrio cholerae 01, biovar eltor"
+              example:
+                metaData:
+                  code: "200"
+                  message: "Sukses"
+                response:
+                  histori:
+                    - noSep: "0301R0110818V200084"
+                      noRujukan: "0301U01108180200084"
+                      tglSep: "2018-07-09"
+                      tglPlgSep: "2018-07-11"
+                      jnsPelayanan: "1"
+                      kelasRawat: "Kelas 1"
+                      namaPeserta: "STAMI"
+                      noKartu: "0001160271256"
+                      poli: ""
+                      ppkPelayanan: "RS YOS SUDARSO"
+                      diagnosa: "A00.1 - Cholera due to Vibrio cholerae 01, biovar eltor"
+                    - noSep: "0301R0110818V100085"
+                      noRujukan: "0301U01108180201084"
+                      tglSep: "2018-08-09"
+                      tglPlgSep: "2018-08-09"
+                      jnsPelayanan: "2"
+                      kelasRawat: null
+                      namaPeserta: "STAMI"
+                      noKartu: "0001160271256"
+                      poli: ""
+                      ppkPelayanan: "RS YOS SUDARSO"
+                      diagnosa: "A00.1 - Cholera due to Vibrio cholerae 01, biovar eltor"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /vclaim-rest/monitoring/JasaRaharja/JnsPelayanan/{jnsPelayanan}/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
+    get:
+      tags:
+        - Monitoring
+      summary: Data Klaim Jaminan Jasa Raharja
+      description: Monitoring Klaim Jasa Raharja berdasarkan jenis pelayanan dan rentang tanggal
+      operationId: getJasaRaharja
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      parameters:
+        - name: jnsPelayanan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Jenis Pelayanan (1. Rawat Inap, 2. Rawat Jalan)
+          example: "2"
+        - name: tglMulai
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tgl Mulai Pencarian (yyyy-mmdd)
+          example: "2018-08-01"
+        - name: tglAkhir
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tgl Akhir Pencarian (yyyy-mmdd)
+          example: "2018-08-31"
+      responses:
+        '200':
+          description: Data klaim Jasa Raharja berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "Sukses"
+                  response:
+                    type: object
+                    properties:
+                      jaminan:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            sep:
+                              type: object
+                              properties:
+                                noSEP:
+                                  type: string
+                                  example: "0301R0110818V100085"
+                                tglSEP:
+                                  type: string
+                                  format: date
+                                  example: "2018-08-09"
+                                tglPlgSEP:
+                                  type: string
+                                  format: date
+                                  example: "2018-08-09"
+                                noMr:
+                                  type: string
+                                  example: "AA-01-11"
+                                jnsPelayanan:
+                                  type: string
+                                  example: "2"
+                                poli:
+                                  type: string
+                                  example: "INT"
+                                diagnosa:
+                                  type: string
+                                  example: "A00.1"
+                                peserta:
+                                  type: object
+                                  properties:
+                                    noKartu:
+                                      type: string
+                                      example: "0001161271256"
+                                    nama:
+                                      type: string
+                                      example: "JASA RAHARJA"
+                                    noMR:
+                                      type: string
+                                      example: "AA-01-11"
+                            jasaRaharja:
+                              type: object
+                              properties:
+                                tglKejadian:
+                                  type: string
+                                  format: date
+                                  example: "2018-08-09"
+                                noRegister:
+                                  type: string
+                                  example: "AA-JR-0801"
+                                ketStatusDijamin:
+                                  type: string
+                                  example: "Dijamin"
+                                ketStatusDikirim:
+                                  type: string
+                                  example: "Sukses"
+                                biayaDijamin:
+                                  type: string
+                                  example: "100000"
+                                plafon:
+                                  type: string
+                                  example: "20000000"
+                                jmlDibayar:
+                                  type: string
+                                  example: "10000"
+                                resultsJasaRaharja:
+                                  type: string
+                                  example: "Sukses"
+              example:
+                metaData:
+                  code: "200"
+                  message: "Sukses"
+                response:
+                  jaminan:
+                    - sep:
+                        noSEP: "0301R0110818V100085"
+                        tglSEP: "2018-08-09"
+                        tglPlgSEP: "2018-08-09"
+                        noMr: "AA-01-11"
+                        jnsPelayanan: "2"
+                        poli: "INT"
+                        diagnosa: "A00.1"
+                        peserta:
+                          noKartu: "0001161271256"
+                          nama: "JASA RAHARJA"
+                          noMR: "AA-01-11"
+                      jasaRaharja:
+                        tglKejadian: "2018-08-09"
+                        noRegister: "AA-JR-0801"
+                        ketStatusDijamin: "Dijamin"
+                        ketStatusDikirim: "Sukses"
+                        biayaDijamin: "100000"
+                        plafon: "20000000"
+                        jmlDibayar: "10000"
+                        resultsJasaRaharja: "Sukses"
+                    - sep:
+                        noSEP: "0301R0110818V100185"
+                        tglSEP: "2018-08-09"
+                        tglPlgSEP: "2018-08-09"
+                        noMr: "AA-01-11"
+                        jnsPelayanan: "2"
+                        poli: "INT"
+                        diagnosa: "A00.1"
+                        peserta:
+                          noKartu: "0003361271256"
+                          nama: "JASA RAHARJA"
+                          noMR: "AA-01-11"
+                      jasaRaharja:
+                        tglKejadian: "2018-08-09"
+                        noRegister: "AA-JR-0801"
+                        ketStatusDijamin: "Dijamin"
+                        ketStatusDikirim: "Sukses"
+                        biayaDijamin: "100000"
+                        plafon: "20000000"
+                        jmlDibayar: "10000"
+                        resultsJasaRaharja: "Sukses"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error

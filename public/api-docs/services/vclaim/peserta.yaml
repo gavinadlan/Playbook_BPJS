@@ -1,0 +1,339 @@
+openapi: 3.0.0
+info:
+  title: VClaim Peserta
+  version: 1.0.0
+  description: Data peserta BPJS Kesehatan
+
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev
+    description: Server Development
+
+tags:
+  - name: Peserta
+    description: Data peserta BPJS Kesehatan
+
+components:
+  securitySchemes:
+    vclaimAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    vclaimTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    vclaimSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
+
+  schemas:
+    PesertaResponse:
+      type: object
+      properties:
+        metaData:
+          type: object
+          properties:
+            code:
+              type: string
+              example: "200"
+            message:
+              type: string
+              example: "OK"
+        response:
+          type: object
+          properties:
+            peserta:
+              type: object
+              properties:
+                nama:
+                  type: string
+                  example: "TRI M"
+                nik:
+                  type: string
+                  example: "3319022010810007"
+                noKartu:
+                  type: string
+                  example: "0011336526592"
+                sex:
+                  type: string
+                  example: "L"
+                tglLahir:
+                  type: string
+                  format: date
+                  example: "1981-10-10"
+                tglCetakKartu:
+                  type: string
+                  format: date
+                  example: "2016-02-12"
+                tglTAT:
+                  type: string
+                  format: date
+                  example: "2014-12-31"
+                tglTMT:
+                  type: string
+                  format: date
+                  example: "2008-10-01"
+                pisa:
+                  type: string
+                  example: "1"
+                statusPeserta:
+                  type: object
+                  properties:
+                    kode:
+                      type: string
+                      example: "0"
+                    keterangan:
+                      type: string
+                      example: "AKTIF"
+                jenisPeserta:
+                  type: object
+                  properties:
+                    kode:
+                      type: string
+                      example: "13"
+                    keterangan:
+                      type: string
+                      example: "PEGAWAI SWASTA"
+                hakKelas:
+                  type: object
+                  properties:
+                    kode:
+                      type: string
+                      example: "1"
+                    keterangan:
+                      type: string
+                      example: "KELAS I"
+                provUmum:
+                  type: object
+                  properties:
+                    kdProvider:
+                      type: string
+                      example: "0138U020"
+                    nmProvider:
+                      type: string
+                      example: "KPRJ PALA MEDIKA"
+                cob:
+                  type: object
+                  properties:
+                    nmAsuransi:
+                      type: string
+                      nullable: true
+                    noAsuransi:
+                      type: string
+                      nullable: true
+                    tglTAT:
+                      type: string
+                      format: date
+                      nullable: true
+                    tglTMT:
+                      type: string
+                      format: date
+                      nullable: true
+                informasi:
+                  type: object
+                  properties:
+                    dinsos:
+                      type: string
+                      nullable: true
+                    noSKTM:
+                      type: string
+                      nullable: true
+                    prolanisPRB:
+                      type: string
+                      nullable: true
+                mr:
+                  type: object
+                  properties:
+                    noMR:
+                      type: string
+                      nullable: true
+                    noTelepon:
+                      type: string
+                      nullable: true
+                umur:
+                  type: object
+                  properties:
+                    umurSaatPelayanan:
+                      type: string
+                      example: "35 tahun ,1 bulan ,11 hari"
+                    umurSekarang:
+                      type: string
+                      example: "35 tahun ,2 bulan ,10 hari"
+
+paths:
+  /vclaim-rest/Peserta/nokartu/{noKartu}/tglSEP/{tglSEP}:
+    get:
+      tags:
+        - Peserta
+      summary: Data Peserta berdasarkan No.Kartu BPJS
+      description: Pencarian data peserta BPJS Kesehatan berdasarkan nomor kartu
+      operationId: getPesertaByNoKartu
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      parameters:
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kartu
+          example: "0011336526592"
+        - name: tglSEP
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal Pelayanan/SEP format yyyy-MM-dd
+          example: "2017-10-30"
+      responses:
+        '200':
+          description: Data peserta berhasil diambil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PesertaResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "OK"
+                response:
+                  peserta:
+                    cob:
+                      nmAsuransi: null
+                      noAsuransi: null
+                      tglTAT: null
+                      tglTMT: null
+                    hakKelas:
+                      keterangan: "KELAS I"
+                      kode: "1"
+                    informasi:
+                      dinsos: null
+                      noSKTM: null
+                      prolanisPRB: null
+                    jenisPeserta:
+                      keterangan: "PEGAWAI SWASTA"
+                      kode: "13"
+                    mr:
+                      noMR: null
+                      noTelepon: null
+                    nama: "TRI M"
+                    nik: "3319022010810007"
+                    noKartu: "0011336526592"
+                    pisa: "1"
+                    provUmum:
+                      kdProvider: "0138U020"
+                      nmProvider: "KPRJ PALA MEDIKA"
+                    sex: "L"
+                    statusPeserta:
+                      keterangan: "AKTIF"
+                      kode: "0"
+                    tglCetakKartu: "2016-02-12"
+                    tglLahir: "1981-10-10"
+                    tglTAT: "2014-12-31"
+                    tglTMT: "2008-10-01"
+                    umur:
+                      umurSaatPelayanan: "35 tahun ,1 bulan ,11 hari"
+                      umurSekarang: "35 tahun ,2 bulan ,10 hari"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /vclaim-rest/Peserta/nik/{nik}/tglSEP/{tglSEP}:
+    get:
+      tags:
+        - Peserta
+      summary: Data Peserta berdasarkan NIK
+      description: Pencarian data peserta berdasarkan NIK Kependudukan
+      operationId: getPesertaByNIK
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      parameters:
+        - name: nik
+          in: path
+          required: true
+          schema:
+            type: string
+          description: NIK KTP
+          example: "3319022010810007"
+        - name: tglSEP
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal Pelayanan/SEP format yyyy-MM-dd
+          example: "2017-10-30"
+      responses:
+        '200':
+          description: Data peserta berhasil diambil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PesertaResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "OK"
+                response:
+                  peserta:
+                    cob:
+                      nmAsuransi: null
+                      noAsuransi: null
+                      tglTAT: null
+                      tglTMT: null
+                    hakKelas:
+                      keterangan: "KELAS I"
+                      kode: "1"
+                    informasi:
+                      dinsos: null
+                      noSKTM: null
+                      prolanisPRB: null
+                    jenisPeserta:
+                      keterangan: "PEGAWAI SWASTA"
+                      kode: "13"
+                    mr:
+                      noMR: null
+                      noTelepon: null
+                    nama: "TRI M"
+                    nik: "3319022010810007"
+                    noKartu: "0011336526592"
+                    pisa: "1"
+                    provUmum:
+                      kdProvider: "0138U020"
+                      nmProvider: "KPRJ PALA MEDIKA"
+                    sex: "L"
+                    statusPeserta:
+                      keterangan: "AKTIF"
+                      kode: "0"
+                    tglCetakKartu: "2016-02-12"
+                    tglLahir: "1981-10-10"
+                    tglTAT: "2014-12-31"
+                    tglTMT: "2008-10-01"
+                    umur:
+                      umurSaatPelayanan: "35 tahun ,1 bulan ,11 hari"
+                      umurSekarang: "35 tahun ,2 bulan ,10 hari"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error 

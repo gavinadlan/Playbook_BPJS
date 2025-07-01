@@ -1,0 +1,38 @@
+openapi: 3.0.0
+info:
+  title: VClaim Authentication
+  version: 1.0.0
+  description: Header authentication dan signature untuk VClaim
+
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev
+    description: Server Development
+
+tags:
+  - name: Authentication
+    description: Header authentication dan signature untuk VClaim
+
+components:
+  securitySchemes:
+    vclaimAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    vclaimTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    vclaimSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
+
+paths: {} 

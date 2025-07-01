@@ -1,0 +1,634 @@
+openapi: 3.0.0
+info:
+  title: VClaim LPK
+  version: 1.0.0
+  description: Lembar Pengajuan Klaim
+
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev
+    description: Server Development
+
+tags:
+  - name: LPK
+    description: Lembar Pengajuan Klaim
+
+components:
+  securitySchemes:
+    vclaimAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    vclaimTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    vclaimSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
+
+  schemas:
+    VClaimRequest:
+      type: object
+      properties:
+        request:
+          type: object
+          properties:
+            t_lpk:
+              $ref: '#/components/schemas/LPKData'
+    
+    LPKData:
+      type: object
+      required:
+        - noSep
+        - tglMasuk
+        - tglKeluar
+        - jaminan
+        - poli
+        - perawatan
+        - diagnosa
+        - procedure
+        - rencanaTL
+        - DPJP
+        - user
+      properties:
+        noSep:
+          type: string
+          description: Nomor SEP
+          example: "0301R0011017V000015"
+        tglMasuk:
+          type: string
+          format: date
+          description: Tanggal masuk format yyyy-mm-dd
+          example: "2017-10-30"
+        tglKeluar:
+          type: string
+          format: date
+          description: Tanggal keluar format yyyy-mm-dd
+          example: "2017-10-30"
+        jaminan:
+          type: string
+          description: Penjamin (1. JKN)
+          example: "1"
+        poli:
+          type: object
+          properties:
+            poli:
+              type: string
+              description: Kode poli dari referensi poli
+              example: "INT"
+        perawatan:
+          type: object
+          properties:
+            ruangRawat:
+              type: string
+              description: Ruang rawat dari referensi ruang rawat
+              example: "1"
+            kelasRawat:
+              type: string
+              description: Kelas rawat dari referensi kelas rawat
+              example: "1"
+            spesialistik:
+              type: string
+              description: Spesialistik dari referensi spesialistik
+              example: "1"
+            caraKeluar:
+              type: string
+              description: Cara keluar dari referensi cara keluar
+              example: "1"
+            kondisiPulang:
+              type: string
+              description: Kondisi pulang dari referensi kondisi pulang
+              example: "1"
+        diagnosa:
+          type: array
+          items:
+            type: object
+            properties:
+              kode:
+                type: string
+                description: Kode diagnosa dari referensi diagnosa
+                example: "N88.0"
+              level:
+                type: string
+                description: Level diagnosa (1.Primer 2.Sekunder)
+                example: "1"
+        procedure:
+          type: array
+          items:
+            type: object
+            properties:
+              kode:
+                type: string
+                description: Kode procedure dari referensi procedure/tindakan
+                example: "00.82"
+        rencanaTL:
+          type: object
+          properties:
+            tindakLanjut:
+              type: string
+              description: Tindak lanjut (1:Diperbolehkan Pulang, 2:Pemeriksaan Penunjang, 3:Dirujuk Ke, 4:Kontrol Kembali)
+              example: "1"
+            dirujukKe:
+              type: object
+              properties:
+                kodePPK:
+                  type: string
+                  description: Kode faskes dari referensi faskes
+                  example: ""
+            kontrolKembali:
+              type: object
+              properties:
+                tglKontrol:
+                  type: string
+                  format: date
+                  description: Tanggal kontrol kembali format yyyy-mm-dd
+                  example: "2017-11-10"
+                poli:
+                  type: string
+                  description: Kode poli dari referensi poli
+                  example: ""
+        DPJP:
+          type: string
+          description: Kode dokter DPJP dari referensi dokter
+          example: "3"
+        user:
+          type: string
+          description: User pemakai
+          example: "Coba Ws"
+
+    VClaimResponse:
+      type: object
+      properties:
+        metaData:
+          type: object
+          properties:
+            code:
+              type: string
+              example: "200"
+            message:
+              type: string
+              example: "OK"
+        response:
+          oneOf:
+            - type: string
+              example: "0301R0011017V000015"
+            - type: object
+              properties:
+                lpk:
+                  type: object
+                  properties:
+                    list:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/LPKResponseData'
+
+    LPKResponseData:
+      type: object
+      properties:
+        noSep:
+          type: string
+          example: "0301R0011017V000014"
+        tglMasuk:
+          type: string
+          format: date
+          example: "2017-10-30"
+        tglKeluar:
+          type: string
+          format: date
+          example: "2017-10-30"
+        jnsPelayanan:
+          type: string
+          example: "1"
+        peserta:
+          type: object
+          properties:
+            nama:
+              type: string
+              example: "123456"
+            noKartu:
+              type: string
+              example: "0000000001231"
+            noMR:
+              type: string
+              example: "123456"
+            tglLahir:
+              type: string
+              format: date
+              example: "2008-02-05"
+            kelamin:
+              type: string
+              example: "L"
+        poli:
+          type: object
+          properties:
+            eksekutif:
+              type: string
+              example: "0"
+            poli:
+              type: object
+              properties:
+                kode:
+                  type: string
+                  example: "INT"
+        perawatan:
+          type: object
+          properties:
+            ruangRawat:
+              type: object
+              properties:
+                kode:
+                  type: string
+                  example: "3"
+                nama:
+                  type: string
+                  example: "Ruang Melati I"
+            kelasRawat:
+              type: object
+              properties:
+                kode:
+                  type: string
+                  example: "1"
+                nama:
+                  type: string
+                  example: "VVIP"
+            spesialistik:
+              type: object
+              properties:
+                kode:
+                  type: string
+                  example: "1"
+                nama:
+                  type: string
+                  example: "Spesialis Penyakit dalam"
+            caraKeluar:
+              type: object
+              properties:
+                kode:
+                  type: string
+                  example: "1"
+                nama:
+                  type: string
+                  example: "Atas Persetujuan Dokter"
+            kondisiPulang:
+              type: object
+              properties:
+                kode:
+                  type: string
+                  example: "1"
+                nama:
+                  type: string
+                  example: "Sembuh"
+        diagnosa:
+          type: object
+          properties:
+            list:
+              type: array
+              items:
+                type: object
+                properties:
+                  level:
+                    type: string
+                    example: "1"
+                  list:
+                    type: object
+                    properties:
+                      kode:
+                        type: string
+                        example: "N88.1"
+                      nama:
+                        type: string
+                        example: "Old laceration of cervix uteri"
+        procedure:
+          type: object
+          properties:
+            list:
+              type: array
+              items:
+                type: object
+                properties:
+                  list:
+                    type: object
+                    properties:
+                      kode:
+                        type: string
+                        example: "00.82"
+                      nama:
+                        type: string
+                        example: "Revision of knee replacement, femoral component"
+        DPJP:
+          type: object
+          properties:
+            dokter:
+              type: object
+              properties:
+                kode:
+                  type: string
+                  example: "3"
+                nama:
+                  type: string
+                  example: "Satro Jadhit, dr"
+        rencanaTL:
+          type: object
+          nullable: true
+
+paths:
+  /vclaim-rest/LPK/insert:
+    post:
+      tags:
+        - LPK
+      summary: Insert LPK
+      description: Insert Lembar Pengajuan Klaim
+      operationId: insertLPK
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VClaimRequest'
+            example:
+              request:
+                t_lpk:
+                  noSep: "0301R0011017V000015"
+                  tglMasuk: "2017-10-30"
+                  tglKeluar: "2017-10-30"
+                  jaminan: "1"
+                  poli:
+                    poli: "INT"
+                  perawatan:
+                    ruangRawat: "1"
+                    kelasRawat: "1"
+                    spesialistik: "1"
+                    caraKeluar: "1"
+                    kondisiPulang: "1"
+                  diagnosa:
+                    - kode: "N88.0"
+                      level: "1"
+                    - kode: "A00.1"
+                      level: "2"
+                  procedure:
+                    - kode: "00.82"
+                    - kode: "00.83"
+                  rencanaTL:
+                    tindakLanjut: "1"
+                    dirujukKe:
+                      kodePPK: ""
+                    kontrolKembali:
+                      tglKontrol: "2017-11-10"
+                      poli: ""
+                  DPJP: "3"
+                  user: "Coba Ws"
+      responses:
+        '200':
+          description: LPK berhasil diinsert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VClaimResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "OK"
+                response: "0301R0011017V000015"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /vclaim-rest/LPK/update:
+    put:
+      tags:
+        - LPK
+      summary: Update LPK
+      description: Update Lembar Pengajuan Klaim
+      operationId: updateLPK
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VClaimRequest'
+            example:
+              request:
+                t_lpk:
+                  noSep: "0301R0011017V000015"
+                  tglMasuk: "2017-10-30"
+                  tglKeluar: "2017-10-30"
+                  jaminan: "1"
+                  poli:
+                    poli: "INT"
+                  perawatan:
+                    ruangRawat: "1"
+                    kelasRawat: "1"
+                    spesialistik: "1"
+                    caraKeluar: "1"
+                    kondisiPulang: "1"
+                  diagnosa:
+                    - kode: "N88.0"
+                      level: "1"
+                    - kode: "A00.1"
+                      level: "2"
+                  procedure:
+                    - kode: "00.82"
+                    - kode: "00.83"
+                  rencanaTL:
+                    tindakLanjut: "1"
+                    dirujukKe:
+                      kodePPK: ""
+                    kontrolKembali:
+                      tglKontrol: "2017-11-10"
+                      poli: ""
+                  DPJP: "3"
+                  user: "Coba Ws"
+      responses:
+        '200':
+          description: LPK berhasil diupdate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VClaimResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "OK"
+                response: "0301R0011017V000015"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /vclaim-rest/LPK/delete:
+    delete:
+      tags:
+        - LPK
+      summary: Delete LPK
+      description: Delete Lembar Pengajuan Klaim
+      operationId: deleteLPK
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                request:
+                  type: object
+                  properties:
+                    t_lpk:
+                      type: object
+                      properties:
+                        noSep:
+                          type: string
+                          description: Nomor SEP
+                          example: "0301R0011017V000015"
+            example:
+              request:
+                t_lpk:
+                  noSep: "0301R0011017V000015"
+      responses:
+        '200':
+          description: LPK berhasil didelete
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VClaimResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "OK"
+                response: "0301R0011017V000015"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /vclaim-rest/LPK/TglMasuk/{tglMasuk}/JnsPelayanan/{jnsPelayanan}:
+    get:
+      tags:
+        - LPK
+      summary: Data Lembar Pengajuan Klaim
+      description: Pencarian data LPK berdasarkan tanggal masuk dan jenis pelayanan
+      operationId: getLPKData
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      parameters:
+        - name: tglMasuk
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal Masuk format yyyy-MM-dd
+          example: "2017-10-30"
+        - name: jnsPelayanan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Jenis Pelayanan (1. Inap 2.Jalan)
+          example: "1"
+      responses:
+        '200':
+          description: Data LPK berhasil diambil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VClaimResponse'
+              example:
+                metaData:
+                  code: "200"
+                  message: "OK"
+                response:
+                  lpk:
+                    list:
+                      - noSep: "0301R0011017V000014"
+                        tglMasuk: "2017-10-30"
+                        tglKeluar: "2017-10-30"
+                        jnsPelayanan: "1"
+                        peserta:
+                          nama: "123456"
+                          noKartu: "0000000001231"
+                          noMR: "123456"
+                          tglLahir: "2008-02-05"
+                          kelamin: "L"
+                        poli:
+                          eksekutif: "0"
+                          poli:
+                            kode: "INT"
+                        perawatan:
+                          ruangRawat:
+                            kode: "3"
+                            nama: "Ruang Melati I"
+                          kelasRawat:
+                            kode: "1"
+                            nama: "VVIP"
+                          spesialistik:
+                            kode: "1"
+                            nama: "Spesialis Penyakit dalam"
+                          caraKeluar:
+                            kode: "1"
+                            nama: "Atas Persetujuan Dokter"
+                          kondisiPulang:
+                            kode: "1"
+                            nama: "Sembuh"
+                        diagnosa:
+                          list:
+                            - level: "1"
+                              list:
+                                kode: "N88.1"
+                                nama: "Old laceration of cervix uteri"
+                            - level: "2"
+                              list:
+                                kode: "A00.1"
+                                nama: "Cholera due to Vibrio cholerae 01, biovar eltor"
+                        procedure:
+                          list:
+                            - list:
+                                kode: "00.82"
+                                nama: "Revision of knee replacement, femoral component"
+                            - list:
+                                kode: "00.83"
+                                nama: "Revision of knee replacement,patellar component"
+                        DPJP:
+                          dokter:
+                            kode: "3"
+                            nama: "Satro Jadhit, dr"
+                        rencanaTL: null
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error 

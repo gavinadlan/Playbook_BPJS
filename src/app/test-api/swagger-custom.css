@@ -1,0 +1,266 @@
+/* Custom styles untuk Swagger UI */
+.swagger-container {
+  font-family: inherit;
+}
+
+.swagger-container .swagger-ui {
+  font-family: inherit;
+}
+
+/* Header styling */
+.swagger-container .swagger-ui .info {
+  margin: 0;
+  padding: 0;
+}
+
+.swagger-container .swagger-ui .info .title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #27447c;
+  margin-bottom: 0.5rem;
+}
+
+.swagger-container .swagger-ui .info .description {
+  color: #6b7280;
+  margin-bottom: 1rem;
+}
+
+/* Operation styling */
+.swagger-container .swagger-ui .opblock {
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.swagger-container .swagger-ui .opblock.opblock-get {
+  border-color: #3b82f6;
+}
+
+.swagger-container .swagger-ui .opblock.opblock-post {
+  border-color: #10b981;
+}
+
+.swagger-container .swagger-ui .opblock.opblock-put {
+  border-color: #f59e0b;
+}
+
+.swagger-container .swagger-ui .opblock.opblock-delete {
+  border-color: #ef4444;
+}
+
+.swagger-container .swagger-ui .opblock.opblock-patch {
+  border-color: #8b5cf6;
+}
+
+/* Operation header */
+.swagger-container .swagger-ui .opblock .opblock-summary {
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 8px 8px 0 0;
+}
+
+.swagger-container .swagger-ui .opblock .opblock-summary-method {
+  border-radius: 4px;
+  font-weight: 600;
+  min-width: 80px;
+  text-align: center;
+}
+
+.swagger-container .swagger-ui .opblock.opblock-get .opblock-summary-method {
+  background: #3b82f6;
+}
+
+.swagger-container .swagger-ui .opblock.opblock-post .opblock-summary-method {
+  background: #10b981;
+}
+
+.swagger-container .swagger-ui .opblock.opblock-put .opblock-summary-method {
+  background: #f59e0b;
+}
+
+.swagger-container .swagger-ui .opblock.opblock-delete .opblock-summary-method {
+  background: #ef4444;
+}
+
+.swagger-container .swagger-ui .opblock.opblock-patch .opblock-summary-method {
+  background: #8b5cf6;
+}
+
+.swagger-container .swagger-ui .opblock .opblock-summary-path {
+  font-weight: 600;
+  color: #374151;
+}
+
+/* Operation content */
+.swagger-container .swagger-ui .opblock .opblock-section {
+  padding: 1rem;
+}
+
+.swagger-container .swagger-ui .opblock .opblock-section-header {
+  background: #f9fafb;
+  border-radius: 4px;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.swagger-container .swagger-ui .opblock .opblock-section-header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+}
+
+/* Parameters */
+.swagger-container .swagger-ui .parameters-container {
+  margin-bottom: 1rem;
+}
+
+.swagger-container .swagger-ui .parameters-container .parameter__name {
+  font-weight: 600;
+  color: #374151;
+}
+
+.swagger-container .swagger-ui .parameters-container .parameter__type {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.swagger-container .swagger-ui .parameters-container .parameter__required {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+/* Try it out button */
+.swagger-container .swagger-ui .try-out__btn {
+  background: #3b82f6;
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.swagger-container .swagger-ui .try-out__btn:hover {
+  background: #2563eb;
+}
+
+.swagger-container .swagger-ui .try-out__btn.cancel {
+  background: #6b7280;
+}
+
+.swagger-container .swagger-ui .try-out__btn.cancel:hover {
+  background: #4b5563;
+}
+
+/* Execute button */
+.swagger-container .swagger-ui .execute-wrapper .btn.execute {
+  background: #10b981;
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.swagger-container .swagger-ui .execute-wrapper .btn.execute:hover {
+  background: #059669;
+}
+
+/* Response section */
+.swagger-container .swagger-ui .responses-wrapper {
+  margin-top: 1rem;
+}
+
+.swagger-container .swagger-ui .responses-wrapper .responses-inner {
+  background: #f9fafb;
+  border-radius: 4px;
+  padding: 1rem;
+}
+
+.swagger-container .swagger-ui .responses-wrapper .response {
+  margin-bottom: 1rem;
+}
+
+.swagger-container .swagger-ui .responses-wrapper .response .response-col_status {
+  font-weight: 600;
+}
+
+.swagger-container .swagger-ui .responses-wrapper .response.response-200 .response-col_status {
+  color: #10b981;
+}
+
+.swagger-container .swagger-ui .responses-wrapper .response.response-400 .response-col_status,
+.swagger-container .swagger-ui .responses-wrapper .response.response-401 .response-col_status,
+.swagger-container .swagger-ui .responses-wrapper .response.response-403 .response-col_status,
+.swagger-container .swagger-ui .responses-wrapper .response.response-404 .response-col_status,
+.swagger-container .swagger-ui .responses-wrapper .response.response-500 .response-col_status {
+  color: #ef4444;
+}
+
+/* Schema section */
+.swagger-container .swagger-ui .model {
+  background: #f9fafb;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.swagger-container .swagger-ui .model .model-title {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.swagger-container .swagger-ui .model .model-title__text {
+  color: #3b82f6;
+}
+
+/* Code blocks */
+.swagger-container .swagger-ui .microlight {
+  background: #1f2937;
+  color: #f9fafb;
+  border-radius: 4px;
+  padding: 1rem;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Loading spinner */
+.swagger-container .swagger-ui .loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.swagger-container .swagger-ui .loading-container .loading {
+  border: 2px solid #e5e7eb;
+  border-top: 2px solid #3b82f6;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .swagger-container .swagger-ui .opblock .opblock-summary {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .swagger-container .swagger-ui .opblock .opblock-summary-path {
+    font-size: 0.875rem;
+  }
+} 

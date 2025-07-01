@@ -2,63 +2,28 @@ openapi: 3.0.0
 info:
   title: VClaim Referensi
   version: 1.0.0
-  description: |
-    Endpoint referensi untuk pencarian data (diagnosa, poli, faskes, dokter, wilayah, dsb) pada layanan VClaim BPJS Kesehatan.
-
+  description: Endpoint referensi VClaim BPJS Kesehatan, sudah disesuaikan dengan kebutuhan dan contoh response user.
 servers:
   - url: https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev
     description: Server Development
-
 tags:
   - name: Referensi
     description: Endpoint referensi data VClaim
-
-components:
-  securitySchemes:
-    vclaimAuth:
-      type: apiKey
-      in: header
-      name: X-cons-id
-      description: Consumer ID dari BPJS Kesehatan
-    vclaimTimestamp:
-      type: apiKey
-      in: header
-      name: X-timestamp
-      description: Generated unix-based timestamp
-    vclaimSignature:
-      type: apiKey
-      in: header
-      name: X-signature
-      description: Generated signature dengan pola HMAC-256
-    userKey:
-      type: apiKey
-      in: header
-      name: user_key
-      description: User key untuk akses webservice
-
 paths:
-  /vclaim-rest/referensi/diagnosa/{parameter}:
+  /referensi/diagnosa/{parameter}:
     get:
-      tags:
-        - Referensi
+      tags: [Referensi]
       summary: Pencarian data diagnosa (ICD-10)
-      description: Pencarian data diagnosa berdasarkan kode atau nama diagnosa (ICD-10)
-      operationId: getDiagnosa
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
         - name: parameter
           in: path
           required: true
           schema:
             type: string
-          description: Kode atau nama diagnosa
+          description: Kode atau Nama Diagnosa
       responses:
         '200':
-          description: Data diagnosa berhasil diambil
+          description: Sukses
           content:
             application/json:
               schema:
@@ -69,10 +34,8 @@ paths:
                     properties:
                       code:
                         type: string
-                        example: "200"
                       message:
                         type: string
-                        example: "Sukses"
                   response:
                     type: object
                     properties:
@@ -83,10 +46,8 @@ paths:
                           properties:
                             kode:
                               type: string
-                              example: "A04"
                             nama:
                               type: string
-                              example: "A04 - Other bacterial intestinal infections"
               example:
                 metaData:
                   code: "200"
@@ -95,33 +56,21 @@ paths:
                   diagnosa:
                     - kode: "A04"
                       nama: "A04 - Other bacterial intestinal infections"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
 
-  /vclaim-rest/referensi/poli/{parameter}:
+  /referensi/poli/{parameter}:
     get:
-      tags:
-        - Referensi
+      tags: [Referensi]
       summary: Pencarian data poli
-      description: Pencarian data poli berdasarkan kode atau nama poli
-      operationId: getPoli
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
         - name: parameter
           in: path
           required: true
           schema:
             type: string
-          description: Kode atau nama poli
+          description: Kode atau Nama Poli
       responses:
         '200':
-          description: Data poli berhasil diambil
+          description: Sukses
           content:
             application/json:
               schema:
@@ -132,10 +81,8 @@ paths:
                     properties:
                       code:
                         type: string
-                        example: "200"
                       message:
                         type: string
-                        example: "Sukses"
                   response:
                     type: object
                     properties:
@@ -146,10 +93,8 @@ paths:
                           properties:
                             kode:
                               type: string
-                              example: "ICU"
                             nama:
                               type: string
-                              example: "Intensive Care Unit"
               example:
                 metaData:
                   code: "200"
@@ -162,23 +107,11 @@ paths:
                       nama: "Poli Penyakit Dalam"
                     - kode: "IVP"
                       nama: "Intravena Pydografi"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
 
-  /vclaim-rest/referensi/faskes/{parameter1}/{parameter2}:
+  /referensi/faskes/{parameter1}/{parameter2}:
     get:
-      tags:
-        - Referensi
+      tags: [Referensi]
       summary: Pencarian data fasilitas kesehatan
-      description: Pencarian data fasilitas kesehatan berdasarkan nama/kode dan jenis faskes
-      operationId: getFaskes
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
         - name: parameter1
           in: path
@@ -194,7 +127,7 @@ paths:
           description: Jenis Faskes (1. Faskes 1, 2. Faskes 2/RS)
       responses:
         '200':
-          description: Data fasilitas kesehatan berhasil diambil
+          description: Sukses
           content:
             application/json:
               schema:
@@ -205,10 +138,8 @@ paths:
                     properties:
                       code:
                         type: string
-                        example: "200"
                       message:
                         type: string
-                        example: "Sukses"
                   response:
                     type: object
                     properties:
@@ -219,10 +150,8 @@ paths:
                           properties:
                             kode:
                               type: string
-                              example: "00161001"
                             nama:
                               type: string
-                              example: "PUSKESMAS SANGIRAN - KAB. SIMEULUE"
               example:
                 metaData:
                   code: "200"
@@ -233,527 +162,11 @@ paths:
                       nama: "PUSKESMAS SANGIRAN - KAB. SIMEULUE"
                     - kode: "00161002"
                       nama: "PUSKESMAS SIMEULUE - KAB. SIMEULUE"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
 
-  /vclaim-rest/referensi/dokter/{parameter}:
+  /referensi/dokter/pelayanan/{parameter1}/tglPelayanan/{parameter2}/Spesialis/{parameter3}:
     get:
-      tags:
-        - Referensi
-      summary: Pencarian data dokter
-      description: Pencarian data dokter berdasarkan kode atau nama dokter
-      operationId: getDokter
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
-      parameters:
-        - name: parameter
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Kode atau nama dokter
-      responses:
-        '200':
-          description: Data dokter berhasil diambil
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  metaData:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                        example: "200"
-                      message:
-                        type: string
-                        example: "Sukses"
-                  response:
-                    type: object
-                    properties:
-                      dokter:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            kode:
-                              type: string
-                              example: "D001"
-                            nama:
-                              type: string
-                              example: "Dr. John Doe"
-              example:
-                metaData:
-                  code: "200"
-                  message: "Sukses"
-                response:
-                  dokter:
-                    - kode: "D001"
-                      nama: "Dr. John Doe"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
-
-  /vclaim-rest/referensi/wilayah/{parameter}:
-    get:
-      tags:
-        - Referensi
-      summary: Pencarian data wilayah
-      description: Pencarian data wilayah berdasarkan kode atau nama wilayah
-      operationId: getWilayah
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
-      parameters:
-        - name: parameter
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Kode atau nama wilayah
-      responses:
-        '200':
-          description: Data wilayah berhasil diambil
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  metaData:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                        example: "200"
-                      message:
-                        type: string
-                        example: "Sukses"
-                  response:
-                    type: object
-                    properties:
-                      wilayah:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            kode:
-                              type: string
-                              example: "12345"
-                            nama:
-                              type: string
-                              example: "Jakarta"
-              example:
-                metaData:
-                  code: "200"
-                  message: "Sukses"
-                response:
-                  wilayah:
-                    - kode: "12345"
-                      nama: "Jakarta"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
-
-  /vclaim-rest/referensi/faskes-terdekat/{parameter}:
-    get:
-      tags:
-        - Referensi
-      summary: Pencarian data fasilitas kesehatan terdekat
-      description: Pencarian data fasilitas kesehatan terdekat berdasarkan koordinat
-      operationId: getFaskesTerdekat
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
-      parameters:
-        - name: parameter
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Koordinat (latitude,longitude)
-      responses:
-        '200':
-          description: Data fasilitas kesehatan terdekat berhasil diambil
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  metaData:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                        example: "200"
-                      message:
-                        type: string
-                        example: "Sukses"
-                  response:
-                    type: object
-                    properties:
-                      faskesTerdekat:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            kode:
-                              type: string
-                              example: "00161001"
-                            nama:
-                              type: string
-                              example: "PUSKESMAS SANGIRAN - KAB. SIMEULUE"
-              example:
-                metaData:
-                  code: "200"
-                  message: "Sukses"
-                response:
-                  faskesTerdekat:
-                    - kode: "00161001"
-                      nama: "PUSKESMAS SANGIRAN - KAB. SIMEULUE"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
-
-  /vclaim-rest/referensi/faskes-terdekat-rs/{parameter}:
-    get:
-      tags:
-        - Referensi
-      summary: Pencarian data fasilitas kesehatan terdekat RS
-      description: Pencarian data fasilitas kesehatan terdekat RS berdasarkan koordinat
-      operationId: getFaskesTerdekatRS
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
-      parameters:
-        - name: parameter
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Koordinat (latitude,longitude)
-      responses:
-        '200':
-          description: Data fasilitas kesehatan terdekat RS berhasil diambil
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  metaData:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                        example: "200"
-                      message:
-                        type: string
-                        example: "Sukses"
-                  response:
-                    type: object
-                    properties:
-                      faskesTerdekatRS:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            kode:
-                              type: string
-                              example: "00161001"
-                            nama:
-                              type: string
-                              example: "PUSKESMAS SANGIRAN - KAB. SIMEULUE"
-              example:
-                metaData:
-                  code: "200"
-                  message: "Sukses"
-                response:
-                  faskesTerdekatRS:
-                    - kode: "00161001"
-                      nama: "PUSKESMAS SANGIRAN - KAB. SIMEULUE"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
-
-  /vclaim-rest/referensi/faskes-terdekat-rs-rs/{parameter}:
-    get:
-      tags:
-        - Referensi
-      summary: Pencarian data fasilitas kesehatan terdekat RS RS
-      description: Pencarian data fasilitas kesehatan terdekat RS RS berdasarkan koordinat
-      operationId: getFaskesTerdekatRSRS
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
-      parameters:
-        - name: parameter
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Koordinat (latitude,longitude)
-      responses:
-        '200':
-          description: Data fasilitas kesehatan terdekat RS RS berhasil diambil
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  metaData:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                        example: "200"
-                      message:
-                        type: string
-                        example: "Sukses"
-                  response:
-                    type: object
-                    properties:
-                      faskesTerdekatRSRS:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            kode:
-                              type: string
-                              example: "00161001"
-                            nama:
-                              type: string
-                              example: "PUSKESMAS SANGIRAN - KAB. SIMEULUE"
-              example:
-                metaData:
-                  code: "200"
-                  message: "Sukses"
-                response:
-                  faskesTerdekatRSRS:
-                    - kode: "00161001"
-                      nama: "PUSKESMAS SANGIRAN - KAB. SIMEULUE"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
-
-  /vclaim-rest/referensi/faskes-terdekat-rs-rs-rs/{parameter}:
-    get:
-      tags:
-        - Referensi
-      summary: Pencarian data fasilitas kesehatan terdekat RS RS RS
-      description: Pencarian data fasilitas kesehatan terdekat RS RS RS RS berdasarkan koordinat
-      operationId: getFaskesTerdekatRSRSRS
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
-      parameters:
-        - name: parameter
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Koordinat (latitude,longitude)
-      responses:
-        '200':
-          description: Data fasilitas kesehatan terdekat RS RS RS RS berhasil diambil
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  metaData:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                        example: "200"
-                      message:
-                        type: string
-                        example: "Sukses"
-                  response:
-                    type: object
-                    properties:
-                      faskesTerdekatRSRSRSRS:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            kode:
-                              type: string
-                              example: "00161001"
-                            nama:
-                              type: string
-                              example: "PUSKESMAS SANGIRAN - KAB. SIMEULUE"
-              example:
-                metaData:
-                  code: "200"
-                  message: "Sukses"
-                response:
-                  faskesTerdekatRSRSRSRS:
-                    - kode: "00161001"
-                      nama: "PUSKESMAS SANGIRAN - KAB. SIMEULUE"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
-
-  /vclaim-rest/referensi/faskes-terdekat-rs-rs-rs-rs/{parameter}:
-    get:
-      tags:
-        - Referensi
-      summary: Pencarian data fasilitas kesehatan terdekat RS RS RS RS
-      description: Pencarian data fasilitas kesehatan terdekat RS RS RS RS berdasarkan koordinat
-      operationId: getFaskesTerdekatRSRSRSRS
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
-      parameters:
-        - name: parameter
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Koordinat (latitude,longitude)
-      responses:
-        '200':
-          description: Data fasilitas kesehatan terdekat RS RS RS RS berhasil diambil
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  metaData:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                        example: "200"
-                      message:
-                        type: string
-                        example: "Sukses"
-                  response:
-                    type: object
-                    properties:
-                      faskesTerdekatRSRSRSRS:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            kode:
-                              type: string
-                              example: "00161001"
-                            nama:
-                              type: string
-                              example: "PUSKESMAS SANGIRAN - KAB. SIMEULUE"
-              example:
-                metaData:
-                  code: "200"
-                  message: "Sukses"
-                response:
-                  faskesTerdekatRSRSRSRS:
-                    - kode: "00161001"
-                      nama: "PUSKESMAS SANGIRAN - KAB. SIMEULUE"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
-
-  /vclaim-rest/referensi/faskes-terdekat-rs-rs-rs-rs/{parameter}:
-    get:
-      tags:
-        - Referensi
-      summary: Pencarian data fasilitas kesehatan terdekat RS RS RS RS RS
-      description: Pencarian data fasilitas kesehatan terdekat RS RS RS RS RS berdasarkan koordinat
-      operationId: getFaskesTerdekatRSRSRSRSRS
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
-      parameters:
-        - name: parameter
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Koordinat (latitude,longitude)
-      responses:
-        '200':
-          description: Data fasilitas kesehatan terdekat RS RS RS RS RS berhasil diambil
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  metaData:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                        example: "200"
-                      message:
-                        type: string
-                        example: "Sukses"
-                  response:
-                    type: object
-                    properties:
-                      faskesTerdekatRSRSRSRSRS:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            kode:
-                              type: string
-                              example: "00161001"
-                            nama:
-                              type: string
-                              example: "PUSKESMAS SANGIRAN - KAB. SIMEULUE"
-              example:
-                metaData:
-                  code: "200"
-                  message: "Sukses"
-                response:
-                  faskesTerdekatRSRSRSRSRS:
-                    - kode: "00161001"
-                      nama: "PUSKESMAS SANGIRAN - KAB. SIMEULUE"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
-
-  /vclaim-rest/referensi/dokter/pelayanan/{parameter1}/tglPelayanan/{parameter2}/Spesialis/{parameter3}:
-    get:
-      tags:
-        - Referensi
+      tags: [Referensi]
       summary: Pencarian data dokter DPJP untuk pengisian DPJP Layan
-      description: Pencarian data dokter DPJP berdasarkan jenis pelayanan, tanggal pelayanan, dan kode spesialis/subspesialis
-      operationId: getDokterDPJP
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
         - name: parameter1
           in: path
@@ -766,7 +179,6 @@ paths:
           required: true
           schema:
             type: string
-            format: date
           description: Tgl.Pelayanan/SEP (yyyy-mm-dd)
         - name: parameter3
           in: path
@@ -776,7 +188,7 @@ paths:
           description: Kode Spesialis/Subspesialis
       responses:
         '200':
-          description: Data dokter DPJP berhasil diambil
+          description: Sukses
           content:
             application/json:
               schema:
@@ -787,10 +199,8 @@ paths:
                     properties:
                       code:
                         type: string
-                        example: "200"
                       message:
                         type: string
-                        example: "Sukses"
                   response:
                     type: object
                     properties:
@@ -801,10 +211,8 @@ paths:
                           properties:
                             kode:
                               type: string
-                              example: "31486"
                             nama:
                               type: string
-                              example: "Satro Jadhit, dr"
               example:
                 metaData:
                   code: "200"
@@ -815,26 +223,14 @@ paths:
                       nama: "Satro Jadhit, dr"
                     - kode: "31492"
                       nama: "Satroni Lawa, dr"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
 
-  /vclaim-rest/referensi/propinsi:
+  /referensi/propinsi:
     get:
-      tags:
-        - Referensi
+      tags: [Referensi]
       summary: Pencarian data propinsi
-      description: Pencarian data propinsi
-      operationId: getPropinsi
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       responses:
         '200':
-          description: Data propinsi berhasil diambil
+          description: Sukses
           content:
             application/json:
               schema:
@@ -845,10 +241,8 @@ paths:
                     properties:
                       code:
                         type: string
-                        example: "200"
                       message:
                         type: string
-                        example: "Sukses"
                   response:
                     type: object
                     properties:
@@ -859,10 +253,8 @@ paths:
                           properties:
                             kode:
                               type: string
-                              example: "16"
                             nama:
                               type: string
-                              example: "Bali"
               example:
                 metaData:
                   code: "200"
@@ -873,23 +265,11 @@ paths:
                       nama: "Bali"
                     - kode: "17"
                       nama: "Banten"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
 
-  /vclaim-rest/referensi/kabupaten/propinsi/{parameter1}:
+  /referensi/kabupaten/propinsi/{parameter1}:
     get:
-      tags:
-        - Referensi
-      summary: Pencarian data kabupaten berdasarkan kode propinsi
-      description: Pencarian data kabupaten berdasarkan kode propinsi
-      operationId: getKabupaten
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
+      tags: [Referensi]
+      summary: Pencarian data kabupaten berdasarkan propinsi
       parameters:
         - name: parameter1
           in: path
@@ -899,7 +279,7 @@ paths:
           description: Kode Propinsi
       responses:
         '200':
-          description: Data kabupaten berhasil diambil
+          description: Sukses
           content:
             application/json:
               schema:
@@ -910,10 +290,8 @@ paths:
                     properties:
                       code:
                         type: string
-                        example: "200"
                       message:
                         type: string
-                        example: "Sukses"
                   response:
                     type: object
                     properties:
@@ -924,10 +302,8 @@ paths:
                           properties:
                             kode:
                               type: string
-                              example: "0227"
                             nama:
                               type: string
-                              example: "KAB. BADUNG"
               example:
                 metaData:
                   code: "200"
@@ -938,23 +314,11 @@ paths:
                       nama: "KAB. BADUNG"
                     - kode: "0230"
                       nama: "KAB. BANGLI"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
 
-  /vclaim-rest/referensi/kecamatan/kabupaten/{parameter1}:
+  /referensi/kecamatan/kabupaten/{parameter1}:
     get:
-      tags:
-        - Referensi
-      summary: Pencarian data kecamatan berdasarkan kode kabupaten
-      description: Pencarian data kecamatan berdasarkan kode kabupaten
-      operationId: getKecamatan
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
+      tags: [Referensi]
+      summary: Pencarian data kecamatan berdasarkan kabupaten
       parameters:
         - name: parameter1
           in: path
@@ -964,7 +328,7 @@ paths:
           description: Kode Kabupaten
       responses:
         '200':
-          description: Data kecamatan berhasil diambil
+          description: Sukses
           content:
             application/json:
               schema:
@@ -975,10 +339,8 @@ paths:
                     properties:
                       code:
                         type: string
-                        example: "200"
                       message:
                         type: string
-                        example: "Sukses"
                   response:
                     type: object
                     properties:
@@ -989,10 +351,8 @@ paths:
                           properties:
                             kode:
                               type: string
-                              example: "3139"
                             nama:
                               type: string
-                              example: "KUTA"
               example:
                 metaData:
                   code: "200"
@@ -1003,26 +363,14 @@ paths:
                       nama: "KUTA"
                     - kode: "3135"
                       nama: "KUTA UTARA"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
 
-  /vclaim-rest/referensi/diagnosaprb:
+  /referensi/diagnosaprb:
     get:
-      tags:
-        - Referensi
+      tags: [Referensi]
       summary: Pencarian data diagnosa program PRB
-      description: Pencarian data diagnosa program PRB
-      operationId: getDiagnosaPRB
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       responses:
         '200':
-          description: Data diagnosa PRB berhasil diambil
+          description: Sukses
           content:
             application/json:
               schema:
@@ -1033,10 +381,8 @@ paths:
                     properties:
                       code:
                         type: string
-                        example: "200"
                       message:
                         type: string
-                        example: "Sukses"
                   response:
                     type: object
                     properties:
@@ -1047,51 +393,37 @@ paths:
                           properties:
                             kode:
                               type: string
-                              example: "01"
                             nama:
                               type: string
-                              example: "Diabetes Mellitus"
               example:
                 metaData:
                   code: "200"
                   message: "Sukses"
                 response:
                   list:
-                    - kode: "01"
+                    - kode: "01 "
                       nama: "Diabetes Mellitus"
-                    - kode: "02"
+                    - kode: "02 "
                       nama: "Hypertensi"
-                    - kode: "03"
+                    - kode: "03 "
                       nama: "Asthma"
-                    - kode: "04"
+                    - kode: "04 "
                       nama: "Penyakit Jantung"
-                    - kode: "05"
+                    - kode: "05 "
                       nama: "PPOK (Penyakit Paru Obstruktif Kronik)"
-                    - kode: "06"
+                    - kode: "06 "
                       nama: "Schizophrenia"
-                    - kode: "07"
+                    - kode: "07 "
                       nama: "Stroke"
-                    - kode: "08"
+                    - kode: "08 "
                       nama: "Epilepsi"
-                    - kode: "09"
+                    - kode: "09 "
                       nama: "Systemic Lupus Erythematosus"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
 
-  /vclaim-rest/referensi/obatprb/{parameter1}:
+  /referensi/obatprb/{parameter1}:
     get:
-      tags:
-        - Referensi
+      tags: [Referensi]
       summary: Pencarian data obat generik PRB
-      description: Pencarian data obat generik PRB berdasarkan nama obat generik
-      operationId: getObatPRB
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
         - name: parameter1
           in: path
@@ -1101,7 +433,7 @@ paths:
           description: Nama obat generik
       responses:
         '200':
-          description: Data obat generik PRB berhasil diambil
+          description: Sukses
           content:
             application/json:
               schema:
@@ -1112,10 +444,8 @@ paths:
                     properties:
                       code:
                         type: string
-                        example: "200"
                       message:
                         type: string
-                        example: "Sukses"
                   response:
                     type: object
                     properties:
@@ -1126,10 +456,8 @@ paths:
                           properties:
                             kode:
                               type: string
-                              example: "00019100017"
                             nama:
                               type: string
-                              example: "Analog Insulin Long Acting inj 100 UI/ml"
               example:
                 metaData:
                   code: "200"
@@ -1140,23 +468,11 @@ paths:
                       nama: "Analog Insulin Long Acting inj 100 UI/ml"
                     - kode: "00012300016"
                       nama: "Analog Insulin Mix Acting inj 100 UI/ml"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
 
-  /vclaim-rest/referensi/procedure/{parameter}:
+  /referensi/procedure/{parameter}:
     get:
-      tags:
-        - Referensi
+      tags: [Referensi]
       summary: Pencarian data procedure/tindakan
-      description: Pencarian data procedure/tindakan berdasarkan nama atau kode procedure
-      operationId: getProcedure
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
         - name: parameter
           in: path
@@ -1166,7 +482,7 @@ paths:
           description: Nama atau kode procedure
       responses:
         '200':
-          description: Data procedure berhasil diambil
+          description: Sukses
           content:
             application/json:
               schema:
@@ -1177,10 +493,8 @@ paths:
                     properties:
                       code:
                         type: string
-                        example: "200"
                       message:
                         type: string
-                        example: "Sukses"
                   response:
                     type: object
                     properties:
@@ -1191,10 +505,8 @@ paths:
                           properties:
                             kode:
                               type: string
-                              example: "21.05"
                             nama:
                               type: string
-                              example: "21.05 - Control of epistaxis by (transantral) ligation of the maxillary artery"
               example:
                 metaData:
                   code: "200"
@@ -1205,26 +517,14 @@ paths:
                       nama: "21.05 - Control of epistaxis by (transantral) ligation of the maxillary artery"
                     - kode: "382.2"
                       nama: "382.2 - Chronic atticoantral suppurative otitis media"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
 
-  /vclaim-rest/referensi/kelasrawat:
+  /referensi/kelasrawat:
     get:
-      tags:
-        - Referensi
+      tags: [Referensi]
       summary: Pencarian data kelas rawat
-      description: Pencarian data kelas rawat
-      operationId: getKelasRawat
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       responses:
         '200':
-          description: Data kelas rawat berhasil diambil
+          description: Sukses
           content:
             application/json:
               schema:
@@ -1235,10 +535,8 @@ paths:
                     properties:
                       code:
                         type: string
-                        example: "200"
                       message:
                         type: string
-                        example: "Sukses"
                   response:
                     type: object
                     properties:
@@ -1249,10 +547,8 @@ paths:
                           properties:
                             kode:
                               type: string
-                              example: "1"
                             nama:
                               type: string
-                              example: "VVIP"
               example:
                 metaData:
                   code: "200"
@@ -1269,23 +565,11 @@ paths:
                       nama: "Kelas 2"
                     - kode: "5"
                       nama: "Kelas 3"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
 
-  /vclaim-rest/referensi/dokter/{parameter}:
+  /referensi/dokter/{parameter}:
     get:
-      tags:
-        - Referensi
+      tags: [Referensi]
       summary: Pencarian data dokter dalam faskes sesuai consid
-      description: Pencarian data dokter dalam faskes sesuai consid berdasarkan nama dokter/DPJP
-      operationId: getDokterFaskes
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
         - name: parameter
           in: path
@@ -1295,7 +579,7 @@ paths:
           description: Nama dokter/DPJP
       responses:
         '200':
-          description: Data dokter dalam faskes berhasil diambil
+          description: Sukses
           content:
             application/json:
               schema:
@@ -1306,10 +590,8 @@ paths:
                     properties:
                       code:
                         type: string
-                        example: "200"
                       message:
                         type: string
-                        example: "Sukses"
                   response:
                     type: object
                     properties:
@@ -1320,10 +602,8 @@ paths:
                           properties:
                             kode:
                               type: string
-                              example: "3"
                             nama:
                               type: string
-                              example: "Satro Jadhit, dr"
               example:
                 metaData:
                   code: "200"
@@ -1334,26 +614,14 @@ paths:
                       nama: "Satro Jadhit, dr"
                     - kode: "2"
                       nama: "Satroni Lawa, dr"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
 
-  /vclaim-rest/referensi/spesialistik:
+  /referensi/spesialistik:
     get:
-      tags:
-        - Referensi
+      tags: [Referensi]
       summary: Pencarian data spesialistik
-      description: Pencarian data spesialistik
-      operationId: getSpesialistik
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       responses:
         '200':
-          description: Data spesialistik berhasil diambil
+          description: Sukses
           content:
             application/json:
               schema:
@@ -1364,10 +632,8 @@ paths:
                     properties:
                       code:
                         type: string
-                        example: "200"
                       message:
                         type: string
-                        example: "Sukses"
                   response:
                     type: object
                     properties:
@@ -1378,10 +644,8 @@ paths:
                           properties:
                             kode:
                               type: string
-                              example: "11"
                             nama:
                               type: string
-                              example: "Spesialis Anestesiologi dan Reanimasi"
               example:
                 metaData:
                   code: "200"
@@ -1394,26 +658,14 @@ paths:
                       nama: "Spesialis Forensik"
                     - kode: "28"
                       nama: "Spesialis Onkologi"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
 
-  /vclaim-rest/referensi/ruangrawat:
+  /referensi/ruangrawat:
     get:
-      tags:
-        - Referensi
+      tags: [Referensi]
       summary: Pencarian data ruang rawat
-      description: Pencarian data ruang rawat
-      operationId: getRuangRawat
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       responses:
         '200':
-          description: Data ruang rawat berhasil diambil
+          description: Sukses
           content:
             application/json:
               schema:
@@ -1424,10 +676,8 @@ paths:
                     properties:
                       code:
                         type: string
-                        example: "200"
                       message:
                         type: string
-                        example: "Sukses"
                   response:
                     type: object
                     properties:
@@ -1438,10 +688,8 @@ paths:
                           properties:
                             kode:
                               type: string
-                              example: "3"
                             nama:
                               type: string
-                              example: "Ruang Melati I"
               example:
                 metaData:
                   code: "200"
@@ -1458,26 +706,14 @@ paths:
                       nama: "Ruang Kamboja II"
                     - kode: "9"
                       nama: "Ruang Bougenvile"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
 
-  /vclaim-rest/referensi/carakeluar:
+  /referensi/carakeluar:
     get:
-      tags:
-        - Referensi
+      tags: [Referensi]
       summary: Pencarian data cara keluar
-      description: Pencarian data cara keluar
-      operationId: getCaraKeluar
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       responses:
         '200':
-          description: Data cara keluar berhasil diambil
+          description: Sukses
           content:
             application/json:
               schema:
@@ -1488,10 +724,8 @@ paths:
                     properties:
                       code:
                         type: string
-                        example: "200"
                       message:
                         type: string
-                        example: "Sukses"
                   response:
                     type: object
                     properties:
@@ -1502,10 +736,8 @@ paths:
                           properties:
                             kode:
                               type: string
-                              example: "1"
                             nama:
                               type: string
-                              example: "Atas Persetujuan Dokter"
               example:
                 metaData:
                   code: "200"
@@ -1522,26 +754,14 @@ paths:
                       nama: "Meninggal"
                     - kode: "5"
                       nama: "Lain-Lain"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
 
-  /vclaim-rest/referensi/pascapulang:
+  /referensi/pascapulang:
     get:
-      tags:
-        - Referensi
+      tags: [Referensi]
       summary: Pencarian data pasca pulang
-      description: Pencarian data pasca pulang
-      operationId: getPascaPulang
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       responses:
         '200':
-          description: Data pasca pulang berhasil diambil
+          description: Sukses
           content:
             application/json:
               schema:
@@ -1552,10 +772,8 @@ paths:
                     properties:
                       code:
                         type: string
-                        example: "200"
                       message:
                         type: string
-                        example: "Sukses"
                   response:
                     type: object
                     properties:
@@ -1566,10 +784,8 @@ paths:
                           properties:
                             kode:
                               type: string
-                              example: "1"
                             nama:
                               type: string
-                              example: "Sembuh"
               example:
                 metaData:
                   code: "200"
@@ -1585,8 +801,4 @@ paths:
                     - kode: "4"
                       nama: "Meninggal"
                     - kode: "5"
-                      nama: "Lain-Lain"
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error 
+                      nama: "Lain-Lain" 

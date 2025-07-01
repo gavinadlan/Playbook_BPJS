@@ -40,7 +40,7 @@ const apiServices: ApiService[] = [
   },
   {
     name: 'VClaim',
-    file: '/api-docs/services/vclaim.yaml',
+    file: '/api-docs/services/vclaim/merged.yaml',
     description: 'Layanan VClaim untuk klaim asuransi',
     status: 'active'
   },

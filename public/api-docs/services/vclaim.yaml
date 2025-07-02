@@ -5,6 +5,10 @@ info:
   description: |
     Entry point dokumentasi VClaim BPJS Kesehatan. Semua endpoint dipecah ke file terpisah berdasarkan domain.
 
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev
+    description: Server Development
+
 paths:
   # LPK
   /vclaim-rest/LPK/insert:

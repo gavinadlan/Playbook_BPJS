@@ -1,0 +1,2163 @@
+openapi: 3.0.0
+info:
+  title: VClaim Rujukan
+  version: 1.0.0
+  description: Layanan untuk pencarian dan pembuatan rujukan
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev
+    description: Server Development
+tags:
+  - name: Cari Rujukan
+    description: Endpoint untuk pencarian data rujukan
+  - name: Pembuatan Rujukan
+    description: Endpoint untuk pembuatan dan manajemen rujukan
+
+paths:
+  # Endpoint pencarian rujukan berdasarkan nomor rujukan
+  /vclaim-rest/Rujukan/{noRujukan}:
+    get:
+      tags: [Cari Rujukan]
+      summary: Rujukan Berdasarkan Nomor Rujukan (PCare)
+      description: Pencarian data rujukan dari Pcare berdasarkan nomor rujukan
+      parameters:
+        - name: noRujukan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Rujukan
+          example: "030107010217Y001465"
+      responses:
+        '200':
+          description: Data rujukan berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "OK"
+                  response:
+                    type: object
+                    properties:
+                      rujukan:
+                        type: object
+                        properties:
+                          diagnosa:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "N40"
+                              nama:
+                                type: string
+                                example: "Hyperplasia of prostate"
+                          keluhan:
+                            type: string
+                            example: "kencing tidak puas"
+                          noKunjungan:
+                            type: string
+                            example: "030107010217Y001465"
+                          pelayanan:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "2"
+                              nama:
+                                type: string
+                                example: "Rawat Jalan"
+                          peserta:
+                            type: object
+                            properties:
+                              cob:
+                                type: object
+                                properties:
+                                  nmAsuransi:
+                                    type: string
+                                    nullable: true
+                                  noAsuransi:
+                                    type: string
+                                    nullable: true
+                                  tglTAT:
+                                    type: string
+                                    nullable: true
+                                  tglTMT:
+                                    type: string
+                                    nullable: true
+                              hakKelas:
+                                type: object
+                                properties:
+                                  keterangan:
+                                    type: string
+                                    example: "KELAS I"
+                                  kode:
+                                    type: string
+                                    example: "1"
+                              informasi:
+                                type: object
+                                properties:
+                                  dinsos:
+                                    type: string
+                                    nullable: true
+                                  noSKTM:
+                                    type: string
+                                    nullable: true
+                                  prolanisPRB:
+                                    type: string
+                                    nullable: true
+                              jenisPeserta:
+                                type: object
+                                properties:
+                                  keterangan:
+                                    type: string
+                                    example: "PENERIMA PENSIUN PNS"
+                                  kode:
+                                    type: string
+                                    example: "15"
+                              mr:
+                                type: object
+                                properties:
+                                  noMR:
+                                    type: string
+                                    example: "298036"
+                                  noTelepon:
+                                    type: string
+                                    nullable: true
+                              nama:
+                                type: string
+                                example: "MUSDIWAR,BA"
+                              nik:
+                                type: string
+                                nullable: true
+                              noKartu:
+                                type: string
+                                example: "0000416382632"
+                              pisa:
+                                type: string
+                                example: "2"
+                              provUmum:
+                                type: object
+                                properties:
+                                  kdProvider:
+                                    type: string
+                                    example: "03010701"
+                                  nmProvider:
+                                    type: string
+                                    example: "SITEBA"
+                              sex:
+                                type: string
+                                example: "L"
+                              statusPeserta:
+                                type: object
+                                properties:
+                                  keterangan:
+                                    type: string
+                                    example: "AKTIF"
+                                  kode:
+                                    type: string
+                                    example: "0"
+                              tglCetakKartu:
+                                type: string
+                                example: "2017-11-13"
+                              tglLahir:
+                                type: string
+                                example: "1938-08-31"
+                              tglTAT:
+                                type: string
+                                example: "2038-08-31"
+                              tglTMT:
+                                type: string
+                                example: "1996-08-20"
+                              umur:
+                                type: object
+                                properties:
+                                  umurSaatPelayanan:
+                                    type: string
+                                    example: "78 tahun ,6 bulan ,6 hari"
+                                  umurSekarang:
+                                    type: string
+                                    example: "79 tahun ,3 bulan ,18 hari"
+                          poliRujukan:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "URO"
+                              nama:
+                                type: string
+                                example: "UROLOGI"
+                          provPerujuk:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "03010701"
+                              nama:
+                                type: string
+                                example: "SITEBA"
+                          tglKunjungan:
+                            type: string
+                            example: "2017-02-25"
+
+  /vclaim-rest/Rujukan/RS/{noRujukan}:
+    get:
+      tags: [Cari Rujukan]
+      summary: Rujukan Berdasarkan Nomor Rujukan (Rumah Sakit)
+      description: Pencarian data rujukan dari rumah sakit berdasarkan nomor rujukan
+      parameters:
+        - name: noRujukan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Rujukan
+          example: "0304R0050217A000079"
+      responses:
+        '200':
+          description: Data rujukan berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "OK"
+                  response:
+                    type: object
+                    properties:
+                      rujukan:
+                        type: object
+                        properties:
+                          diagnosa:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "I21.9"
+                              nama:
+                                type: string
+                                example: "Acute myocardial infarction, unspecified"
+                          keluhan:
+                            type: string
+                            example: ""
+                          noKunjungan:
+                            type: string
+                            example: "0304R0050217A000079"
+                          pelayanan:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "1"
+                              nama:
+                                type: string
+                                example: "Rawat Inap"
+                          peserta:
+                            type: object
+                            properties:
+                              cob:
+                                type: object
+                                properties:
+                                  nmAsuransi:
+                                    type: string
+                                    nullable: true
+                                  noAsuransi:
+                                    type: string
+                                    nullable: true
+                                  tglTAT:
+                                    type: string
+                                    nullable: true
+                                  tglTMT:
+                                    type: string
+                                    nullable: true
+                              hakKelas:
+                                type: object
+                                properties:
+                                  keterangan:
+                                    type: string
+                                    example: "KELAS III"
+                                  kode:
+                                    type: string
+                                    example: "3"
+                              informasi:
+                                type: object
+                                properties:
+                                  dinsos:
+                                    type: string
+                                    nullable: true
+                                  noSKTM:
+                                    type: string
+                                    nullable: true
+                                  prolanisPRB:
+                                    type: string
+                                    nullable: true
+                              jenisPeserta:
+                                type: object
+                                properties:
+                                  keterangan:
+                                    type: string
+                                    example: "PBI (APBN)"
+                                  kode:
+                                    type: string
+                                    example: "21"
+                              mr:
+                                type: object
+                                properties:
+                                  noMR:
+                                    type: string
+                                    example: "971430"
+                                  noTelepon:
+                                    type: string
+                                    nullable: true
+                              nama:
+                                type: string
+                                example: "MUHAMMAD JUSAR"
+                              nik:
+                                type: string
+                                example: "1106081301530001"
+                              noKartu:
+                                type: string
+                                example: "0105986780439"
+                              pisa:
+                                type: string
+                                example: "1"
+                              provUmum:
+                                type: object
+                                properties:
+                                  kdProvider:
+                                    type: string
+                                    example: "03050301"
+                                  nmProvider:
+                                    type: string
+                                    example: "BASO"
+                              sex:
+                                type: string
+                                example: "L"
+                              statusPeserta:
+                                type: object
+                                properties:
+                                  keterangan:
+                                    type: string
+                                    example: "AKTIF"
+                                  kode:
+                                    type: string
+                                    example: "0"
+                              tglCetakKartu:
+                                type: string
+                                example: "2017-11-13"
+                              tglLahir:
+                                type: string
+                                example: "1953-07-01"
+                              tglTAT:
+                                type: string
+                                example: "2053-07-01"
+                              tglTMT:
+                                type: string
+                                example: "2013-01-01"
+                              umur:
+                                type: object
+                                properties:
+                                  umurSaatPelayanan:
+                                    type: string
+                                    example: "63 tahun ,7 bulan ,23 hari"
+                                  umurSekarang:
+                                    type: string
+                                    example: "64 tahun ,4 bulan ,12 hari"
+                          poliRujukan:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: ""
+                              nama:
+                                type: string
+                                example: ""
+                          provPerujuk:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "0304R005"
+                              nama:
+                                type: string
+                                example: "RSI IBNU SINA"
+                          tglKunjungan:
+                            type: string
+                            example: "2017-02-24"
+
+  # Endpoint pencarian rujukan berdasarkan nomor kartu
+  /vclaim-rest/Rujukan/Peserta/{noKartu}:
+    get:
+      tags: [Cari Rujukan]
+      summary: Rujukan Berdasarkan Nomor Kartu (1 Record - PCare)
+      description: Pencarian data rujukan dari PCare berdasarkan nomor kartu
+      parameters:
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kartu Peserta
+          example: "0000416382632"
+      responses:
+        '200':
+          description: Data rujukan berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "OK"
+                  response:
+                    type: object
+                    properties:
+                      rujukan:
+                        type: object
+                        properties:
+                          diagnosa:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "N40"
+                              nama:
+                                type: string
+                                example: "Hyperplasia of prostate"
+                          keluhan:
+                            type: string
+                            example: "kencing tidak puas"
+                          noKunjungan:
+                            type: string
+                            example: "030107010217Y001465"
+                          pelayanan:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "2"
+                              nama:
+                                type: string
+                                example: "Rawat Jalan"
+                          peserta:
+                            type: object
+                            properties:
+                              cob:
+                                type: object
+                                properties:
+                                  nmAsuransi:
+                                    type: string
+                                    nullable: true
+                                  noAsuransi:
+                                    type: string
+                                    nullable: true
+                                  tglTAT:
+                                    type: string
+                                    nullable: true
+                                  tglTMT:
+                                    type: string
+                                    nullable: true
+                              hakKelas:
+                                type: object
+                                properties:
+                                  keterangan:
+                                    type: string
+                                    example: "KELAS I"
+                                  kode:
+                                    type: string
+                                    example: "1"
+                              informasi:
+                                type: object
+                                properties:
+                                  dinsos:
+                                    type: string
+                                    nullable: true
+                                  noSKTM:
+                                    type: string
+                                    nullable: true
+                                  prolanisPRB:
+                                    type: string
+                                    nullable: true
+                              jenisPeserta:
+                                type: object
+                                properties:
+                                  keterangan:
+                                    type: string
+                                    example: "PENERIMA PENSIUN PNS"
+                                  kode:
+                                    type: string
+                                    example: "15"
+                              mr:
+                                type: object
+                                properties:
+                                  noMR:
+                                    type: string
+                                    example: "298036"
+                                  noTelepon:
+                                    type: string
+                                    nullable: true
+                              nama:
+                                type: string
+                                example: "MUSDIWAR,BA"
+                              nik:
+                                type: string
+                                nullable: true
+                              noKartu:
+                                type: string
+                                example: "0000416382632"
+                              pisa:
+                                type: string
+                                example: "2"
+                              provUmum:
+                                type: object
+                                properties:
+                                  kdProvider:
+                                    type: string
+                                    example: "03010701"
+                                  nmProvider:
+                                    type: string
+                                    example: "SITEBA"
+                              sex:
+                                type: string
+                                example: "L"
+                              statusPeserta:
+                                type: object
+                                properties:
+                                  keterangan:
+                                    type: string
+                                    example: "AKTIF"
+                                  kode:
+                                    type: string
+                                    example: "0"
+                              tglCetakKartu:
+                                type: string
+                                example: "2017-11-13"
+                              tglLahir:
+                                type: string
+                                example: "1938-08-31"
+                              tglTAT:
+                                type: string
+                                example: "2038-08-31"
+                              tglTMT:
+                                type: string
+                                example: "1996-08-20"
+                              umur:
+                                type: object
+                                properties:
+                                  umurSaatPelayanan:
+                                    type: string
+                                    example: "78 tahun ,6 bulan ,6 hari"
+                                  umurSekarang:
+                                    type: string
+                                    example: "79 tahun ,3 bulan ,18 hari"
+                          poliRujukan:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "URO"
+                              nama:
+                                type: string
+                                example: "UROLOGI"
+                          provPerujuk:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "03010701"
+                              nama:
+                                type: string
+                                example: "SITEBA"
+                          tglKunjungan:
+                            type: string
+                            example: "2017-02-25"
+
+  /vclaim-rest/Rujukan/RS/Peserta/{noKartu}:
+    get:
+      tags: [Cari Rujukan]
+      summary: Rujukan Berdasarkan Nomor Kartu (1 Record - Rumah Sakit)
+      description: Pencarian data rujukan dari rumah sakit berdasarkan nomor kartu
+      parameters:
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kartu Peserta
+          example: "0105986780439"
+      responses:
+        '200':
+          description: Data rujukan berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "OK"
+                  response:
+                    type: object
+                    properties:
+                      rujukan:
+                        type: object
+                        properties:
+                          diagnosa:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "I21.9"
+                              nama:
+                                type: string
+                                example: "Acute myocardial infarction, unspecified"
+                          keluhan:
+                            type: string
+                            example: ""
+                          noKunjungan:
+                            type: string
+                            example: "0304R0050217A000079"
+                          pelayanan:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "1"
+                              nama:
+                                type: string
+                                example: "Rawat Inap"
+                          peserta:
+                            type: object
+                            properties:
+                              cob:
+                                type: object
+                                properties:
+                                  nmAsuransi:
+                                    type: string
+                                    nullable: true
+                                  noAsuransi:
+                                    type: string
+                                    nullable: true
+                                  tglTAT:
+                                    type: string
+                                    nullable: true
+                                  tglTMT:
+                                    type: string
+                                    nullable: true
+                              hakKelas:
+                                type: object
+                                properties:
+                                  keterangan:
+                                    type: string
+                                    example: "KELAS III"
+                                  kode:
+                                    type: string
+                                    example: "3"
+                              informasi:
+                                type: object
+                                properties:
+                                  dinsos:
+                                    type: string
+                                    nullable: true
+                                  noSKTM:
+                                    type: string
+                                    nullable: true
+                                  prolanisPRB:
+                                    type: string
+                                    nullable: true
+                              jenisPeserta:
+                                type: object
+                                properties:
+                                  keterangan:
+                                    type: string
+                                    example: "PBI (APBN)"
+                                  kode:
+                                    type: string
+                                    example: "21"
+                              mr:
+                                type: object
+                                properties:
+                                  noMR:
+                                    type: string
+                                    example: "971430"
+                                  noTelepon:
+                                    type: string
+                                    nullable: true
+                              nama:
+                                type: string
+                                example: "MUHAMMAD JUSAR"
+                              nik:
+                                type: string
+                                example: "1106081301530001"
+                              noKartu:
+                                type: string
+                                example: "0105986780439"
+                              pisa:
+                                type: string
+                                example: "1"
+                              provUmum:
+                                type: object
+                                properties:
+                                  kdProvider:
+                                    type: string
+                                    example: "03050301"
+                                  nmProvider:
+                                    type: string
+                                    example: "BASO"
+                              sex:
+                                type: string
+                                example: "L"
+                              statusPeserta:
+                                type: object
+                                properties:
+                                  keterangan:
+                                    type: string
+                                    example: "AKTIF"
+                                  kode:
+                                    type: string
+                                    example: "0"
+                              tglCetakKartu:
+                                type: string
+                                example: "2017-11-13"
+                              tglLahir:
+                                type: string
+                                example: "1953-07-01"
+                              tglTAT:
+                                type: string
+                                example: "2053-07-01"
+                              tglTMT:
+                                type: string
+                                example: "2013-01-01"
+                              umur:
+                                type: object
+                                properties:
+                                  umurSaatPelayanan:
+                                    type: string
+                                    example: "63 tahun ,7 bulan ,23 hari"
+                                  umurSekarang:
+                                    type: string
+                                    example: "64 tahun ,4 bulan ,12 hari"
+                          poliRujukan:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: ""
+                              nama:
+                                type: string
+                                example: ""
+                          provPerujuk:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "0304R005"
+                              nama:
+                                type: string
+                                example: "RSI IBNU SINA"
+                          tglKunjungan:
+                            type: string
+                            example: "2017-02-24"
+
+  # Endpoint pencarian rujukan multi record
+  /vclaim-rest/Rujukan/List/Peserta/{noKartu}:
+    get:
+      tags: [Cari Rujukan]
+      summary: Rujukan Berdasarkan Nomor Kartu (Multi Record - PCare)
+      description: Pencarian data rujukan dari PCare berdasarkan nomor kartu
+      parameters:
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kartu Peserta
+          example: "0000416382632"
+      responses:
+        '200':
+          description: Data rujukan berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "OK"
+                  response:
+                    type: object
+                    properties:
+                      rujukan:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            diagnosa:
+                              type: object
+                              properties:
+                                kode:
+                                  type: string
+                                  example: "N40"
+                                nama:
+                                  type: string
+                                  example: "Hyperplasia of prostate"
+                            keluhan:
+                              type: string
+                              example: "kencing tidak puas"
+                            noKunjungan:
+                              type: string
+                              example: "030107010217Y001465"
+                            pelayanan:
+                              type: object
+                              properties:
+                                kode:
+                                  type: string
+                                  example: "2"
+                                nama:
+                                  type: string
+                                  example: "Rawat Jalan"
+                            peserta:
+                              type: object
+                              properties:
+                                cob:
+                                  type: object
+                                  properties:
+                                    nmAsuransi:
+                                      type: string
+                                      nullable: true
+                                    noAsuransi:
+                                      type: string
+                                      nullable: true
+                                    tglTAT:
+                                      type: string
+                                      nullable: true
+                                    tglTMT:
+                                      type: string
+                                      nullable: true
+                                hakKelas:
+                                  type: object
+                                  properties:
+                                    keterangan:
+                                      type: string
+                                      example: "KELAS I"
+                                    kode:
+                                      type: string
+                                      example: "1"
+                                informasi:
+                                  type: object
+                                  properties:
+                                    dinsos:
+                                      type: string
+                                      nullable: true
+                                    noSKTM:
+                                      type: string
+                                      nullable: true
+                                    prolanisPRB:
+                                      type: string
+                                      nullable: true
+                                jenisPeserta:
+                                  type: object
+                                  properties:
+                                    keterangan:
+                                      type: string
+                                      example: "PENERIMA PENSIUN PNS"
+                                    kode:
+                                      type: string
+                                      example: "15"
+                                mr:
+                                  type: object
+                                  properties:
+                                    noMR:
+                                      type: string
+                                      example: "298036"
+                                    noTelepon:
+                                      type: string
+                                      nullable: true
+                                nama:
+                                  type: string
+                                  example: "MUSDIWAR,BA"
+                                nik:
+                                  type: string
+                                  nullable: true
+                                noKartu:
+                                  type: string
+                                  example: "0000416382632"
+                                pisa:
+                                  type: string
+                                  example: "2"
+                                provUmum:
+                                  type: object
+                                  properties:
+                                    kdProvider:
+                                      type: string
+                                      example: "03010701"
+                                    nmProvider:
+                                      type: string
+                                      example: "SITEBA"
+                                sex:
+                                  type: string
+                                  example: "L"
+                                statusPeserta:
+                                  type: object
+                                  properties:
+                                    keterangan:
+                                      type: string
+                                      example: "AKTIF"
+                                    kode:
+                                      type: string
+                                      example: "0"
+                                tglCetakKartu:
+                                  type: string
+                                  example: "2017-11-13"
+                                tglLahir:
+                                  type: string
+                                  example: "1938-08-31"
+                                tglTAT:
+                                  type: string
+                                  example: "2038-08-31"
+                                tglTMT:
+                                  type: string
+                                  example: "1996-08-20"
+                                umur:
+                                  type: object
+                                  properties:
+                                    umurSaatPelayanan:
+                                      type: string
+                                      example: "78 tahun ,6 bulan ,6 hari"
+                                    umurSekarang:
+                                      type: string
+                                      example: "79 tahun ,3 bulan ,18 hari"
+                            poliRujukan:
+                              type: object
+                              properties:
+                                kode:
+                                  type: string
+                                  example: "URO"
+                                nama:
+                                  type: string
+                                  example: "UROLOGI"
+                            provPerujuk:
+                              type: object
+                              properties:
+                                kode:
+                                  type: string
+                                  example: "03010701"
+                                nama:
+                                  type: string
+                                  example: "SITEBA"
+                            tglKunjungan:
+                              type: string
+                              example: "2017-02-25"
+
+  /vclaim-rest/Rujukan/RS/List/Peserta/{noKartu}:
+    get:
+      tags: [Cari Rujukan]
+      summary: Rujukan Berdasarkan Nomor Kartu (Multi Record - Rumah Sakit)
+      description: Pencarian data rujukan dari rumah sakit berdasarkan nomor kartu
+      parameters:
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kartu Peserta
+          example: "0105986780439"
+      responses:
+        '200':
+          description: Data rujukan berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "OK"
+                  response:
+                    type: object
+                    properties:
+                      rujukan:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            diagnosa:
+                              type: object
+                              properties:
+                                kode:
+                                  type: string
+                                  example: "I21.9"
+                                nama:
+                                  type: string
+                                  example: "Acute myocardial infarction, unspecified"
+                            keluhan:
+                              type: string
+                              example: ""
+                            noKunjungan:
+                              type: string
+                              example: "0304R0050217A000079"
+                            pelayanan:
+                              type: object
+                              properties:
+                                kode:
+                                  type: string
+                                  example: "1"
+                                nama:
+                                  type: string
+                                  example: "Rawat Inap"
+                            peserta:
+                              type: object
+                              properties:
+                                cob:
+                                  type: object
+                                  properties:
+                                    nmAsuransi:
+                                      type: string
+                                      nullable: true
+                                    noAsuransi:
+                                      type: string
+                                      nullable: true
+                                    tglTAT:
+                                      type: string
+                                      nullable: true
+                                    tglTMT:
+                                      type: string
+                                      nullable: true
+                                hakKelas:
+                                  type: object
+                                  properties:
+                                    keterangan:
+                                      type: string
+                                      example: "KELAS III"
+                                    kode:
+                                      type: string
+                                      example: "3"
+                                informasi:
+                                  type: object
+                                  properties:
+                                    dinsos:
+                                      type: string
+                                      nullable: true
+                                    noSKTM:
+                                      type: string
+                                      nullable: true
+                                    prolanisPRB:
+                                      type: string
+                                      nullable: true
+                                jenisPeserta:
+                                  type: object
+                                  properties:
+                                    keterangan:
+                                      type: string
+                                      example: "PBI (APBN)"
+                                    kode:
+                                      type: string
+                                      example: "21"
+                                mr:
+                                  type: object
+                                  properties:
+                                    noMR:
+                                      type: string
+                                      example: "971430"
+                                    noTelepon:
+                                      type: string
+                                      nullable: true
+                                nama:
+                                  type: string
+                                  example: "MUHAMMAD JUSAR"
+                                nik:
+                                  type: string
+                                  example: "1106081301530001"
+                                noKartu:
+                                  type: string
+                                  example: "0105986780439"
+                                pisa:
+                                  type: string
+                                  example: "1"
+                                provUmum:
+                                  type: object
+                                  properties:
+                                    kdProvider:
+                                      type: string
+                                      example: "03050301"
+                                    nmProvider:
+                                      type: string
+                                      example: "BASO"
+                                sex:
+                                  type: string
+                                  example: "L"
+                                statusPeserta:
+                                  type: object
+                                  properties:
+                                    keterangan:
+                                      type: string
+                                      example: "AKTIF"
+                                    kode:
+                                      type: string
+                                      example: "0"
+                                tglCetakKartu:
+                                  type: string
+                                  example: "2017-11-13"
+                                tglLahir:
+                                  type: string
+                                  example: "1953-07-01"
+                                tglTAT:
+                                  type: string
+                                  example: "2053-07-01"
+                                tglTMT:
+                                  type: string
+                                  example: "2013-01-01"
+                                umur:
+                                  type: object
+                                  properties:
+                                    umurSaatPelayanan:
+                                      type: string
+                                      example: "63 tahun ,7 bulan ,23 hari"
+                                    umurSekarang:
+                                      type: string
+                                      example: "64 tahun ,4 bulan ,12 hari"
+                            poliRujukan:
+                              type: object
+                              properties:
+                                kode:
+                                  type: string
+                                  example: ""
+                                nama:
+                                  type: string
+                                  example: ""
+                            provPerujuk:
+                              type: object
+                              properties:
+                                kode:
+                                  type: string
+                                  example: "0304R005"
+                                nama:
+                                  type: string
+                                  example: "RSI IBNU SINA"
+                            tglKunjungan:
+                              type: string
+                              example: "2017-02-24"
+
+  # ==========================================
+  # PEMBUATAN RUJUKAN (SEMUA SISANYA)
+  # ==========================================
+
+  # Endpoint pembuatan rujukan
+  /vclaim-rest/Rujukan/insert:
+    post:
+      tags: [Pembuatan Rujukan]
+      summary: Insert Rujukan
+      description: Membuat data rujukan baru
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                request:
+                  type: object
+                  properties:
+                    t_rujukan:
+                      type: object
+                      properties:
+                        noSep:
+                          type: string
+                          example: "0301R0011017V000014"
+                        tglRujukan:
+                          type: string
+                          format: date
+                          example: "2017-11-08"
+                        ppkDirujuk:
+                          type: string
+                          example: "0301R002"
+                        jnsPelayanan:
+                          type: string
+                          example: "1"
+                        catatan:
+                          type: string
+                          example: "test"
+                        diagRujukan:
+                          type: string
+                          example: "A00.1"
+                        tipeRujukan:
+                          type: string
+                          example: "1"
+                        poliRujukan:
+                          type: string
+                          example: "INT"
+                        user:
+                          type: string
+                          example: "Coba Ws"
+      responses:
+        '200':
+          description: Rujukan berhasil dibuat
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "OK"
+                  response:
+                    type: object
+                    properties:
+                      rujukan:
+                        type: object
+                        properties:
+                          AsalRujukan:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "0301R001"
+                              nama:
+                                type: string
+                                example: "RSUP DR M JAMIL PADANG"
+                          diagnosa:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "A00.1"
+                              nama:
+                                type: string
+                                example: "A00.1 - Cholera due to Vibrio cholerae 01, biovar eltor"
+                          noRujukan:
+                            type: string
+                            example: "0301R0011117B001126"
+                          peserta:
+                            type: object
+                            properties:
+                              asuransi:
+                                type: string
+                                example: "-"
+                              hakKelas:
+                                type: string
+                                nullable: true
+                              jnsPeserta:
+                                type: string
+                                example: "PNS PUSAT"
+                              kelamin:
+                                type: string
+                                example: "Laki-Laki"
+                              nama:
+                                type: string
+                                example: "ZIYADUL"
+                              noKartu:
+                                type: string
+                                example: "0000000110156"
+                              noMr:
+                                type: string
+                                example: "123456"
+                              tglLahir:
+                                type: string
+                                example: "2008-02-05"
+                          poliTujuan:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "INT"
+                              nama:
+                                type: string
+                                example: "Poli Penyakit Dalam"
+                          tglRujukan:
+                            type: string
+                            example: "2017-11-08"
+                          tujuanRujukan:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "0301R002"
+                              nama:
+                                type: string
+                                example: "RS JIWA ULU GADUT"
+
+  /vclaim-rest/Rujukan/update:
+    put:
+      tags: [Pembuatan Rujukan]
+      summary: Update Rujukan
+      description: Memperbarui data rujukan
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                request:
+                  type: object
+                  properties:
+                    t_rujukan:
+                      type: object
+                      properties:
+                        noRujukan:
+                          type: string
+                          example: "0301R0011117B000014"
+                        ppkDirujuk:
+                          type: string
+                          example: "0301R002"
+                        tipe:
+                          type: string
+                          example: "0"
+                        jnsPelayanan:
+                          type: string
+                          example: "1"
+                        catatan:
+                          type: string
+                          example: "test 3"
+                        diagRujukan:
+                          type: string
+                          example: "A00.1"
+                        tipeRujukan:
+                          type: string
+                          example: "1"
+                        poliRujukan:
+                          type: string
+                          example: "INT"
+                        user:
+                          type: string
+                          example: "Coba Ws"
+      responses:
+        '200':
+          description: Rujukan berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "OK"
+                  response:
+                    type: string
+                    example: "0301R0011117B000014"
+
+  /vclaim-rest/Rujukan/delete:
+    delete:
+      tags: [Pembuatan Rujukan]
+      summary: Delete Rujukan
+      description: Menghapus data rujukan
+      parameters:
+        - name: noRujukan
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "0301R0011117B000015"
+        - name: user
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "Coba Ws"
+      responses:
+        '200':
+          description: Rujukan berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "OK"
+                  response:
+                    type: string
+                    example: "0301R0011117B000014"
+
+  # Endpoint rujukan khusus
+  /vclaim-rest/Rujukan/Khusus/insert:
+    post:
+      tags: [Pembuatan Rujukan]
+      summary: Insert Rujukan Khusus New
+      description: Membuat data rujukan khusus baru
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                noRujukan:
+                  type: string
+                  example: "0301U0331019P003283"
+                diagnosa:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      kode:
+                        type: string
+                        example: "P;N18"
+                procedure:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      kode:
+                        type: string
+                        example: "39.95"
+                user:
+                  type: string
+                  example: "Coba Ws"
+      responses:
+        '200':
+          description: Rujukan khusus berhasil dibuat
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "Sukses"
+                  response:
+                    type: object
+                    properties:
+                      rujukan:
+                        type: object
+                        properties:
+                          norujukan:
+                            type: string
+                            example: "0301U0331019P003283"
+                          nokapst:
+                            type: string
+                            example: "0000016553957"
+                          nmpst:
+                            type: string
+                            example: "MUZNI MUKHTAR"
+                          diagppk:
+                            type: string
+                            example: "Z49.1"
+                          tglrujukan_awal:
+                            type: string
+                            example: "2021-06-20"
+                          tglrujukan_berakhir:
+                            type: string
+                            example: "2021-09-17"
+
+  /vclaim-rest/Rujukan/Khusus/delete:
+    post:
+      tags: [Pembuatan Rujukan]
+      summary: Delete Rujukan Khusus New
+      description: Menghapus data rujukan khusus
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                request:
+                  type: object
+                  properties:
+                    t_rujukan:
+                      type: object
+                      properties:
+                        idRujukan:
+                          type: string
+                          example: "98865"
+                        noRujukan:
+                          type: string
+                          example: "0301U0331019P003283"
+                        user:
+                          type: string
+                          example: "Coba Ws"
+      responses:
+        '200':
+          description: Rujukan khusus berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "OK"
+                  response:
+                    type: string
+                    example: "98865"
+
+  /vclaim-rest/Rujukan/Khusus/List/Bulan/{bulan}/Tahun/{tahun}:
+    get:
+      tags: [Pembuatan Rujukan]
+      summary: List Rujukan Khusus New
+      description: Mendapatkan daftar rujukan khusus berdasarkan bulan dan tahun
+      parameters:
+        - name: bulan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Bulan (1-12)
+          example: "12"
+        - name: tahun
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Tahun (4 digit)
+          example: "2023"
+      responses:
+        '200':
+          description: Data rujukan khusus berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "OK"
+                  response:
+                    type: object
+                    properties:
+                      rujukan:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            idrujukan:
+                              type: string
+                              example: "98866"
+                            norujukan:
+                              type: string
+                              example: "0301U0331019P003283"
+                            nokapst:
+                              type: string
+                              example: "0000016553957"
+                            nmpst:
+                              type: string
+                              example: "MUZNI MUKHTAR"
+                            diagppk:
+                              type: string
+                              example: "N18"
+                            tglrujukan_awal:
+                              type: string
+                              example: "2021-03-22"
+                            tglrujukan_berakhir:
+                              type: string
+                              example: "2021-06-19"
+
+  # Endpoint rujukan 2.0
+  /vclaim-rest/Rujukan/2.0/insert:
+    post:
+      tags: [Pembuatan Rujukan]
+      summary: Insert Rujukan 2.0 New
+      description: Membuat data rujukan versi 2.0
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                request:
+                  type: object
+                  properties:
+                    t_rujukan:
+                      type: object
+                      properties:
+                        noSep:
+                          type: string
+                          example: "0301R0010321V000003"
+                        tglRujukan:
+                          type: string
+                          format: date
+                          example: "2021-03-18"
+                        tglRencanaKunjungan:
+                          type: string
+                          format: date
+                          example: "2021-03-19"
+                        ppkDirujuk:
+                          type: string
+                          example: "03010402"
+                        jnsPelayanan:
+                          type: string
+                          example: "1"
+                        catatan:
+                          type: string
+                          example: "test"
+                        diagRujukan:
+                          type: string
+                          example: "A15"
+                        tipeRujukan:
+                          type: string
+                          example: "2"
+                        poliRujukan:
+                          type: string
+                          example: ""
+                        user:
+                          type: string
+                          example: "Coba Ws"
+      responses:
+        '200':
+          description: Rujukan 2.0 berhasil dibuat
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "OK"
+                  response:
+                    type: object
+                    properties:
+                      rujukan:
+                        type: object
+                        properties:
+                          AsalRujukan:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "0301R001d"
+                              nama:
+                                type: string
+                                example: "RSUP DR M JAMIL PADANG"
+                          diagnosa:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "A15"
+                              nama:
+                                type: string
+                                example: "A15 - Respiratory tuberculosis, bacteriologically and histologically confirmed"
+                          noRujukan:
+                            type: string
+                            example: "0301R0010321B000012"
+                          peserta:
+                            type: object
+                            properties:
+                              asuransi:
+                                type: string
+                                example: "-"
+                              hakKelas:
+                                type: string
+                                nullable: true
+                              jnsPeserta:
+                                type: string
+                                example: "PBI (APBD)"
+                              kelamin:
+                                type: string
+                                example: "Laki-Laki"
+                              nama:
+                                type: string
+                                example: "FADLAN LISMI AZIZ"
+                              noKartu:
+                                type: string
+                                example: "0001329783085"
+                              noMr:
+                                type: string
+                                example: "00754610"
+                              tglLahir:
+                                type: string
+                                example: "2006-02-20"
+                          poliTujuan:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: ""
+                              nama:
+                                type: string
+                                example: ""
+                          tglBerlakuKunjungan:
+                            type: string
+                            example: "2021-06-16"
+                          tglRencanaKunjungan:
+                            type: string
+                            example: "2021-03-19"
+                          tglRujukan:
+                            type: string
+                            example: "2021-03-18"
+                          tujuanRujukan:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                                example: "03010402"
+                              nama:
+                                type: string
+                                example: "PEGAMBIRAN"
+
+  /vclaim-rest/Rujukan/2.0/Update:
+    put:
+      tags: [Pembuatan Rujukan]
+      summary: Update Rujukan 2.0 New
+      description: Memperbarui data rujukan versi 2.0
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                request:
+                  type: object
+                  properties:
+                    t_rujukan:
+                      type: object
+                      properties:
+                        noRujukan:
+                          type: string
+                          example: "0301R0010321V000003"
+                        tglRujukan:
+                          type: string
+                          format: date
+                          example: "2021-03-18"
+                        tglRencanaKunjungan:
+                          type: string
+                          format: date
+                          example: "2021-03-19"
+                        ppkDirujuk:
+                          type: string
+                          example: "03010402"
+                        jnsPelayanan:
+                          type: string
+                          example: "1"
+                        catatan:
+                          type: string
+                          example: "test"
+                        diagRujukan:
+                          type: string
+                          example: "A15"
+                        tipeRujukan:
+                          type: string
+                          example: "2"
+                        poliRujukan:
+                          type: string
+                          example: ""
+                        user:
+                          type: string
+                          example: "Coba Ws"
+      responses:
+        '200':
+          description: Rujukan 2.0 berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "OK"
+                  response:
+                    type: string
+                    example: "0301R0011117B000014"
+
+  # Endpoint referensi rujukan
+  /vclaim-rest/Rujukan/ListSpesialistik/PPKRujukan/{kodePPK}/TglRujukan/{tglRujukan}:
+    get:
+      tags: [Pembuatan Rujukan]
+      summary: List Spesialistik Rujukan New
+      description: Mendapatkan daftar spesialistik berdasarkan PPK dan tanggal rujukan
+      parameters:
+        - name: kodePPK
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode PPK Rujukan (8 digit)
+          example: "03010402"
+        - name: tglRujukan
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal rujukan (yyyy-MM-dd)
+          example: "2023-12-15"
+      responses:
+        '200':
+          description: Data spesialistik berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "Ok"
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kodeSpesialis:
+                              type: string
+                              example: "005"
+                            namaSpesialis:
+                              type: string
+                              example: "Gastroenterologi-Hepatologi "
+                            kapasitas:
+                              type: string
+                              example: "0"
+                            jumlahRujukan:
+                              type: string
+                              example: "0"
+                            persentase:
+                              type: string
+                              example: "0,00"
+
+  /vclaim-rest/Rujukan/ListSarana/PPKRujukan/{kodePPK}:
+    get:
+      tags: [Pembuatan Rujukan]
+      summary: List Sarana New
+      description: Mendapatkan daftar sarana berdasarkan PPK
+      parameters:
+        - name: kodePPK
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode PPK Rujukan (8 digit)
+          example: "03010402"
+      responses:
+        '200':
+          description: Data sarana berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "Ok"
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kodeSarana:
+                              type: string
+                              example: "1"
+                            namaSarana:
+                              type: string
+                              example: "Rekam Medik"
+
+  # Endpoint rujukan keluar
+  /vclaim-rest/Rujukan/Keluar/List/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
+    get:
+      tags: [Pembuatan Rujukan]
+      summary: List Rujukan Keluar RS New
+      description: Mendapatkan daftar rujukan keluar berdasarkan rentang tanggal
+      parameters:
+        - name: tglMulai
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal mulai (yyyy-MM-dd)
+          example: "2023-01-01"
+        - name: tglAkhir
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal akhir (yyyy-MM-dd)
+          example: "2023-12-31"
+      responses:
+        '200':
+          description: Data rujukan keluar berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "Sukses"
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            noRujukan:
+                              type: string
+                              example: "1828R0011221B000001"
+                            tglRujukan:
+                              type: string
+                              example: "2021-12-06"
+                            jnsPelayanan:
+                              type: string
+                              example: "2"
+                            noSep:
+                              type: string
+                              example: "1828r0011221v000001"
+                            noKartu:
+                              type: string
+                              example: "0002035020396"
+                            nama:
+                              type: string
+                              example: "SUSANTI"
+                            ppkDirujuk:
+                              type: string
+                              example: "1820R001"
+                            namaPpkDirujuk:
+                              type: string
+                              example: "RSUD SAWERIGADING PALOPO"
+
+  /vclaim-rest/Rujukan/Keluar/{noRujukan}:
+    get:
+      tags: [Pembuatan Rujukan]
+      summary: Data Rujukan Keluar RS Berdasarkan Nomor Rujukan New
+      description: Mendapatkan detail rujukan keluar berdasarkan nomor rujukan
+      parameters:
+        - name: noRujukan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Rujukan
+          example: "1828R0011221B000001"
+      responses:
+        '200':
+          description: Data rujukan keluar berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "Sukses"
+                  response:
+                    type: object
+                    properties:
+                      rujukan:
+                        type: object
+                        properties:
+                          noRujukan:
+                            type: string
+                            example: "1828R0011221B000001"
+                          noSep:
+                            type: string
+                            example: "1828r0011221v000001"
+                          noKartu:
+                            type: string
+                            example: "0002035020396"
+                          nama:
+                            type: string
+                            example: "SUSANTI"
+                          kelasRawat:
+                            type: string
+                            example: "3"
+                          kelamin:
+                            type: string
+                            example: "P"
+                          tglLahir:
+                            type: string
+                            example: "1988-04-08"
+                          tglSep:
+                            type: string
+                            example: "2021-12-06"
+                          tglRujukan:
+                            type: string
+                            example: "2021-12-06"
+                          tglRencanaKunjungan:
+                            type: string
+                            example: "2021-12-06"
+                          ppkDirujuk:
+                            type: string
+                            example: "1820R001"
+                          namaPpkDirujuk:
+                            type: string
+                            example: "RSUD SAWERIGADING PALOPO"
+                          jnsPelayanan:
+                            type: string
+                            example: "2"
+                          catatan:
+                            type: string
+                            example: "TES DEVELOPMENT"
+                          diagRujukan:
+                            type: string
+                            example: "C46.0"
+                          namaDiagRujukan:
+                            type: string
+                            example: "Kaposi's sarcoma of skin"
+                          tipeRujukan:
+                            type: string
+                            example: "0"
+                          namaTipeRujukan:
+                            type: string
+                            example: "Rujukan Penuh"
+                          poliRujukan:
+                            type: string
+                            example: "OBG"
+                          namaPoliRujukan:
+                            type: string
+                            example: "OBGYN"
+
+  /vclaim-rest/Rujukan/JumlahSEP/{jenisRujukan}/{noRujukan}:
+    get:
+      tags: [Pembuatan Rujukan]
+      summary: Data Jumlah SEP Rujukan New
+      description: Mendapatkan jumlah SEP berdasarkan jenis dan nomor rujukan
+      parameters:
+        - name: jenisRujukan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Jenis Rujukan (1 untuk FKTP, 2 untuk FKTL)
+          example: "1"
+        - name: noRujukan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Rujukan
+          example: "030107010217Y001465"
+      responses:
+        '200':
+          description: Jumlah SEP berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "200"
+                      message:
+                        type: string
+                        example: "OK"
+                  response:
+                    type: object
+                    properties:
+                      jumlahSEP:
+                        type: string
+                        example: "1"

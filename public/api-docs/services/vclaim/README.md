@@ -14,6 +14,7 @@ Dokumentasi API VClaim untuk pengelolaan klaim BPJS Kesehatan telah dipecah menj
 - `monitoring.yaml` - Monitoring data klaim dan kunjungan
 - `peserta.yaml` - Data peserta BPJS Kesehatan
 - `prb.yaml` - Pembuatan Rujuk Balik (PRB)
+- `rencana-kontrol.yaml` - Pembuatan Rencana Kontrol/SPRI
 
 ## Authentication
 
@@ -62,6 +63,19 @@ Response yang dienkripsi menggunakan AES-256-CBC dengan:
 - Delete PRB
 - Pencarian Data PRB berdasarkan Nomor SRB
 - Pencarian Data PRB berdasarkan Tanggal SRB
+
+### 6. Rencana Kontrol/SPRI
+- Insert Rencana Kontrol
+- Update Rencana Kontrol
+- Delete Rencana Kontrol
+- Insert SPRI
+- Update SPRI
+- Cari SEP
+- Cari Nomor Surat Kontrol
+- Data Nomor Surat Kontrol berdasarkan No Kartu
+- Data Nomor Surat Kontrol
+- Data Poli/Spesialistik
+- Data Dokter
 
 ## Penggunaan
 

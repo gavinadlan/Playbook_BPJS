@@ -3054,3 +3054,880 @@ paths:
                       nama: Meninggal
                     - kode: '5'
                       nama: Lain-Lain
+  /vclaim-rest/RencanaKontrol/insert:
+    post:
+      tags:
+        - Rencana Kontrol
+      summary: Insert Rencana Kontrol New
+      description: Insert Rencana Kontrol
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                request:
+                  type: object
+                  properties:
+                    noSEP:
+                      type: string
+                      example: 0301R0111018V000006
+                    kodeDokter:
+                      type: string
+                      example: '12345'
+                    poliKontrol:
+                      type: string
+                      example: INT
+                    tglRencanaKontrol:
+                      type: string
+                      format: date
+                      example: '2021-03-20'
+                    user:
+                      type: string
+                      example: ws
+      responses:
+        '200':
+          description: Rencana kontrol berhasil dibuat
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: '200'
+                      message:
+                        type: string
+                        example: Ok
+                  response:
+                    type: object
+                    properties:
+                      noSuratKontrol:
+                        type: string
+                        example: 0301R0110520K000013
+                      tglRencanaKontrol:
+                        type: string
+                        format: date
+                        example: '2020-05-15'
+                      namaDokter:
+                        type: string
+                        example: Dr. John Wick
+                      noKartu:
+                        type: string
+                        example: 0001328186441
+                      nama:
+                        type: string
+                        example: ARIS
+                      kelamin:
+                        type: string
+                        example: Laki-laki
+                      tglLahir:
+                        type: string
+                        format: date
+                        example: '1947-12-31'
+  /vclaim-rest/RencanaKontrol/Update:
+    put:
+      tags:
+        - Rencana Kontrol
+      summary: Update Rencana Kontrol New
+      description: Update Rencana Kontrol
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                request:
+                  type: object
+                  properties:
+                    noSuratKontrol:
+                      type: string
+                      example: 0301R0110321K000002
+                    noSEP:
+                      type: string
+                      example: 0301R0111018V000006
+                    kodeDokter:
+                      type: string
+                      example: '11111'
+                    poliKontrol:
+                      type: string
+                      example: INT
+                    tglRencanaKontrol:
+                      type: string
+                      format: date
+                      example: '2021-03-18'
+                    user:
+                      type: string
+                      example: coba
+      responses:
+        '200':
+          description: Rencana kontrol berhasil diupdate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: '200'
+                      message:
+                        type: string
+                        example: Ok
+                  response:
+                    type: object
+                    properties:
+                      noSuratKontrol:
+                        type: string
+                        example: 0301R0110520K000013
+                      tglRencanaKontrol:
+                        type: string
+                        format: date
+                        example: '2020-05-15'
+                      namaDokter:
+                        type: string
+                        example: Dr. John Wick
+                      noKartu:
+                        type: string
+                        example: 0001328186441
+                      nama:
+                        type: string
+                        example: ARIS
+                      kelamin:
+                        type: string
+                        example: Laki-laki
+                      tglLahir:
+                        type: string
+                        format: date
+                        example: '1947-12-31'
+  /vclaim-rest/RencanaKontrol/Delete:
+    delete:
+      tags:
+        - Rencana Kontrol
+      summary: Hapus Rencana Kontrol New
+      description: Hapus Data Rencana Kontrol
+      parameters:
+        - name: noSuratKontrol
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Nomor Surat Kontrol
+          example: 0301R0010320K000004
+        - name: user
+          in: query
+          required: true
+          schema:
+            type: string
+          description: User
+          example: xxx
+      responses:
+        '200':
+          description: Rencana kontrol berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: '200'
+                      message:
+                        type: string
+                        example: Sukses
+                  response:
+                    type: string
+                    nullable: true
+                    example: null
+  /vclaim-rest/RencanaKontrol/InsertSPRI:
+    post:
+      tags:
+        - Rencana Kontrol
+      summary: Insert SPRI New
+      description: Insert SPRI
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                request:
+                  type: object
+                  properties:
+                    noKartu:
+                      type: string
+                      example: '0001116500714'
+                    kodeDokter:
+                      type: string
+                      example: '31537'
+                    poliKontrol:
+                      type: string
+                      example: BED
+                    tglRencanaKontrol:
+                      type: string
+                      format: date
+                      example: '2021-04-13'
+                    user:
+                      type: string
+                      example: sss
+      responses:
+        '200':
+          description: SPRI berhasil dibuat
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: '200'
+                      message:
+                        type: string
+                        example: Ok
+                  response:
+                    type: object
+                    properties:
+                      noSPRI:
+                        type: string
+                        example: 0301R0110421K000002
+                      tglRencanaKontrol:
+                        type: string
+                        format: date
+                        example: '2021-04-20'
+                      namaDokter:
+                        type: string
+                        example: 'Dr.Yahya Marpaung,SpB, FINACS'
+                      noKartu:
+                        type: string
+                        example: '0001116500714'
+                      nama:
+                        type: string
+                        example: M AMRU
+                      kelamin:
+                        type: string
+                        example: Laki-Laki
+                      tglLahir:
+                        type: string
+                        format: date
+                        example: '1997-12-16'
+                      namaDiagnosa:
+                        type: string
+                        nullable: true
+                        example: null
+  /vclaim-rest/RencanaKontrol/UpdateSPRI:
+    put:
+      tags:
+        - Rencana Kontrol
+      summary: Update SPRI New
+      description: Update SPRI
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                request:
+                  type: object
+                  properties:
+                    noSPRI:
+                      type: string
+                      example: 0301R0110421K000116
+                    kodeDokter:
+                      type: string
+                      example: '31537'
+                    poliKontrol:
+                      type: string
+                      example: ANA
+                    tglRencanaKontrol:
+                      type: string
+                      format: date
+                      example: '2021-04-13'
+                    user:
+                      type: string
+                      example: cobdda
+      responses:
+        '200':
+          description: SPRI berhasil diupdate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: '200'
+                      message:
+                        type: string
+                        example: Ok
+                  response:
+                    type: object
+                    properties:
+                      noSPRI:
+                        type: string
+                        example: 0301R0110421K000002
+                      tglRencanaKontrol:
+                        type: string
+                        format: date
+                        example: '2021-04-22'
+                      namaDokter:
+                        type: string
+                        example: 'Dr.Yahya Marpaung,SpB, FINACS'
+                      noKartu:
+                        type: string
+                        example: '0001116500714'
+                      nama:
+                        type: string
+                        example: M AMRU
+                      kelamin:
+                        type: string
+                        example: Laki-Laki
+                      tglLahir:
+                        type: string
+                        format: date
+                        example: '1997-12-16'
+                      namaDiagnosa:
+                        type: string
+                        nullable: true
+                        example: null
+  '/vclaim-rest/RencanaKontrol/nosep/{noSEP}':
+    get:
+      tags:
+        - Rencana Kontrol
+      summary: Cari SEP New
+      description: Melihat data SEP untuk keperluan rencana kontrol
+      parameters:
+        - name: noSEP
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor SEP Peserta
+          example: 0301R0010819V006059
+      responses:
+        '200':
+          description: Data SEP berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: '200'
+                      message:
+                        type: string
+                        example: Sukses
+                  response:
+                    type: object
+                    properties:
+                      noSep:
+                        type: string
+                        example: 0301R0010819V006059
+                      tglSep:
+                        type: string
+                        format: date
+                        example: '2019-10-17'
+                      jnsPelayanan:
+                        type: string
+                        example: Rawat Jalan
+                      poli:
+                        type: string
+                        example: HDL - HEMODIALISA
+                      diagnosa:
+                        type: string
+                        example: Z49.1 - Extracorporeal dialysis
+                      peserta:
+                        type: object
+                        properties:
+                          noKartu:
+                            type: string
+                            example: 0000018965349
+                          nama:
+                            type: string
+                            example: RASBEN
+                          tglLahir:
+                            type: string
+                            format: date
+                            example: '1957-11-10'
+                          kelamin:
+                            type: string
+                            example: L
+                          hakKelas:
+                            type: string
+                            example: '-'
+                      provUmum:
+                        type: object
+                        properties:
+                          kdProvider:
+                            type: string
+                            example: '03100202'
+                          nmProvider:
+                            type: string
+                            example: KAMPUNG TELENG
+                      provPerujuk:
+                        type: object
+                        properties:
+                          kdProviderPerujuk:
+                            type: string
+                            example: '03100202'
+                          nmProviderPerujuk:
+                            type: string
+                            example: KAMPUNG TELENG
+                          asalRujukan:
+                            type: string
+                            example: '1'
+                          noRujukan:
+                            type: string
+                            example: 031002020619P000413
+                          tglRujukan:
+                            type: string
+                            format: date
+                            example: '2019-10-17'
+  '/vclaim-rest/RencanaKontrol/noSuratKontrol/{noSuratKontrol}':
+    get:
+      tags:
+        - Rencana Kontrol
+      summary: Cari Nomor Surat Kontrol New
+      description: Melihat data SEP untuk keperluan rencana kontrol
+      parameters:
+        - name: noSuratKontrol
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Surat Kontrol Peserta
+          example: 0301R0010120K000003
+      responses:
+        '200':
+          description: Data surat kontrol berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: '200'
+                      message:
+                        type: string
+                        example: Sukses
+                  response:
+                    type: object
+                    properties:
+                      noSuratKontrol:
+                        type: string
+                        example: 0301R0010120K000003
+                      tglRencanaKontrol:
+                        type: string
+                        format: date
+                        example: '2020-01-21'
+                      tglTerbit:
+                        type: string
+                        format: date
+                        example: '2020-01-21'
+                      jnsKontrol:
+                        type: string
+                        example: '2'
+                      poliTujuan:
+                        type: string
+                        example: '010'
+                      namaPoliTujuan:
+                        type: string
+                        example: ENDOKRIN-METABOLIK-DIABETES
+                      kodeDokter:
+                        type: string
+                        example: '266822'
+                      namaDokter:
+                        type: string
+                        example: 'DR.dr.H Eva Decroli, SpPD K-EMD Finasim'
+                      flagKontrol:
+                        type: string
+                        example: 'False'
+                      kodeDokterPembuat:
+                        type: string
+                        nullable: true
+                      namaDokterPembuat:
+                        type: string
+                        nullable: true
+                      namaJnsKontrol:
+                        type: string
+                        example: Kontrol
+  '/vclaim-rest/RencanaKontrol/ListRencanaKontrol/Bulan/{bulan}/Tahun/{tahun}/Nokartu/{noKartu}/filter/{filter}':
+    get:
+      tags:
+        - Rencana Kontrol
+      summary: Data Nomor Surat Kontrol Berdasarkan No Kartu New
+      description: Data Rencana Kontrol By No Kartu
+      parameters:
+        - name: bulan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'Bulan (contoh: Januari => 01)'
+          example: '01'
+        - name: tahun
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Tahun
+          example: '2022'
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kartu
+          example: 0002035874204
+        - name: filter
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'Format filter (1: tanggal entri, 2: tanggal rencana kontrol)'
+          example: '2'
+      responses:
+        '200':
+          description: Data rencana kontrol berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: '200'
+                      message:
+                        type: string
+                        example: Sukses
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            noSuratKontrol:
+                              type: string
+                              example: 0117R0770122K000004
+                            jnsPelayanan:
+                              type: string
+                              example: Rawat Inap
+                            jnsKontrol:
+                              type: string
+                              example: '2'
+                            namaJnsKontrol:
+                              type: string
+                              example: Surat Kontrol
+                            tglRencanaKontrol:
+                              type: string
+                              format: date
+                              example: '2022-01-06'
+                            tglTerbitKontrol:
+                              type: string
+                              format: date
+                              example: '2022-01-05'
+                            noSepAsalKontrol:
+                              type: string
+                              example: 0117R0770122V000003
+                            poliAsal:
+                              type: string
+                              example: INT
+                            namaPoliAsal:
+                              type: string
+                              example: '-'
+                            poliTujuan:
+                              type: string
+                              example: INT
+                            namaPoliTujuan:
+                              type: string
+                              example: PENYAKIT DALAM
+                            tglSEP:
+                              type: string
+                              format: date
+                              example: '2022-01-04'
+                            kodeDokter:
+                              type: string
+                              example: '296676'
+                            namaDokter:
+                              type: string
+                              example: ABD KADIR
+                            noKartu:
+                              type: string
+                              example: 0002035874204
+                            nama:
+                              type: string
+                              example: ANI AZKIA
+                            terbitSEP:
+                              type: string
+                              example: Belum
+  '/vclaim-rest/RencanaKontrol/ListRencanaKontrol/tglAwal/{tglAwal}/tglAkhir/{tglAkhir}/filter/{filter}':
+    get:
+      tags:
+        - Rencana Kontrol
+      summary: Data Nomor Surat Kontrol New
+      description: Data Rencana Kontrol
+      parameters:
+        - name: tglAwal
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal awal format yyyy-MM-dd
+          example: '2021-03-01'
+        - name: tglAkhir
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal akhir format yyyy-MM-dd
+          example: '2021-03-31'
+        - name: filter
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'Format filter (1: tanggal entri, 2: tanggal rencana kontrol)'
+          example: '2'
+      responses:
+        '200':
+          description: Data rencana kontrol berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: '200'
+                      message:
+                        type: string
+                        example: Sukses
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            noSuratKontrol:
+                              type: string
+                              example: 0301R0110321K000002
+                            jnsPelayanan:
+                              type: string
+                              example: Rawat Jalan
+                            jnsKontrol:
+                              type: string
+                              example: '2'
+                            namaJnsKontrol:
+                              type: string
+                              example: Surat Kontrol
+                            tglRencanaKontrol:
+                              type: string
+                              format: date
+                              example: '2021-03-18'
+                            tglTerbitKontrol:
+                              type: string
+                              format: date
+                              example: '2021-03-16'
+                            noSepAsalKontrol:
+                              type: string
+                              example: 0301R0111018V000006
+                            poliAsal:
+                              type: string
+                              example: INT
+                            namaPoliAsal:
+                              type: string
+                              example: PENYAKIT DALAM
+                            poliTujuan:
+                              type: string
+                              example: INT
+                            namaPoliTujuan:
+                              type: string
+                              example: PENYAKIT DALAM
+                            tglSEP:
+                              type: string
+                              format: date
+                              example: '2021-03-16'
+                            kodeDokter:
+                              type: string
+                              example: '31479'
+                            namaDokter:
+                              type: string
+                              example: 'Prof.dr.Yulius,SpPD, KGEH'
+                            noKartu:
+                              type: string
+                              example: 0001882053808
+                            nama:
+                              type: string
+                              example: mela handayani
+  '/vclaim-rest/RencanaKontrol/ListSpesialistik/JnsKontrol/{jnsKontrol}/nomor/{nomor}/TglRencanaKontrol/{tglRencanaKontrol}':
+    get:
+      tags:
+        - Rencana Kontrol
+      summary: Data Poli/Spesialistik New
+      description: Data Rencana Kontrol
+      parameters:
+        - name: jnsKontrol
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'Jenis kontrol (1: SPRI, 2: Rencana Kontrol)'
+          example: '2'
+        - name: nomor
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'Nomor (jika jenis kontrol = 1, maka diisi nomor kartu; jika jenis kontrol = 2, maka diisi nomor SEP)'
+          example: 0301R0111018V000006
+        - name: tglRencanaKontrol
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal rencana kontrol format yyyy-MM-dd
+          example: '2021-03-20'
+      responses:
+        '200':
+          description: Data spesialistik berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: '200'
+                      message:
+                        type: string
+                        example: Sukses
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kodePoli:
+                              type: string
+                              example: '004'
+                            namaPoli:
+                              type: string
+                              example: 'Alergi-Immunologi Klinik '
+                            kapasitas:
+                              type: string
+                              example: '30'
+                            jmlRencanaKontroldanRujukan:
+                              type: string
+                              example: '0'
+                            persentase:
+                              type: string
+                              example: '0.00'
+  '/vclaim-rest/RencanaKontrol/JadwalPraktekDokter/JnsKontrol/{jnsKontrol}/KdPoli/{kdPoli}/TglRencanaKontrol/{tglRencanaKontrol}':
+    get:
+      tags:
+        - Rencana Kontrol
+      summary: Data Dokter New
+      description: Data Rencana Kontrol
+      parameters:
+        - name: jnsKontrol
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'Jenis kontrol (1: SPRI, 2: Rencana Kontrol)'
+          example: '2'
+        - name: kdPoli
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode poli
+          example: INT
+        - name: tglRencanaKontrol
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal rencana kontrol format yyyy-MM-dd
+          example: '2021-03-20'
+      responses:
+        '200':
+          description: Data jadwal dokter berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: '200'
+                      message:
+                        type: string
+                        example: Sukses
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kodeDokter:
+                              type: string
+                              example: '31528'
+                            namaDokter:
+                              type: string
+                              example: Dr.John Wick
+                            jadwalPraktek:
+                              type: string
+                              example: '16:00 - 18:00'
+                            kapasitas:
+                              type: string
+                              example: '12'

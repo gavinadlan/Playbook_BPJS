@@ -29,9 +29,10 @@ info:
     - `monitoring.yaml`: Monitoring data klaim dan kunjungan
     - `peserta.yaml`: Data peserta BPJS Kesehatan
     - `prb.yaml`: Pembuatan Rujuk Balik
+    - `rencana-kontrol.yaml`: Pembuatan Rencana Kontrol/SPRI
 
 servers:
-  - url: https://apijkn-dev.bpjs-kesehatan.go.id
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev
     description: Server Development
 
 tags:
@@ -45,6 +46,8 @@ tags:
     description: Data peserta BPJS Kesehatan
   - name: PRB
     description: Pembuatan Rujuk Balik
+  - name: Rencana Kontrol
+    description: Pembuatan Rencana Kontrol/SPRI
 
 components:
   securitySchemes:
@@ -210,6 +213,35 @@ paths:
                   message:
                     type: string
                     example: "PRB endpoint example"
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  # Rencana Kontrol endpoints
+  /vclaim-rest/RencanaKontrol/example:
+    get:
+      tags:
+        - Rencana Kontrol
+      summary: Rencana Kontrol Example
+      description: Contoh endpoint Rencana Kontrol/SPRI
+      operationId: rencanaKontrolExample
+      security:
+        - vclaimAuth: []
+        - vclaimTimestamp: []
+        - vclaimSignature: []
+        - userKey: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Rencana Kontrol endpoint example"
         '401':
           description: Unauthorized
         '500':

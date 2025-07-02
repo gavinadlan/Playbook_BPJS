@@ -108,3 +108,38 @@ paths:
   /referensi/pascapulang:
     get:
       $ref: './vclaim/referensi.yaml#/paths/~1referensi~1pascapulang/get'
+
+  # Rencana Kontrol
+  /vclaim-rest/RencanaKontrol/insert:
+    post:
+      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1vclaim-rest~1RencanaKontrol~1insert/post'
+  /vclaim-rest/RencanaKontrol/Update:
+    put:
+      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1vclaim-rest~1RencanaKontrol~1Update/put'
+  /vclaim-rest/RencanaKontrol/Delete:
+    delete:
+      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1vclaim-rest~1RencanaKontrol~1Delete/delete'
+  /vclaim-rest/RencanaKontrol/InsertSPRI:
+    post:
+      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1vclaim-rest~1RencanaKontrol~1InsertSPRI/post'
+  /vclaim-rest/RencanaKontrol/UpdateSPRI:
+    put:
+      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1vclaim-rest~1RencanaKontrol~1UpdateSPRI/put'
+  /vclaim-rest/RencanaKontrol/nosep/{noSEP}:
+    get:
+      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1vclaim-rest~1RencanaKontrol~1nosep~1{noSEP}/get'
+  /vclaim-rest/RencanaKontrol/noSuratKontrol/{noSuratKontrol}:
+    get:
+      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1vclaim-rest~1RencanaKontrol~1noSuratKontrol~1{noSuratKontrol}/get'
+  /vclaim-rest/RencanaKontrol/ListRencanaKontrol/Bulan/{bulan}/Tahun/{tahun}/Nokartu/{noKartu}/filter/{filter}:
+    get:
+      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1vclaim-rest~1RencanaKontrol~1ListRencanaKontrol~1Bulan~1{bulan}~1Tahun~1{tahun}~1Nokartu~1{noKartu}~1filter~1{filter}/get'
+  /vclaim-rest/RencanaKontrol/ListRencanaKontrol/tglAwal/{tglAwal}/tglAkhir/{tglAkhir}/filter/{filter}:
+    get:
+      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1vclaim-rest~1RencanaKontrol~1ListRencanaKontrol~1tglAwal~1{tglAwal}~1tglAkhir~1{tglAkhir}~1filter~1{filter}/get'
+  /vclaim-rest/RencanaKontrol/ListSpesialistik/JnsKontrol/{jnsKontrol}/nomor/{nomor}/TglRencanaKontrol/{tglRencanaKontrol}:
+    get:
+      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1vclaim-rest~1RencanaKontrol~1ListSpesialistik~1JnsKontrol~1{jnsKontrol}~1nomor~1{nomor}~1TglRencanaKontrol~1{tglRencanaKontrol}/get'
+  /vclaim-rest/RencanaKontrol/JadwalPraktekDokter/JnsKontrol/{jnsKontrol}/KdPoli/{kdPoli}/TglRencanaKontrol/{tglRencanaKontrol}:
+    get:
+      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1vclaim-rest~1RencanaKontrol~1JadwalPraktekDokter~1JnsKontrol~1{jnsKontrol}~1KdPoli~1{kdPoli}~1TglRencanaKontrol~1{tglRencanaKontrol}/get'

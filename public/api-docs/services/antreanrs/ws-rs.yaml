@@ -1,0 +1,1022 @@
+openapi: 3.0.0
+info:
+  title: WS RS Antrean
+  version: 1.0.0
+  description: |
+    Entry point dokumentasi Antrean RS BPJS Kesehatan. Semua endpoint dipecah ke file terpisah berdasarkan domain.
+
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/antreanrs_dev
+    description: Server Development
+
+tags:
+  - name: Web Service Antrean - RS (Diakses oleh Mobile JKN)
+
+paths:
+  /token:
+    get:
+      tags:
+        - Web Service Antrean - RS (Diakses oleh Mobile JKN)
+      summary: Token
+      description: Membuat token akses
+      operationId: createToken
+      parameters:
+        - name: x-username
+          in: header
+          required: true
+          description: User akses
+          schema:
+            type: string
+        - name: x-password
+          in: header
+          required: true
+          description: Password akses
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        example: "1231242353534645645"
+                  metadata:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Ok"
+                      code:
+                        type: integer
+                        example: 200
+
+  /antrean/status:
+    post:
+      tags:
+        - Web Service Antrean - RS (Diakses oleh Mobile JKN)
+      summary: Status Antrean
+      description: Menampilkan status antrean per poli (digunakan untuk perencanaan kedatangan pasien)
+      operationId: getStatusAntrean
+      parameters:
+        - name: x-token
+          in: header
+          required: true
+          description: Token akses
+          schema:
+            type: string
+        - name: x-username
+          in: header
+          required: true
+          description: User akses
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                kodepoli:
+                  type: string
+                  description: Kode subspesialis BPJS
+                  example: "ANA"
+                kodedokter:
+                  type: integer
+                  description: Kode dokter BPJS
+                  example: 12346
+                tanggalperiksa:
+                  type: string
+                  format: date
+                  description: Tanggal rencana berobat
+                  example: "2020-01-28"
+                jampraktek:
+                  type: string
+                  description: Waktu praktek dokter yang diambil dari Aplikasi HFIS
+                  example: "08:00-16:00"
+      responses:
+        '200':
+          description: Sukses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      namapoli:
+                        type: string
+                        example: "Anak"
+                      namadokter:
+                        type: string
+                        example: "Dr. Hendra"
+                      totalantrean:
+                        type: integer
+                        example: 25
+                      sisaantrean:
+                        type: integer
+                        example: 4
+                      antreanpanggil:
+                        type: string
+                        example: "A-21"
+                      sisakuotajkn:
+                        type: integer
+                        example: 5
+                      kuotajkn:
+                        type: integer
+                        example: 30
+                      sisakuotanonjkn:
+                        type: integer
+                        example: 5
+                      kuotanonjkn:
+                        type: integer
+                        example: 30
+                      keterangan:
+                        type: string
+                        example: ""
+                  metadata:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Ok"
+                      code:
+                        type: integer
+                        example: 200
+        '201':
+          description: Gagal
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan sesuai kondisi di lapangan
+                      code:
+                        type: integer
+                        example: 201
+
+  /antrean/ambil:
+    post:
+      tags:
+        - Web Service Antrean - RS (Diakses oleh Mobile JKN)
+      summary: Ambil Antrean
+      description: Mengambil antrean
+      operationId: ambilAntrean
+      parameters:
+        - name: x-token
+          in: header
+          required: true
+          description: Token akses
+          schema:
+            type: string
+        - name: x-username
+          in: header
+          required: true
+          description: User akses
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nomorkartu:
+                  type: string
+                  description: Noka pasien BPJS, diisi kosong jika NON JKN
+                  example: "00012345678"
+                nik:
+                  type: string
+                  description: NIK pasien
+                  example: "3212345678987654"
+                nohp:
+                  type: string
+                  description: No HP pasien
+                  example: "085635228888"
+                kodepoli:
+                  type: string
+                  description: Kode subspesialis BPJS
+                  example: "ANA"
+                norm:
+                  type: string
+                  description: No rekam medis pasien
+                  example: "123345"
+                tanggalperiksa:
+                  type: string
+                  format: date
+                  description: Tanggal periksa
+                  example: "2021-01-28"
+                kodedokter:
+                  type: integer
+                  description: Kode dokter BPJS
+                  example: 12345
+                jampraktek:
+                  type: string
+                  description: Jam praktek dokter
+                  example: "08:00-16:00"
+                jeniskunjungan:
+                  type: integer
+                  description: "1 (Rujukan FKTP), 2 (Rujukan Internal), 3 (Kontrol), 4 (Rujukan Antar RS)"
+                  example: 1
+                nomorreferensi:
+                  type: string
+                  description: No rujukan/kontrol pasien JKN, diisi kosong jika NON JKN
+                  example: "0001R0040116A000001"
+      responses:
+        '200':
+          description: Sukses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      nomorantrean:
+                        type: string
+                        example: "A-12"
+                      angkaantrean:
+                        type: integer
+                        example: 12
+                      kodebooking:
+                        type: string
+                        example: "16032021A001"
+                      norm:
+                        type: string
+                        example: "123345"
+                      namapoli:
+                        type: string
+                        example: "Anak"
+                      namadokter:
+                        type: string
+                        example: "Dr. Hendra"
+                      estimasidilayani:
+                        type: integer
+                        format: int64
+                        description: Format dalam milisecond
+                        example: 1615869169000
+                      sisakuotajkn:
+                        type: integer
+                        example: 5
+                      kuotajkn:
+                        type: integer
+                        example: 30
+                      sisakuotanonjkn:
+                        type: integer
+                        example: 5
+                      kuotanonjkn:
+                        type: integer
+                        example: 30
+                      keterangan:
+                        type: string
+                        example: "Peserta harap 60 menit lebih awal guna pencatatan administrasi."
+                  metadata:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Ok"
+                      code:
+                        type: integer
+                        example: 200
+        '201':
+          description: Gagal
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      code:
+                        type: integer
+                        example: 201
+        '202':
+          description: Pasien Baru
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      code:
+                        type: integer
+                        example: 202
+
+  /antrean/sisa:
+    post:
+      tags:
+        - Web Service Antrean - RS (Diakses oleh Mobile JKN)
+      summary: Sisa Antrean
+      description: Melihat sisa antrean di hari H pelayanan
+      operationId: getSisaAntrean
+      parameters:
+        - name: x-token
+          in: header
+          required: true
+          description: Token akses
+          schema:
+            type: string
+        - name: x-username
+          in: header
+          required: true
+          description: User akses
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                kodebooking:
+                  type: string
+                  description: Kodebooking yang unik yang diambil dari WS Ambil Antrean
+                  example: "16032021A001"
+      responses:
+        '200':
+          description: Sukses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      nomorantrean:
+                        type: string
+                        example: "A20"
+                      namapoli:
+                        type: string
+                        example: "Anak"
+                      namadokter:
+                        type: string
+                        example: "Dr. Hendra"
+                      sisaantrean:
+                        type: integer
+                        example: 12
+                      antreanpanggil:
+                        type: string
+                        example: "A-8"
+                      waktutunggu:
+                        type: integer
+                        description: Format waktu dalam detik dengan formula SPM * (sisa antrean-1)
+                        example: 9000
+                      keterangan:
+                        type: string
+                        example: ""
+                  metadata:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Ok"
+                      code:
+                        type: integer
+                        example: 200
+        '201':
+          description: Gagal
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan sesuai kondisi di lapangan
+                      code:
+                        type: integer
+                        example: 201
+
+  /antrean/batal:
+    post:
+      tags:
+        - Web Service Antrean - RS (Diakses oleh Mobile JKN)
+      summary: Batal Antrean
+      description: Membatalkan antrean pasien
+      operationId: batalAntrean
+      parameters:
+        - name: x-token
+          in: header
+          required: true
+          description: Token akses
+          schema:
+            type: string
+        - name: x-username
+          in: header
+          required: true
+          description: User akses
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                kodebooking:
+                  type: string
+                  description: Kodebooking yang didapat dari WS Ambil Antrean
+                  example: "16032021A001"
+                keterangan:
+                  type: string
+                  description: Alasan pembatalan
+                  example: "Ada kebutuhan mendadak"
+      responses:
+        '200':
+          description: Sukses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Ok"
+                      code:
+                        type: integer
+                        example: 200
+        '201':
+          description: Gagal
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan sesuai kondisi di lapangan
+                      code:
+                        type: integer
+                        example: 201
+
+  /antrean/checkin:
+    post:
+      tags:
+        - Web Service Antrean - RS (Diakses oleh Mobile JKN)
+      summary: Check In
+      description: Memastikan pasien sudah datang di RS
+      operationId: checkinPasien
+      parameters:
+        - name: x-token
+          in: header
+          required: true
+          description: Token akses
+          schema:
+            type: string
+        - name: x-username
+          in: header
+          required: true
+          description: User akses
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                kodebooking:
+                  type: string
+                  description: Kodebooking yang didapat dari WS Ambil Antrean
+                  example: "16032021A001"
+                waktu:
+                  type: integer
+                  format: int64
+                  description: Waktu pasien checkin format timestamp dalam milisecond
+                  example: 1616559330000
+      responses:
+        '200':
+          description: Sukses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 200
+                      message:
+                        type: string
+                        example: "OK"
+        '201':
+          description: Gagal
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan sesuai kondisi di lapangan
+                      code:
+                        type: integer
+                        example: 201
+
+  /antrean/pasienbaru:
+    post:
+      tags:
+        - Web Service Antrean - RS (Diakses oleh Mobile JKN)
+      summary: Info Pasien Baru
+      description: Informasi identitas pasien baru yang belum punya rekam medis (tidak ada norm di Aplikasi VClaim)
+      operationId: infoPasienBaru
+      parameters:
+        - name: x-token
+          in: header
+          required: true
+          description: Token akses
+          schema:
+            type: string
+        - name: x-username
+          in: header
+          required: true
+          description: User akses
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nomorkartu:
+                  type: string
+                  description: No kartu pasien JKN
+                  example: "00012345678"
+                nik:
+                  type: string
+                  description: NIK pasien
+                  example: "3212345678987654"
+                nomorkk:
+                  type: string
+                  description: No KK pasien
+                  example: "3212345678987654"
+                nama:
+                  type: string
+                  description: Nama pasien
+                  example: "sumarsono"
+                jeniskelamin:
+                  type: string
+                  description: Jenis kelamin pasien
+                  example: "L"
+                tanggallahir:
+                  type: string
+                  format: date
+                  description: Tanggal lahir pasien
+                  example: "1985-03-01"
+                nohp:
+                  type: string
+                  description: No HP pasien
+                  example: "085635228888"
+                alamat:
+                  type: string
+                  description: Alamat lengkap pasien
+                  example: "alamat yang muncul merupakan alamat lengkap"
+                kodeprop:
+                  type: string
+                  description: Kode propinsi BPJS
+                  example: "11"
+                namaprop:
+                  type: string
+                  description: Nama propinsi
+                  example: "Jawa Barat"
+                kodedati2:
+                  type: string
+                  description: Kode kota/kab BPJS
+                  example: "0120"
+                namadati2:
+                  type: string
+                  description: Nama kota/kab
+                  example: "Kab. Bandung"
+                kodekec:
+                  type: string
+                  description: Kode kecamatan BPJS
+                  example: "1319"
+                namakec:
+                  type: string
+                  description: Nama kecamatan
+                  example: "Soreang"
+                kodekel:
+                  type: string
+                  description: Kode kelurahan BPJS
+                  example: "D2105"
+                namakel:
+                  type: string
+                  description: Nama kelurahan
+                  example: "Cingcin"
+                rw:
+                  type: string
+                  description: No RW
+                  example: "001"
+                rt:
+                  type: string
+                  description: No RT
+                  example: "013"
+      responses:
+        '200':
+          description: Sukses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      norm:
+                        type: string
+                        example: "123456"
+                  metadata:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Harap datang ke admisi untuk melengkapi data rekam medis"
+                      code:
+                        type: integer
+                        example: 200
+        '201':
+          description: Gagal
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan sesuai kondisi di lapangan
+                      code:
+                        type: integer
+                        example: 201
+
+  /operasi/jadwal:
+    post:
+      tags:
+        - Web Service Antrean - RS (Diakses oleh Mobile JKN)
+      summary: Jadwal Operasi RS
+      description: Informasi jadwal operasi di rumah sakit
+      operationId: getJadwalOperasiRS
+      parameters:
+        - name: x-token
+          in: header
+          required: true
+          description: Token akses
+          schema:
+            type: string
+        - name: x-username
+          in: header
+          required: true
+          description: User akses
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tanggalawal:
+                  type: string
+                  format: date
+                  description: Tanggal awal pencarian
+                  example: "2019-12-11"
+                tanggalakhir:
+                  type: string
+                  format: date
+                  description: Tanggal akhir pencarian
+                  example: "2019-12-13"
+      responses:
+        '200':
+          description: Sukses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kodebooking:
+                              type: string
+                              example: "123456ZXC"
+                            tanggaloperasi:
+                              type: string
+                              format: date
+                              example: "2019-12-11"
+                            jenistindakan:
+                              type: string
+                              example: "operasi gigi"
+                            kodepoli:
+                              type: string
+                              description: Kode subspesialis BPJS
+                              example: "001"
+                            namapoli:
+                              type: string
+                              example: "Poli Bedah Mulut"
+                            terlaksana:
+                              type: integer
+                              description: "0: Belum terlaksana, 1: Sudah terlaksana"
+                              example: 1
+                            nopeserta:
+                              type: string
+                              example: "0000000924782"
+                            lastupdate:
+                              type: integer
+                              format: int64
+                              example: 1577417743000
+                  metadata:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Ok"
+                      code:
+                        type: integer
+                        example: 200
+        '201':
+          description: Gagal
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan sesuai kondisi di lapangan
+                      code:
+                        type: integer
+                        example: 201
+
+  /operasi/pasien:
+    post:
+      tags:
+        - Web Service Antrean - RS (Diakses oleh Mobile JKN)
+      summary: Jadwal Operasi Pasien
+      description: Informasi jadwal operasi per pasien
+      operationId: getJadwalOperasiPasien
+      parameters:
+        - name: x-token
+          in: header
+          required: true
+          description: Token akses
+          schema:
+            type: string
+        - name: x-username
+          in: header
+          required: true
+          description: User akses
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nopeserta:
+                  type: string
+                  description: No kartu pasien JKN
+                  example: "0000000000123"
+      responses:
+        '200':
+          description: Sukses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kodebooking:
+                              type: string
+                              example: "123456ZXC"
+                            tanggaloperasi:
+                              type: string
+                              format: date
+                              example: "2019-12-11"
+                            jenistindakan:
+                              type: string
+                              example: "operasi gigi"
+                            kodepoli:
+                              type: string
+                              description: Kode subspesialis BPJS
+                              example: "001"
+                            namapoli:
+                              type: string
+                              example: "Poli Bedah Mulut"
+                            terlaksana:
+                              type: integer
+                              description: "0: Belum terlaksana, 1: Sudah terlaksana"
+                              example: 0
+                  metadata:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Ok"
+                      code:
+                        type: integer
+                        example: 200
+        '201':
+          description: Gagal
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan sesuai kondisi di lapangan
+                      code:
+                        type: integer
+                        example: 201
+
+  /farmasi/ambil:
+    post:
+      tags:
+        - Web Service Antrean - RS (Diakses oleh Mobile JKN)
+      summary: Ambil Antrean Farmasi New
+      description: Mengambil antrean farmasi
+      operationId: ambilAntreanFarmasi
+      parameters:
+        - name: x-token
+          in: header
+          required: true
+          description: Token akses
+          schema:
+            type: string
+        - name: x-username
+          in: header
+          required: true
+          description: User akses
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                kodebooking:
+                  type: string
+                  example: "00012345678"
+      responses:
+        '200':
+          description: Sukses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      jenisresep:
+                        type: string
+                        example: "Racikan/Non Racikan"
+                      nomorantrean:
+                        type: integer
+                        example: 1
+                      keterangan:
+                        type: string
+                        example: ""
+                  metadata:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Ok"
+                      code:
+                        type: integer
+                        example: 200
+
+  /farmasi/status:
+    post:
+      tags:
+        - Web Service Antrean - RS (Diakses oleh Mobile JKN)
+      summary: Status Antrean Farmasi New
+      description: Mengetahui status antrean farmasi
+      operationId: getStatusAntreanFarmasi
+      parameters:
+        - name: x-token
+          in: header
+          required: true
+          description: Token akses
+          schema:
+            type: string
+        - name: x-username
+          in: header
+          required: true
+          description: User akses
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                kodebooking:
+                  type: string
+                  example: "00012345678"
+      responses:
+        '200':
+          description: Sukses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      jenisresep:
+                        type: string
+                        example: "Racikan/Non Racikan"
+                      totalantrean:
+                        type: integer
+                        example: 10
+                      sisaantrean:
+                        type: integer
+                        example: 8
+                      antreanpanggil:
+                        type: integer
+                        example: 2
+                      keterangan:
+                        type: string
+                        example: ""
+                  metadata:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Ok"
+                      code:
+                        type: integer
+                        example: 200

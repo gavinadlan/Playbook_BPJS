@@ -1,0 +1,120 @@
+openapi: 3.0.0
+info:
+  title: Antrean RS API - Entry Point
+  version: 1.0.0
+  description: |
+    Entry point dokumentasi Antrean RS BPJS Kesehatan. Semua endpoint dipecah ke file terpisah berdasarkan domain.
+
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/antreanrs_dev
+    description: Server Development
+
+paths:
+  # ============================== WEB SERVICE BPJS (Diakses oleh Sistem RS) ==============================
+  
+  # Referensi
+  /ref/poli:
+    get:
+      $ref: './antreanrs/ws-bpjs.yaml#/paths/~1ref~1poli/get'
+  /ref/dokter:
+    get:
+      $ref: './antreanrs/ws-bpjs.yaml#/paths/~1ref~1dokter/get'
+  /ref/poli/fp:
+    get:
+      $ref: './antreanrs/ws-bpjs.yaml#/paths/~1ref~1poli~1fp/get'
+  /ref/pasien/fp/identitas/{identitas}/noidentitas/{noidentitas}:
+    get:
+      $ref: './antreanrs/ws-bpjs.yaml#/paths/~1ref~1pasien~1fp~1identitas~1{identitas}~1noidentitas~1{noidentitas}/get'
+
+  # Jadwal Dokter
+  /jadwaldokter/kodepoli/{kodepoli}/tanggal/{tanggal}:
+    get:
+      $ref: './antreanrs/ws-bpjs.yaml#/paths/~1jadwaldokter~1kodepoli~1{kodepoli}~1tanggal~1{tanggal}/get'
+  /jadwaldokter/updatejadwaldokter:
+    post:
+      $ref: './antreanrs/ws-bpjs.yaml#/paths/~1jadwaldokter~1updatejadwaldokter/post'
+
+  # Antrean
+  /antrean/add:
+    post:
+      $ref: './antreanrs/ws-bpjs.yaml#/paths/~1antrean~1add/post'
+  /antrean/farmasi/add:
+    post:
+      $ref: './antreanrs/ws-bpjs.yaml#/paths/~1antrean~1farmasi~1add/post'
+  /antrean/updatewaktu:
+    post:
+      $ref: './antreanrs/ws-bpjs.yaml#/paths/~1antrean~1updatewaktu/post'
+  /antrean/batal:
+    post:
+      $ref: './antreanrs/ws-bpjs.yaml#/paths/~1antrean~1batal/post'
+      # Note: Endpoint ini untuk sistem RS (BPJS), untuk Mobile JKN gunakan /antrean/batal/rs
+  /antrean/getlisttask:
+    post:
+      $ref: './antreanrs/ws-bpjs.yaml#/paths/~1antrean~1getlisttask/post'
+
+  # Dashboard
+  /dashboard/waktutunggu/tanggal/{tanggal}/waktu/{sumber}:
+    get:
+      $ref: './antreanrs/ws-bpjs.yaml#/paths/~1dashboard~1waktutunggu~1tanggal~1{tanggal}~1waktu~1{sumber}/get'
+  /dashboard/waktutunggu/bulan/{bulan}/tahun/{tahun}/waktu/{sumber}:
+    get:
+      $ref: './antreanrs/ws-bpjs.yaml#/paths/~1dashboard~1waktutunggu~1bulan~1{bulan}~1tahun~1{tahun}~1waktu~1{sumber}/get'
+
+  # Pendaftaran
+  /antrean/pendaftaran/tanggal/{tanggal}:
+    get:
+      $ref: './antreanrs/ws-bpjs.yaml#/paths/~1antrean~1pendaftaran~1tanggal~1{tanggal}/get'
+  /antrean/pendaftaran/kodebooking/{kodebooking}:
+    get:
+      $ref: './antreanrs/ws-bpjs.yaml#/paths/~1antrean~1pendaftaran~1kodebooking~1{kodebooking}/get'
+  /antrean/pendaftaran/aktif:
+    get:
+      $ref: './antreanrs/ws-bpjs.yaml#/paths/~1antrean~1pendaftaran~1aktif/get'
+  /antrean/pendaftaran/kodepoli/{kodepoli}/kodedokter/{kodedokter}/hari/{hari}/jampraktek/{jampraktek}:
+    get:
+      $ref: './antreanrs/ws-bpjs.yaml#/paths/~1antrean~1pendaftaran~1kodepoli~1{kodepoli}~1kodedokter~1{kodedokter}~1hari~1{hari}~1jampraktek~1{jampraktek}/get'
+
+  # ============================== WEB SERVICE RS (Diakses oleh Mobile JKN) ==============================
+  
+  # Token
+  /token:
+    get:
+      $ref: './antreanrs/ws-rs.yaml#/paths/~1token/get'
+
+  # Antrean
+  /antrean/status:
+    post:
+      $ref: './antreanrs/ws-rs.yaml#/paths/~1antrean~1status/post'
+  /antrean/ambil:
+    post:
+      $ref: './antreanrs/ws-rs.yaml#/paths/~1antrean~1ambil/post'
+  /antrean/sisa:
+    post:
+      $ref: './antreanrs/ws-rs.yaml#/paths/~1antrean~1sisa/post'
+  /antrean/batal/rs:
+    post:
+      $ref: './antreanrs/ws-rs.yaml#/paths/~1antrean~1batal/post'
+      # Note: Endpoint ini untuk Mobile JKN, untuk sistem RS (BPJS) gunakan /antrean/batal
+  /antrean/checkin:
+    post:
+      $ref: './antreanrs/ws-rs.yaml#/paths/~1antrean~1checkin/post'
+  /antrean/pasienbaru:
+    post:
+      $ref: './antreanrs/ws-rs.yaml#/paths/~1antrean~1pasienbaru/post'
+
+  # Operasi
+  /operasi/jadwal:
+    post:
+      $ref: './antreanrs/ws-rs.yaml#/paths/~1operasi~1jadwal/post'
+  /operasi/pasien:
+    post:
+      $ref: './antreanrs/ws-rs.yaml#/paths/~1operasi~1pasien/post'
+
+  # Farmasi
+  /farmasi/ambil:
+    post:
+      $ref: './antreanrs/ws-rs.yaml#/paths/~1farmasi~1ambil/post'
+  /farmasi/status:
+    post:
+      $ref: './antreanrs/ws-rs.yaml#/paths/~1farmasi~1status/post'
+

@@ -1,0 +1,989 @@
+openapi: 3.0.0
+info:
+  title: Web Service Antrean - BPJS (Diakses oleh Sistem RS)
+  version: 1.0.0
+  description: |
+    Layanan referensi dan manajemen antrean untuk sistem rumah sakit.
+    Semua endpoint memerlukan header autentikasi khusus BPJS.
+
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/antreanrs_dev
+    description: Server Development
+
+tags:
+  - name: Web Service Antrean - BPJS (Diakses oleh sistem RS)
+
+paths:
+  # ============================== REFERENSI ==============================
+  /ref/poli:
+    get:
+      tags: ['Web Service Antrean - BPJS (Diakses oleh sistem RS)']
+      summary: Referensi Poli
+      description: Melihat referensi poli pada Aplikasi HFIS
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-timestamp
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-signature
+          in: header
+          required: true
+          schema: { type: string }
+        - name: user_key
+          in: header
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            nmpoli: { type: string, example: "ANAK" }
+                            nmsubspesialis: { type: string, example: "ANAK ALERGI IMUNOLOGI" }
+                            kdsubspesialis: { type: string, example: "027" }
+                            kdpoli: { type: string, example: "ANA" }
+                  metadata:
+                    type: object
+                    properties:
+                      code: { type: integer, example: 1 }
+                      message: { type: string, example: "OK" }
+
+  /ref/dokter:
+    get:
+      tags: ['Web Service Antrean - BPJS (Diakses oleh sistem RS)']
+      summary: Referensi Dokter
+      description: Melihat referensi dokter pada Aplikasi HFIS
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-timestamp
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-signature
+          in: header
+          required: true
+          schema: { type: string }
+        - name: user_key
+          in: header
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            namadokter: { type: string, example: "drg. Kusumawati Sukadi, Sp.BM" }
+                            kodedokter: { type: integer, example: 700 }
+                  metadata:
+                    type: object
+                    properties:
+                      code: { type: integer, example: 1 }
+                      message: { type: string, example: "OK" }
+
+  /jadwaldokter/kodepoli/{kodepoli}/tanggal/{tanggal}:
+    get:
+      tags: ['Web Service Antrean - BPJS (Diakses oleh sistem RS)']
+      summary: Referensi Jadwal Dokter
+      description: Melihat jadwal dokter per poli dan tanggal
+      parameters:
+        - name: kodepoli
+          in: path
+          required: true
+          schema: { type: string, example: "ANA" }
+        - name: tanggal
+          in: path
+          required: true
+          schema: { type: string, format: date, example: "2021-08-07" }
+        - name: x-cons-id
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-timestamp
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-signature
+          in: header
+          required: true
+          schema: { type: string }
+        - name: user_key
+          in: header
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kodesubspesialis: { type: string, example: "ANA" }
+                            hari: { type: integer, example: 4 }
+                            kapasitaspasien: { type: integer, example: 54 }
+                            libur: { type: integer, example: 0 }
+                            namahari: { type: string, example: "KAMIS" }
+                            jadwal: { type: string, example: "08:00 - 12:00" }
+                            namasubspesialis: { type: string, example: "ANAK" }
+                            namadokter: { type: string, example: "DR. OKTORA WAHYU WIJAYANTO, SP.A" }
+                            kodepoli: { type: string, example: "ANA" }
+                            namapoli: { type: string, example: "Anak" }
+                            kodedokter: { type: integer, example: 33690 }
+                  metadata:
+                    type: object
+                    properties:
+                      message: { type: string, example: "Ok" }
+                      code: { type: integer, example: 200 }
+
+  /ref/poli/fp:
+    get:
+      tags: ['Web Service Antrean - BPJS (Diakses oleh sistem RS)']
+      summary: Referensi Poli Finger Print New
+      description: Melihat referensi poli finger print
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-timestamp
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-signature
+          in: header
+          required: true
+          schema: { type: string }
+        - name: user_key
+          in: header
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kodesubspesialis: { type: string, example: "027" }
+                            namasubspesialis: { type: string, example: "Anak Alergi Imunologi" }
+                            kodepoli: { type: string, example: "ANA" }
+                            namapoli: { type: string, example: "ANAK" }
+                  metadata:
+                    type: object
+                    properties:
+                      message: { type: string, example: "Ok" }
+                      code: { type: integer, example: 1 }
+
+  /ref/pasien/fp/identitas/{identitas}/noidentitas/{noidentitas}:
+    get:
+      tags: ['Web Service Antrean - BPJS (Diakses oleh sistem RS)']
+      summary: Referensi Pasien Finger Print New
+      description: Melihat referensi pasien finger print
+      parameters:
+        - name: identitas
+          in: path
+          required: true
+          schema: { type: string, enum: [nik, noka] }
+        - name: noidentitas
+          in: path
+          required: true
+          schema: { type: string, example: "3212345678987654" }
+        - name: x-cons-id
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-timestamp
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-signature
+          in: header
+          required: true
+          schema: { type: string }
+        - name: user_key
+          in: header
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      nomorkartu: { type: string, example: "0000000000031" }
+                      nik: { type: string, example: "6748373747440003" }
+                      tgllahir: { type: string, format: date, example: "2000-04-02" }
+                      daftarfp: { type: integer, example: 1 }
+                  metadata:
+                    type: object
+                    properties:
+                      message: { type: string, example: "Ok" }
+                      code: { type: integer, example: 1 }
+
+  /jadwaldokter/updatejadwaldokter:
+    post:
+      tags: ['Web Service Antrean - BPJS (Diakses oleh sistem RS)']
+      summary: Update Jadwal Dokter
+      description: Mengupdate jadwal dokter
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-timestamp
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-signature
+          in: header
+          required: true
+          schema: { type: string }
+        - name: user_key
+          in: header
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                kodepoli: { type: string, example: "ANA" }
+                kodesubspesialis: { type: string, example: "ANA" }
+                kodedokter: { type: integer, example: 12346 }
+                jadwal:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      hari: { type: integer, enum: [1,2,3,4,5,6,7,8] }
+                      buka: { type: string, example: "08:00" }
+                      tutup: { type: string, example: "10:00" }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      message: { type: string, example: "Ok" }
+                      code: { type: integer, example: 200 }
+
+  /antrean/add:
+    post:
+      tags: ['Web Service Antrean - BPJS (Diakses oleh sistem RS)']
+      summary: Tambah Antrean
+      description: Menambahkan data antrean baru
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-timestamp
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-signature
+          in: header
+          required: true
+          schema: { type: string }
+        - name: user_key
+          in: header
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                kodebooking: { type: string, example: "16032021A001" }
+                jenispasien: { type: string, enum: [JKN, NON JKN], example: "JKN" }
+                nomorkartu: { type: string, example: "00012345678" }
+                nik: { type: string, example: "3212345678987654" }
+                nohp: { type: string, example: "085635228888" }
+                kodepoli: { type: string, example: "ANA" }
+                namapoli: { type: string, example: "Anak" }
+                pasienbaru: { type: integer, enum: [0,1], example: 0 }
+                norm: { type: string, example: "123345" }
+                tanggalperiksa: { type: string, format: date, example: "2021-01-28" }
+                kodedokter: { type: integer, example: 12345 }
+                namadokter: { type: string, example: "Dr. Hendra" }
+                jampraktek: { type: string, example: "08:00-16:00" }
+                jeniskunjungan: { type: integer, enum: [1,2,3,4], example: 1 }
+                nomorreferensi: { type: string, example: "0001R0040116A000001" }
+                nomorantrean: { type: string, example: "A-12" }
+                angkaantrean: { type: integer, example: 12 }
+                estimasidilayani: { type: integer, format: int64, example: 1615869169000 }
+                sisakuotajkn: { type: integer, example: 5 }
+                kuotajkn: { type: integer, example: 30 }
+                sisakuotanonjkn: { type: integer, example: 5 }
+                kuotanonjkn: { type: integer, example: 30 }
+                keterangan: { type: string, example: "Peserta harap 30 menit lebih awal" }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      message: { type: string, example: "Ok" }
+                      code: { type: integer, example: 200 }
+
+  /antrean/farmasi/add:
+    post:
+      tags: ['Web Service Antrean - BPJS (Diakses oleh sistem RS)']
+      summary: Tambah Antrean Farmasi New
+      description: Menambah antrean farmasi RS
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-timestamp
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-signature
+          in: header
+          required: true
+          schema: { type: string }
+        - name: user_key
+          in: header
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                kodebooking: { type: string, example: "16032021A001" }
+                jenisresep: { type: string, enum: [racikan, non racikan], example: "racikan" }
+                nomorantrean: { type: integer, example: 1 }
+                keterangan: { type: string, example: "" }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      message: { type: string, example: "Ok" }
+                      code: { type: integer, example: 200 }
+
+  /antrean/updatewaktu:
+    post:
+      tags: ['Web Service Antrean - BPJS (Diakses oleh sistem RS)']
+      summary: Update Waktu Antrean Update
+      description: Update status waktu antrean
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-timestamp
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-signature
+          in: header
+          required: true
+          schema: { type: string }
+        - name: user_key
+          in: header
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:  
+                - kodebooking
+                - taskid
+                - waktu
+              properties:
+                kodebooking: 
+                  type: string
+                  example: "16032021A001"
+                taskid: 
+                  type: integer
+                  enum: [1,2,3,4,5,6,7,99]
+                  example: 1
+                waktu: 
+                  type: integer
+                  format: int64
+                  example: 1616559330000
+                jenisresep:   
+                  type: string
+                  enum: [racikan, non racikan]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      code: { type: integer, example: 200 }
+                      message: { type: string, example: "Ok" }
+
+  /antrean/batal:
+    post:
+      tags: ['Web Service Antrean - BPJS (Diakses oleh sistem RS)']
+      summary: Batal Antrean
+      description: Membatalkan antrean pasien
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-timestamp
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-signature
+          in: header
+          required: true
+          schema: { type: string }
+        - name: user_key
+          in: header
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                kodebooking: { type: string, example: "16032021A001" }
+                keterangan: { type: string, example: "Terjadi perubahan jadwal dokter" }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      message: { type: string, example: "Ok" }
+                      code: { type: integer, example: 200 }
+
+  /antrean/getlisttask:
+    post:
+      tags: ['Web Service Antrean - BPJS (Diakses oleh sistem RS)']
+      summary: List Waktu Task Id
+      description: Melihat waktu task id yang telah dikirim ke BPJS
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-timestamp
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-signature
+          in: header
+          required: true
+          schema: { type: string }
+        - name: user_key
+          in: header
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                kodebooking: { type: string, example: "Y03-20#1617068533" }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            wakturs: { type: string, example: "16-03-2021 11:32:49 WIB" }
+                            waktu: { type: string, example: "24-03-2021 12:55:23 WIB" }
+                            taskname: { type: string, example: "mulai waktu tunggu admisi" }
+                            taskid: { type: integer, example: 1 }
+                            kodebooking: { type: string, example: "Y03-20#1617068533" }
+                  metadata:
+                    type: object
+                    properties:
+                      code: { type: integer, example: 200 }
+                      message: { type: string, example: "OK" }
+
+  /dashboard/waktutunggu/tanggal/{tanggal}/waktu/{sumber}:
+    get:
+      tags: ['Web Service Antrean - BPJS (Diakses oleh sistem RS)']
+      summary: Dashboard Per Tanggal
+      description: Monitoring waktu tunggu per tanggal
+      parameters:
+        - name: tanggal
+          in: path
+          required: true
+          schema: { type: string, format: date, example: "2021-04-16" }
+        - name: sumber
+          in: path
+          required: true
+          schema: 
+            type: string
+            enum: [rs, server]
+            example: "rs"
+        - name: x-cons-id
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-timestamp
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-signature
+          in: header
+          required: true
+          schema: { type: string }
+        - name: user_key
+          in: header
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kdppk: { type: string, example: "1311R002" }
+                            waktu_task1: { type: integer, example: 0 }
+                            avg_waktu_task4: { type: integer, example: 0 }
+                            jumlah_antrean: { type: integer, example: 1 }
+                            avg_waktu_task3: { type: integer, example: 0 }
+                            namapoli: { type: string, example: "BEDAH" }
+                            avg_waktu_task6: { type: integer, example: 0 }
+                            avg_waktu_task5: { type: integer, example: 0 }
+                            nmppk: { type: string, example: "RSU AISYIYAH" }
+                            avg_waktu_task2: { type: integer, example: 0 }
+                            avg_waktu_task1: { type: integer, example: 0 }
+                            kodepoli: { type: string, example: "BED" }
+                            waktu_task5: { type: integer, example: 0 }
+                            waktu_task4: { type: integer, example: 0 }
+                            waktu_task3: { type: integer, example: 0 }
+                            insertdate: { type: integer, format: int64, example: 1627873951000 }
+                            tanggal: { type: string, example: "2021-04-16" }
+                            waktu_task2: { type: integer, example: 0 }
+                            waktu_task6: { type: integer, example: 0 }
+                  metadata:
+                    type: object
+                    properties:
+                      code: { type: integer, example: 200 }
+                      message: { type: string, example: "OK" }
+
+  /dashboard/waktutunggu/bulan/{bulan}/tahun/{tahun}/waktu/{sumber}:
+    get:
+      tags: ['Web Service Antrean - BPJS (Diakses oleh sistem RS)']
+      summary: Dashboard Per Bulan
+      description: Monitoring waktu tunggu per bulan
+      parameters:
+        - name: bulan
+          in: path
+          required: true
+          schema: { type: string, example: "07" }
+        - name: tahun
+          in: path
+          required: true
+          schema: { type: string, example: "2021" }
+        - name: sumber
+          in: path
+          required: true
+          schema: 
+            type: string
+            enum: [rs, server]
+            example: "rs"
+        - name: x-cons-id
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-timestamp
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-signature
+          in: header
+          required: true
+          schema: { type: string }
+        - name: user_key
+          in: header
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kdppk: { type: string, example: "1311R002" }
+                            waktu_task1: { type: integer, example: 0 }
+                            avg_waktu_task4: { type: integer, example: 0 }
+                            jumlah_antrean: { type: integer, example: 1 }
+                            avg_waktu_task3: { type: integer, example: 0 }
+                            namapoli: { type: string, example: "BEDAH" }
+                            avg_waktu_task6: { type: integer, example: 0 }
+                            avg_waktu_task5: { type: integer, example: 0 }
+                            nmppk: { type: string, example: "RSU AISYIYAH" }
+                            avg_waktu_task2: { type: integer, example: 0 }
+                            avg_waktu_task1: { type: integer, example: 0 }
+                            kodepoli: { type: string, example: "BED" }
+                            waktu_task5: { type: integer, example: 0 }
+                            waktu_task4: { type: integer, example: 0 }
+                            waktu_task3: { type: integer, example: 0 }
+                            insertdate: { type: integer, format: int64, example: 1627873951000 }
+                            tanggal: { type: string, example: "2021-04-16" }
+                            waktu_task2: { type: integer, example: 0 }
+                            waktu_task6: { type: integer, example: 0 }
+                  metadata:
+                    type: object
+                    properties:
+                      code: { type: integer, example: 200 }
+                      message: { type: string, example: "OK" }
+
+  /antrean/pendaftaran/tanggal/{tanggal}:
+    get:
+      tags: ['Web Service Antrean - BPJS (Diakses oleh sistem RS)']
+      summary: Antrean Per Tanggal New
+      description: Melihat pendaftaran antrean per tanggal
+      parameters:
+        - name: tanggal
+          in: path
+          required: true
+          schema: { type: string, format: date, example: "2021-03-24" }
+        - name: x-cons-id
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-timestamp
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-signature
+          in: header
+          required: true
+          schema: { type: string }
+        - name: user_key
+          in: header
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kodebooking: { type: string, example: "ABC0000001" }
+                            tanggal: { type: string, example: "2021-03-24" }
+                            kodepoli: { type: string, example: "INT" }
+                            kodedokter: { type: integer, example: 1234 }
+                            jampraktek: { type: string, example: "08:00-17:00" }
+                            nik: { type: string, example: "2749494383830001" }
+                            nokapst: { type: string, example: "0000000000013" }
+                            nohp: { type: string, example: "081234567890" }
+                            norekammedis: { type: string, example: "654321" }
+                            jeniskunjungan: { type: integer, example: 1 }
+                            nomorreferensi: { type: string, example: "1029R0021221K000012" }
+                            sumberdata: { type: string, example: "Mobile JKN" }
+                            ispeserta: { type: integer, example: 1 }
+                            noantrean: { type: string, example: "INT-0001" }
+                            estimasidilayani: { type: integer, format: int64, example: 1669278161000 }
+                            createdtime: { type: integer, format: int64, example: 1669278161000 }
+                            status: { type: string, example: "Selesai dilayani" }
+                  metadata:
+                    type: object
+                    properties:
+                      code: { type: integer, example: 200 }
+                      message: { type: string, example: "OK" }
+
+  /antrean/pendaftaran/kodebooking/{kodebooking}:
+    get:
+      tags: ['Web Service Antrean - BPJS (Diakses oleh sistem RS)']
+      summary: Antrean Per Kode Booking New
+      description: Melihat pendaftaran antrean per kode booking
+      parameters:
+        - name: kodebooking
+          in: path
+          required: true
+          schema: { type: string, example: "ABC0000001" }
+        - name: x-cons-id
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-timestamp
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-signature
+          in: header
+          required: true
+          schema: { type: string }
+        - name: user_key
+          in: header
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PendaftaranResponse'
+
+  /antrean/pendaftaran/aktif:
+    get:
+      tags: ['Web Service Antrean - BPJS (Diakses oleh sistem RS)']
+      summary: Antrean Belum Dilayani New
+      description: Melihat pendaftaran antrean belum dilayani
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-timestamp
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-signature
+          in: header
+          required: true
+          schema: { type: string }
+        - name: user_key
+          in: header
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PendaftaranResponse'
+
+  /antrean/pendaftaran/kodepoli/{kodepoli}/kodedokter/{kodedokter}/hari/{hari}/jampraktek/{jampraktek}:
+    get:
+      tags: ['Web Service Antrean - BPJS (Diakses oleh sistem RS)']
+      summary: Antrean Belum Dilayani Per Poli Per Dokter Per Hari Per Jam Praktek New
+      description: Melihat antrean belum dilayani per parameter
+      parameters:
+        - name: kodepoli
+          in: path
+          required: true
+          schema: { type: string, example: "INT" }
+        - name: kodedokter
+          in: path
+          required: true
+          schema: { type: integer, example: 1234 }
+        - name: hari
+          in: path
+          required: true
+          schema: { type: string, example: "1" }
+        - name: jampraktek
+          in: path
+          required: true
+          schema: { type: string, example: "08:00-17:00" }
+        - name: x-cons-id
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-timestamp
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-signature
+          in: header
+          required: true
+          schema: { type: string }
+        - name: user_key
+          in: header
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PendaftaranResponse'
+
+components:
+  schemas:
+    PendaftaranResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            list:
+              type: array
+              items:
+                type: object
+                properties:
+                  kodebooking: { type: string }
+                  tanggal: { type: string }
+                  kodepoli: { type: string }
+                  kodedokter: { type: integer }
+                  jampraktek: { type: string }
+                  nik: { type: string }
+                  nokapst: { type: string }
+                  nohp: { type: string }
+                  norekammedis: { type: string }
+                  jeniskunjungan: { type: integer }
+                  nomorreferensi: { type: string }
+                  sumberdata: { type: string }
+                  ispeserta: { type: integer }
+                  noantrean: { type: string }
+                  estimasidilayani: { type: integer, format: int64 }
+                  createdtime: { type: integer, format: int64 }
+                  status: { type: string }
+        metadata:
+          type: object
+          properties:
+            code: { type: integer }
+            message: { type: string }
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: user_key
+    ConsIdAuth:
+      type: apiKey
+      in: header
+      name: x-cons-id
+    TimestampAuth:
+      type: apiKey
+      in: header
+      name: x-timestamp
+    SignatureAuth:
+      type: apiKey
+      in: header
+      name: x-signature
+
+security:
+  - ApiKeyAuth: []
+  - ConsIdAuth: []
+  - TimestampAuth: []
+  - SignatureAuth: []

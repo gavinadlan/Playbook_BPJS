@@ -46,9 +46,9 @@ const apiServices: ApiService[] = [
   },
   {
     name: 'AntreanRS',
-    file: '/api-docs/services/antreanrs.yaml',
+    file: '/api-docs/services/antreanrs/merged.yaml',
     description: 'Layanan Antrean Rumah Sakit',
-    status: 'inactive'
+    status: 'active'
   },
   {
     name: 'Apotek',

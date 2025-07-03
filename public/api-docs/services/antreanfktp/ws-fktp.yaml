@@ -1,0 +1,338 @@
+openapi: 3.0.0
+info:
+  title: Web Service Antrean FKTP
+  version: 1.0.0
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/antreanfktp_dev
+tags:
+  - name: Web Service Antrean - FKTP
+    description: Layanan antrean untuk FKTP (Diaakses oleh Mobile JKN)
+paths:
+  /auth:
+    get:
+      summary: Generate authentication token
+      tags: [Web Service Antrean - FKTP]
+      parameters:
+        - in: header
+          name: x-username
+          required: true
+          schema: {type: string}
+        - in: header
+          name: x-password
+          required: true
+          schema: {type: string}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example: 
+                response: { token: "1231242353534645645" }
+                metadata: { message: "Ok", code: 200 }
+
+  /antrean/status/{kode_poli}/{tanggalperiksa}:
+    get:
+      summary: Status Antrean
+      tags: [Web Service Antrean - FKTP]
+      parameters:
+        - in: header
+          name: x-token
+          required: true
+          schema: {type: string}
+        - in: header
+          name: x-username
+          required: true
+          schema: {type: string}
+        - in: path
+          name: kode_poli
+          required: true
+          schema: {type: string}
+        - in: path
+          name: tanggalperiksa
+          required: true
+          schema: {type: string, format: date}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example: 
+                response: 
+                  namapoli: "Poli Umum"
+                  totalantrean: "25"
+                  sisaantrean: "4"
+                  antreanpanggil: "A21"
+                  keterangan: ""
+                metadata: { message: "Ok", code: 200 }
+
+  /antrean:
+    post:
+      summary: Ambil Antrean
+      tags: [Web Service Antrean - FKTP]
+      parameters:
+        - in: header
+          name: x-token
+          required: true
+          schema: {type: string}
+        - in: header
+          name: x-username
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              nomorkartu: "00012345678"
+              nik: "3212345678987654"
+              kodepoli: "001"
+              tanggalperiksa: "2020-01-28"
+              keluhan: "sakit kepala"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example: 
+                response: 
+                  nomorantrean: "A12"
+                  angkaantrean: "12"
+                  namapoli: "Poli Umum"
+                  sisaantrean: "4"
+                  antreanpanggil: "A8"
+                  keterangan: "Apabila antrean terlewat harap mengambil antrean kembali."
+                metadata: { message: "Ok", code: 200 }
+
+  /antrean/sisapeserta/{nomorkartu_jkn}/{kode_poli}/{tanggalperiksa}:
+    get:
+      summary: Sisa Antrean
+      tags: [Web Service Antrean - FKTP]
+      parameters:
+        - in: header
+          name: x-token
+          required: true
+          schema: {type: string}
+        - in: header
+          name: x-username
+          required: true
+          schema: {type: string}
+        - in: path
+          name: nomorkartu_jkn
+          required: true
+          schema: {type: string}
+        - in: path
+          name: kode_poli
+          required: true
+          schema: {type: string}
+        - in: path
+          name: tanggalperiksa
+          required: true
+          schema: {type: string, format: date}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example: 
+                response: 
+                  nomorantrean: "A20"
+                  namapoli: "Poli Umum"
+                  sisaantrean: "4"
+                  antreanpanggil: "A8"
+                  keterangan: ""
+                metadata: { message: "Ok", code: 200 }
+
+  /peserta:
+    post:
+      summary: Pasien Baru
+      tags: [Web Service Antrean - FKTP]
+      parameters:
+        - in: header
+          name: x-token
+          required: true
+          schema: {type: string}
+        - in: header
+          name: x-username
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              nomorkartu: "00012345678"
+              nik: "3212345678987654"
+              nomorkk: "3212345678987654"
+              nama: "sumarsono"
+              jeniskelamin: "L"
+              tanggallahir: "1985-03-01"
+              alamat: "alamat lengkap"
+              kodeprop: "11"
+              namaprop: "Jawa Barat"
+              kodedati2: "0120"
+              namadati2: "Kab. Bandung"
+              kodekec: "1319"
+              namakec: "Soreang"
+              kodekel: "D2105"
+              namakel: "Cingcin"
+              rw: "001"
+              rt: "013"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example: 
+                metadata: { message: "Ok", code: 200 }
+
+  /antrean/batal:
+    put:
+      summary: Batal Antrean
+      tags: [Web Service Antrean - FKTP]
+      parameters:
+        - in: header
+          name: x-token
+          required: true
+          schema: {type: string}
+        - in: header
+          name: x-username
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              nomorkartu: "00012345678"
+              kodepoli: "001"
+              tanggalperiksa: "2020-01-28"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example: 
+                metadata: { code: 200, message: "OK" }
+
+  /v2/antrean:
+    post:
+      summary: Ambil Antrean V2 New
+      tags: [Web Service Antrean - FKTP]
+      parameters:
+        - in: header
+          name: x-token
+          required: true
+          schema: {type: string}
+        - in: header
+          name: x-username
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              nomorkartu: "0000012345678"
+              nik: "3212345678987654"
+              kodepoli: "001"
+              tanggalperiksa: "2020-01-28"
+              keluhan: "sakit kepala"
+              kodedokter: 123456
+              jampraktek: "08:00-12:00"
+              norm: "654321"
+              nohp: "081234567890"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example: 
+                response: 
+                  nomorantrean: "A12"
+                  angkaantrean: 12
+                  namapoli: "Poli Umum"
+                  sisaantrean: "4"
+                  antreanpanggil: "A8"
+                  keterangan: "Apabila antrean terlewat harap mengambil antrean kembali."
+                metadata: { message: "Ok", code: 200 }
+
+  /v2/antrean/status/{kode_poli}/{tanggalperiksa}:
+    get:
+      summary: Status Antrean V2 New
+      tags: [Web Service Antrean - FKTP]
+      parameters:
+        - in: header
+          name: x-token
+          required: true
+          schema: {type: string}
+        - in: header
+          name: x-username
+          required: true
+          schema: {type: string}
+        - in: path
+          name: kode_poli
+          required: true
+          schema: {type: string}
+        - in: path
+          name: tanggalperiksa
+          required: true
+          schema: {type: string, format: date}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example: 
+                response: [
+                  {
+                    namapoli: "Poli Umum",
+                    totalantrean: "25",
+                    sisaantrean: 4,
+                    antreanpanggil: "A1-21",
+                    keterangan: "",
+                    kodedokter: 123456,
+                    namadokter: "Dr. Ali",
+                    jampraktek: "08:00-13:00"
+                  },
+                  {
+                    namapoli: "Poli Umum",
+                    totalantrean: "11",
+                    sisaantrean: 1,
+                    antreanpanggil: "A2-10",
+                    keterangan: "",
+                    kodedokter: 123466,
+                    namadokter: "Dr. Adi",
+                    jampraktek: "08:00-12:00"
+                  }
+                ]
+                metadata: { message: "Ok", code: 200 }
+
+  /v2/antrean/batal:
+    put:
+      summary: Batal Antrean V2 New
+      tags: [Web Service Antrean - FKTP]
+      parameters:
+        - in: header
+          name: x-token
+          required: true
+          schema: {type: string}
+        - in: header
+          name: x-username
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              nomorkartu: "00012345678"
+              kodepoli: "001"
+              tanggalperiksa: "2020-01-28"
+              keterangan: "peserta batal hadir"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example: 
+                metadata: { message: "Ok", code: 200 }

@@ -1,0 +1,166 @@
+openapi: 3.0.0
+info:
+  title: SEP 
+  version: 1.0.0
+  description: Layanan manajemen Surat Elegibilitas Peserta (SEP)
+
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/apotek-rest-dev
+    description: Server Development
+
+tags:
+  - name: SEP
+    description: Endpoint untuk manajemen Surat Elegibilitas Peserta
+
+paths:
+  /{serviceName}/sep/{nomorKunjungan}:
+    get:
+      tags:
+        - SEP
+      summary: Cari No Kunjungan/SEP
+      description: Mendapatkan data berdasarkan nomor kunjungan/SEP
+      operationId: cariSEP
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+        - name: nomorKunjungan
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{19}$'
+          description: Nomor Kunjungan/SEP (19 digit)
+      responses:
+        '200':
+          description: Berhasil mendapatkan data SEP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SEPResponse'
+              example:
+                response:
+                  noSep: "1202R0010318V000092"
+                  faskesasalresep: "1202R001"
+                  nmfaskesasalresep: "RSUP DR. SARDJITO"
+                  nokartu: "0000648450639"
+                  namapeserta: "SITI NAFISAH"
+                  jnskelamin: "P"
+                  tgllhr: "1990-10-01"
+                  pisat: "4"
+                  kdjenispeserta: "21"
+                  nmjenispeserta: "PBI (APBN)"
+                  kodebu: "00000021"
+                  namabu: "PBI (APBN)"
+                  tglsep: "2021-08-01"
+                  tglplgsep: "2021-08-01"
+                  jnspelayanan: "RJTL"
+                  nmdiag: "Supervision of normal first pregnancy"
+                  poli: "OBGYN"
+                  flagprb: "0"
+                  namaprb: ""
+                  kodedokter: ""
+                  namadokter: null
+                metaData:
+                  code: "200"
+                  message: "OK"
+        '400':
+          description: Bad Request (format nomor SEP tidak valid)
+        '404':
+          description: Data tidak ditemukan
+        '500':
+          description: Internal Server Error
+
+components:
+  schemas:
+    # Response untuk pencarian SEP
+    SEPResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            noSep:
+              type: string
+              description: Nomor SEP
+            faskesasalresep:
+              type: string
+              description: Kode faskes asal resep
+            nmfaskesasalresep:
+              type: string
+              description: Nama faskes asal resep
+            nokartu:
+              type: string
+              description: Nomor kartu peserta
+            namapeserta:
+              type: string
+              description: Nama peserta
+            jnskelamin:
+              type: string
+              enum: [L, P]
+              description: Jenis kelamin (L/P)
+            tgllhr:
+              type: string
+              format: date
+              description: Tanggal lahir peserta
+            pisat:
+              type: string
+              description: Kode PISAT
+            kdjenispeserta:
+              type: string
+              description: Kode jenis peserta
+            nmjenispeserta:
+              type: string
+              description: Nama jenis peserta
+            kodebu:
+              type: string
+              description: Kode BU
+            namabu:
+              type: string
+              description: Nama BU
+            tglsep:
+              type: string
+              format: date
+              description: Tanggal pembuatan SEP
+            tglplgsep:
+              type: string
+              format: date
+              description: Tanggal pulang SEP
+            jnspelayanan:
+              type: string
+              description: Jenis pelayanan
+            nmdiag:
+              type: string
+              description: Nama diagnosis
+            poli:
+              type: string
+              description: Poli tujuan
+            flagprb:
+              type: string
+              description: Flag PRB (0/1)
+            namaprb:
+              type: string
+              description: Nama PRB
+            kodedokter:
+              type: string
+              description: Kode dokter
+            namadokter:
+              type: string
+              nullable: true
+              description: Nama dokter
+        metaData:
+          $ref: '#/components/schemas/MetaData'
+
+    # Schema umum untuk metadata
+    MetaData:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "200"
+        message:
+          type: string
+          example: "OK"

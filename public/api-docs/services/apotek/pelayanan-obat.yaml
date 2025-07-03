@@ -1,0 +1,284 @@
+openapi: 3.0.0
+info:
+  title: Pelayanan Obat
+  version: 1.0.0
+  description: Layanan manajemen pelayanan obat
+
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/apotek-rest-dev
+    description: Server Development
+
+tags:
+  - name: Pelayanan Obat
+    description: Endpoint untuk manajemen pelayanan obat
+
+paths:
+  /{serviceName}/pelayanan/obat/hapus:
+    delete:
+      tags:
+        - Pelayanan Obat
+      summary: Hapus Pelayanan Obat
+      description: Menghapus data pelayanan obat
+      operationId: hapusPelayananObat
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+        - name: nosepapotek
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "1801A00104190000001"
+        - name: noresep
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "12345"
+        - name: kodeobat
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "25180404057"
+        - name: tipeobat
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [N, R]
+          example: "N"
+      responses:
+        '200':
+          description: Berhasil menghapus obat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HapusResponse'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+
+  /{serviceName}/obat/daftar/{nomorKunjungan}:
+    get:
+      tags:
+        - Pelayanan Obat
+      summary: Daftar Pelayanan Obat
+      description: Mendapatkan daftar pelayanan obat berdasarkan nomor kunjungan/SEP
+      operationId: daftarPelayananObat
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+        - name: nomorKunjungan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kunjungan/SEP
+      responses:
+        '200':
+          description: Berhasil mendapatkan data obat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DaftarResponse'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+
+  /{serviceName}/riwayatobat/{tglAwal}/{tglAkhir}/{noKartu}:
+    get:
+      tags:
+        - Pelayanan Obat
+      summary: Riwayat Pelayanan Obat
+      description: Mendapatkan riwayat pelayanan obat berdasarkan periode dan nomor kartu
+      operationId: riwayatPelayananObat
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+        - name: tglAwal
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal awal (YYYY-MM-DD)
+        - name: tglAkhir
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal akhir (YYYY-MM-DD)
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor kartu peserta
+      responses:
+        '200':
+          description: Berhasil mendapatkan riwayat obat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RiwayatResponse'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+
+components:
+  schemas:
+    # Schema untuk response Hapus Obat
+    HapusResponse:
+      type: object
+      properties:
+        response:
+          type: string
+          example: "Data berhasil dihapus."
+        metaData:
+          $ref: '#/components/schemas/MetaData'
+
+    # Schema untuk response Daftar Obat
+    DaftarResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            detailsep:
+              type: object
+              properties:
+                noSepApotek:
+                  type: string
+                  example: "1801A00104190000001"
+                noSepAsal:
+                  type: string
+                  example: "1801R0010419V000001"
+                noresep:
+                  type: string
+                  example: "12345"
+                nokartu:
+                  type: string
+                  example: "0000000000044"
+                nmpst:
+                  type: string
+                  example: "AGUSMA"
+                kdjnsobat:
+                  type: string
+                  example: "1"
+                nmjnsobat:
+                  type: string
+                  example: "Obat PRB"
+                tglpelayanan:
+                  type: string
+                  format: date
+                  example: "2019-04-04"
+                listobat:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      kodeobat:
+                        type: string
+                        example: "25180404057"
+                      namaobat:
+                        type: string
+                        example: "Amlodipin 10 Plab tab 10 mg"
+                      tipeobat:
+                        type: string
+                        example: "N"
+                      signa1:
+                        type: string
+                        example: "1.00"
+                      signa2:
+                        type: string
+                        example: "1.00"
+                      hari:
+                        type: string
+                        example: "23.00"
+                      permintaan:
+                        type: string
+                        nullable: true
+                        example: null
+                      jumlah:
+                        type: string
+                        example: "23.00"
+                      harga:
+                        type: string
+                        example: "2797"
+        metaData:
+          $ref: '#/components/schemas/MetaData'
+
+    # Schema untuk response Riwayat Obat
+    RiwayatResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            list:
+              type: object
+              properties:
+                nokartu:
+                  type: string
+                  example: "0000000000044"
+                namapeserta:
+                  type: string
+                  example: "AGUSMA"
+                tgllhr:
+                  type: string
+                  format: date
+                  example: "1973-11-03"
+                history:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      nosjp:
+                        type: string
+                        example: "1101A00309180000002"
+                      tglpelayanan:
+                        type: string
+                        format: date
+                        example: "2018-09-13"
+                      noresep:
+                        type: string
+                        example: "00001"
+                      kodeobat:
+                        type: string
+                        example: "12180400002"
+                      namaobat:
+                        type: string
+                        example: "Akarbose 50 Dexa tab 50 mg"
+                      jmlobat:
+                        type: string
+                        example: "46.00"
+        metaData:
+          $ref: '#/components/schemas/MetaData'
+
+    # Schema umum untuk metadata
+    MetaData:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "200"
+        message:
+          type: string
+          example: "Ok"

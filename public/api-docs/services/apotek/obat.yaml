@@ -1,0 +1,326 @@
+openapi: 3.0.0
+info:
+  title: Penyimpanan Obat
+  version: 1.0.0
+  description: Layanan penyimpanan obat racikan dan non racikan
+
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/apotek-rest-dev
+    description: Server Development
+
+tags:
+  - name: Penyimpanan Obat
+    description: Endpoint untuk penyimpanan obat racikan dan non racikan
+
+paths:
+  /{serviceName}/obatnonracikan/v3/insert:
+    post:
+      tags:
+        - Penyimpanan Obat
+      summary: Simpan Obat Non Racikan
+      description: Simpan data obat non racikan
+      operationId: insertObatNonRacikan
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - NOSJP
+                - NORESEP
+                - KDOBT
+                - NMOBAT
+                - SIGNA1OBT
+                - SIGNA2OBT
+                - JMLOBT
+                - JHO
+              properties:
+                NOSJP:
+                  type: string
+                  description: Nomor SJP
+                  example: "0112A01704190000001"
+                NORESEP:
+                  type: string
+                  description: Nomor resep
+                  example: "01236"
+                KDOBT:
+                  type: string
+                  description: Kode obat
+                  example: "123456"
+                NMOBAT:
+                  type: string
+                  description: Nama obat
+                  example: "IVAN"
+                SIGNA1OBT:
+                  type: integer
+                  description: Signa 1 obat
+                  example: 1
+                SIGNA2OBT:
+                  type: integer
+                  description: Signa 2 obat
+                  example: 1
+                JMLOBT:
+                  type: integer
+                  description: Jumlah obat
+                  example: 1
+                JHO:
+                  type: integer
+                  description: JHO
+                  example: 1
+                CatKhsObt:
+                  type: string
+                  description: Catatan khusus obat
+                  example: "TES"
+            example:
+              NOSJP: "0112A01704190000001"
+              NORESEP: "01236"
+              KDOBT: "123456"
+              NMOBAT: "IVAN"
+              SIGNA1OBT: 1
+              SIGNA2OBT: 1
+              JMLOBT: 1
+              JHO: 1
+              CatKhsObt: "TES"
+      responses:
+        '200':
+          description: Berhasil menyimpan obat non racikan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    nullable: true
+                    description: Response data
+                  metaData:
+                    $ref: '#/components/schemas/MetaData'
+              example:
+                response: null
+                metaData:
+                  code: 200
+                  message: "Ok"
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+
+  /{serviceName}/obatracikan/v3/insert:
+    post:
+      tags:
+        - Penyimpanan Obat
+      summary: Simpan Obat Racikan
+      description: Simpan data obat racikan
+      operationId: insertObatRacikan
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - NOSJP
+                - NORESEP
+                - JNSROBT
+                - KDOBT
+                - NMOBAT
+                - SIGNA1OBT
+                - SIGNA2OBT
+                - PERMINTAAN
+                - JMLOBT
+                - JHO
+              properties:
+                NOSJP:
+                  type: string
+                  description: Nomor SJP
+                  example: "0112A01704190000001"
+                NORESEP:
+                  type: string
+                  description: Nomor resep
+                  example: "01236"
+                JNSROBT:
+                  type: string
+                  description: Jenis racikan obat
+                  example: "R.01"
+                KDOBT:
+                  type: string
+                  description: Kode obat
+                  example: "012131"
+                NMOBAT:
+                  type: string
+                  description: Nama obat
+                  example: "OBAT SOA 1"
+                SIGNA1OBT:
+                  type: integer
+                  description: Signa 1 obat
+                  example: 1
+                SIGNA2OBT:
+                  type: integer
+                  description: Signa 2 obat
+                  example: 1
+                PERMINTAAN:
+                  type: integer
+                  description: Permintaan
+                  example: 1
+                JMLOBT:
+                  type: integer
+                  description: Jumlah obat
+                  example: 1
+                JHO:
+                  type: integer
+                  description: JHO
+                  example: 1
+                CatKhsObt:
+                  type: string
+                  description: Catatan khusus obat
+                  example: "RACIKAN 1"
+            example:
+              NOSJP: "0112A01704190000001"
+              NORESEP: "01236"
+              JNSROBT: "R.01"
+              KDOBT: "012131"
+              NMOBAT: "OBAT SOA 1"
+              SIGNA1OBT: 1
+              SIGNA2OBT: 1
+              PERMINTAAN: 1
+              JMLOBT: 1
+              JHO: 1
+              CatKhsObt: "RACIKAN 1"
+      responses:
+        '200':
+          description: Berhasil menyimpan obat racikan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    nullable: true
+                    description: Response data
+                  metaData:
+                    $ref: '#/components/schemas/MetaData'
+              example:
+                response: null
+                metaData:
+                  code: 200
+                  message: "Ok"
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+
+components:
+  schemas:
+    MetaData:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Kode response
+        message:
+          type: string
+          description: Pesan response
+
+    ObatNonRacikan:
+      type: object
+      required:
+        - NOSJP
+        - NORESEP
+        - KDOBT
+        - NMOBAT
+        - SIGNA1OBT
+        - SIGNA2OBT
+        - JMLOBT
+        - JHO
+      properties:
+        NOSJP:
+          type: string
+          description: Nomor SJP
+        NORESEP:
+          type: string
+          description: Nomor resep
+        KDOBT:
+          type: string
+          description: Kode obat
+        NMOBAT:
+          type: string
+          description: Nama obat
+        SIGNA1OBT:
+          type: integer
+          description: Signa 1 obat
+        SIGNA2OBT:
+          type: integer
+          description: Signa 2 obat
+        JMLOBT:
+          type: integer
+          description: Jumlah obat
+        JHO:
+          type: integer
+          description: JHO
+        CatKhsObt:
+          type: string
+          description: Catatan khusus obat
+
+    ObatRacikan:
+      type: object
+      required:
+        - NOSJP
+        - NORESEP
+        - JNSROBT
+        - KDOBT
+        - NMOBAT
+        - SIGNA1OBT
+        - SIGNA2OBT
+        - PERMINTAAN
+        - JMLOBT
+        - JHO
+      properties:
+        NOSJP:
+          type: string
+          description: Nomor SJP
+        NORESEP:
+          type: string
+          description: Nomor resep
+        JNSROBT:
+          type: string
+          description: Jenis racikan obat
+        KDOBT:
+          type: string
+          description: Kode obat
+        NMOBAT:
+          type: string
+          description: Nama obat
+        SIGNA1OBT:
+          type: integer
+          description: Signa 1 obat
+        SIGNA2OBT:
+          type: integer
+          description: Signa 2 obat
+        PERMINTAAN:
+          type: integer
+          description: Permintaan
+        JMLOBT:
+          type: integer
+          description: Jumlah obat
+        JHO:
+          type: integer
+          description: JHO
+        CatKhsObt:
+          type: string
+          description: Catatan khusus obat

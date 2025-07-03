@@ -1,0 +1,450 @@
+openapi: 3.0.0
+info:
+  title: referensi
+  version: 1.0.0
+  description: Layanan referensi untuk manajemen data obat, poli, fasilitas kesehatan, dan spesialistik
+
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/apotek-rest-dev
+    description: Server Development
+
+tags:
+  - name: Referensi
+    description: Endpoint untuk manajemen referensi data apotek
+
+paths:
+  /{serviceName}/referensi/dpho:
+    get:
+      tags:
+        - Referensi
+      summary: Daftar Obat DPHO
+      description: Mendapatkan daftar obat DPHO
+      operationId: getDPHO
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/DPHOObat'
+                  metaData:
+                    $ref: '#/components/schemas/MetaData'
+              example:
+                response:
+                  list:
+                    - kodeobat: "13210400001"
+                      namaobat: "Akarbose 100 Dexa tab 100 mg"
+                      prb: "True"
+                      kronis: "True"
+                      kemo: "False"
+                      harga: "831"
+                      restriksi: "Maks 90 tab/bln"
+                      generik: "Akarbose"
+                      aktif: null
+                metaData:
+                  code: "200"
+                  message: "OK"
+
+  /{serviceName}/referensi/poli/{parameter}:
+    get:
+      tags:
+        - Referensi
+      summary: Daftar Poli
+      description: Mendapatkan daftar poli berdasarkan kode atau nama
+      operationId: getPoli
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+        - name: parameter
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode atau Nama Poli
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      poli:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Poli'
+                  metaData:
+                    $ref: '#/components/schemas/MetaData'
+              example:
+                response:
+                  poli:
+                    - kode: "ICU"
+                      nama: "Intensive Care Unit"
+                    - kode: "INT"
+                      nama: "Poli Penyakit Dalam"
+                metaData:
+                  code: "200"
+                  message: "OK"
+
+  /{serviceName}/referensi/ppk/{jenisFaskes}/{namaFaskes}:
+    get:
+      tags:
+        - Referensi
+      summary: Pencarian Fasilitas Kesehatan
+      description: Pencarian data fasilitas kesehatan berdasarkan jenis dan nama
+      operationId: getFaskes
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+        - name: jenisFaskes
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: ["1", "2"]
+          description: Jenis Faskes (1. Faskes 1, 2. Faskes 2/RS)
+        - name: namaFaskes
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama fasilitas kesehatan
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      faskes:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Faskes'
+                  metaData:
+                    $ref: '#/components/schemas/MetaData'
+              example:
+                response:
+                  faskes:
+                    - kode: "00161001"
+                      nama: "PUSKESMAS SANGIRAN - KAB. SIMEULUE"
+                    - kode: "00161002"
+                      nama: "PUSKESMAS SIMEULUE - KAB. SIMEULUE"
+                metaData:
+                  code: "200"
+                  message: "OK"
+
+  /{serviceName}/referensi/settingppk/read/{kodeApotek}:
+    get:
+      tags:
+        - Referensi
+      summary: Setting Apotek
+      description: Pencarian setting apotek berdasarkan kode apotek
+      operationId: getSettingApotek
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+        - name: kodeApotek
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode Apotek
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    $ref: '#/components/schemas/SettingApotek'
+                  metaData:
+                    $ref: '#/components/schemas/MetaData'
+              example:
+                response:
+                  kode: "0112A017"
+                  namaapoteker: "masapo"
+                  namakepala: "maskep"
+                  jabatankepala: "Kepala Apotek"
+                  nipkepala: "34567"
+                  siup: "1112233"
+                  alamat: "Jl. Kebayoran Lama No. 34 K"
+                  kota: "jakarta selatan"
+                  namaverifikator: "masver"
+                  nppverifikator: "12345"
+                  namapetugasapotek: "maspet"
+                  nippetugasapotek: "23456"
+                  checkstock: "False"
+                metaData:
+                  code: "200"
+                  message: "OK"
+
+  /{serviceName}/referensi/spesialistik:
+    get:
+      tags:
+        - Referensi
+      summary: Daftar Spesialistik
+      description: Pencarian data spesialistik
+      operationId: getSpesialistik
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Spesialistik'
+                  metaData:
+                    $ref: '#/components/schemas/MetaData'
+              example:
+                response:
+                  list:
+                    - kode: "11"
+                      nama: "Spesialis Anestesiologi dan Reanimasi"
+                    - kode: "27"
+                      nama: "Spesialis Forensik"
+                metaData:
+                  code: "200"
+                  message: "OK"
+
+  /{serviceName}/referensi/obat/{kodeJenisObat}/{tglResep}/{filterPencarian}:
+    get:
+      tags:
+        - Referensi
+      summary: Pencarian Obat
+      description: Pencarian obat berdasarkan jenis, tanggal resep, dan filter
+      operationId: getObat
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+        - name: kodeJenisObat
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode Jenis Obat
+        - name: tglResep
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal Resep (YYYY-MM-DD)
+        - name: filterPencarian
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Filter Pencarian
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Obat'
+                  metaData:
+                    $ref: '#/components/schemas/MetaData'
+              example:
+                response:
+                  list:
+                    - kode: "13210404174"
+                      nama: "Amlodipin 5 Temp tab 5 mg"
+                      harga: "75"
+                    - kode: "13210404294"
+                      nama: "Amlodipin 10 Temp tab 10 mg"
+                      harga: "99"
+                metaData:
+                  code: "200"
+                  message: "OK"
+
+components:
+  schemas:
+    MetaData:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Kode response
+        message:
+          type: string
+          description: Pesan response
+
+    DPHOObat:
+      type: object
+      properties:
+        kodeobat:
+          type: string
+          description: Kode obat
+        namaobat:
+          type: string
+          description: Nama obat
+        prb:
+          type: string
+          description: Status PRB (True/False)
+        kronis:
+          type: string
+          description: Status kronis (True/False)
+        kemo:
+          type: string
+          description: Status kemo (True/False)
+        harga:
+          type: string
+          description: Harga obat
+        restriksi:
+          type: string
+          description: Restriksi obat
+        generik:
+          type: string
+          description: Nama generik
+        aktif:
+          type: string
+          nullable: true
+          description: Status aktif
+
+    Poli:
+      type: object
+      properties:
+        kode:
+          type: string
+          description: Kode poli
+        nama:
+          type: string
+          description: Nama poli
+
+    Faskes:
+      type: object
+      properties:
+        kode:
+          type: string
+          description: Kode fasilitas kesehatan
+        nama:
+          type: string
+          description: Nama fasilitas kesehatan
+
+    SettingApotek:
+      type: object
+      properties:
+        kode:
+          type: string
+          description: Kode apotek
+        namaapoteker:
+          type: string
+          description: Nama apoteker
+        namakepala:
+          type: string
+          description: Nama kepala apotek
+        jabatankepala:
+          type: string
+          description: Jabatan kepala apotek
+        nipkepala:
+          type: string
+          description: NIP kepala apotek
+        siup:
+          type: string
+          description: SIUP apotek
+        alamat:
+          type: string
+          description: Alamat apotek
+        kota:
+          type: string
+          description: Kota apotek
+        namaverifikator:
+          type: string
+          description: Nama verifikator
+        nppverifikator:
+          type: string
+          description: NPP verifikator
+        namapetugasapotek:
+          type: string
+          description: Nama petugas apotek
+        nippetugasapotek:
+          type: string
+          description: NIP petugas apotek
+        checkstock:
+          type: string
+          description: Status check stock (True/False)
+
+    Spesialistik:
+      type: object
+      properties:
+        kode:
+          type: string
+          description: Kode spesialistik
+        nama:
+          type: string
+          description: Nama spesialistik
+
+    Obat:
+      type: object
+      properties:
+        kode:
+          type: string
+          description: Kode obat
+        nama:
+          type: string
+          description: Nama obat
+        harga:
+          type: string
+          description: Harga obat

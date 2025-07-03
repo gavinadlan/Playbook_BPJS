@@ -1,0 +1,179 @@
+openapi: 3.0.0
+info:
+  title: Monitoring
+  version: 1.0.0
+  description: Layanan monitoring klaim obat
+
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/apotek-rest-dev
+    description: Server Development
+
+tags:
+  - name: Monitoring
+    description: Endpoint untuk monitoring klaim obat
+
+paths:
+  /{serviceName}/monitoring/klaim/{bulan}/{tahun}/{jenisObat}/{status}:
+    get:
+      tags:
+        - Monitoring
+      summary: Data Klaim
+      description: Mendapatkan data klaim obat berdasarkan filter
+      operationId: dataKlaim
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+        - name: bulan
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 12
+          description: Bulan (1-12)
+        - name: tahun
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 2000
+            maximum: 2100
+          description: Tahun (4 digit)
+        - name: jenisObat
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: ["0", "1", "2", "3"]
+          description: |
+            0. Semua
+            1. Obat PRB
+            2. Obat Kronis Blm Stabil
+            3. Obat Kemoterapi
+        - name: status
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: ["1", "2"]
+          description: |
+            1. Belum diverifikasi
+            2. Sudah Verifikasi
+      responses:
+        '200':
+          description: Berhasil mendapatkan data klaim
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KlaimResponse'
+              example:
+                response:
+                  rekap:
+                    jumlahdata: "2"
+                    totalbiayapengajuan: "35646930"
+                    totalbiayasetuju: "0"
+                    listsep:
+                      - nosepapotek: "1801A00104190000002"
+                        nosepaasal: "1801R0010419V000001"
+                        nokartu: "0000000000044"
+                        namapeserta: "AGUSMA"
+                        noresep: "00001"
+                        jnsobat: "Obat Kemoterapi"
+                        tglpelayanan: "2019-04-04"
+                        biayapengajuan: "35646930"
+                        biayasetuju: "0"
+                      - nosepapotek: "1801A00104190000003"
+                        nosepaasal: "1801R0010419V000001"
+                        nokartu: "0000000000044"
+                        namapeserta: "AGUSMA"
+                        noresep: "00002"
+                        jnsobat: "Obat Kemoterapi"
+                        tglpelayanan: "2019-04-04"
+                        biayapengajuan: "0"
+                        biayasetuju: "0"
+                metaData:
+                  code: "200"
+                  message: "Ok"
+        '400':
+          description: |
+            Bad Request (parameter tidak valid)
+            - Bulan diluar 1-12
+            - Tahun diluar 2000-2100
+            - Jenis obat bukan 0-3
+            - Status bukan 1-2
+        '404':
+          description: Data tidak ditemukan
+        '500':
+          description: Internal Server Error
+
+components:
+  schemas:
+    # Response untuk data klaim
+    KlaimResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            rekap:
+              type: object
+              properties:
+                jumlahdata:
+                  type: string
+                  description: Jumlah data klaim
+                totalbiayapengajuan:
+                  type: string
+                  description: Total biaya pengajuan
+                totalbiayasetuju:
+                  type: string
+                  description: Total biaya disetujui
+                listsep:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      nosepapotek:
+                        type: string
+                        description: Nomor SEP apotek
+                      nosepaasal:
+                        type: string
+                        description: Nomor SEP asal
+                      nokartu:
+                        type: string
+                        description: Nomor kartu peserta
+                      namapeserta:
+                        type: string
+                        description: Nama peserta
+                      noresep:
+                        type: string
+                        description: Nomor resep
+                      jnsobat:
+                        type: string
+                        description: Jenis obat
+                      tglpelayanan:
+                        type: string
+                        format: date
+                        description: Tanggal pelayanan
+                      biayapengajuan:
+                        type: string
+                        description: Biaya pengajuan
+                      biayasetuju:
+                        type: string
+                        description: Biaya disetujui
+        metaData:
+          $ref: '#/components/schemas/MetaData'
+
+    # Schema umum untuk metadata
+    MetaData:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "200"
+        message:
+          type: string
+          example: "Ok"

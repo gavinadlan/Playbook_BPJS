@@ -1,0 +1,360 @@
+openapi: 3.0.0
+info:
+  title: Resep
+  version: 1.0.0
+  description: Layanan manajemen resep obat
+
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/apotek-rest-dev
+    description: Server Development
+
+tags:
+  - name: Resep
+    description: Endpoint untuk manajemen resep obat
+
+paths:
+  /{serviceName}/sjpresep/v3/insert:
+    post:
+      tags:
+        - Resep
+      summary: Simpan Resep
+      description: Menyimpan data resep obat
+      operationId: simpanResep
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SimpanResepRequest'
+            example:
+              TGLSJP: "2021-08-05 18:13:11"
+              REFASALSJP: "1202R0010318V000092"
+              POLIRSP: "IPD"
+              KDJNSOBAT: "3"
+              NORESEP: "12346"
+              IDUSERSJP: "USR-01"
+              TGLRSP: "2021-08-05 00:00:00"
+              TGLPELRSP: "2021-08-05 00:00:00"
+              KdDokter: "0"
+              iterasi: "0"
+      responses:
+        '200':
+          description: Berhasil menyimpan resep
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpanResepResponse'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+
+  /{serviceName}/hapusresep:
+    delete:
+      tags:
+        - Resep
+      summary: Hapus Resep
+      description: Menghapus data resep obat
+      operationId: hapusResep
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+        - name: nosjp
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "1202A00201210000032"
+        - name: refasalsjp
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "1202R0010121V000325"
+        - name: noresep
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "0SI44"
+      responses:
+        '200':
+          description: Berhasil menghapus resep
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HapusResepResponse'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+
+  /{serviceName}/daftarresep:
+    post:
+      tags:
+        - Resep
+      summary: Daftar Resep
+      description: Mendapatkan daftar resep berdasarkan filter
+      operationId: daftarResep
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DaftarResepRequest'
+            example:
+              kdppk: "0112A017"
+              KdJnsObat: "0"
+              JnsTgl: "TGLPELSJP"
+              TglMulai: "2019-03-01 08:49:45"
+              TglAkhir: "2019-03-31 06:18:33"
+      responses:
+        '200':
+          description: Berhasil mendapatkan daftar resep
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DaftarResepResponse'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+
+components:
+  schemas:
+    # Request Simpan Resep
+    SimpanResepRequest:
+      type: object
+      required:
+        - TGLSJP
+        - REFASALSJP
+        - POLIRSP
+        - KDJNSOBAT
+        - NORESEP
+        - IDUSERSJP
+        - TGLRSP
+        - TGLPELRSP
+        - KdDokter
+        - iterasi
+      properties:
+        TGLSJP:
+          type: string
+          format: date-time
+          description: Tanggal SJP
+        REFASALSJP:
+          type: string
+          description: Referensi asal SJP
+        POLIRSP:
+          type: string
+          description: Poli resep
+        KDJNSOBAT:
+          type: string
+          enum: ["1", "2", "3"]
+          description: |
+            1. Obat PRB
+            2. Obat Kronis Blm Stabil
+            3. Obat Kemoterapi
+        NORESEP:
+          type: string
+          description: Nomor resep
+        IDUSERSJP:
+          type: string
+          description: ID user SJP
+        TGLRSP:
+          type: string
+          format: date-time
+          description: Tanggal resep
+        TGLPELRSP:
+          type: string
+          format: date-time
+          description: Tanggal pelayanan resep
+        KdDokter:
+          type: string
+          description: Kode dokter
+        iterasi:
+          type: string
+          enum: ["0", "1"]
+          description: |
+            0. Non Iterasi
+            1. Iterasi
+
+    # Response Simpan Resep
+    SimpanResepResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            noSep_Kunjungan:
+              type: string
+            noKartu:
+              type: string
+            nama:
+              type: string
+            faskesAsal:
+              type: string
+            noApotik:
+              type: string
+            noResep:
+              type: string
+            tglResep:
+              type: string
+              format: date
+            kdJnsObat:
+              type: string
+            byTagRsp:
+              type: string
+            byVerRsp:
+              type: string
+            tglEntry:
+              type: string
+              format: date
+        metaData:
+          $ref: '#/components/schemas/MetaData'
+      example:
+        response:
+          noSep_Kunjungan: "1202R0010318V000092"
+          noKartu: "0000648450639"
+          nama: "SITI NAFISAH"
+          faskesAsal: "1202A002"
+          noApotik: "1202A00208210000001"
+          noResep: "12346"
+          tglResep: "2021-08-05"
+          kdJnsObat: "3"
+          byTagRsp: "0"
+          byVerRsp: "0"
+          tglEntry: "2021-08-05"
+        metaData:
+          code: "200"
+          message: "BERHASIL SIMPAN RESEP DENGAN NOSJP: 1202A00208210000001 No SEP RS sudah dilakukan iterasi sebanyak 1"
+
+    # Response Hapus Resep
+    HapusResepResponse:
+      type: object
+      properties:
+        metaData:
+          $ref: '#/components/schemas/MetaData'
+        response:
+          type: string
+          nullable: true
+      example:
+        metaData:
+          code: "200"
+          message: "OK"
+        response: null
+
+    # Request Daftar Resep
+    DaftarResepRequest:
+      type: object
+      required:
+        - kdppk
+        - KdJnsObat
+        - JnsTgl
+        - TglMulai
+        - TglAkhir
+      properties:
+        kdppk:
+          type: string
+          description: Kode PPK
+        KdJnsObat:
+          type: string
+          description: Kode jenis obat
+        JnsTgl:
+          type: string
+          enum: ["TGLPELSJP", "TGLRSP"]
+          description: Jenis tanggal filter
+        TglMulai:
+          type: string
+          format: date-time
+          description: Tanggal mulai filter
+        TglAkhir:
+          type: string
+          format: date-time
+          description: Tanggal akhir filter
+
+    # Response Daftar Resep
+    DaftarResepResponse:
+      type: object
+      properties:
+        metaData:
+          $ref: '#/components/schemas/MetaData'
+        response:
+          type: object
+          properties:
+            resep:
+              type: object
+              properties:
+                NORESEP:
+                  type: string
+                NOAPOTIK:
+                  type: string
+                NOSEP_KUNJUNGAN:
+                  type: string
+                NOKARTU:
+                  type: string
+                NAMA:
+                  type: string
+                TGLENTRY:
+                  type: string
+                  format: date-time
+                TGLRESEP:
+                  type: string
+                  format: date-time
+                TGLPELRSP:
+                  type: string
+                  format: date-time
+                BYTAGRSP:
+                  type: string
+                BYVERRSP:
+                  type: string
+                KDJNSOBAT:
+                  type: string
+                FASKESASAL:
+                  type: string
+      example:
+        metaData:
+          code: "200"
+          message: "Ok."
+        response:
+          resep:
+            NORESEP: "01236"
+            NOAPOTIK: "0112A01704190000001"
+            NOSEP_KUNJUNGAN: "0112R0340418V004961"
+            NOKARTU: "0002338679259"
+            NAMA: "SITI SULASTRI"
+            TGLENTRY: "2019-04-02 11:13:33.000+07:00"
+            TGLRESEP: "2019-03-19 00:00:00.000+07:00"
+            TGLPELRSP: "2019-03-26 00:00:00.000+07:00"
+            BYTAGRSP: "0.00"
+            BYVERRSP: "0.00"
+            KDJNSOBAT: "2"
+            FASKESASAL: "0112R034"
+
+    # Schema umum untuk metadata
+    MetaData:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "200"
+        message:
+          type: string
+          example: "Ok"

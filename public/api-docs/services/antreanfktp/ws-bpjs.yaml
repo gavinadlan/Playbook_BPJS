@@ -1,0 +1,319 @@
+openapi: 3.0.0
+info:
+  title: Web Service Antrean BPJS
+  version: 1.0.0
+servers:
+  - url:  https://apijkn-dev.bpjs-kesehatan.go.id/antreanfktp_dev
+    description: Server utama BPJS Kesehatan
+tags:
+  - name: Web Service Antrean - BPJS
+    description: Diakses oleh sistem FKTP
+paths:
+  /{serviceName}/ref/poli/tanggal/{tanggal}:
+    get:
+      tags: [Web Service Antrean - BPJS]
+      summary: Referensi Poli
+      description: Melihat referensi poli
+      parameters:
+        - in: path
+          name: serviceName
+          required: true
+          schema: {type: string}
+        - in: path
+          name: tanggal
+          required: true
+          schema: {type: string, format: date}
+        - in: header
+          name: x-cons-id
+          required: true
+          schema: {type: string}
+        - in: header
+          name: x-timestamp
+          required: true
+          schema: {type: string}
+        - in: header
+          name: x-signature
+          required: true
+          schema: {type: string}
+        - in: header
+          name: user_key
+          required: true
+          schema: {type: string}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example:
+                metadata: {code: 1, message: "OK"}
+                response:
+                  list:
+                    - namapoli: "POLI UMUM"
+                      nmsubspesialis: "AKUPUNTUR MEDIK"
+                      kdsubspesialis: "AKP"
+                      kodepoli: "001"
+                    - namapoli: "POLI GIGI & MULUT"
+                      kodepoli: "002"
+
+  /{serviceName}/ref/dokter/kodepoli/{kodepoli}/tanggal/{tanggal}:
+    get:
+      tags: [Web Service Antrean - BPJS]
+      summary: Referensi Dokter
+      description: Melihat list dokter per poli
+      parameters:
+        - in: path
+          name: serviceName
+          required: true
+          schema: {type: string}
+        - in: path
+          name: kodepoli
+          required: true
+          schema: {type: string}
+        - in: path
+          name: tanggal
+          required: true
+          schema: {type: string, format: date}
+        - in: header
+          name: x-cons-id
+          required: true
+          schema: {type: string}
+        - in: header
+          name: x-timestamp
+          required: true
+          schema: {type: string}
+        - in: header
+          name: x-signature
+          required: true
+          schema: {type: string}
+        - in: header
+          name: user_key
+          required: true
+          schema: {type: string}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example:
+                metadata: {code: 1, message: "OK"}
+                response:
+                  list:
+                    - namadokter: "drg. Kusumawati Sukadi, Sp.BM"
+                      kodedokter: 700
+                      jampraktek: "07:00-12:00"
+                      kapasitas: 100
+                    - namadokter: "Dr. Dr. Noer Rachma, Sp.KFR"
+                      kodedokter: 854
+                      jampraktek: "12:00-16:00"
+                      kapasitas: 60
+
+  /{serviceName}/antrean/add:
+    post:
+      tags: [Web Service Antrean - BPJS]
+      summary: Tambah Antrean
+      description: Menambah antrean baru
+      parameters:
+        - in: path
+          name: serviceName
+          required: true
+          schema: {type: string}
+        - in: header
+          name: x-cons-id
+          required: true
+          schema: {type: string}
+        - in: header
+          name: x-timestamp
+          required: true
+          schema: {type: string}
+        - in: header
+          name: x-signature
+          required: true
+          schema: {type: string}
+        - in: header
+          name: user_key
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nomorkartu:
+                  type: string
+                  description: Nomor kartu BPJS (kosong jika non-JKN)
+                nik:
+                  type: string
+                  description: NIK pasien
+                nohp:
+                  type: string
+                  description: Nomor HP pasien
+                kodepoli:
+                  type: string
+                  description: Kode subspesialis BPJS
+                namapoli:
+                  type: string
+                  description: Nama poli
+                norm:
+                  type: string
+                  description: Nomor rekam medis
+                tanggalperiksa:
+                  type: string
+                  format: date
+                  description: Tanggal periksa (YYYY-MM-DD)
+                kodedokter:
+                  type: integer
+                  description: Kode dokter BPJS
+                namadokter:
+                  type: string
+                  description: Nama dokter
+                jampraktek:
+                  type: string
+                  description: Jam praktek dokter
+                nomorantrean:
+                  type: string
+                  description: Nomor antrean
+                angkaantrean:
+                  type: integer
+                  description: Angka antrean
+                keterangan:
+                  type: string
+                  description: Informasi untuk pasien
+            example:
+              nomorkartu: "00012345678"
+              nik: "3212345678987654"
+              nohp: "085635228888"
+              kodepoli: "ANA"
+              namapoli: "Anak"
+              norm: "123345"
+              tanggalperiksa: "2021-01-28"
+              kodedokter: 12345
+              namadokter: "Dr. Hendra"
+              jampraktek: "08:00-16:00"
+              nomorantrean: "A-12"
+              angkaantrean: 12
+              keterangan: ""
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example:
+                metadata: {message: "Ok", code: 200}
+
+  /{serviceName}/antrean/panggil:
+    post:
+      tags: [Web Service Antrean - BPJS]
+      summary: Update Status/Panggil Antrean
+      description: Update status antrean hadir/tidak hadir
+      parameters:
+        - in: path
+          name: serviceName
+          required: true
+          schema: {type: string}
+        - in: header
+          name: x-cons-id
+          required: true
+          schema: {type: string}
+        - in: header
+          name: x-timestamp
+          required: true
+          schema: {type: string}
+        - in: header
+          name: x-signature
+          required: true
+          schema: {type: string}
+        - in: header
+          name: user_key
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tanggalperiksa:
+                  type: string
+                  format: date
+                kodepoli:
+                  type: string
+                nomorkartu:
+                  type: string
+                status:
+                  type: integer
+                  description: 1 = Hadir, 2 = Tidak Hadir
+                waktu:
+                  type: integer
+                  format: int64
+                  description: Timestamp milisecond
+            example:
+              tanggalperiksa: "2024-03-01"
+              kodepoli: "001"
+              nomorkartu: "0000034563234"
+              status: 1
+              waktu: 1616559330000
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example:
+                metadata: {message: "Ok", code: 200}
+
+  /{serviceName}/antrean/batal:
+    post:
+      tags: [Web Service Antrean - BPJS]
+      summary: Batal Antrean
+      description: Membatalkan antrean pasien
+      parameters:
+        - in: path
+          name: serviceName
+          required: true
+          schema: {type: string}
+        - in: header
+          name: x-cons-id
+          required: true
+          schema: {type: string}
+        - in: header
+          name: x-timestamp
+          required: true
+          schema: {type: string}
+        - in: header
+          name: x-signature
+          required: true
+          schema: {type: string}
+        - in: header
+          name: user_key
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tanggalperiksa:
+                  type: string
+                  format: date
+                kodepoli:
+                  type: string
+                nomorkartu:
+                  type: string
+                alasan:
+                  type: string
+            example:
+              tanggalperiksa: "2024-01-03"
+              kodepoli: "001"
+              nomorkartu: "0000045258563"
+              alasan: "Terjadi perubahan jadwal dokter"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example:
+                metadata: {message: "Ok", code: 200}

@@ -1,0 +1,1514 @@
+openapi: 3.0.0
+info:
+  title: Apotek - Entry Point
+  version: 1.0.0
+  description: |
+    Entry point dokumentasi Apotek BPJS Kesehatan. Semua endpoint dipecah ke file terpisah berdasarkan domain.
+servers:
+  - url: 'https://apijkn-dev.bpjs-kesehatan.go.id/apotek-rest-dev'
+    description: Server Development
+paths:
+  '/{serviceName}/referensi/dpho':
+    get:
+      tags:
+        - Referensi
+      summary: Daftar Obat DPHO
+      description: Mendapatkan daftar obat DPHO
+      operationId: getDPHO
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kodeobat:
+                              type: string
+                              description: Kode obat
+                            namaobat:
+                              type: string
+                              description: Nama obat
+                            prb:
+                              type: string
+                              description: Status PRB (True/False)
+                            kronis:
+                              type: string
+                              description: Status kronis (True/False)
+                            kemo:
+                              type: string
+                              description: Status kemo (True/False)
+                            harga:
+                              type: string
+                              description: Harga obat
+                            restriksi:
+                              type: string
+                              description: Restriksi obat
+                            generik:
+                              type: string
+                              description: Nama generik
+                            aktif:
+                              type: string
+                              nullable: true
+                              description: Status aktif
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        description: Kode response
+                      message:
+                        type: string
+                        description: Pesan response
+              example:
+                response:
+                  list:
+                    - kodeobat: '13210400001'
+                      namaobat: Akarbose 100 Dexa tab 100 mg
+                      prb: 'True'
+                      kronis: 'True'
+                      kemo: 'False'
+                      harga: '831'
+                      restriksi: Maks 90 tab/bln
+                      generik: Akarbose
+                      aktif: null
+                metaData:
+                  code: '200'
+                  message: OK
+  '/{serviceName}/referensi/poli/{parameter}':
+    get:
+      tags:
+        - Referensi
+      summary: Daftar Poli
+      description: Mendapatkan daftar poli berdasarkan kode atau nama
+      operationId: getPoli
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+        - name: parameter
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode atau Nama Poli
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      poli:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kode:
+                              type: string
+                              description: Kode poli
+                            nama:
+                              type: string
+                              description: Nama poli
+                  metaData:
+                    $ref: '#/paths/~1%7BserviceName%7D~1referensi~1dpho/get/responses/200/content/application~1json/schema/properties/metaData'
+              example:
+                response:
+                  poli:
+                    - kode: ICU
+                      nama: Intensive Care Unit
+                    - kode: INT
+                      nama: Poli Penyakit Dalam
+                metaData:
+                  code: '200'
+                  message: OK
+  '/{serviceName}/referensi/ppk/{jenisFaskes}/{namaFaskes}':
+    get:
+      tags:
+        - Referensi
+      summary: Pencarian Fasilitas Kesehatan
+      description: Pencarian data fasilitas kesehatan berdasarkan jenis dan nama
+      operationId: getFaskes
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+        - name: jenisFaskes
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - '1'
+              - '2'
+          description: 'Jenis Faskes (1. Faskes 1, 2. Faskes 2/RS)'
+        - name: namaFaskes
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama fasilitas kesehatan
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      faskes:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kode:
+                              type: string
+                              description: Kode fasilitas kesehatan
+                            nama:
+                              type: string
+                              description: Nama fasilitas kesehatan
+                  metaData:
+                    $ref: '#/paths/~1%7BserviceName%7D~1referensi~1dpho/get/responses/200/content/application~1json/schema/properties/metaData'
+              example:
+                response:
+                  faskes:
+                    - kode: '00161001'
+                      nama: PUSKESMAS SANGIRAN - KAB. SIMEULUE
+                    - kode: '00161002'
+                      nama: PUSKESMAS SIMEULUE - KAB. SIMEULUE
+                metaData:
+                  code: '200'
+                  message: OK
+  '/{serviceName}/referensi/settingppk/read/{kodeApotek}':
+    get:
+      tags:
+        - Referensi
+      summary: Setting Apotek
+      description: Pencarian setting apotek berdasarkan kode apotek
+      operationId: getSettingApotek
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+        - name: kodeApotek
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode Apotek
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      kode:
+                        type: string
+                        description: Kode apotek
+                      namaapoteker:
+                        type: string
+                        description: Nama apoteker
+                      namakepala:
+                        type: string
+                        description: Nama kepala apotek
+                      jabatankepala:
+                        type: string
+                        description: Jabatan kepala apotek
+                      nipkepala:
+                        type: string
+                        description: NIP kepala apotek
+                      siup:
+                        type: string
+                        description: SIUP apotek
+                      alamat:
+                        type: string
+                        description: Alamat apotek
+                      kota:
+                        type: string
+                        description: Kota apotek
+                      namaverifikator:
+                        type: string
+                        description: Nama verifikator
+                      nppverifikator:
+                        type: string
+                        description: NPP verifikator
+                      namapetugasapotek:
+                        type: string
+                        description: Nama petugas apotek
+                      nippetugasapotek:
+                        type: string
+                        description: NIP petugas apotek
+                      checkstock:
+                        type: string
+                        description: Status check stock (True/False)
+                  metaData:
+                    $ref: '#/paths/~1%7BserviceName%7D~1referensi~1dpho/get/responses/200/content/application~1json/schema/properties/metaData'
+              example:
+                response:
+                  kode: 0112A017
+                  namaapoteker: masapo
+                  namakepala: maskep
+                  jabatankepala: Kepala Apotek
+                  nipkepala: '34567'
+                  siup: '1112233'
+                  alamat: Jl. Kebayoran Lama No. 34 K
+                  kota: jakarta selatan
+                  namaverifikator: masver
+                  nppverifikator: '12345'
+                  namapetugasapotek: maspet
+                  nippetugasapotek: '23456'
+                  checkstock: 'False'
+                metaData:
+                  code: '200'
+                  message: OK
+  '/{serviceName}/referensi/spesialistik':
+    get:
+      tags:
+        - Referensi
+      summary: Daftar Spesialistik
+      description: Pencarian data spesialistik
+      operationId: getSpesialistik
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kode:
+                              type: string
+                              description: Kode spesialistik
+                            nama:
+                              type: string
+                              description: Nama spesialistik
+                  metaData:
+                    $ref: '#/paths/~1%7BserviceName%7D~1referensi~1dpho/get/responses/200/content/application~1json/schema/properties/metaData'
+              example:
+                response:
+                  list:
+                    - kode: '11'
+                      nama: Spesialis Anestesiologi dan Reanimasi
+                    - kode: '27'
+                      nama: Spesialis Forensik
+                metaData:
+                  code: '200'
+                  message: OK
+  '/{serviceName}/referensi/obat/{kodeJenisObat}/{tglResep}/{filterPencarian}':
+    get:
+      tags:
+        - Referensi
+      summary: Pencarian Obat
+      description: 'Pencarian obat berdasarkan jenis, tanggal resep, dan filter'
+      operationId: getObat
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+        - name: kodeJenisObat
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode Jenis Obat
+        - name: tglResep
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal Resep (YYYY-MM-DD)
+        - name: filterPencarian
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Filter Pencarian
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kode:
+                              type: string
+                              description: Kode obat
+                            nama:
+                              type: string
+                              description: Nama obat
+                            harga:
+                              type: string
+                              description: Harga obat
+                  metaData:
+                    $ref: '#/paths/~1%7BserviceName%7D~1referensi~1dpho/get/responses/200/content/application~1json/schema/properties/metaData'
+              example:
+                response:
+                  list:
+                    - kode: '13210404174'
+                      nama: Amlodipin 5 Temp tab 5 mg
+                      harga: '75'
+                    - kode: '13210404294'
+                      nama: Amlodipin 10 Temp tab 10 mg
+                      harga: '99'
+                metaData:
+                  code: '200'
+                  message: OK
+  '/{serviceName}/obatnonracikan/v3/insert':
+    post:
+      tags:
+        - Penyimpanan Obat
+      summary: Simpan Obat Non Racikan
+      description: Simpan data obat non racikan
+      operationId: insertObatNonRacikan
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - NOSJP
+                - NORESEP
+                - KDOBT
+                - NMOBAT
+                - SIGNA1OBT
+                - SIGNA2OBT
+                - JMLOBT
+                - JHO
+              properties:
+                NOSJP:
+                  type: string
+                  description: Nomor SJP
+                  example: 0112A01704190000001
+                NORESEP:
+                  type: string
+                  description: Nomor resep
+                  example: '01236'
+                KDOBT:
+                  type: string
+                  description: Kode obat
+                  example: '123456'
+                NMOBAT:
+                  type: string
+                  description: Nama obat
+                  example: IVAN
+                SIGNA1OBT:
+                  type: integer
+                  description: Signa 1 obat
+                  example: 1
+                SIGNA2OBT:
+                  type: integer
+                  description: Signa 2 obat
+                  example: 1
+                JMLOBT:
+                  type: integer
+                  description: Jumlah obat
+                  example: 1
+                JHO:
+                  type: integer
+                  description: JHO
+                  example: 1
+                CatKhsObt:
+                  type: string
+                  description: Catatan khusus obat
+                  example: TES
+            example:
+              NOSJP: 0112A01704190000001
+              NORESEP: '01236'
+              KDOBT: '123456'
+              NMOBAT: IVAN
+              SIGNA1OBT: 1
+              SIGNA2OBT: 1
+              JMLOBT: 1
+              JHO: 1
+              CatKhsObt: TES
+      responses:
+        '200':
+          description: Berhasil menyimpan obat non racikan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    nullable: true
+                    description: Response data
+                  metaData:
+                    $ref: '#/paths/~1%7BserviceName%7D~1obatracikan~1v3~1insert/post/responses/200/content/application~1json/schema/properties/metaData'
+              example:
+                response: null
+                metaData:
+                  code: 200
+                  message: Ok
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  '/{serviceName}/obatracikan/v3/insert':
+    post:
+      tags:
+        - Penyimpanan Obat
+      summary: Simpan Obat Racikan
+      description: Simpan data obat racikan
+      operationId: insertObatRacikan
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - NOSJP
+                - NORESEP
+                - JNSROBT
+                - KDOBT
+                - NMOBAT
+                - SIGNA1OBT
+                - SIGNA2OBT
+                - PERMINTAAN
+                - JMLOBT
+                - JHO
+              properties:
+                NOSJP:
+                  type: string
+                  description: Nomor SJP
+                  example: 0112A01704190000001
+                NORESEP:
+                  type: string
+                  description: Nomor resep
+                  example: '01236'
+                JNSROBT:
+                  type: string
+                  description: Jenis racikan obat
+                  example: R.01
+                KDOBT:
+                  type: string
+                  description: Kode obat
+                  example: '012131'
+                NMOBAT:
+                  type: string
+                  description: Nama obat
+                  example: OBAT SOA 1
+                SIGNA1OBT:
+                  type: integer
+                  description: Signa 1 obat
+                  example: 1
+                SIGNA2OBT:
+                  type: integer
+                  description: Signa 2 obat
+                  example: 1
+                PERMINTAAN:
+                  type: integer
+                  description: Permintaan
+                  example: 1
+                JMLOBT:
+                  type: integer
+                  description: Jumlah obat
+                  example: 1
+                JHO:
+                  type: integer
+                  description: JHO
+                  example: 1
+                CatKhsObt:
+                  type: string
+                  description: Catatan khusus obat
+                  example: RACIKAN 1
+            example:
+              NOSJP: 0112A01704190000001
+              NORESEP: '01236'
+              JNSROBT: R.01
+              KDOBT: '012131'
+              NMOBAT: OBAT SOA 1
+              SIGNA1OBT: 1
+              SIGNA2OBT: 1
+              PERMINTAAN: 1
+              JMLOBT: 1
+              JHO: 1
+              CatKhsObt: RACIKAN 1
+      responses:
+        '200':
+          description: Berhasil menyimpan obat racikan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    nullable: true
+                    description: Response data
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        description: Kode response
+                      message:
+                        type: string
+                        description: Pesan response
+              example:
+                response: null
+                metaData:
+                  code: 200
+                  message: Ok
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  '/{serviceName}/pelayanan/obat/hapus':
+    delete:
+      tags:
+        - Pelayanan Obat
+      summary: Hapus Pelayanan Obat
+      description: Menghapus data pelayanan obat
+      operationId: hapusPelayananObat
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+        - name: nosepapotek
+          in: query
+          required: true
+          schema:
+            type: string
+          example: 1801A00104190000001
+        - name: noresep
+          in: query
+          required: true
+          schema:
+            type: string
+          example: '12345'
+        - name: kodeobat
+          in: query
+          required: true
+          schema:
+            type: string
+          example: '25180404057'
+        - name: tipeobat
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - 'N'
+              - R
+          example: 'N'
+      responses:
+        '200':
+          description: Berhasil menghapus obat
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    example: Data berhasil dihapus.
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: '200'
+                      message:
+                        type: string
+                        example: Ok
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  '/{serviceName}/obat/daftar/{nomorKunjungan}':
+    get:
+      tags:
+        - Pelayanan Obat
+      summary: Daftar Pelayanan Obat
+      description: Mendapatkan daftar pelayanan obat berdasarkan nomor kunjungan/SEP
+      operationId: daftarPelayananObat
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+        - name: nomorKunjungan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kunjungan/SEP
+      responses:
+        '200':
+          description: Berhasil mendapatkan data obat
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      detailsep:
+                        type: object
+                        properties:
+                          noSepApotek:
+                            type: string
+                            example: 1801A00104190000001
+                          noSepAsal:
+                            type: string
+                            example: 1801R0010419V000001
+                          noresep:
+                            type: string
+                            example: '12345'
+                          nokartu:
+                            type: string
+                            example: '0000000000044'
+                          nmpst:
+                            type: string
+                            example: AGUSMA
+                          kdjnsobat:
+                            type: string
+                            example: '1'
+                          nmjnsobat:
+                            type: string
+                            example: Obat PRB
+                          tglpelayanan:
+                            type: string
+                            format: date
+                            example: '2019-04-04'
+                          listobat:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                kodeobat:
+                                  type: string
+                                  example: '25180404057'
+                                namaobat:
+                                  type: string
+                                  example: Amlodipin 10 Plab tab 10 mg
+                                tipeobat:
+                                  type: string
+                                  example: 'N'
+                                signa1:
+                                  type: string
+                                  example: '1.00'
+                                signa2:
+                                  type: string
+                                  example: '1.00'
+                                hari:
+                                  type: string
+                                  example: '23.00'
+                                permintaan:
+                                  type: string
+                                  nullable: true
+                                  example: null
+                                jumlah:
+                                  type: string
+                                  example: '23.00'
+                                harga:
+                                  type: string
+                                  example: '2797'
+                  metaData:
+                    $ref: '#/paths/~1%7BserviceName%7D~1pelayanan~1obat~1hapus/delete/responses/200/content/application~1json/schema/properties/metaData'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  '/{serviceName}/riwayatobat/{tglAwal}/{tglAkhir}/{noKartu}':
+    get:
+      tags:
+        - Pelayanan Obat
+      summary: Riwayat Pelayanan Obat
+      description: Mendapatkan riwayat pelayanan obat berdasarkan periode dan nomor kartu
+      operationId: riwayatPelayananObat
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+        - name: tglAwal
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal awal (YYYY-MM-DD)
+        - name: tglAkhir
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Tanggal akhir (YYYY-MM-DD)
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor kartu peserta
+      responses:
+        '200':
+          description: Berhasil mendapatkan riwayat obat
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: object
+                        properties:
+                          nokartu:
+                            type: string
+                            example: '0000000000044'
+                          namapeserta:
+                            type: string
+                            example: AGUSMA
+                          tgllhr:
+                            type: string
+                            format: date
+                            example: '1973-11-03'
+                          history:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                nosjp:
+                                  type: string
+                                  example: 1101A00309180000002
+                                tglpelayanan:
+                                  type: string
+                                  format: date
+                                  example: '2018-09-13'
+                                noresep:
+                                  type: string
+                                  example: '00001'
+                                kodeobat:
+                                  type: string
+                                  example: '12180400002'
+                                namaobat:
+                                  type: string
+                                  example: Akarbose 50 Dexa tab 50 mg
+                                jmlobat:
+                                  type: string
+                                  example: '46.00'
+                  metaData:
+                    $ref: '#/paths/~1%7BserviceName%7D~1pelayanan~1obat~1hapus/delete/responses/200/content/application~1json/schema/properties/metaData'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  '/{serviceName}/sjpresep/v3/insert':
+    post:
+      tags:
+        - Resep
+      summary: Simpan Resep
+      description: Menyimpan data resep obat
+      operationId: simpanResep
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - TGLSJP
+                - REFASALSJP
+                - POLIRSP
+                - KDJNSOBAT
+                - NORESEP
+                - IDUSERSJP
+                - TGLRSP
+                - TGLPELRSP
+                - KdDokter
+                - iterasi
+              properties:
+                TGLSJP:
+                  type: string
+                  format: date-time
+                  description: Tanggal SJP
+                REFASALSJP:
+                  type: string
+                  description: Referensi asal SJP
+                POLIRSP:
+                  type: string
+                  description: Poli resep
+                KDJNSOBAT:
+                  type: string
+                  enum:
+                    - '1'
+                    - '2'
+                    - '3'
+                  description: |
+                    1. Obat PRB
+                    2. Obat Kronis Blm Stabil
+                    3. Obat Kemoterapi
+                NORESEP:
+                  type: string
+                  description: Nomor resep
+                IDUSERSJP:
+                  type: string
+                  description: ID user SJP
+                TGLRSP:
+                  type: string
+                  format: date-time
+                  description: Tanggal resep
+                TGLPELRSP:
+                  type: string
+                  format: date-time
+                  description: Tanggal pelayanan resep
+                KdDokter:
+                  type: string
+                  description: Kode dokter
+                iterasi:
+                  type: string
+                  enum:
+                    - '0'
+                    - '1'
+                  description: |
+                    0. Non Iterasi
+                    1. Iterasi
+            example:
+              TGLSJP: '2021-08-05 18:13:11'
+              REFASALSJP: 1202R0010318V000092
+              POLIRSP: IPD
+              KDJNSOBAT: '3'
+              NORESEP: '12346'
+              IDUSERSJP: USR-01
+              TGLRSP: '2021-08-05 00:00:00'
+              TGLPELRSP: '2021-08-05 00:00:00'
+              KdDokter: '0'
+              iterasi: '0'
+      responses:
+        '200':
+          description: Berhasil menyimpan resep
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      noSep_Kunjungan:
+                        type: string
+                      noKartu:
+                        type: string
+                      nama:
+                        type: string
+                      faskesAsal:
+                        type: string
+                      noApotik:
+                        type: string
+                      noResep:
+                        type: string
+                      tglResep:
+                        type: string
+                        format: date
+                      kdJnsObat:
+                        type: string
+                      byTagRsp:
+                        type: string
+                      byVerRsp:
+                        type: string
+                      tglEntry:
+                        type: string
+                        format: date
+                  metaData:
+                    $ref: '#/paths/~1%7BserviceName%7D~1daftarresep/post/responses/200/content/application~1json/schema/properties/metaData'
+                example:
+                  response:
+                    noSep_Kunjungan: 1202R0010318V000092
+                    noKartu: 0000648450639
+                    nama: SITI NAFISAH
+                    faskesAsal: 1202A002
+                    noApotik: 1202A00208210000001
+                    noResep: '12346'
+                    tglResep: '2021-08-05'
+                    kdJnsObat: '3'
+                    byTagRsp: '0'
+                    byVerRsp: '0'
+                    tglEntry: '2021-08-05'
+                  metaData:
+                    code: '200'
+                    message: 'BERHASIL SIMPAN RESEP DENGAN NOSJP: 1202A00208210000001 No SEP RS sudah dilakukan iterasi sebanyak 1'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  '/{serviceName}/hapusresep':
+    delete:
+      tags:
+        - Resep
+      summary: Hapus Resep
+      description: Menghapus data resep obat
+      operationId: hapusResep
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+        - name: nosjp
+          in: query
+          required: true
+          schema:
+            type: string
+          example: 1202A00201210000032
+        - name: refasalsjp
+          in: query
+          required: true
+          schema:
+            type: string
+          example: 1202R0010121V000325
+        - name: noresep
+          in: query
+          required: true
+          schema:
+            type: string
+          example: 0SI44
+      responses:
+        '200':
+          description: Berhasil menghapus resep
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    $ref: '#/paths/~1%7BserviceName%7D~1daftarresep/post/responses/200/content/application~1json/schema/properties/metaData'
+                  response:
+                    type: string
+                    nullable: true
+                example:
+                  metaData:
+                    code: '200'
+                    message: OK
+                  response: null
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  '/{serviceName}/daftarresep':
+    post:
+      tags:
+        - Resep
+      summary: Daftar Resep
+      description: Mendapatkan daftar resep berdasarkan filter
+      operationId: daftarResep
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - kdppk
+                - KdJnsObat
+                - JnsTgl
+                - TglMulai
+                - TglAkhir
+              properties:
+                kdppk:
+                  type: string
+                  description: Kode PPK
+                KdJnsObat:
+                  type: string
+                  description: Kode jenis obat
+                JnsTgl:
+                  type: string
+                  enum:
+                    - TGLPELSJP
+                    - TGLRSP
+                  description: Jenis tanggal filter
+                TglMulai:
+                  type: string
+                  format: date-time
+                  description: Tanggal mulai filter
+                TglAkhir:
+                  type: string
+                  format: date-time
+                  description: Tanggal akhir filter
+            example:
+              kdppk: 0112A017
+              KdJnsObat: '0'
+              JnsTgl: TGLPELSJP
+              TglMulai: '2019-03-01 08:49:45'
+              TglAkhir: '2019-03-31 06:18:33'
+      responses:
+        '200':
+          description: Berhasil mendapatkan daftar resep
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: '200'
+                      message:
+                        type: string
+                        example: Ok
+                  response:
+                    type: object
+                    properties:
+                      resep:
+                        type: object
+                        properties:
+                          NORESEP:
+                            type: string
+                          NOAPOTIK:
+                            type: string
+                          NOSEP_KUNJUNGAN:
+                            type: string
+                          NOKARTU:
+                            type: string
+                          NAMA:
+                            type: string
+                          TGLENTRY:
+                            type: string
+                            format: date-time
+                          TGLRESEP:
+                            type: string
+                            format: date-time
+                          TGLPELRSP:
+                            type: string
+                            format: date-time
+                          BYTAGRSP:
+                            type: string
+                          BYVERRSP:
+                            type: string
+                          KDJNSOBAT:
+                            type: string
+                          FASKESASAL:
+                            type: string
+                example:
+                  metaData:
+                    code: '200'
+                    message: Ok.
+                  response:
+                    resep:
+                      NORESEP: '01236'
+                      NOAPOTIK: 0112A01704190000001
+                      NOSEP_KUNJUNGAN: 0112R0340418V004961
+                      NOKARTU: 0002338679259
+                      NAMA: SITI SULASTRI
+                      TGLENTRY: '2019-04-02 11:13:33.000+07:00'
+                      TGLRESEP: '2019-03-19 00:00:00.000+07:00'
+                      TGLPELRSP: '2019-03-26 00:00:00.000+07:00'
+                      BYTAGRSP: '0.00'
+                      BYVERRSP: '0.00'
+                      KDJNSOBAT: '2'
+                      FASKESASAL: 0112R034
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  '/{serviceName}/sep/{nomorKunjungan}':
+    get:
+      tags:
+        - SEP
+      summary: Cari No Kunjungan/SEP
+      description: Mendapatkan data berdasarkan nomor kunjungan/SEP
+      operationId: cariSEP
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+        - name: nomorKunjungan
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{19}$'
+          description: Nomor Kunjungan/SEP (19 digit)
+      responses:
+        '200':
+          description: Berhasil mendapatkan data SEP
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      noSep:
+                        type: string
+                        description: Nomor SEP
+                      faskesasalresep:
+                        type: string
+                        description: Kode faskes asal resep
+                      nmfaskesasalresep:
+                        type: string
+                        description: Nama faskes asal resep
+                      nokartu:
+                        type: string
+                        description: Nomor kartu peserta
+                      namapeserta:
+                        type: string
+                        description: Nama peserta
+                      jnskelamin:
+                        type: string
+                        enum:
+                          - L
+                          - P
+                        description: Jenis kelamin (L/P)
+                      tgllhr:
+                        type: string
+                        format: date
+                        description: Tanggal lahir peserta
+                      pisat:
+                        type: string
+                        description: Kode PISAT
+                      kdjenispeserta:
+                        type: string
+                        description: Kode jenis peserta
+                      nmjenispeserta:
+                        type: string
+                        description: Nama jenis peserta
+                      kodebu:
+                        type: string
+                        description: Kode BU
+                      namabu:
+                        type: string
+                        description: Nama BU
+                      tglsep:
+                        type: string
+                        format: date
+                        description: Tanggal pembuatan SEP
+                      tglplgsep:
+                        type: string
+                        format: date
+                        description: Tanggal pulang SEP
+                      jnspelayanan:
+                        type: string
+                        description: Jenis pelayanan
+                      nmdiag:
+                        type: string
+                        description: Nama diagnosis
+                      poli:
+                        type: string
+                        description: Poli tujuan
+                      flagprb:
+                        type: string
+                        description: Flag PRB (0/1)
+                      namaprb:
+                        type: string
+                        description: Nama PRB
+                      kodedokter:
+                        type: string
+                        description: Kode dokter
+                      namadokter:
+                        type: string
+                        nullable: true
+                        description: Nama dokter
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: '200'
+                      message:
+                        type: string
+                        example: OK
+              example:
+                response:
+                  noSep: 1202R0010318V000092
+                  faskesasalresep: 1202R001
+                  nmfaskesasalresep: RSUP DR. SARDJITO
+                  nokartu: 0000648450639
+                  namapeserta: SITI NAFISAH
+                  jnskelamin: P
+                  tgllhr: '1990-10-01'
+                  pisat: '4'
+                  kdjenispeserta: '21'
+                  nmjenispeserta: PBI (APBN)
+                  kodebu: '00000021'
+                  namabu: PBI (APBN)
+                  tglsep: '2021-08-01'
+                  tglplgsep: '2021-08-01'
+                  jnspelayanan: RJTL
+                  nmdiag: Supervision of normal first pregnancy
+                  poli: OBGYN
+                  flagprb: '0'
+                  namaprb: ''
+                  kodedokter: ''
+                  namadokter: null
+                metaData:
+                  code: '200'
+                  message: OK
+        '400':
+          description: Bad Request (format nomor SEP tidak valid)
+        '404':
+          description: Data tidak ditemukan
+        '500':
+          description: Internal Server Error
+  '/{serviceName}/monitoring/klaim/{bulan}/{tahun}/{jenisObat}/{status}':
+    get:
+      tags:
+        - Monitoring
+      summary: Data Klaim
+      description: Mendapatkan data klaim obat berdasarkan filter
+      operationId: dataKlaim
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+        - name: bulan
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 12
+          description: Bulan (1-12)
+        - name: tahun
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 2000
+            maximum: 2100
+          description: Tahun (4 digit)
+        - name: jenisObat
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - '0'
+              - '1'
+              - '2'
+              - '3'
+          description: |
+            0. Semua
+            1. Obat PRB
+            2. Obat Kronis Blm Stabil
+            3. Obat Kemoterapi
+        - name: status
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - '1'
+              - '2'
+          description: |
+            1. Belum diverifikasi
+            2. Sudah Verifikasi
+      responses:
+        '200':
+          description: Berhasil mendapatkan data klaim
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      rekap:
+                        type: object
+                        properties:
+                          jumlahdata:
+                            type: string
+                            description: Jumlah data klaim
+                          totalbiayapengajuan:
+                            type: string
+                            description: Total biaya pengajuan
+                          totalbiayasetuju:
+                            type: string
+                            description: Total biaya disetujui
+                          listsep:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                nosepapotek:
+                                  type: string
+                                  description: Nomor SEP apotek
+                                nosepaasal:
+                                  type: string
+                                  description: Nomor SEP asal
+                                nokartu:
+                                  type: string
+                                  description: Nomor kartu peserta
+                                namapeserta:
+                                  type: string
+                                  description: Nama peserta
+                                noresep:
+                                  type: string
+                                  description: Nomor resep
+                                jnsobat:
+                                  type: string
+                                  description: Jenis obat
+                                tglpelayanan:
+                                  type: string
+                                  format: date
+                                  description: Tanggal pelayanan
+                                biayapengajuan:
+                                  type: string
+                                  description: Biaya pengajuan
+                                biayasetuju:
+                                  type: string
+                                  description: Biaya disetujui
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: '200'
+                      message:
+                        type: string
+                        example: Ok
+              example:
+                response:
+                  rekap:
+                    jumlahdata: '2'
+                    totalbiayapengajuan: '35646930'
+                    totalbiayasetuju: '0'
+                    listsep:
+                      - nosepapotek: 1801A00104190000002
+                        nosepaasal: 1801R0010419V000001
+                        nokartu: '0000000000044'
+                        namapeserta: AGUSMA
+                        noresep: '00001'
+                        jnsobat: Obat Kemoterapi
+                        tglpelayanan: '2019-04-04'
+                        biayapengajuan: '35646930'
+                        biayasetuju: '0'
+                      - nosepapotek: 1801A00104190000003
+                        nosepaasal: 1801R0010419V000001
+                        nokartu: '0000000000044'
+                        namapeserta: AGUSMA
+                        noresep: '00002'
+                        jnsobat: Obat Kemoterapi
+                        tglpelayanan: '2019-04-04'
+                        biayapengajuan: '0'
+                        biayasetuju: '0'
+                metaData:
+                  code: '200'
+                  message: Ok
+        '400':
+          description: |
+            Bad Request (parameter tidak valid)
+            - Bulan diluar 1-12
+            - Tahun diluar 2000-2100
+            - Jenis obat bukan 0-3
+            - Status bukan 1-2
+        '404':
+          description: Data tidak ditemukan
+        '500':
+          description: Internal Server Error

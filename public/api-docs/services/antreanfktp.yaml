@@ -1,0 +1,57 @@
+openapi: 3.0.0
+info:
+  title: Antrean FKTP API - Entry Point
+  version: 1.0.0
+  description: |
+    Entry point dokumentasi Antrean FKTP BPJS Kesehatan. Semua endpoint dipecah ke file terpisah berdasarkan domain.
+
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/antreanfktp_dev
+    description: Server Development
+
+paths:
+  # ============================== WEB SERVICE BPJS (Diakses oleh Sistem FKTP) ==============================
+  /{serviceName}/ref/poli/tanggal/{tanggal}:
+    get:
+      $ref: './antreanfktp/ws-bpjs.yaml#/paths/~1{serviceName}~1ref~1poli~1tanggal~1{tanggal}/get'
+  /{serviceName}/ref/dokter/kodepoli/{kodepoli}/tanggal/{tanggal}:
+    get:
+      $ref: './antreanfktp/ws-bpjs.yaml#/paths/~1{serviceName}~1ref~1dokter~1kodepoli~1{kodepoli}~1tanggal~1{tanggal}/get'
+  /{serviceName}/antrean/add:
+    post:
+      $ref: './antreanfktp/ws-bpjs.yaml#/paths/~1{serviceName}~1antrean~1add/post'
+  /{serviceName}/antrean/panggil:
+    post:
+      $ref: './antreanfktp/ws-bpjs.yaml#/paths/~1{serviceName}~1antrean~1panggil/post'
+  /{serviceName}/antrean/batal:
+    post:
+      $ref: './antreanfktp/ws-bpjs.yaml#/paths/~1{serviceName}~1antrean~1batal/post'
+
+  # ============================== WEB SERVICE FKTP (Diakses oleh Mobile JKN) ==============================
+  /auth:
+    get:
+      $ref: './antreanfktp/ws-fktp.yaml#/paths/~1auth/get'
+  /antrean/status/{kode_poli}/{tanggalperiksa}:
+    get:
+      $ref: './antreanfktp/ws-fktp.yaml#/paths/~1antrean~1status~1{kode_poli}~1{tanggalperiksa}/get'
+  /antrean:
+    post:
+      $ref: './antreanfktp/ws-fktp.yaml#/paths/~1antrean/post'
+  /antrean/sisapeserta/{nomorkartu_jkn}/{kode_poli}/{tanggalperiksa}:
+    get:
+      $ref: './antreanfktp/ws-fktp.yaml#/paths/~1antrean~1sisapeserta~1{nomorkartu_jkn}~1{kode_poli}~1{tanggalperiksa}/get'
+  /peserta:
+    post:
+      $ref: './antreanfktp/ws-fktp.yaml#/paths/~1peserta/post'
+  /antrean/batal:
+    put:
+      $ref: './antreanfktp/ws-fktp.yaml#/paths/~1antrean~1batal/put'
+  /v2/antrean:
+    post:
+      $ref: './antreanfktp/ws-fktp.yaml#/paths/~1v2~1antrean/post'
+  /v2/antrean/status/{kode_poli}/{tanggalperiksa}:
+    get:
+      $ref: './antreanfktp/ws-fktp.yaml#/paths/~1v2~1antrean~1status~1{kode_poli}~1{tanggalperiksa}/get'
+  /v2/antrean/batal:
+    put:
+      $ref: './antreanfktp/ws-fktp.yaml#/paths/~1v2~1antrean~1batal/put'

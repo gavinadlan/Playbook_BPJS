@@ -52,9 +52,9 @@ const apiServices: ApiService[] = [
   },
   {
     name: 'Apotek',
-    file: '/api-docs/services/apotek.yaml',
+    file: '/api-docs/services/apotek/merged.yaml',
     description: 'Layanan Apotek',
-    status: 'inactive'
+    status: 'active'
   },
   {
     name: 'PCare',

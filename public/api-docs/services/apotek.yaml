@@ -1,0 +1,71 @@
+openapi: 3.0.0
+info:
+  title: Apotek - Entry Point
+  version: 1.0.0
+  description: |
+    Entry point dokumentasi Apotek BPJS Kesehatan. Semua endpoint dipecah ke file terpisah berdasarkan domain.
+
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/apotek-rest-dev
+    description: Server Development
+
+paths:
+  # ============================== REFERENSI ==============================
+  /{serviceName}/referensi/dpho:
+    get:
+      $ref: './apotek/referensi.yaml#/paths/~1{serviceName}~1referensi~1dpho/get'
+  /{serviceName}/referensi/poli/{parameter}:
+    get:
+      $ref: './apotek/referensi.yaml#/paths/~1{serviceName}~1referensi~1poli~1{parameter}/get'
+  /{serviceName}/referensi/ppk/{jenisFaskes}/{namaFaskes}:
+    get:
+      $ref: './apotek/referensi.yaml#/paths/~1{serviceName}~1referensi~1ppk~1{jenisFaskes}~1{namaFaskes}/get'
+  /{serviceName}/referensi/settingppk/read/{kodeApotek}:
+    get:
+      $ref: './apotek/referensi.yaml#/paths/~1{serviceName}~1referensi~1settingppk~1read~1{kodeApotek}/get'
+  /{serviceName}/referensi/spesialistik:
+    get:
+      $ref: './apotek/referensi.yaml#/paths/~1{serviceName}~1referensi~1spesialistik/get'
+  /{serviceName}/referensi/obat/{kodeJenisObat}/{tglResep}/{filterPencarian}:
+    get:
+      $ref: './apotek/referensi.yaml#/paths/~1{serviceName}~1referensi~1obat~1{kodeJenisObat}~1{tglResep}~1{filterPencarian}/get'
+
+  # ============================== OBAT ==============================
+  /{serviceName}/obatnonracikan/v3/insert:
+    post:
+      $ref: './apotek/obat.yaml#/paths/~1{serviceName}~1obatnonracikan~1v3~1insert/post'
+  /{serviceName}/obatracikan/v3/insert:
+    post:
+      $ref: './apotek/obat.yaml#/paths/~1{serviceName}~1obatracikan~1v3~1insert/post'
+
+  # ============================== PELAYANAN OBAT ==============================
+  /{serviceName}/pelayanan/obat/hapus:
+    delete:
+      $ref: './apotek/pelayanan-obat.yaml#/paths/~1{serviceName}~1pelayanan~1obat~1hapus/delete'
+  /{serviceName}/obat/daftar/{nomorKunjungan}:
+    get:
+      $ref: './apotek/pelayanan-obat.yaml#/paths/~1{serviceName}~1obat~1daftar~1{nomorKunjungan}/get'
+  /{serviceName}/riwayatobat/{tglAwal}/{tglAkhir}/{noKartu}:
+    get:
+      $ref: './apotek/pelayanan-obat.yaml#/paths/~1{serviceName}~1riwayatobat~1{tglAwal}~1{tglAkhir}~1{noKartu}/get'
+
+  # ============================== RESEP ==============================
+  /{serviceName}/sjpresep/v3/insert:
+    post:
+      $ref: './apotek/resep.yaml#/paths/~1{serviceName}~1sjpresep~1v3~1insert/post'
+  /{serviceName}/hapusresep:
+    delete:
+      $ref: './apotek/resep.yaml#/paths/~1{serviceName}~1hapusresep/delete'
+  /{serviceName}/daftarresep:
+    post:
+      $ref: './apotek/resep.yaml#/paths/~1{serviceName}~1daftarresep/post'
+
+  # ============================== SEP ==============================
+  /{serviceName}/sep/{nomorKunjungan}:
+    get:
+      $ref: './apotek/sep.yaml#/paths/~1{serviceName}~1sep~1{nomorKunjungan}/get'
+
+  # ============================== MONITORING ==============================
+  /{serviceName}/monitoring/klaim/{bulan}/{tahun}/{jenisObat}/{status}:
+    get:
+      $ref: './apotek/monitoring.yaml#/paths/~1{serviceName}~1monitoring~1klaim~1{bulan}~1{tahun}~1{jenisObat}~1{status}/get'

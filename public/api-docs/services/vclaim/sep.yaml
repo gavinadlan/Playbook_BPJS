@@ -7,28 +7,14 @@ servers:
   - url: https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev
     description: Server Development
 tags:
-  - name: Pembuatan SEP
-    description: Endpoint untuk pembuatan dan manajemen SEP
-  - name: Potensi Suplesi Jasa Raharja
-    description: Endpoint untuk pencarian data potensi SEP sebagai suplesi Jasa Raharja
-  - name: Approval Penjaminan SEP
-    description: Endpoint untuk approval dan pengajuan SEP
-  - name: Update Tgl Pulang SEP
-    description: Endpoint untuk update tanggal pulang SEP
-  - name: Integrasi SEP dan Inacbg
-    description: Endpoint untuk integrasi SEP dengan Inacbg
-  - name: SEP Internal
-    description: Endpoint untuk manajemen SEP Internal
-  - name: Finger Print
-    description: Endpoint untuk validasi fingerprint
-  - name: Random Question
-    description: Endpoint untuk random question validation
+  - name: SEP
+    description: Pengelolaan SEP (Surat Eligibilitas Peserta) - pembuatan, update, hapus, pencarian, approval, finger print, dan random question
 
 paths:
   
   /vclaim-rest/SEP/1.1/insert:
     post:
-      tags: [Pembuatan SEP]
+      tags: [SEP]
       summary: Insert SEP
       description: Insert SEP versi 1.1
       requestBody:
@@ -253,7 +239,7 @@ paths:
 
   /vclaim-rest/SEP/1.1/Update:
     put:
-      tags: [Pembuatan SEP]
+      tags: [SEP]
       summary: Update SEP
       description: Update SEP versi 1.1
       requestBody:
@@ -396,7 +382,7 @@ paths:
 
   /vclaim-rest/SEP/Delete:
     delete:
-      tags: [Pembuatan SEP]
+      tags: [SEP]
       summary: Hapus SEP
       description: Hapus Data SEP
       parameters:
@@ -437,7 +423,7 @@ paths:
 
   /vclaim-rest/SEP/{noSep}:
     get:
-      tags: [Pembuatan SEP]
+      tags: [SEP]
       summary: Cari SEP
       description: Melihat data detail SEP Peserta
       parameters:
@@ -636,7 +622,7 @@ paths:
 
   /vclaim-rest/Rujukan/lastsep/norujukan/{noRujukan}:
     get:
-      tags: [Pembuatan SEP]
+      tags: [SEP]
       summary: Cari SEP Terakhir berdasarkan Nomor Rujukan
       description: Melihat data detail SEP Terakhir Peserta Berdasarkan Nomor Rujukan
       parameters:
@@ -835,7 +821,7 @@ paths:
 
   /vclaim-rest/SEP/2.0/insert:
     post:
-      tags: [Pembuatan SEP]
+      tags: [SEP]
       summary: Insert SEP 2.0 New
       description: Insert SEP versi 2.0
       requestBody:
@@ -1107,7 +1093,7 @@ paths:
 
   /vclaim-rest/SEP/2.0/update:
     put:
-      tags: [Pembuatan SEP]
+      tags: [SEP]
       summary: Update SEP 2.0 New
       description: Update SEP versi 2.0
       requestBody:
@@ -1239,7 +1225,7 @@ paths:
 
   /vclaim-rest/SEP/2.0/delete:
     delete:
-      tags: [Pembuatan SEP]
+      tags: [SEP]
       summary: Delete SEP 2.0 New
       description: Hapus SEP versi 2.0
       parameters:
@@ -1284,7 +1270,7 @@ paths:
 
   /vclaim-rest/sep/JasaRaharja/Suplesi/{noKartu}/tglPelayanan/{tglPelayanan}:
     get:
-      tags: [Potensi Suplesi Jasa Raharja]
+      tags: [SEP]
       summary: Suplesi Jasa Raharja
       description: Pencarian data potensi SEP Sebagai Suplesi Jasa Raharja
       parameters:
@@ -1349,7 +1335,7 @@ paths:
 
   /vclaim-rest/sep/KllInduk/List/{noKartu}:
     get:
-      tags: [Potensi Suplesi Jasa Raharja]
+      tags: [SEP]
       summary: Data Induk Kecelakaan New
       description: Pencarian data SEP Induk Kecelakaan Lalu Lintas
       parameters:
@@ -1416,7 +1402,7 @@ paths:
 
   /vclaim-rest/Sep/pengajuanSEP:
     post:
-      tags: [Approval Penjaminan SEP]
+      tags: [SEP]
       summary: Pengajuan
       description: Pengajuan SEP
       requestBody:
@@ -1474,7 +1460,7 @@ paths:
 
   /vclaim-rest/Sep/aprovalSEP:
     post:
-      tags: [Approval Penjaminan SEP]
+      tags: [SEP]
       summary: Aproval Pengajuan SEP
       description: Pengajuan SEP
       requestBody:
@@ -1532,7 +1518,7 @@ paths:
 
   /vclaim-rest/Sep/persetujuanSEP/list/bulan/{bulan}/tahun/{tahun}:
     get:
-      tags: [Approval Penjaminan SEP]
+      tags: [SEP]
       summary: List Data Persetujuan SEP New
       description: Get List Data Persetujuan SEP
       parameters:
@@ -1600,7 +1586,7 @@ paths:
 
   /vclaim-rest/Sep/updtglplg:
     put:
-      tags: [Update Tgl Pulang SEP]
+      tags: [SEP]
       summary: Update Tanggal Pulang
       description: Update tanggal pulang SEP
       requestBody:
@@ -1646,7 +1632,7 @@ paths:
 
   /vclaim-rest/SEP/2.0/updtglplg:
     put:
-      tags: [Update Tgl Pulang SEP]
+      tags: [SEP]
       summary: Update Tanggal Pulang 2.0 New
       description: Update tanggal pulang SEP 2.0
       requestBody:
@@ -1708,7 +1694,7 @@ paths:
 
   /vclaim-rest/Sep/updtglplg/list/bulan/{bulan}/tahun/{tahun}/{filter}:
     get:
-      tags: [Update Tgl Pulang SEP]
+      tags: [SEP]
       summary: List Data Update Tanggal Pulang New
       description: Get List Data Update Tanggal Pulang
       parameters:
@@ -1804,7 +1790,7 @@ paths:
 
   /vclaim-rest/sep/cbg/{noSep}:
     get:
-      tags: [Integrasi SEP dan Inacbg]
+      tags: [SEP]
       summary: Integrasi SEP dengan Inacbg
       description: Pencarian No.SEP untuk Aplikasi Inacbg 4.1
       parameters:
@@ -1872,7 +1858,7 @@ paths:
 
   /vclaim-rest/SEP/Internal/{noSep}:
     get:
-      tags: [SEP Internal]
+      tags: [SEP]
       summary: Data SEP Internal New
       description: Data SEP Internal
       parameters:
@@ -1986,7 +1972,7 @@ paths:
 
   /vclaim-rest/SEP/Internal/delete:
     delete:
-      tags: [SEP Internal]
+      tags: [SEP]
       summary: Hapus SEP Internal New
       description: Hapus SEP Internal
       parameters:
@@ -2053,7 +2039,7 @@ paths:
 
   /vclaim-rest/SEP/FingerPrint/Peserta/{noKartu}/TglPelayanan/{tglPelayanan}:
     get:
-      tags: [Finger Print]
+      tags: [SEP]
       summary: Get Finger Print
       description: Pencarian data fingerprint
       parameters:
@@ -2101,7 +2087,7 @@ paths:
 
   /vclaim-rest/SEP/FingerPrint/List/Peserta/TglPelayanan/{tglPelayanan}:
     get:
-      tags: [Finger Print]
+      tags: [SEP]
       summary: Get List Finger Print
       description: List Finger Print
       parameters:
@@ -2151,7 +2137,7 @@ paths:
 
   /vclaim-rest/SEP/FingerPrint/randomquestion/faskesterdaftar/nokapst/{noKartu}/tglsep/{tglPelayanan}:
     get:
-      tags: [Random Question]
+      tags: [SEP]
       summary: Get Random Question
       description: Menampilkan Random Question
       parameters:
@@ -2204,7 +2190,7 @@ paths:
 
   /vclaim-rest/SEP/FingerPrint/randomanswer:
     post:
-      tags: [Random Question]
+      tags: [SEP]
       summary: Post Random Answer
       description: POST Random Answer
       requestBody:

@@ -7,16 +7,14 @@ servers:
   - url: https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev
     description: Server Development
 tags:
-  - name: Cari Rujukan
-    description: Endpoint untuk pencarian data rujukan
-  - name: Pembuatan Rujukan
-    description: Endpoint untuk pembuatan dan manajemen rujukan
+  - name: Rujukan
+    description: Pengelolaan rujukan (pencarian, pembuatan, update, delete)
 
 paths:
   # Endpoint pencarian rujukan berdasarkan nomor rujukan
   /vclaim-rest/Rujukan/{noRujukan}:
     get:
-      tags: [Cari Rujukan]
+      tags: [Rujukan]
       summary: Rujukan Berdasarkan Nomor Rujukan (PCare)
       description: Pencarian data rujukan dari Pcare berdasarkan nomor rujukan
       parameters:
@@ -1185,7 +1183,7 @@ paths:
   # Endpoint pembuatan rujukan
   /vclaim-rest/Rujukan/insert:
     post:
-      tags: [Pembuatan Rujukan]
+      tags: [Rujukan]
       summary: Insert Rujukan
       description: Membuat data rujukan baru
       requestBody:
@@ -1324,7 +1322,7 @@ paths:
 
   /vclaim-rest/Rujukan/update:
     put:
-      tags: [Pembuatan Rujukan]
+      tags: [Rujukan]
       summary: Update Rujukan
       description: Memperbarui data rujukan
       requestBody:
@@ -1390,7 +1388,7 @@ paths:
 
   /vclaim-rest/Rujukan/delete:
     delete:
-      tags: [Pembuatan Rujukan]
+      tags: [Rujukan]
       summary: Delete Rujukan
       description: Menghapus data rujukan
       parameters:
@@ -1430,7 +1428,7 @@ paths:
   # Endpoint rujukan khusus
   /vclaim-rest/Rujukan/Khusus/insert:
     post:
-      tags: [Pembuatan Rujukan]
+      tags: [Rujukan]
       summary: Insert Rujukan Khusus New
       description: Membuat data rujukan khusus baru
       requestBody:
@@ -1506,7 +1504,7 @@ paths:
 
   /vclaim-rest/Rujukan/Khusus/delete:
     post:
-      tags: [Pembuatan Rujukan]
+      tags: [Rujukan]
       summary: Delete Rujukan Khusus New
       description: Menghapus data rujukan khusus
       requestBody:
@@ -1554,7 +1552,7 @@ paths:
 
   /vclaim-rest/Rujukan/Khusus/List/Bulan/{bulan}/Tahun/{tahun}:
     get:
-      tags: [Pembuatan Rujukan]
+      tags: [Rujukan]
       summary: List Rujukan Khusus New
       description: Mendapatkan daftar rujukan khusus berdasarkan bulan dan tahun
       parameters:
@@ -1622,7 +1620,7 @@ paths:
   # Endpoint rujukan 2.0
   /vclaim-rest/Rujukan/2.0/insert:
     post:
-      tags: [Pembuatan Rujukan]
+      tags: [Rujukan]
       summary: Insert Rujukan 2.0 New
       description: Membuat data rujukan versi 2.0
       requestBody:
@@ -1771,7 +1769,7 @@ paths:
 
   /vclaim-rest/Rujukan/2.0/Update:
     put:
-      tags: [Pembuatan Rujukan]
+      tags: [Rujukan]
       summary: Update Rujukan 2.0 New
       description: Memperbarui data rujukan versi 2.0
       requestBody:
@@ -1843,7 +1841,7 @@ paths:
   # Endpoint referensi rujukan
   /vclaim-rest/Rujukan/ListSpesialistik/PPKRujukan/{kodePPK}/TglRujukan/{tglRujukan}:
     get:
-      tags: [Pembuatan Rujukan]
+      tags: [Rujukan]
       summary: List Spesialistik Rujukan New
       description: Mendapatkan daftar spesialistik berdasarkan PPK dan tanggal rujukan
       parameters:
@@ -1905,7 +1903,7 @@ paths:
 
   /vclaim-rest/Rujukan/ListSarana/PPKRujukan/{kodePPK}:
     get:
-      tags: [Pembuatan Rujukan]
+      tags: [Rujukan]
       summary: List Sarana New
       description: Mendapatkan daftar sarana berdasarkan PPK
       parameters:
@@ -1951,7 +1949,7 @@ paths:
   # Endpoint rujukan keluar
   /vclaim-rest/Rujukan/Keluar/List/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
     get:
-      tags: [Pembuatan Rujukan]
+      tags: [Rujukan]
       summary: List Rujukan Keluar RS New
       description: Mendapatkan daftar rujukan keluar berdasarkan rentang tanggal
       parameters:
@@ -2023,7 +2021,7 @@ paths:
 
   /vclaim-rest/Rujukan/Keluar/{noRujukan}:
     get:
-      tags: [Pembuatan Rujukan]
+      tags: [Rujukan]
       summary: Data Rujukan Keluar RS Berdasarkan Nomor Rujukan New
       description: Mendapatkan detail rujukan keluar berdasarkan nomor rujukan
       parameters:
@@ -2120,7 +2118,7 @@ paths:
 
   /vclaim-rest/Rujukan/JumlahSEP/{jenisRujukan}/{noRujukan}:
     get:
-      tags: [Pembuatan Rujukan]
+      tags: [Rujukan]
       summary: Data Jumlah SEP Rujukan New
       description: Mendapatkan jumlah SEP berdasarkan jenis dan nomor rujukan
       parameters:

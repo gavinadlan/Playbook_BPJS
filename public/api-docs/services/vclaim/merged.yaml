@@ -1,12 +1,80 @@
 openapi: 3.0.0
 info:
-  title: VClaim API - Entry Point
+  title: VClaim API - Complete Documentation
   version: 1.0.0
   description: |
-    Entry point dokumentasi VClaim BPJS Kesehatan. Semua endpoint dipecah ke file terpisah berdasarkan domain.
+    API VClaim untuk pengelolaan klaim BPJS Kesehatan
+
+    ## Authentication
+    Semua endpoint memerlukan header authentication:
+    - `X-cons-id`: Consumer ID dari BPJS Kesehatan
+    - `X-timestamp`: Generated unix-based timestamp
+    - `X-signature`: Generated signature dengan pola HMAC-256
+    - `user_key`: User key untuk akses webservice
+
+    ## Signature Generation
+    ```
+    signature = HMAC-SHA256(consId + "&" + timestamp, secretKey)
+    ```
+
+    ## Decryption
+    Response yang dienkripsi menggunakan AES-256-CBC dengan:
+    - Key: 16 karakter pertama dari secretKey
+    - IV: 16 karakter terakhir dari secretKey
+
+    ## File Structure
+    Dokumentasi ini terbagi menjadi beberapa file:
+    - `authentication.yaml`: Header authentication dan signature
+    - `lpk.yaml`: Lembar Pengajuan Klaim
+    - `monitoring.yaml`: Monitoring data klaim dan kunjungan
+    - `peserta.yaml`: Data peserta BPJS Kesehatan
+    - `prb.yaml`: Pembuatan Rujuk Balik
+    - `rencana-kontrol.yaml`: Pembuatan Rencana Kontrol/SPRI
+    - `referensi.yaml`: Data referensi (diagnosa, poli, faskes, dll)
+    - `rujukan.yaml`: Pengelolaan rujukan
+    - `sep.yaml`: Pengelolaan SEP (Surat Eligibilitas Peserta)
 servers:
   - url: 'https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev'
     description: Server Development
+tags:
+  - name: LPK
+    description: Lembar Pengajuan Klaim
+  - name: Monitoring
+    description: Monitoring data klaim dan kunjungan
+  - name: Peserta
+    description: Data peserta BPJS Kesehatan
+  - name: PRB
+    description: Pembuatan Rujuk Balik
+  - name: Rencana Kontrol
+    description: Pembuatan Rencana Kontrol/SPRI
+  - name: Referensi
+    description: 'Data referensi (diagnosa, poli, faskes, dll)'
+  - name: Rujukan
+    description: 'Pengelolaan rujukan (pencarian, pembuatan, update, delete)'
+  - name: SEP
+    description: 'Pengelolaan SEP (Surat Eligibilitas Peserta) - pembuatan, update, hapus, pencarian, approval, finger print, dan random question'
+components:
+  securitySchemes:
+    vclaimAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    vclaimTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    vclaimSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
 paths:
   /vclaim-rest/LPK/insert:
     post:
@@ -3937,7 +4005,7 @@ paths:
   '/vclaim-rest/Rujukan/{noRujukan}':
     get:
       tags:
-        - Cari Rujukan
+        - Rujukan
       summary: Rujukan Berdasarkan Nomor Rujukan (PCare)
       description: Pencarian data rujukan dari Pcare berdasarkan nomor rujukan
       parameters:
@@ -4130,7 +4198,7 @@ paths:
   '/vclaim-rest/Rujukan/RS/{noRujukan}':
     get:
       tags:
-        - Cari Rujukan
+        - Rujukan
       summary: Rujukan Berdasarkan Nomor Rujukan (Rumah Sakit)
       description: Pencarian data rujukan dari rumah sakit berdasarkan nomor rujukan
       parameters:
@@ -4323,7 +4391,7 @@ paths:
   '/vclaim-rest/Rujukan/Peserta/{noKartu}':
     get:
       tags:
-        - Cari Rujukan
+        - Rujukan
       summary: Rujukan Berdasarkan Nomor Kartu (1 Record - PCare)
       description: Pencarian data rujukan dari PCare berdasarkan nomor kartu
       parameters:
@@ -4516,7 +4584,7 @@ paths:
   '/vclaim-rest/Rujukan/RS/Peserta/{noKartu}':
     get:
       tags:
-        - Cari Rujukan
+        - Rujukan
       summary: Rujukan Berdasarkan Nomor Kartu (1 Record - Rumah Sakit)
       description: Pencarian data rujukan dari rumah sakit berdasarkan nomor kartu
       parameters:
@@ -4709,7 +4777,7 @@ paths:
   '/vclaim-rest/Rujukan/List/Peserta/{noKartu}':
     get:
       tags:
-        - Cari Rujukan
+        - Rujukan
       summary: Rujukan Berdasarkan Nomor Kartu (Multi Record - PCare)
       description: Pencarian data rujukan dari PCare berdasarkan nomor kartu
       parameters:
@@ -4904,7 +4972,7 @@ paths:
   '/vclaim-rest/Rujukan/RS/List/Peserta/{noKartu}':
     get:
       tags:
-        - Cari Rujukan
+        - Rujukan
       summary: Rujukan Berdasarkan Nomor Kartu (Multi Record - Rumah Sakit)
       description: Pencarian data rujukan dari rumah sakit berdasarkan nomor kartu
       parameters:
@@ -5099,7 +5167,7 @@ paths:
   /vclaim-rest/Rujukan/insert:
     post:
       tags:
-        - Pembuatan Rujukan
+        - Rujukan
       summary: Insert Rujukan
       description: Membuat data rujukan baru
       requestBody:
@@ -5238,7 +5306,7 @@ paths:
   /vclaim-rest/Rujukan/update:
     put:
       tags:
-        - Pembuatan Rujukan
+        - Rujukan
       summary: Update Rujukan
       description: Memperbarui data rujukan
       requestBody:
@@ -5304,7 +5372,7 @@ paths:
   /vclaim-rest/Rujukan/delete:
     delete:
       tags:
-        - Pembuatan Rujukan
+        - Rujukan
       summary: Delete Rujukan
       description: Menghapus data rujukan
       parameters:
@@ -5343,7 +5411,7 @@ paths:
   /vclaim-rest/Rujukan/Khusus/insert:
     post:
       tags:
-        - Pembuatan Rujukan
+        - Rujukan
       summary: Insert Rujukan Khusus New
       description: Membuat data rujukan khusus baru
       requestBody:
@@ -5419,7 +5487,7 @@ paths:
   /vclaim-rest/Rujukan/Khusus/delete:
     post:
       tags:
-        - Pembuatan Rujukan
+        - Rujukan
       summary: Delete Rujukan Khusus New
       description: Menghapus data rujukan khusus
       requestBody:
@@ -5467,7 +5535,7 @@ paths:
   '/vclaim-rest/Rujukan/Khusus/List/Bulan/{bulan}/Tahun/{tahun}':
     get:
       tags:
-        - Pembuatan Rujukan
+        - Rujukan
       summary: List Rujukan Khusus New
       description: Mendapatkan daftar rujukan khusus berdasarkan bulan dan tahun
       parameters:
@@ -5534,7 +5602,7 @@ paths:
   /vclaim-rest/Rujukan/2.0/insert:
     post:
       tags:
-        - Pembuatan Rujukan
+        - Rujukan
       summary: Insert Rujukan 2.0 New
       description: Membuat data rujukan versi 2.0
       requestBody:
@@ -5683,7 +5751,7 @@ paths:
   /vclaim-rest/Rujukan/2.0/Update:
     put:
       tags:
-        - Pembuatan Rujukan
+        - Rujukan
       summary: Update Rujukan 2.0 New
       description: Memperbarui data rujukan versi 2.0
       requestBody:
@@ -5754,7 +5822,7 @@ paths:
   '/vclaim-rest/Rujukan/ListSpesialistik/PPKRujukan/{kodePPK}/TglRujukan/{tglRujukan}':
     get:
       tags:
-        - Pembuatan Rujukan
+        - Rujukan
       summary: List Spesialistik Rujukan New
       description: Mendapatkan daftar spesialistik berdasarkan PPK dan tanggal rujukan
       parameters:
@@ -5816,7 +5884,7 @@ paths:
   '/vclaim-rest/Rujukan/ListSarana/PPKRujukan/{kodePPK}':
     get:
       tags:
-        - Pembuatan Rujukan
+        - Rujukan
       summary: List Sarana New
       description: Mendapatkan daftar sarana berdasarkan PPK
       parameters:
@@ -5861,7 +5929,7 @@ paths:
   '/vclaim-rest/Rujukan/Keluar/List/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}':
     get:
       tags:
-        - Pembuatan Rujukan
+        - Rujukan
       summary: List Rujukan Keluar RS New
       description: Mendapatkan daftar rujukan keluar berdasarkan rentang tanggal
       parameters:
@@ -5933,7 +6001,7 @@ paths:
   '/vclaim-rest/Rujukan/Keluar/{noRujukan}':
     get:
       tags:
-        - Pembuatan Rujukan
+        - Rujukan
       summary: Data Rujukan Keluar RS Berdasarkan Nomor Rujukan New
       description: Mendapatkan detail rujukan keluar berdasarkan nomor rujukan
       parameters:
@@ -6030,7 +6098,7 @@ paths:
   '/vclaim-rest/Rujukan/JumlahSEP/{jenisRujukan}/{noRujukan}':
     get:
       tags:
-        - Pembuatan Rujukan
+        - Rujukan
       summary: Data Jumlah SEP Rujukan New
       description: Mendapatkan jumlah SEP berdasarkan jenis dan nomor rujukan
       parameters:
@@ -6074,7 +6142,7 @@ paths:
   /vclaim-rest/SEP/1.1/insert:
     post:
       tags:
-        - Pembuatan SEP
+        - SEP
       summary: Insert SEP
       description: Insert SEP versi 1.1
       requestBody:
@@ -6299,7 +6367,7 @@ paths:
   /vclaim-rest/SEP/1.1/Update:
     put:
       tags:
-        - Pembuatan SEP
+        - SEP
       summary: Update SEP
       description: Update SEP versi 1.1
       requestBody:
@@ -6442,7 +6510,7 @@ paths:
   /vclaim-rest/SEP/Delete:
     delete:
       tags:
-        - Pembuatan SEP
+        - SEP
       summary: Hapus SEP
       description: Hapus Data SEP
       parameters:
@@ -6483,7 +6551,7 @@ paths:
   '/vclaim-rest/SEP/{noSep}':
     get:
       tags:
-        - Pembuatan SEP
+        - SEP
       summary: Cari SEP
       description: Melihat data detail SEP Peserta
       parameters:
@@ -6682,7 +6750,7 @@ paths:
   '/vclaim-rest/Rujukan/lastsep/norujukan/{noRujukan}':
     get:
       tags:
-        - Pembuatan SEP
+        - SEP
       summary: Cari SEP Terakhir berdasarkan Nomor Rujukan
       description: Melihat data detail SEP Terakhir Peserta Berdasarkan Nomor Rujukan
       parameters:
@@ -6881,7 +6949,7 @@ paths:
   /vclaim-rest/SEP/2.0/insert:
     post:
       tags:
-        - Pembuatan SEP
+        - SEP
       summary: Insert SEP 2.0 New
       description: Insert SEP versi 2.0
       requestBody:
@@ -7153,7 +7221,7 @@ paths:
   /vclaim-rest/SEP/2.0/update:
     put:
       tags:
-        - Pembuatan SEP
+        - SEP
       summary: Update SEP 2.0 New
       description: Update SEP versi 2.0
       requestBody:
@@ -7285,7 +7353,7 @@ paths:
   /vclaim-rest/SEP/2.0/delete:
     delete:
       tags:
-        - Pembuatan SEP
+        - SEP
       summary: Delete SEP 2.0 New
       description: Hapus SEP versi 2.0
       parameters:
@@ -7326,7 +7394,7 @@ paths:
   '/vclaim-rest/sep/JasaRaharja/Suplesi/{noKartu}/tglPelayanan/{tglPelayanan}':
     get:
       tags:
-        - Potensi Suplesi Jasa Raharja
+        - SEP
       summary: Suplesi Jasa Raharja
       description: Pencarian data potensi SEP Sebagai Suplesi Jasa Raharja
       parameters:
@@ -7391,7 +7459,7 @@ paths:
   '/vclaim-rest/sep/KllInduk/List/{noKartu}':
     get:
       tags:
-        - Potensi Suplesi Jasa Raharja
+        - SEP
       summary: Data Induk Kecelakaan New
       description: Pencarian data SEP Induk Kecelakaan Lalu Lintas
       parameters:
@@ -7454,7 +7522,7 @@ paths:
   /vclaim-rest/Sep/pengajuanSEP:
     post:
       tags:
-        - Approval Penjaminan SEP
+        - SEP
       summary: Pengajuan
       description: Pengajuan SEP
       requestBody:
@@ -7512,7 +7580,7 @@ paths:
   /vclaim-rest/Sep/aprovalSEP:
     post:
       tags:
-        - Approval Penjaminan SEP
+        - SEP
       summary: Aproval Pengajuan SEP
       description: Pengajuan SEP
       requestBody:
@@ -7570,7 +7638,7 @@ paths:
   '/vclaim-rest/Sep/persetujuanSEP/list/bulan/{bulan}/tahun/{tahun}':
     get:
       tags:
-        - Approval Penjaminan SEP
+        - SEP
       summary: List Data Persetujuan SEP New
       description: Get List Data Persetujuan SEP
       parameters:
@@ -7634,7 +7702,7 @@ paths:
   /vclaim-rest/Sep/updtglplg:
     put:
       tags:
-        - Update Tgl Pulang SEP
+        - SEP
       summary: Update Tanggal Pulang
       description: Update tanggal pulang SEP
       requestBody:
@@ -7680,7 +7748,7 @@ paths:
   /vclaim-rest/SEP/2.0/updtglplg:
     put:
       tags:
-        - Update Tgl Pulang SEP
+        - SEP
       summary: Update Tanggal Pulang 2.0 New
       description: Update tanggal pulang SEP 2.0
       requestBody:
@@ -7742,7 +7810,7 @@ paths:
   '/vclaim-rest/Sep/updtglplg/list/bulan/{bulan}/tahun/{tahun}/{filter}':
     get:
       tags:
-        - Update Tgl Pulang SEP
+        - SEP
       summary: List Data Update Tanggal Pulang New
       description: Get List Data Update Tanggal Pulang
       parameters:
@@ -7834,7 +7902,7 @@ paths:
   '/vclaim-rest/sep/cbg/{noSep}':
     get:
       tags:
-        - Integrasi SEP dan Inacbg
+        - SEP
       summary: Integrasi SEP dengan Inacbg
       description: Pencarian No.SEP untuk Aplikasi Inacbg 4.1
       parameters:
@@ -7898,7 +7966,7 @@ paths:
   '/vclaim-rest/SEP/Internal/{noSep}':
     get:
       tags:
-        - SEP Internal
+        - SEP
       summary: Data SEP Internal New
       description: Data SEP Internal
       parameters:
@@ -8012,7 +8080,7 @@ paths:
   /vclaim-rest/SEP/Internal/delete:
     delete:
       tags:
-        - SEP Internal
+        - SEP
       summary: Hapus SEP Internal New
       description: Hapus SEP Internal
       parameters:
@@ -8075,7 +8143,7 @@ paths:
   '/vclaim-rest/SEP/FingerPrint/Peserta/{noKartu}/TglPelayanan/{tglPelayanan}':
     get:
       tags:
-        - Finger Print
+        - SEP
       summary: Get Finger Print
       description: Pencarian data fingerprint
       parameters:
@@ -8123,7 +8191,7 @@ paths:
   '/vclaim-rest/SEP/FingerPrint/List/Peserta/TglPelayanan/{tglPelayanan}':
     get:
       tags:
-        - Finger Print
+        - SEP
       summary: Get List Finger Print
       description: List Finger Print
       parameters:
@@ -8169,7 +8237,7 @@ paths:
   '/vclaim-rest/SEP/FingerPrint/randomquestion/faskesterdaftar/nokapst/{noKartu}/tglsep/{tglPelayanan}':
     get:
       tags:
-        - Random Question
+        - SEP
       summary: Get Random Question
       description: Menampilkan Random Question
       parameters:
@@ -8222,7 +8290,7 @@ paths:
   /vclaim-rest/SEP/FingerPrint/randomanswer:
     post:
       tags:
-        - Random Question
+        - SEP
       summary: Post Random Answer
       description: POST Random Answer
       requestBody:

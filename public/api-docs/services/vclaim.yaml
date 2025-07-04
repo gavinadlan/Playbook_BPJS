@@ -1,13 +1,83 @@
 openapi: 3.0.0
 info:
-  title: VClaim API - Entry Point
+  title: VClaim API - Complete Documentation
   version: 1.0.0
   description: |
-    Entry point dokumentasi VClaim BPJS Kesehatan. Semua endpoint dipecah ke file terpisah berdasarkan domain.
+    API VClaim untuk pengelolaan klaim BPJS Kesehatan
+    
+    ## Authentication
+    Semua endpoint memerlukan header authentication:
+    - `X-cons-id`: Consumer ID dari BPJS Kesehatan
+    - `X-timestamp`: Generated unix-based timestamp
+    - `X-signature`: Generated signature dengan pola HMAC-256
+    - `user_key`: User key untuk akses webservice
+    
+    ## Signature Generation
+    ```
+    signature = HMAC-SHA256(consId + "&" + timestamp, secretKey)
+    ```
+    
+    ## Decryption
+    Response yang dienkripsi menggunakan AES-256-CBC dengan:
+    - Key: 16 karakter pertama dari secretKey
+    - IV: 16 karakter terakhir dari secretKey
+    
+    ## File Structure
+    Dokumentasi ini terbagi menjadi beberapa file:
+    - `authentication.yaml`: Header authentication dan signature
+    - `lpk.yaml`: Lembar Pengajuan Klaim
+    - `monitoring.yaml`: Monitoring data klaim dan kunjungan
+    - `peserta.yaml`: Data peserta BPJS Kesehatan
+    - `prb.yaml`: Pembuatan Rujuk Balik
+    - `rencana-kontrol.yaml`: Pembuatan Rencana Kontrol/SPRI
+    - `referensi.yaml`: Data referensi (diagnosa, poli, faskes, dll)
+    - `rujukan.yaml`: Pengelolaan rujukan
+    - `sep.yaml`: Pengelolaan SEP (Surat Eligibilitas Peserta)
 
 servers:
   - url: https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev
     description: Server Development
+
+tags:
+  - name: LPK
+    description: Lembar Pengajuan Klaim
+  - name: Monitoring
+    description: Monitoring data klaim dan kunjungan
+  - name: Peserta
+    description: Data peserta BPJS Kesehatan
+  - name: PRB
+    description: Pembuatan Rujuk Balik
+  - name: Rencana Kontrol
+    description: Pembuatan Rencana Kontrol/SPRI
+  - name: Referensi
+    description: Data referensi (diagnosa, poli, faskes, dll)
+  - name: Rujukan
+    description: Pengelolaan rujukan (pencarian, pembuatan, update, delete)
+  - name: SEP
+    description: Pengelolaan SEP (Surat Eligibilitas Peserta) - pembuatan, update, hapus, pencarian, approval, finger print, dan random question
+
+components:
+  securitySchemes:
+    vclaimAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    vclaimTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    vclaimSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
 
 paths:
   # LPK

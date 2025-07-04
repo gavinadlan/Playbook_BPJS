@@ -1,0 +1,97 @@
+openapi: 3.0.0
+info:
+  title: PCare Status Pulang API
+  version: 1.0.0
+  description: Layanan untuk data referensi status pulang PCare
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev
+    description: PCare Development Server
+tags:
+  - name: Status Pulang
+    description: Data status pulang pasien
+
+paths:
+  /status-pulang:
+    get:
+      tags:
+        - Status Pulang
+      summary: Get Status Pulang
+      description: Get Data Referensi Status Pulang
+      responses:
+        '200':
+          description: Data status pulang berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusPulangListResponse'
+              example:
+                response:
+                  count: 2
+                  list:
+                    - kdStatusPulang: "1"
+                      nmStatusPulang: "Sembuh"
+                    - kdStatusPulang: "2"
+                      nmStatusPulang: "Rujuk"
+                metaData:
+                  message: "OK"
+                  code: 200
+
+components:
+  securitySchemes:
+    pcareAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    pcareTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    pcareSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    pcareAuthorization:
+      type: apiKey
+      in: header
+      name: X-authorization
+      description: Generated signature dengan pola Base64
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
+  schemas:
+    StatusPulang:
+      type: object
+      properties:
+        kdStatusPulang:
+          type: string
+          description: Kode status pulang
+        nmStatusPulang:
+          type: string
+          description: Nama status pulang
+    StatusPulangListResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Jumlah total data status pulang
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/StatusPulang'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response

@@ -1,0 +1,426 @@
+openapi: 3.0.0
+info:
+  title: PCare Tindakan API
+  version: 1.0.0
+  description: Layanan untuk data tindakan dan referensi tindakan PCare
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev
+    description: PCare Development Server
+tags:
+  - name: Tindakan
+    description: Data tindakan dan referensi tindakan
+
+paths:
+  /tindakan/kunjungan/{noKunjungan}:
+    get:
+      tags: [Tindakan]
+      summary: Get Tindakan by Kunjungan
+      description: Get Data Tindakan berdasarkan nomor kunjungan
+      parameters:
+        - name: noKunjungan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kunjungan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data tindakan berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TindakanKunjunganListResponse'
+              example:
+                response:
+                  count: 1
+                  list:
+                    - kdTindakanSK: 199
+                      noKunjungan: "1301U0070815Y000005"
+                      kdTindakan: "01006"
+                      nmTindakan: "Pelayanan KB : Suntik\r\n"
+                      biaya: 15000
+                      keterangan: "2000"
+                      hasil: 0
+                metaData:
+                  message: "OK"
+                  code: 200
+
+  /tindakan/kdTkp/{kdTkp}/{start}/{limit}:
+    get:
+      tags: [Tindakan]
+      summary: Get Referensi Tindakan
+      description: Get Data Referensi Tindakan berdasarkan kdTkp, start, dan limit
+      parameters:
+        - name: kdTkp
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - "10"
+              - "20"
+              - "50"
+          description: "Kode TKP (10=RJTP, 20=RITP, 50=Promotif)"
+        - name: start
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+          description: Row data awal yang akan ditampilkan
+        - name: limit
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          description: Limit jumlah data yang akan ditampilkan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data referensi tindakan berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReferensiTindakanListResponse'
+              example:
+                response:
+                  count: 212
+                  list:
+                    - kdTindakan: "02007"
+                      nmTindakan: "Penanganan pendarahan pasca keguguran\r\n"
+                      maxTarif: 750000
+                      withValue: false
+                    - kdTindakan: "02005"
+                      nmTindakan: "Paket persalinan per vaginam normal"
+                      maxTarif: 600000
+                      withValue: false
+                    - kdTindakan: "02003"
+                      nmTindakan: "Pelayanan tindakan pasca persalinan"
+                      maxTarif: 175000
+                      withValue: false
+                metaData:
+                  message: "OK"
+                  code: 200
+
+  /tindakan:
+    post:
+      tags: [Tindakan]
+      summary: Add Tindakan
+      description: Add Data Tindakan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/TindakanRequest'
+            example:
+              kdTindakanSK: 0
+              noKunjungan: "1301U0070815Y000004"
+              kdTindakan: "01007"
+              biaya: 0
+              keterangan: null
+              hasil: 0
+      responses:
+        '201':
+          description: Data tindakan berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      field:
+                        type: string
+                        description: Field yang diupdate
+                        example: "kdTindakanSK"
+                      message:
+                        type: string
+                        description: ID tindakan yang dibuat
+                        example: "218"
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "CREATED"
+                      code:
+                        type: integer
+                        example: 201
+              example:
+                response:
+                  field: "kdTindakanSK"
+                  message: "218"
+                metaData:
+                  message: "CREATED"
+                  code: 201
+    put:
+      tags: [Tindakan]
+      summary: Edit Tindakan
+      description: Edit Data Tindakan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/TindakanRequest'
+            example:
+              kdTindakanSK: 218
+              noKunjungan: "1301U0070815Y000004"
+              kdTindakan: "01007"
+              biaya: 0
+              keterangan: null
+              hasil: 0
+      responses:
+        '200':
+          description: Data tindakan berhasil diupdate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      field:
+                        type: string
+                        description: Field yang diupdate
+                        example: "kdTindakanSK"
+                      message:
+                        type: string
+                        description: ID tindakan yang diupdate
+                        example: "219"
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "OK"
+                      code:
+                        type: integer
+                        example: 200
+              example:
+                response:
+                  field: "kdTindakanSK"
+                  message: "219"
+                metaData:
+                  message: "OK"
+                  code: 200
+
+  /tindakan/{kdTindakanSK}/kunjungan/{noKunjungan}:
+    delete:
+      tags: [Tindakan]
+      summary: Delete Tindakan
+      description: Delete Data Tindakan berdasarkan kdTindakanSK dan nomor kunjungan
+      parameters:
+        - name: kdTindakanSK
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Kode TindakanSK
+        - name: noKunjungan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kunjungan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data tindakan berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    nullable: true
+                    description: Response data (null jika berhasil)
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "OK"
+                      code:
+                        type: integer
+                        example: 200
+              example:
+                response: null
+                metaData:
+                  message: "OK"
+                  code: 200
+
+components:
+  securitySchemes:
+    pcareAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    pcareTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    pcareSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    pcareAuthorization:
+      type: apiKey
+      in: header
+      name: X-authorization
+      description: Generated signature dengan pola Base64
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
+  schemas:
+    TindakanKunjungan:
+      type: object
+      properties:
+        kdTindakanSK:
+          type: integer
+          description: Kode TindakanSK
+        noKunjungan:
+          type: string
+          description: Nomor Kunjungan
+        kdTindakan:
+          type: string
+          description: Kode Tindakan
+        nmTindakan:
+          type: string
+          description: Nama Tindakan
+        biaya:
+          type: integer
+          description: Biaya
+        keterangan:
+          type: string
+          nullable: true
+          description: Keterangan
+        hasil:
+          type: integer
+          description: Hasil
+    TindakanKunjunganListResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Jumlah total data tindakan
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/TindakanKunjungan'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response
+    ReferensiTindakan:
+      type: object
+      properties:
+        kdTindakan:
+          type: string
+          description: Kode Tindakan
+        nmTindakan:
+          type: string
+          description: Nama Tindakan
+        maxTarif:
+          type: integer
+          description: Maksimal Tarif
+        withValue:
+          type: boolean
+          description: Apakah dengan value
+    ReferensiTindakanListResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Jumlah total data referensi tindakan
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/ReferensiTindakan'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response
+    TindakanRequest:
+      type: object
+      required:
+        - kdTindakanSK
+        - noKunjungan
+        - kdTindakan
+        - biaya
+        - hasil
+      properties:
+        kdTindakanSK:
+          type: integer
+          description: Kode TindakanSK (0 untuk create baru)
+        noKunjungan:
+          type: string
+          description: Nomor Kunjungan
+        kdTindakan:
+          type: string
+          description: Kode Tindakan
+        biaya:
+          type: integer
+          description: Biaya
+        keterangan:
+          type: string
+          nullable: true
+          description: Keterangan
+        hasil:
+          type: integer
+          description: Hasil

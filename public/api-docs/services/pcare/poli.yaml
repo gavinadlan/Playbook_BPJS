@@ -1,0 +1,127 @@
+openapi: 3.0.0
+info:
+  title: PCare Poli API
+  version: 1.0.0
+  description: Layanan untuk data poli FKTP PCare
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev
+    description: PCare Development Server
+tags:
+  - name: Poli
+    description: Data poli FKTP
+
+paths:
+  /poli/fktp/{start}/{limit}:
+    get:
+      tags: [Poli]
+      summary: Get Poli FKTP
+      description: |
+        Get Data Poli FKTP berdasarkan start dan limit
+        
+        ## URL Format
+        `{Base URL}/{Service Name}/poli/fktp/{start}/{limit}`
+      parameters:
+        - name: start
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+          description: Row data awal yang akan ditampilkan
+        - name: limit
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          description: Limit jumlah data yang akan ditampilkan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data poli FKTP berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoliFKTPResponse'
+              example:
+                response:
+                  count: 2
+                  list:
+                    - kdPoli: "001"
+                      nmPoli: "Umum"
+                      poliSakit: true
+                    - kdPoli: "003"
+                      nmPoli: "K I A"
+                      poliSakit: true
+                metaData:
+                  message: "OK"
+                  code: 200
+
+components:
+  securitySchemes:
+    pcareAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    pcareTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    pcareSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    pcareAuthorization:
+      type: apiKey
+      in: header
+      name: X-authorization
+      description: Generated signature dengan pola Base64
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
+  schemas:
+    PoliFKTP:
+      type: object
+      properties:
+        kdPoli:
+          type: string
+          description: Kode poli
+        nmPoli:
+          type: string
+          description: Nama poli
+        poliSakit:
+          type: boolean
+          description: Apakah poli sakit
+    PoliFKTPResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Jumlah total data poli
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/PoliFKTP'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response

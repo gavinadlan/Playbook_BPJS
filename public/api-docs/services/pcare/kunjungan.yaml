@@ -1,0 +1,1000 @@
+openapi: 3.0.0
+info:
+  title: PCare Kunjungan API
+  version: 1.0.0
+  description: Layanan untuk mengelola data kunjungan PCare
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev
+    description: PCare Development Server
+tags:
+  - name: Kunjungan
+    description: Operasi data kunjungan pasien
+
+paths:
+  /kunjungan/rujukan/{noKunjungan}:
+    get:
+      tags: [Kunjungan]
+      summary: Get Data Rujukan
+      description: Mendapatkan data rujukan berdasarkan nomor kunjungan
+      parameters:
+        - name: noKunjungan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor kunjungan
+          example: "0114U1630316Y000003"
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data rujukan berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RujukanResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /kunjungan/peserta/{noKartu}:
+    get:
+      tags: [Kunjungan]
+      summary: Get Riwayat Kunjungan
+      description: Mendapatkan riwayat kunjungan berdasarkan nomor kartu peserta
+      parameters:
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor kartu peserta
+          example: "0000029247423"
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data riwayat kunjungan berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RiwayatKunjunganResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /kunjungan:
+    post:
+      tags: [Kunjungan]
+      summary: Add Data Kunjungan
+      description: Menambahkan data kunjungan baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KunjunganRequest'
+            examples:
+              rujukan_hemodialisa:
+                summary: Contoh Rujukan Hemodialisa
+                value:
+                  noKunjungan: null
+                  noKartu: "0000043678034"
+                  tglDaftar: "13-08-2018"
+                  kdPoli: null
+                  keluhan: "keluhan"
+                  kdSadar: "01"
+                  sistole: 0
+                  diastole: 0
+                  beratBadan: 0
+                  tinggiBadan: 0
+                  respRate: 0
+                  heartRate: 0
+                  lingkarPerut: 36
+                  kdStatusPulang: "4"
+                  tglPulang: "19-05-2016"
+                  kdDokter: "73229"
+                  kdDiag1: "A01.0"
+                  kdDiag2: null
+                  kdDiag3: null
+                  kdPoliRujukInternal: null
+                  rujukLanjut:
+                    tglEstRujuk: "02-10-2018"
+                    kdppk: "0116R028"
+                    subSpesialis: null
+                    khusus:
+                      kdKhusus: "HDL"
+                      kdSubSpesialis: null
+                      catatan: "peserta sudah biasa hemodialisa"
+                  kdTacc: 0
+                  alasanTacc: null
+                  anamnesa: "test anamnesa"
+                  alergiMakan: "00"
+                  alergiUdara: "00"
+                  alergiObat: "00"
+                  kdPrognosa: "01"
+                  terapiObat: "test terapi obat"
+                  terapiNonObat: "test terapi nonobat"
+                  bmhp: "bmhp"
+                  suhu: "36,4"
+              rujukan_spesialis:
+                summary: Contoh Rujukan Spesialis
+                value:
+                  noKunjungan: null
+                  noKartu: "0000000114759"
+                  tglDaftar: "26-03-2022"
+                  kdPoli: "002"
+                  keluhan: "keluhan"
+                  kdSadar: "04"
+                  sistole: 80
+                  diastole: 80
+                  beratBadan: 50
+                  tinggiBadan: 170
+                  respRate: 80
+                  heartRate: 80
+                  lingkarPerut: 36
+                  kdStatusPulang: "4"
+                  tglPulang: "27-03-2022"
+                  kdDokter: "179007"
+                  kdDiag1: "O82"
+                  kdDiag2: null
+                  kdDiag3: null
+                  kdPoliRujukInternal: null
+                  rujukLanjut:
+                    kdppk: "0112R016"
+                    tglEstRujuk: "27-03-2022"
+                    subSpesialis:
+                      kdSubSpesialis1: "16"
+                      kdSarana: null
+                    khusus: null
+                  kdTacc: -1
+                  alasanTacc: null
+                  anamnesa: "test anamnesa"
+                  alergiMakan: "00"
+                  alergiUdara: "00"
+                  alergiObat: "00"
+                  kdPrognosa: "01"
+                  terapiObat: "test terapi obat"
+                  terapiNonObat: "test terapi nonobat"
+                  bmhp: "bmhp"
+                  suhu: "36,4"
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '201':
+          description: Data kunjungan berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddKunjunganResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    put:
+      tags: [Kunjungan]
+      summary: Edit Data Kunjungan
+      description: Mengubah data kunjungan yang sudah ada
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditKunjunganRequest'
+            example:
+              noKunjungan: "011200210322Y000012"
+              noKartu: "0000000114759"
+              keluhan: "keluhan"
+              kdSadar: "03"
+              sistole: 90
+              diastole: 90
+              beratBadan: 50
+              tinggiBadan: 170
+              respRate: 90
+              heartRate: 90
+              lingkarPerut: 36
+              kdStatusPulang: "4"
+              tglPulang: "27-03-2022"
+              kdDokter: "179007"
+              kdDiag1: "B54"
+              kdDiag2: null
+              kdDiag3: null
+              kdPoliRujukInternal: null
+              rujukLanjut:
+                tglEstRujuk: "27-03-2022"
+                kdppk: "0112R016"
+                subSpesialis: null
+                khusus:
+                  kdKhusus: "HDL"
+                  kdSubSpesialis: null
+                  catatan: "peserta sudah biasa hemodialisa"
+              kdTacc: 1
+              alasanTacc: "< 3 Hari"
+              anamnesa: "test anamnesa"
+              alergiMakan: "00"
+              alergiUdara: "00"
+              alergiObat: "00"
+              kdPrognosa: "01"
+              terapiObat: "test terapi obat"
+              terapiNonObat: "test terapi nonobat"
+              bmhp: "bmhp"
+              suhu: "36,4"
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data kunjungan berhasil diubah
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /kunjungan/{noKunjungan}:
+    delete:
+      tags: [Kunjungan]
+      summary: Delete Data Kunjungan
+      description: Menghapus data kunjungan berdasarkan nomor kunjungan
+      parameters:
+        - name: noKunjungan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor kunjungan
+          example: "0114U1630316Y000003"
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data kunjungan berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  schemas:
+    # Schema untuk response rujukan
+    RujukanResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            noRujukan:
+              type: string
+              example: "0114U1630316Y000003"
+            ppk:
+              $ref: '#/components/schemas/PPK'
+            tglKunjungan:
+              type: string
+              format: date
+              example: "31-07-2016"
+            poli:
+              $ref: '#/components/schemas/Poli'
+            nokaPst:
+              type: string
+              example: "0001149957551"
+            nmPst:
+              type: string
+              example: "HANY TJOA"
+            tglLahir:
+              type: string
+              format: date
+              example: "16-06-1970"
+            pisa:
+              type: string
+              example: "1"
+            ketPisa:
+              type: string
+              example: "Peserta"
+            sex:
+              type: string
+              enum: ["L", "P"]
+              example: "L"
+            diag1:
+              $ref: '#/components/schemas/Diagnosa'
+            diag2:
+              $ref: '#/components/schemas/Diagnosa'
+            diag3:
+              $ref: '#/components/schemas/Diagnosa'
+            catatan:
+              type: string
+              example: ""
+            dokter:
+              $ref: '#/components/schemas/Dokter'
+            tacc:
+              $ref: '#/components/schemas/Tacc'
+            infoDenda:
+              type: string
+              example: "Anda memasuki masa denda 45 hari jika melakukan rawat inap di FKRTL mulai tanggal : 01-08-2016 sampai tanggal : 15-09-2016"
+        metaData:
+          $ref: '#/components/schemas/MetaData'
+
+    # Schema untuk response riwayat kunjungan
+    RiwayatKunjunganResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            count:
+              type: integer
+              example: 1
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/RiwayatKunjunganItem'
+        metaData:
+          $ref: '#/components/schemas/MetaData'
+
+    # Schema untuk request kunjungan
+    KunjunganRequest:
+      type: object
+      properties:
+        noKunjungan:
+          type: string
+          nullable: true
+          example: null
+        noKartu:
+          type: string
+          example: "0000043678034"
+        tglDaftar:
+          type: string
+          format: date
+          example: "13-08-2018"
+        kdPoli:
+          type: string
+          nullable: true
+          example: null
+        keluhan:
+          type: string
+          example: "keluhan"
+        kdSadar:
+          type: string
+          example: "01"
+        sistole:
+          type: integer
+          example: 0
+        diastole:
+          type: integer
+          example: 0
+        beratBadan:
+          type: integer
+          example: 0
+        tinggiBadan:
+          type: integer
+          example: 0
+        respRate:
+          type: integer
+          example: 0
+        heartRate:
+          type: integer
+          example: 0
+        lingkarPerut:
+          type: integer
+          example: 36
+        kdStatusPulang:
+          type: string
+          example: "4"
+        tglPulang:
+          type: string
+          format: date
+          example: "19-05-2016"
+        kdDokter:
+          type: string
+          example: "73229"
+        kdDiag1:
+          type: string
+          example: "A01.0"
+        kdDiag2:
+          type: string
+          nullable: true
+          example: null
+        kdDiag3:
+          type: string
+          nullable: true
+          example: null
+        kdPoliRujukInternal:
+          type: string
+          nullable: true
+          example: null
+        rujukLanjut:
+          $ref: '#/components/schemas/RujukLanjut'
+        kdTacc:
+          type: integer
+          example: 0
+        alasanTacc:
+          type: string
+          nullable: true
+          example: null
+        anamnesa:
+          type: string
+          example: "test anamnesa"
+        alergiMakan:
+          type: string
+          example: "00"
+        alergiUdara:
+          type: string
+          example: "00"
+        alergiObat:
+          type: string
+          example: "00"
+        kdPrognosa:
+          type: string
+          example: "01"
+        terapiObat:
+          type: string
+          example: "test terapi obat"
+        terapiNonObat:
+          type: string
+          example: "test terapi nonobat"
+        bmhp:
+          type: string
+          example: "bmhp"
+        suhu:
+          type: string
+          example: "36,4"
+      required:
+        - noKartu
+        - tglDaftar
+        - keluhan
+        - kdSadar
+        - kdStatusPulang
+        - tglPulang
+        - kdDokter
+        - kdDiag1
+
+    # Schema untuk request edit kunjungan
+    EditKunjunganRequest:
+      allOf:
+        - $ref: '#/components/schemas/KunjunganRequest'
+        - type: object
+          properties:
+            noKunjungan:
+              type: string
+              example: "011200210322Y000012"
+          required:
+            - noKunjungan
+
+    # Schema untuk response add kunjungan
+    AddKunjunganResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            field:
+              type: string
+              example: "noKunjungan"
+            message:
+              type: string
+              example: "0114U1630316Y000001"
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "CREATED"
+            code:
+              type: integer
+              example: 201
+
+    # Schema untuk response standar
+    StandardResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          nullable: true
+          example: null
+        metaData:
+          $ref: '#/components/schemas/MetaData'
+
+    # Supporting schemas
+    PPK:
+      type: object
+      properties:
+        kdPPK:
+          type: string
+          example: "0114U163"
+        nmPPK:
+          type: string
+          example: "Klinik Cempaka Putih (JST)"
+        alamat:
+          type: string
+          nullable: true
+          example: null
+        kc:
+          $ref: '#/components/schemas/KC'
+
+    KC:
+      type: object
+      properties:
+        kdKC:
+          type: string
+          example: "0901"
+        nmKC:
+          type: string
+          example: "JAKARTA PUSAT"
+        alamat:
+          type: string
+          nullable: true
+          example: null
+        telp:
+          type: string
+          nullable: true
+          example: null
+        fax:
+          type: string
+          nullable: true
+          example: null
+        dati:
+          $ref: '#/components/schemas/Dati'
+        kdKR:
+          $ref: '#/components/schemas/KR'
+
+    Dati:
+      type: object
+      properties:
+        kdProp:
+          type: string
+          nullable: true
+          example: null
+        kdDati:
+          type: string
+          example: "0114"
+        nmDati:
+          type: string
+          example: "KOTA JAKARTA PUSAT"
+
+    KR:
+      type: object
+      properties:
+        kdKR:
+          type: string
+          example: "04"
+        nmKR:
+          type: string
+          example: "REGIONAL   IV - JAKARTA"
+        alamat:
+          type: string
+          nullable: true
+          example: null
+        telp:
+          type: string
+          nullable: true
+          example: null
+        fax:
+          type: string
+          nullable: true
+          example: null
+
+    Poli:
+      type: object
+      properties:
+        kdPoli:
+          type: string
+          example: "UGD"
+        nmPoli:
+          type: string
+          example: "Unit Gawat Darurat"
+        poliSakit:
+          type: boolean
+          example: true
+
+    Diagnosa:
+      type: object
+      properties:
+        kdDiag:
+          type: string
+          example: "A01.1"
+        nmDiag:
+          type: string
+          example: "Paratyphoid fever A"
+        nonSpesialis:
+          type: boolean
+          example: false
+
+    Dokter:
+      type: object
+      properties:
+        kdDokter:
+          type: string
+          example: "019"
+        nmDokter:
+          type: string
+          example: "dr henny"
+
+    Tacc:
+      type: object
+      properties:
+        nmTacc:
+          type: string
+          nullable: true
+          example: null
+        alasanTacc:
+          type: string
+          nullable: true
+          example: null
+
+    RiwayatKunjunganItem:
+      type: object
+      properties:
+        noKunjungan:
+          type: string
+          example: "0114A0260815Y000003"
+        tglKunjungan:
+          type: string
+          format: date
+          example: "25-08-2015"
+        providerPelayanan:
+          type: object
+          properties:
+            kdProvider:
+              type: string
+              example: "0114A026"
+            nmProvider:
+              type: string
+              example: "IF RS THAMRIN"
+        peserta:
+          $ref: '#/components/schemas/Peserta'
+        poli:
+          $ref: '#/components/schemas/Poli'
+        progProlanis:
+          type: object
+          properties:
+            kdProgram:
+              type: string
+              example: ""
+            nmProgram:
+              type: string
+              example: ""
+        keluhan:
+          type: string
+          example: "keluhan"
+        diagnosa1:
+          $ref: '#/components/schemas/Diagnosa'
+        diagnosa2:
+          $ref: '#/components/schemas/Diagnosa'
+        diagnosa3:
+          $ref: '#/components/schemas/Diagnosa'
+        kesadaran:
+          type: object
+          properties:
+            kdSadar:
+              type: string
+              example: "01"
+            nmSadar:
+              type: string
+              example: "Compos mentis"
+        sistole:
+          type: integer
+          example: 0
+        diastole:
+          type: integer
+          example: 0
+        beratBadan:
+          type: integer
+          example: 0
+        tinggiBadan:
+          type: integer
+          example: 0
+        respRate:
+          type: integer
+          example: 0
+        heartRate:
+          type: integer
+          example: 0
+        catatan:
+          type: string
+          example: "catatan"
+        rujukBalik:
+          type: integer
+          example: 0
+        providerAsalRujuk:
+          type: object
+          properties:
+            kdProvider:
+              type: string
+              example: ""
+            nmProvider:
+              type: string
+              nullable: true
+              example: null
+        providerRujukLanjut:
+          type: object
+          properties:
+            kdProvider:
+              type: string
+              example: "00010003"
+            nmProvider:
+              type: string
+              example: "POLIKLINIK POLRES LANGSA"
+        pemFisikLain:
+          type: string
+          example: ""
+        dokter:
+          $ref: '#/components/schemas/Dokter'
+        statusPulang:
+          type: object
+          properties:
+            kdStatusPulang:
+              type: string
+              example: "4"
+            nmStatusPulang:
+              type: string
+              example: "Rujuk Lanjut"
+        tkp:
+          type: object
+          properties:
+            kdTkp:
+              type: string
+              example: "10"
+            nmTkp:
+              type: string
+              example: "RJTP"
+        poliRujukInternal:
+          $ref: '#/components/schemas/Poli'
+        poliRujukLanjut:
+          $ref: '#/components/schemas/Poli'
+        tglPulang:
+          type: string
+          format: date
+          example: "25-08-2015"
+
+    Peserta:
+      type: object
+      properties:
+        noKartu:
+          type: string
+          example: "0000029247423"
+        nama:
+          type: string
+          nullable: true
+          example: null
+        hubunganKeluarga:
+          type: string
+          example: "Peserta"
+        sex:
+          type: string
+          nullable: true
+          example: null
+        tglLahir:
+          type: string
+          nullable: true
+          format: date
+          example: null
+        tglMulaiAktif:
+          type: string
+          nullable: true
+          format: date
+          example: null
+        tglAkhirBerlaku:
+          type: string
+          nullable: true
+          format: date
+          example: null
+        kdPpkPst:
+          type: string
+          nullable: true
+          example: null
+        kdPpkGigi:
+          type: string
+          nullable: true
+          example: null
+        jnsKelas:
+          type: string
+          nullable: true
+          example: null
+        jnsPeserta:
+          type: string
+          nullable: true
+          example: null
+        golDarah:
+          type: string
+          nullable: true
+          example: null
+        noHP:
+          type: string
+          nullable: true
+          example: null
+        noKTP:
+          type: string
+          nullable: true
+          example: null
+        asuransi:
+          type: string
+          nullable: true
+          example: null
+
+    RujukLanjut:
+      type: object
+      properties:
+        tglEstRujuk:
+          type: string
+          format: date
+          example: "02-10-2018"
+        kdppk:
+          type: string
+          example: "0116R028"
+        subSpesialis:
+          type: object
+          nullable: true
+          properties:
+            kdSubSpesialis1:
+              type: string
+              example: "16"
+            kdSarana:
+              type: string
+              nullable: true
+              example: null
+        khusus:
+          type: object
+          nullable: true
+          properties:
+            kdKhusus:
+              type: string
+              example: "HDL"
+            kdSubSpesialis:
+              type: string
+              nullable: true
+              example: null
+            catatan:
+              type: string
+              example: "peserta sudah biasa hemodialisa"
+
+    MetaData:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "OK"
+        code:
+          type: integer
+          example: 200
+
+  responses:
+    BadRequest:
+      description: Bad Request - Parameter tidak valid
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              metaData:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Parameter tidak valid"
+                  code:
+                    type: integer
+                    example: 400
+
+    Unauthorized:
+      description: Unauthorized - Authentication gagal
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              metaData:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Authentication gagal"
+                  code:
+                    type: integer
+                    example: 401
+
+    NotFound:
+      description: Not Found - Data tidak ditemukan
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              metaData:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Data tidak ditemukan"
+                  code:
+                    type: integer
+                    example: 404
+
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              metaData:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Internal Server Error"
+                  code:
+                    type: integer
+                    example: 500
+
+  securitySchemes:
+    pcareAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID untuk otentikasi PCare
+    pcareTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Timestamp dalam format milliseconds
+    pcareSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Signature untuk validasi request
+    pcareAuthorization:
+      type: apiKey
+      in: header
+      name: X-authorization
+      description: Authorization token
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses API

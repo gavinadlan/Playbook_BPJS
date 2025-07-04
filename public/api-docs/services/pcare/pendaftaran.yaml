@@ -1,0 +1,618 @@
+openapi: 3.0.0
+info:
+  title: PCare Pendaftaran API
+  version: 1.0.0
+  description: Layanan untuk data pendaftaran pasien PCare
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev
+    description: PCare Development Server
+tags:
+  - name: Pendaftaran
+    description: Data pendaftaran pasien
+
+paths:
+  /pendaftaran/noUrut/{noUrut}/tglDaftar/{tglDaftar}:
+    get:
+      tags: [Pendaftaran]
+      summary: Get Pendaftaran by Nomor Urut
+      description: |
+        Get Data Pendaftaran berdasarkan nomor urut dan tanggal daftar
+        
+        ## URL Format
+        `{Base URL}/{Service Name}/pendaftaran/noUrut/{noUrut}/tglDaftar/{tglDaftar}`
+      parameters:
+        - name: noUrut
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Urut Pendaftaran
+        - name: tglDaftar
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Tanggal Pendaftaran (format dd-mm-yyyy)
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data pendaftaran berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PendaftaranResponse'
+              example:
+                response:
+                  noUrut: "A1"
+                  tgldaftar: "13-08-2015"
+                  providerPelayanan:
+                    kdProvider: "1301U007"
+                    nmProvider: "MAULIDA JUNIAR, dr"
+                  peserta:
+                    noKartu: "0000029247423"
+                    nama: "ANDIKA TRI UTARI"
+                    hubunganKeluarga: "Peserta"
+                    sex: "P"
+                    tglLahir: "01-11-1992"
+                    tglMulaiAktif: "12-09-2002"
+                    tglAkhirBerlaku: "31-12-2050"
+                    kdProviderPst:
+                      kdProvider: "0611U006"
+                      nmProvider: "dr. HESTI WIDYANINGSIH"
+                    kdProviderGigi:
+                      kdProvider: "0091G002"
+                      nmProvider: "drg. SRIWIDIASTUTI"
+                    jnsKelas:
+                      kode: "2"
+                      nama: "KELAS II"
+                    jnsPeserta:
+                      kode: "13"
+                      nama: "PEGAWAI SWASTA"
+                    golDarah: "4"
+                    noHP: ""
+                    noKTP: "1674010000"
+                    aktif: true
+                    ketAktif: "AKTIF"
+                    asuransi:
+                      kdAsuransi: "05"
+                      nmAsuransi: "PT ASURANSI SINAR MAS"
+                      noAsuransi: "056M000045274004792a"
+                  poli:
+                    kdPoli: "001"
+                    nmPoli: "Umum"
+                  keluhan: ""
+                  status: "Sudah dilayani"
+                  sistole: 0
+                  diastole: 0
+                  beratBadan: 0
+                  tinggiBadan: 0
+                  respRate: 0
+                  heartRate: 0
+                  tkp:
+                    kdTkp: "10"
+                    nmTkp: "RJTP"
+                metaData:
+                  message: "OK"
+                  code: 200
+
+  /pendaftaran/tglDaftar/{tglDaftar}/{start}/{limit}:
+    get:
+      tags: [Pendaftaran]
+      summary: Get Pendaftaran Provider
+      description: |
+        Get Data Pendaftaran Provider berdasarkan tanggal daftar, start, dan limit
+        
+        ## URL Format
+        `{Base URL}/{Service Name}/pendaftaran/tglDaftar/{tglDaftar}/{start}/{limit}`
+      parameters:
+        - name: tglDaftar
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Tanggal Pendaftaran (format dd-mm-yyyy)
+        - name: start
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+          description: Row data awal yang akan ditampilkan
+        - name: limit
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          description: Limit jumlah data yang akan ditampilkan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data pendaftaran provider berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PendaftaranProviderResponse'
+              example:
+                response:
+                  count: 1
+                  list:
+                    - noUrut: "A1"
+                      tgldaftar: "15-05-2018"
+                      providerPelayanan: null
+                      peserta:
+                        noKartu: "0000043678034"
+                        nama: "FERRY APRIADI"
+                        hubunganKeluarga: null
+                        sex: "L"
+                        tglLahir: "05-04-1965"
+                        tglMulaiAktif: null
+                        tglAkhirBerlaku: null
+                        kdProviderPst: null
+                        kdProviderGigi: null
+                        jnsKelas: null
+                        jnsPeserta: null
+                        golDarah: null
+                        noHP: null
+                        noKTP: null
+                        aktif: false
+                        ketAktif: null
+                        asuransi: null
+                      poli:
+                        kdPoli: "001"
+                        nmPoli: "Umum"
+                        poliSakit: true
+                      keluhan: ""
+                      kunjSakit: true
+                      status: "Baru"
+                      sistole: 0
+                      diastole: 0
+                      beratBadan: 0
+                      tinggiBadan: 0
+                      respRate: 0
+                      heartRate: 0
+                      tkp:
+                        kdTkp: "10"
+                        nmTkp: "RJTP"
+                metaData:
+                  message: "OK"
+                  code: 200
+
+  /pendaftaran:
+    post:
+      tags: [Pendaftaran]
+      summary: Add Pendaftaran
+      description: |
+        Add Data Pendaftaran
+        
+        ## URL Format
+        `{Base URL}/{Service Name}/pendaftaran`
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/PendaftaranRequest'
+            example:
+              kdProviderPeserta: "0114A026"
+              tglDaftar: "12-08-2015"
+              noKartu: "0001113569638"
+              kdPoli: "001"
+              keluhan: null
+              kunjSakit: true
+              sistole: 0
+              diastole: 0
+              beratBadan: 0
+              tinggiBadan: 0
+              respRate: 0
+              lingkarPerut: 0
+              heartRate: 0
+              rujukBalik: 0
+              kdTkp: "10"
+      responses:
+        '201':
+          description: Data pendaftaran berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      field:
+                        type: string
+                        description: Field yang diupdate
+                        example: "noUrut"
+                      message:
+                        type: string
+                        description: Nomor urut pendaftaran yang dibuat
+                        example: "A1"
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "CREATED"
+                      code:
+                        type: integer
+                        example: 201
+              example:
+                response:
+                  field: "noUrut"
+                  message: "A1"
+                metaData:
+                  message: "CREATED"
+                  code: 201
+
+  /pendaftaran/peserta/{noKartu}/tglDaftar/{tglDaftar}/noUrut/{noUrut}/kdPoli/{kdPoli}:
+    delete:
+      tags: [Pendaftaran]
+      summary: Delete Pendaftaran
+      description: |
+        Delete Data Pendaftaran berdasarkan nomor kartu peserta, tanggal daftar, nomor urut, dan kode poli
+        
+        ## URL Format
+        `{Base URL}/{Service Name}/pendaftaran/peserta/{noKartu}/tglDaftar/{tglDaftar}/noUrut/{noUrut}/kdPoli/{kdPoli}`
+      parameters:
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kartu Peserta
+        - name: tglDaftar
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Tanggal Pendaftaran (format dd-mm-yyyy)
+        - name: noUrut
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Urut Pendaftaran
+        - name: kdPoli
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode Poli
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data pendaftaran berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    description: Response data (string kosong jika berhasil)
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "OK"
+                      code:
+                        type: integer
+                        example: 200
+              example:
+                response: ""
+                metaData:
+                  message: "OK"
+                  code: 200
+
+components:
+  securitySchemes:
+    pcareAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    pcareTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    pcareSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    pcareAuthorization:
+      type: apiKey
+      in: header
+      name: X-authorization
+      description: Generated signature dengan pola Base64
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
+  schemas:
+    Provider:
+      type: object
+      properties:
+        kdProvider:
+          type: string
+          description: Kode provider
+        nmProvider:
+          type: string
+          description: Nama provider
+    Poli:
+      type: object
+      properties:
+        kdPoli:
+          type: string
+          description: Kode poli
+        nmPoli:
+          type: string
+          description: Nama poli
+        poliSakit:
+          type: boolean
+          description: Apakah poli sakit
+          nullable: true
+    TKP:
+      type: object
+      properties:
+        kdTkp:
+          type: string
+          description: Kode TKP
+        nmTkp:
+          type: string
+          description: Nama TKP
+    Asuransi:
+      type: object
+      properties:
+        kdAsuransi:
+          type: string
+          description: Kode asuransi
+        nmAsuransi:
+          type: string
+          description: Nama asuransi
+        noAsuransi:
+          type: string
+          description: Nomor asuransi
+    Peserta:
+      type: object
+      properties:
+        noKartu:
+          type: string
+          description: Nomor kartu peserta
+        nama:
+          type: string
+          description: Nama peserta
+        hubunganKeluarga:
+          type: string
+          description: Hubungan keluarga
+          nullable: true
+        sex:
+          type: string
+          description: Jenis kelamin
+        tglLahir:
+          type: string
+          description: Tanggal lahir
+        tglMulaiAktif:
+          type: string
+          description: Tanggal mulai aktif
+          nullable: true
+        tglAkhirBerlaku:
+          type: string
+          description: Tanggal akhir berlaku
+          nullable: true
+        kdProviderPst:
+          $ref: '#/components/schemas/Provider'
+          nullable: true
+        kdProviderGigi:
+          $ref: '#/components/schemas/Provider'
+          nullable: true
+        jnsKelas:
+          type: object
+          properties:
+            kode:
+              type: string
+            nama:
+              type: string
+          nullable: true
+        jnsPeserta:
+          type: object
+          properties:
+            kode:
+              type: string
+            nama:
+              type: string
+          nullable: true
+        golDarah:
+          type: string
+          description: Golongan darah
+          nullable: true
+        noHP:
+          type: string
+          description: Nomor HP
+          nullable: true
+        noKTP:
+          type: string
+          description: Nomor KTP
+          nullable: true
+        aktif:
+          type: boolean
+          description: Status aktif
+        ketAktif:
+          type: string
+          description: Keterangan aktif
+          nullable: true
+        asuransi:
+          $ref: '#/components/schemas/Asuransi'
+          nullable: true
+    Pendaftaran:
+      type: object
+      properties:
+        noUrut:
+          type: string
+          description: Nomor urut pendaftaran
+        tgldaftar:
+          type: string
+          description: Tanggal daftar
+        providerPelayanan:
+          $ref: '#/components/schemas/Provider'
+          nullable: true
+        peserta:
+          $ref: '#/components/schemas/Peserta'
+        poli:
+          $ref: '#/components/schemas/Poli'
+        keluhan:
+          type: string
+          description: Keluhan
+        kunjSakit:
+          type: boolean
+          description: Kunjungan sakit
+          nullable: true
+        status:
+          type: string
+          description: Status pendaftaran
+        sistole:
+          type: integer
+          description: Tekanan darah sistole
+        diastole:
+          type: integer
+          description: Tekanan darah diastole
+        beratBadan:
+          type: integer
+          description: Berat badan
+        tinggiBadan:
+          type: integer
+          description: Tinggi badan
+        respRate:
+          type: integer
+          description: Respiratory rate
+        heartRate:
+          type: integer
+          description: Heart rate
+        tkp:
+          $ref: '#/components/schemas/TKP'
+    PendaftaranResponse:
+      type: object
+      properties:
+        response:
+          $ref: '#/components/schemas/Pendaftaran'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response
+    PendaftaranProviderResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Jumlah total data pendaftaran
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/Pendaftaran'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response
+    PendaftaranRequest:
+      type: object
+      required:
+        - kdProviderPeserta
+        - tglDaftar
+        - noKartu
+        - kdPoli
+        - kunjSakit
+        - sistole
+        - diastole
+        - beratBadan
+        - tinggiBadan
+        - respRate
+        - lingkarPerut
+        - heartRate
+        - rujukBalik
+        - kdTkp
+      properties:
+        kdProviderPeserta:
+          type: string
+          description: Kode provider peserta
+        tglDaftar:
+          type: string
+          description: Tanggal daftar
+        noKartu:
+          type: string
+          description: Nomor kartu peserta
+        kdPoli:
+          type: string
+          description: Kode poli
+        keluhan:
+          type: string
+          nullable: true
+          description: Keluhan
+        kunjSakit:
+          type: boolean
+          description: Kunjungan sakit
+        sistole:
+          type: integer
+          description: Tekanan darah sistole
+        diastole:
+          type: integer
+          description: Tekanan darah diastole
+        beratBadan:
+          type: integer
+          description: Berat badan
+        tinggiBadan:
+          type: integer
+          description: Tinggi badan
+        respRate:
+          type: integer
+          description: Respiratory rate
+        lingkarPerut:
+          type: integer
+          description: Lingkar perut
+        heartRate:
+          type: integer
+          description: Heart rate
+        rujukBalik:
+          type: integer
+          description: Rujuk balik
+        kdTkp:
+          type: string
+          description: Kode TKP

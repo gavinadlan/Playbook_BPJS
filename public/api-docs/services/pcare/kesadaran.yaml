@@ -1,0 +1,125 @@
+openapi: 3.0.0
+info:
+  title: PCare Kesadaran API
+  version: 1.0.0
+  description: Layanan untuk data tingkat kesadaran pasien PCare
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev
+    description: PCare Development Server
+tags:
+  - name: Kesadaran
+    description: Data tingkat kesadaran pasien
+
+paths:
+  /pcare-rest-dev/kesadaran:
+    get:
+      tags: [Kesadaran]
+      summary: Get Kesadaran
+      description: |
+        Get Data Kesadaran untuk tingkat kesadaran pasien
+        
+        ## URL Format
+        `{Base URL}/{Service Name}/kesadaran`
+        
+        ## Response
+        Mengembalikan daftar tingkat kesadaran yang tersedia:
+        - `01`: Compos mentis
+        - `02`: Somnolence  
+        - `03`: Sopor
+        - `04`: Coma
+        
+        ## Example
+        ```
+        GET https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev/kesadaran
+        ```
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data kesadaran berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KesadaranResponse'
+              example:
+                response:
+                  count: 4
+                  list:
+                    - kdSadar: "01"
+                      nmSadar: "Compos mentis"
+                    - kdSadar: "02"
+                      nmSadar: "Somnolence"
+                    - kdSadar: "03"
+                      nmSadar: "Sopor"
+                    - kdSadar: "04"
+                      nmSadar: "Coma"
+                metaData:
+                  message: "OK"
+                  code: 200
+
+components:
+  securitySchemes:
+    pcareAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    pcareTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    pcareSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    pcareAuthorization:
+      type: apiKey
+      in: header
+      name: X-authorization
+      description: Generated signature dengan pola Base64
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
+  schemas:
+    Kesadaran:
+      type: object
+      properties:
+        kdSadar:
+          type: string
+          description: Kode tingkat kesadaran
+          example: "01"
+        nmSadar:
+          type: string
+          description: Nama tingkat kesadaran
+          example: "Compos mentis"
+    
+    KesadaranResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Jumlah total data kesadaran
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/Kesadaran'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response

@@ -1,0 +1,122 @@
+openapi: 3.0.0
+info:
+  title: PCare Provider API
+  version: 1.0.0
+  description: Layanan untuk data provider rayonisasi PCare
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev
+    description: PCare Development Server
+tags:
+  - name: Provider
+    description: Data provider rayonisasi
+
+paths:
+  /provider/{start}/{limit}:
+    get:
+      tags: [Provider]
+      summary: Get Provider Rayonisasi
+      description: |
+        Get Data Provider Rayonisasi berdasarkan start dan limit
+        
+        ## URL Format
+        `{Base URL}/{Service Name}/provider/{start}/{limit}`
+      parameters:
+        - name: start
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+          description: Row data awal yang akan ditampilkan
+        - name: limit
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          description: Limit jumlah data yang akan ditampilkan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data provider rayonisasi berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderRayonisasiResponse'
+              example:
+                response:
+                  count: 47
+                  list:
+                    - kdProvider: "0195R001"
+                      nmProvider: "RUMKITBAN SIDOARJO"
+                    - kdProvider: "0195R027"
+                      nmProvider: "RSU AL-Islam HM Mawardi"
+                metaData:
+                  message: "OK"
+                  code: 200
+
+components:
+  securitySchemes:
+    pcareAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    pcareTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    pcareSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    pcareAuthorization:
+      type: apiKey
+      in: header
+      name: X-authorization
+      description: Generated signature dengan pola Base64
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
+  schemas:
+    ProviderRayonisasi:
+      type: object
+      properties:
+        kdProvider:
+          type: string
+          description: Kode provider
+        nmProvider:
+          type: string
+          description: Nama provider
+    ProviderRayonisasiResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Jumlah total data provider
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProviderRayonisasi'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response

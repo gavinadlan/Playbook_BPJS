@@ -1,0 +1,248 @@
+openapi: 3.0.0
+info:
+  title: PCare Diagnosa API
+  version: 1.0.0
+  description: Layanan untuk mendapatkan data diagnosa PCare
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev
+    description: PCare Development Server
+tags:
+  - name: Diagnosa
+    description: Data diagnosa PCare
+
+paths:
+  /diagnosa/{keyword}/{start}/{limit}:
+    get:
+      tags: [Diagnosa]
+      summary: Get Diagnosa
+      description: |
+        Get Data Diagnosa berdasarkan kode atau nama diagnosa
+        
+        ## Parameter
+        - `keyword`: Kode atau nama diagnosa yang dicari
+        - `start`: Row data awal yang akan ditampilkan
+        - `limit`: Limit jumlah data yang akan ditampilkan
+        
+        ## Example
+        ```
+        GET /diagnosa/A001/0/10
+        GET /diagnosa/Cholera/0/20
+        ```
+      parameters:
+        - name: keyword
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode atau nama diagnosa
+          example: "A001"
+        - name: start
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+          description: Row data awal yang akan ditampilkan
+          example: 0
+        - name: limit
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          description: Limit jumlah data yang akan ditampilkan
+          example: 10
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data diagnosa berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Jumlah total data diagnosa
+                        example: 33
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kdDiag:
+                              type: string
+                              description: Kode diagnosa
+                              example: "A001"
+                            nmDiag:
+                              type: string
+                              description: Nama diagnosa
+                              example: "Cholera due to vibrio cholerae 01, biovar eltor"
+                            nonSpesialis:
+                              type: boolean
+                              description: Apakah diagnosa non-spesialis
+                              example: false
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                        example: "OK"
+                      code:
+                        type: integer
+                        description: Kode response
+                        example: 200
+              example:
+                response:
+                  count: 33
+                  list:
+                    - kdDiag: "A001"
+                      nmDiag: "Cholera due to vibrio cholerae 01, biovar eltor"
+                      nonSpesialis: false
+                    - kdDiag: "B001"
+                      nmDiag: "Herpesviral vesicular dermatitis"
+                      nonSpesialis: true
+                metaData:
+                  message: "OK"
+                  code: 200
+        '400':
+          description: Bad Request - Parameter tidak valid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Parameter tidak valid"
+                      code:
+                        type: integer
+                        example: 400
+        '401':
+          description: Unauthorized - Authentication gagal
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Authentication gagal"
+                      code:
+                        type: integer
+                        example: 401
+        '404':
+          description: Not Found - Data diagnosa tidak ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Data diagnosa tidak ditemukan"
+                      code:
+                        type: integer
+                        example: 404
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Internal Server Error"
+                      code:
+                        type: integer
+                        example: 500
+
+components:
+  securitySchemes:
+    pcareAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    pcareTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    pcareSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    pcareAuthorization:
+      type: apiKey
+      in: header
+      name: X-authorization
+      description: Generated signature dengan pola Base64
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
+  schemas:
+    Diagnosa:
+      type: object
+      properties:
+        kdDiag:
+          type: string
+          description: Kode diagnosa
+          example: "A001"
+        nmDiag:
+          type: string
+          description: Nama diagnosa
+          example: "Cholera due to vibrio cholerae 01, biovar eltor"
+        nonSpesialis:
+          type: boolean
+          description: Apakah diagnosa non-spesialis
+          example: false
+    
+    DiagnosaResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Jumlah total data diagnosa
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/Diagnosa'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response

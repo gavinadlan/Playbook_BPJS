@@ -1,0 +1,336 @@
+openapi: 3.0.0
+info:
+  title: PCare API - Decrypt Response Guide
+  version: 1.0.0
+  description: |
+    # PCare API Response Decryption Guide
+    
+    ## Overview
+    
+    Response kembalian dari web service PCare sudah dalam bentuk compres dan terenkripsi.
+    
+    ## Encryption Details
+    
+    - **Kompresi service**: menggunakan metode Lz-string
+    - **Enkripsi**: menggunakan metode AES 256 (mode CBC) - SHA256
+    - **Key enkripsi**: consid + conspwd + timestamp request (concatenate string)
+    
+    ## Decryption Process
+    
+    Langkah proses dalam melakukan decrypt data response sebagai berikut:
+    
+    1. **Dekripsi**: AES 256 (mode CBC) - SHA256
+    2. **Dekompresi**: Lz-string (decompressFromEncodedURIComponent)
+    
+    ### Key Generation
+    ```
+    key : consid + conspwd + timestamp request (concatenate string)
+    ```
+    
+    ## Code Examples
+    
+    ### Python
+    ```python
+    import hashlib
+    from Crypto.Cipher import AES
+    from Crypto.Util.Padding import pad, unpad
+    import base64
+    import lzstring
+    
+    def decrypt(key, txt_enc):
+        x = lzstring.LZString()
+        
+        key_hash = hashlib.sha256(key.encode('utf-8')).digest()
+        
+        mode = AES.MODE_CBC
+        
+        # decrypt
+        decryptor = AES.new(key_hash[0:32], mode, IV=key_hash[0:16])
+        plain = decryptor.decrypt(base64.b64decode(txt_enc))
+        decompress = x.decompressFromEncodedURIComponent(plain.decode('utf-8'))
+        
+        return decompress
+    
+    # Example usage
+    consumer_id = "1234"
+    consumer_secret = "pwd"
+    timestamp = "433223232"
+    encrypted_response = "encrypted_base64_string_here"
+    
+    key = consumer_id + consumer_secret + timestamp
+    decrypted_data = decrypt(key, encrypted_response)
+    print(decrypted_data)
+    ```
+    
+    ### Java
+    ```java
+    import javax.crypto.Cipher;
+    import javax.crypto.spec.IvParameterSpec;
+    import javax.crypto.spec.SecretKeySpec;
+    import java.security.MessageDigest;
+    import java.util.Base64;
+    
+    public class BpjsDecrypt {
+        
+        public static String decrypt(String key, String encryptedText) throws Exception {
+            // Generate SHA256 hash of the key
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] keyHash = digest.digest(key.getBytes("UTF-8"));
+            
+            // Extract key and IV from hash
+            byte[] aesKey = new byte[32];
+            byte[] iv = new byte[16];
+            System.arraycopy(keyHash, 0, aesKey, 0, 32);
+            System.arraycopy(keyHash, 0, iv, 0, 16);
+            
+            // Decrypt AES
+            SecretKeySpec secretKey = new SecretKeySpec(aesKey, "AES");
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv));
+            
+            byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedText));
+            String decryptedText = new String(decryptedBytes, "UTF-8");
+            
+            // Decompress using LZString
+            return LZString.decompressFromEncodedURIComponent(decryptedText);
+        }
+        
+        public static void main(String[] args) {
+            try {
+                String consumerId = "1234";
+                String consumerSecret = "pwd";
+                String timestamp = "433223232";
+                String encryptedResponse = "encrypted_base64_string_here";
+                
+                String key = consumerId + consumerSecret + timestamp;
+                String decryptedData = decrypt(key, encryptedResponse);
+                System.out.println(decryptedData);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    ```
+    
+    ### PHP
+    ```php
+    <?php
+    require_once 'lz-string.php'; // You need to include LZString library
+    
+    function decrypt($key, $txt_enc) {
+        // Generate SHA256 hash of the key
+        $key_hash = hash('sha256', $key, true);
+        
+        // Extract key and IV from hash
+        $aes_key = substr($key_hash, 0, 32);
+        $iv = substr($key_hash, 0, 16);
+        
+        // Decrypt AES
+        $decrypted = openssl_decrypt(
+            base64_decode($txt_enc),
+            'AES-256-CBC',
+            $aes_key,
+            OPENSSL_RAW_DATA,
+            $iv
+        );
+        
+        // Decompress using LZString
+        return LZString::decompressFromEncodedURIComponent($decrypted);
+    }
+    
+    // Example usage
+    $consumer_id = "1234";
+    $consumer_secret = "pwd";
+    $timestamp = "433223232";
+    $encrypted_response = "encrypted_base64_string_here";
+    
+    $key = $consumer_id . $consumer_secret . $timestamp;
+    $decrypted_data = decrypt($key, $encrypted_response);
+    echo $decrypted_data;
+    ?>
+    ```
+    
+    ### C#
+    ```csharp
+    using System;
+    using System.Security.Cryptography;
+    using System.Text;
+    using System.IO;
+    
+    public class BpjsDecrypt
+    {
+        public static string Decrypt(string key, string encryptedText)
+        {
+            // Generate SHA256 hash of the key
+            using (var sha256 = SHA256.Create())
+            {
+                byte[] keyHash = sha256.ComputeHash(Encoding.UTF8.GetBytes(key));
+                
+                // Extract key and IV from hash
+                byte[] aesKey = new byte[32];
+                byte[] iv = new byte[16];
+                Array.Copy(keyHash, 0, aesKey, 0, 32);
+                Array.Copy(keyHash, 0, iv, 0, 16);
+                
+                // Decrypt AES
+                using (var aes = Aes.Create())
+                {
+                    aes.Key = aesKey;
+                    aes.IV = iv;
+                    aes.Mode = CipherMode.CBC;
+                    aes.Padding = PaddingMode.PKCS7;
+                    
+                    using (var decryptor = aes.CreateDecryptor())
+                    using (var ms = new MemoryStream(Convert.FromBase64String(encryptedText)))
+                    using (var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
+                    using (var sr = new StreamReader(cs))
+                    {
+                        string decryptedText = sr.ReadToEnd();
+                        
+                        // Decompress using LZString (you need to implement or use a library)
+                        return LZString.DecompressFromEncodedURIComponent(decryptedText);
+                    }
+                }
+            }
+        }
+        
+        public static void Main()
+        {
+            string consumerId = "1234";
+            string consumerSecret = "pwd";
+            string timestamp = "433223232";
+            string encryptedResponse = "encrypted_base64_string_here";
+            
+            string key = consumerId + consumerSecret + timestamp;
+            string decryptedData = Decrypt(key, encryptedResponse);
+            Console.WriteLine(decryptedData);
+        }
+    }
+    ```
+    
+    ## Step-by-Step Process
+    
+    ### 1. Prepare Key
+    ```javascript
+    const consumerId = "1234";
+    const consumerSecret = "pwd";
+    const timestamp = "433223232";
+    
+    const key = consumerId + consumerSecret + timestamp;
+    // Result: "1234pwd433223232"
+    ```
+    
+    ### 2. Generate SHA256 Hash
+    ```javascript
+    const keyHash = crypto.createHash('sha256').update(key).digest();
+    // Use first 32 bytes as AES key, first 16 bytes as IV
+    ```
+    
+    ### 3. Decrypt AES
+    ```javascript
+    const aesKey = keyHash.slice(0, 32);
+    const iv = keyHash.slice(0, 16);
+    
+    const decipher = crypto.createDecipheriv('aes-256-cbc', aesKey, iv);
+    let decrypted = decipher.update(encryptedText, 'base64', 'utf8');
+    decrypted += decipher.final('utf8');
+    ```
+    
+    ### 4. Decompress LZString
+    ```javascript
+    const decompressed = LZString.decompressFromEncodedURIComponent(decrypted);
+    return decompressed;
+    ```
+    
+    ## Common Issues & Solutions
+    
+    ### Issue 1: Invalid Key Length
+    **Problem**: AES key must be exactly 32 bytes
+    **Solution**: Use SHA256 hash of the concatenated key string
+    
+    ### Issue 2: IV Mismatch
+    **Problem**: IV must be exactly 16 bytes
+    **Solution**: Use first 16 bytes of the SHA256 hash
+    
+    ### Issue 3: LZString Decompression Fails
+    **Problem**: Decompression returns null
+    **Solution**: Ensure the decrypted text is properly formatted for LZString
+    
+    ### Issue 4: Base64 Decoding Error
+    **Problem**: Invalid base64 string
+    **Solution**: Verify the encrypted response is properly base64 encoded
+
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev
+    description: PCare Development Server
+
+components:
+  schemas:
+    DecryptRequest:
+      type: object
+      required:
+        - key
+        - encryptedText
+      properties:
+        key:
+          type: string
+          description: Key untuk decrypt (consId + consSecret + timestamp)
+          example: "1234pwd433223232"
+        encryptedText:
+          type: string
+          description: Base64 encoded encrypted text
+          example: "U2FsdGVkX1+..."
+    
+    DecryptResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Status decrypt berhasil atau tidak
+        data:
+          type: object
+          description: Data hasil decrypt
+        error:
+          type: string
+          description: Pesan error jika decrypt gagal
+
+paths:
+  /decrypt:
+    post:
+      tags: [Decryption]
+      summary: Decrypt Response
+      description: |
+        Panduan untuk decrypt response dari PCare API
+        
+        ## Process
+        1. Generate key: `consId + consSecret + timestamp`
+        2. Generate SHA256 hash dari key
+        3. Decrypt AES-256-CBC dengan key dan IV dari hash
+        4. Decompress menggunakan LZString
+        
+        ## Formula
+        ```
+        key = consId + consSecret + timestamp
+        keyHash = SHA256(key)
+        aesKey = keyHash[0:32]
+        iv = keyHash[0:16]
+        decrypted = AES-256-CBC-Decrypt(encryptedText, aesKey, iv)
+        result = LZString.decompressFromEncodedURIComponent(decrypted)
+        ```
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecryptRequest'
+      responses:
+        '200':
+          description: Decrypt berhasil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DecryptResponse'
+        '400':
+          description: Request tidak valid
+        '500':
+          description: Error decrypt

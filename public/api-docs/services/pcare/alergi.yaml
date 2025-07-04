@@ -1,0 +1,106 @@
+openapi: 3.0.0
+info:
+  title: PCare Alergi API
+  version: 1.0.0
+  description: Layanan untuk data referensi alergi PCare
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev
+    description: PCare Development Server
+tags:
+  - name: Alergi
+    description: Data referensi alergi
+
+paths:
+  /alergi/jenis/{jenisAlergi}:
+    get:
+      tags:
+        - Alergi
+      summary: Get Data Alergi
+      description: Get Data Referensi Alergi berdasarkan jenis
+      parameters:
+        - name: jenisAlergi
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - "01"
+              - "02"
+              - "03"
+          description: |
+            Jenis Alergi:
+              - 01: Makanan
+              - 02: Udara
+              - 03: Obat
+      security:
+        - bpjsSecurity: []
+      responses:
+        '200':
+          description: Data referensi alergi berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlergiListResponse'
+              example:
+                response:
+                  list:
+                    - kdAlergi: "00"
+                      nmAlergi: "Tidak Ada"
+                    - kdAlergi: "01"
+                      nmAlergi: "Seafood"
+                    - kdAlergi: "02"
+                      nmAlergi: "Gandum"
+                    - kdAlergi: "03"
+                      nmAlergi: "Susu Sapi"
+                    - kdAlergi: "04"
+                      nmAlergi: "Kacang-Kacangan"
+                    - kdAlergi: "05"
+                      nmAlergi: "Makanan Lain"
+                metaData:
+                  message: "OK"
+                  code: 200
+
+components:
+  securitySchemes:
+    bpjsSecurity:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Dibutuhkan 5 header khusus untuk autentikasi:
+        1. X-cons-id - Consumer ID dari BPJS Kesehatan
+        2. X-timestamp - Generated unix-based timestamp
+        3. X-signature - Generated signature dengan pola HMAC-256
+        4. X-authorization - Generated signature dengan pola Base64
+        5. user_key - User key untuk akses webservice
+
+  schemas:
+    Alergi:
+      type: object
+      properties:
+        kdAlergi:
+          type: string
+          description: Kode alergi
+        nmAlergi:
+          type: string
+          description: Nama alergi
+
+    AlergiListResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/Alergi'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response

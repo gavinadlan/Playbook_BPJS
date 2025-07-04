@@ -1,0 +1,231 @@
+openapi: 3.0.0
+info:
+  title: PCare Dokter API
+  version: 1.0.0
+  description: Layanan untuk mendapatkan data dokter PCare
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev
+    description: PCare Development Server
+tags:
+  - name: Dokter
+    description: Data dokter PCare
+
+paths:
+  /dokter/{start}/{limit}:
+    get:
+      tags: [Dokter]
+      summary: Get Dokter
+      description: |
+        Get Data Dokter
+        
+        ## Parameter
+        - `start`: Row data awal yang akan ditampilkan
+        - `limit`: Limit jumlah data yang akan ditampilkan
+        
+        ## Example
+        ```
+        GET /dokter/0/10
+        GET /dokter/10/20
+        ```
+      parameters:
+        - name: start
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+          description: Row data awal yang akan ditampilkan
+          example: 0
+        - name: limit
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          description: Limit jumlah data yang akan ditampilkan
+          example: 10
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data dokter berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Jumlah total data dokter
+                        example: 19
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kdDokter:
+                              type: string
+                              description: Kode dokter
+                              example: "001"
+                            nmDokter:
+                              type: string
+                              description: Nama dokter
+                              example: "dr. Muna Hasnita Harahap"
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                        example: "OK"
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  count: 19
+                  list:
+                    - kdDokter: "001"
+                      nmDokter: "dr..."
+                    - kdDokter: "002"
+                      nmDokter: "dr. Muna Hasnita Harahap"
+                    - kdDokter: "003"
+                      nmDokter: "dr. fauzi"
+                metaData:
+                  message: "OK"
+                  code: 200
+        '400':
+          description: Bad Request - Parameter tidak valid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Parameter tidak valid"
+                      code:
+                        type: integer
+                        example: 400
+        '401':
+          description: Unauthorized - Authentication gagal
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Authentication gagal"
+                      code:
+                        type: integer
+                        example: 401
+        '404':
+          description: Not Found - Data dokter tidak ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Data dokter tidak ditemukan"
+                      code:
+                        type: integer
+                        example: 404
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Internal Server Error"
+                      code:
+                        type: integer
+                        example: 500
+
+components:
+  securitySchemes:
+    pcareAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    pcareTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    pcareSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    pcareAuthorization:
+      type: apiKey
+      in: header
+      name: X-authorization
+      description: Generated signature dengan pola Base64
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
+  schemas:
+    Dokter:
+      type: object
+      properties:
+        kdDokter:
+          type: string
+          description: Kode dokter
+          example: "001"
+        nmDokter:
+          type: string
+          description: Nama dokter
+          example: "dr. Muna Hasnita Harahap"
+    
+    DokterResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Jumlah total data dokter
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/Dokter'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response

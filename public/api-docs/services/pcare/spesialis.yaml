@@ -1,0 +1,558 @@
+openapi: 3.0.0
+info:
+  title: PCare Spesialis API
+  version: 1.0.0
+  description: Layanan untuk data referensi spesialis, subspesialis, sarana, khusus, dan faskes rujukan PCare
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev
+    description: PCare Development Server
+tags:
+  - name: Spesialis
+    description: Data referensi spesialis dan rujukan
+
+paths:
+  /spesialis:
+    get:
+      tags: 
+        - Spesialis
+      summary: Get Referensi Spesialis
+      description: Get Data Referensi Spesialis
+      security:
+        - bpjsSecurity: []
+      responses:
+        '200':
+          description: Data referensi spesialis berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpesialisListResponse'
+              example:
+                response:
+                  count: 2
+                  list:
+                    - kdSpesialis: "ANA"
+                      nmSpesialis: "ANAK"
+                    - kdSpesialis: "AND"
+                      nmSpesialis: "ANDROLOGI"
+                metaData:
+                  message: "OK"
+                  code: 200
+
+  /spesialis/{kdSpesialis}/subspesialis:
+    get:
+      tags: 
+        - Spesialis
+      summary: Get Referensi Sub Spesialis
+      description: Get Data Referensi Sub Spesialis berdasarkan kode spesialis
+      parameters:
+        - name: kdSpesialis
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode Spesialis
+      security:
+        - bpjsSecurity: []
+      responses:
+        '200':
+          description: Data referensi sub spesialis berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubSpesialisListResponse'
+              example:
+                response:
+                  count: 2
+                  list:
+                    - kdSubSpesialis: "26"
+                      nmSubSpesialis: "Anak"
+                      kdPoliRujuk: "ANA"
+                    - kdSubSpesialis: "27"
+                      nmSubSpesialis: "Anak Alergi Imunologi"
+                      kdPoliRujuk: "027"
+                metaData:
+                  message: "OK"
+                  code: 200
+
+  /spesialis/sarana:
+    get:
+      tags: 
+        - Spesialis
+      summary: Get Referensi Sarana
+      description: Get Data Referensi Sarana
+      security:
+        - bpjsSecurity: []
+      responses:
+        '200':
+          description: Data referensi sarana berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SaranaListResponse'
+              example:
+                response:
+                  count: 2
+                  list:
+                    - kdSarana: "1"
+                      nmSarana: "Rekam Medik"
+                    - kdSarana: "2"
+                      nmSarana: "Laboratorium"
+                metaData:
+                  message: "OK"
+                  code: 200
+
+  /spesialis/khusus:
+    get:
+      tags: 
+        - Spesialis
+      summary: Get Referensi Khusus
+      description: Get Data Referensi Khusus
+      security:
+        - bpjsSecurity: []
+      responses:
+        '200':
+          description: Data referensi khusus berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KhususListResponse'
+              example:
+                response:
+                  count: 10
+                  list:
+                    - kdKhusus: "HDL"
+                      nmKhusus: "HEMODIALISA"
+                    - kdKhusus: "THA"
+                      nmKhusus: "THALASEMIA"
+                    - kdKhusus: "HEM"
+                      nmKhusus: "HEMOFILI"
+                    - kdKhusus: "IGD"
+                      nmKhusus: "ALIH RAWAT"
+                    - kdKhusus: "JIW"
+                      nmKhusus: "JIWA"
+                    - kdKhusus: "KLT"
+                      nmKhusus: "KUSTA"
+                    - kdKhusus: "PAR"
+                      nmKhusus: "TB-MDR"
+                    - kdKhusus: "KEM"
+                      nmKhusus: "SARANA KEMOTERAPI"
+                    - kdKhusus: "RAT"
+                      nmKhusus: "SARANA RADIOTERAPI"
+                    - kdKhusus: "HIV"
+                      nmKhusus: "HIV-ODHA"
+                metaData:
+                  message: "OK"
+                  code: 200
+
+  /spesialis/rujuk/subspesialis/{kdSubSpesialis}/sarana/{kdSarana}/tglEstRujuk/{tglEstRujuk}:
+    get:
+      tags: 
+        - Spesialis
+      summary: Get Faskes Rujukan Sub Spesialis
+      description: Get Data Faskes Rujukan Sub Spesialis
+      parameters:
+        - name: kdSubSpesialis
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode Sub Spesialis
+        - name: kdSarana
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode Sarana
+        - name: tglEstRujuk
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{2}-\d{2}-\d{4}$'
+          description: Tanggal Estimasi Rujuk (format dd-mm-yyyy)
+      security:
+        - bpjsSecurity: []
+      responses:
+        '200':
+          description: Data faskes rujukan sub spesialis berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FaskesRujukanListResponse'
+              example:
+                response:
+                  count: 36
+                  list:
+                    - kdppk: "0114R049"
+                      nmppk: "RSUD CEMPAKA PUTIH"
+                      alamatPpk: "JALAN RAWASARI SELATAN NO. 1"
+                      telpPpk: "021-4224243"
+                      kelas: "D"
+                      nmkc: "JAKARTA PUSAT"
+                      distance: 951.0729
+                      jadwal: "Senin : 07:30 - 14:00, 08:00 - 17:00;14:00 - 19:00"
+                      jmlRujuk: 0
+                      kapasitas: 0
+                      persentase: 0
+                    - kdppk: "0114R052"
+                      nmppk: "RSUD KEMAYORAN"
+                      alamatPpk: "Jl. Serdang Baru I"
+                      telpPpk: "(021) 4251005"
+                      kelas: "D"
+                      nmkc: "JAKARTA PUSAT"
+                      distance: 2505.416
+                      jadwal: "Senin : 07:30 - 14:00, 08:00 - 17:00;14:00 - 19:00"
+                      jmlRujuk: 0
+                      kapasitas: 0
+                      persentase: 0
+                metaData:
+                  message: "OK"
+                  code: 200
+
+  /spesialis/rujuk/khusus/{kdKhusus}/noKartu/{noKartu}/tglEstRujuk/{tglEstRujuk}:
+    get:
+      tags: 
+        - Spesialis
+      summary: Get Faskes Rujukan Khusus (Alih Rawat, Hemodialisa, Jiwa, Kusta, TB-MDR, Kemoterapi, Radioterapi, HIV-ODHA)
+      description: Get Data Faskes Rujukan Khusus berdasarkan kode khusus, no kartu, dan tanggal estimasi rujuk
+      parameters:
+        - name: kdKhusus
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode Khusus (IGD, HDL, JIW, KLT, PAR, KEM, RAT, HIV)
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kartu Peserta
+        - name: tglEstRujuk
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{2}-\d{2}-\d{4}$'
+          description: Tanggal Estimasi Rujuk (format dd-mm-yyyy)
+      security:
+        - bpjsSecurity: []
+      responses:
+        '200':
+          description: Data faskes rujukan khusus berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FaskesRujukanListResponse'
+              example:
+                response:
+                  count: 36
+                  list:
+                    - kdppk: "0114R049"
+                      nmppk: "RSUD CEMPAKA PUTIH"
+                      alamatPpk: "JALAN RAWASARI SELATAN NO. 1"
+                      telpPpk: "021-4224243"
+                      kelas: "D"
+                      nmkc: "JAKARTA PUSAT"
+                      distance: 951.0729
+                      jadwal: "Senin : 07:30 - 14:00, 08:00 - 17:00;14:00 - 19:00"
+                      jmlRujuk: 0
+                      kapasitas: 0
+                      persentase: 0
+                    - kdppk: "0114R052"
+                      nmppk: "RSUD KEMAYORAN"
+                      alamatPpk: "Jl. Serdang Baru I"
+                      telpPpk: "(021) 4251005"
+                      kelas: "D"
+                      nmkc: "JAKARTA PUSAT"
+                      distance: 2505.416
+                      jadwal: "Senin : 07:30 - 14:00, 08:00 - 17:00;14:00 - 19:00"
+                      jmlRujuk: 0
+                      kapasitas: 0
+                      persentase: 0
+                metaData:
+                  message: "OK"
+                  code: 200
+
+  /spesialis/rujuk/khusus/{kdKhusus}/subspesialis/{kdSubSpesialis}/noKartu/{noKartu}/tglEstRujuk/{tglEstRujuk}:
+    get:
+      tags: 
+        - Spesialis
+      summary: Get Faskes Rujukan Khusus (Thalasemia, Hemofili)
+      description: Get Data Faskes Rujukan Khusus Thalasemia dan Hemofili
+      parameters:
+        - name: kdKhusus
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode Khusus (THA, HEM)
+        - name: kdSubSpesialis
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode Sub Spesialis
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kartu Peserta
+        - name: tglEstRujuk
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{2}-\d{2}-\d{4}$'
+          description: Tanggal Estimasi Rujuk (format dd-mm-yyyy)
+      security:
+        - bpjsSecurity: []
+      responses:
+        '200':
+          description: Data faskes rujukan khusus thalasemia/hemofili berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FaskesRujukanListResponse'
+              example:
+                response:
+                  count: 2
+                  list:
+                    - kdppk: "0114R049"
+                      nmppk: "RSUD CEMPAKA PUTIH"
+                      alamatPpk: "JALAN RAWASARI SELATAN NO. 1"
+                      telpPpk: "021-4224243"
+                      kelas: "D"
+                      nmkc: "JAKARTA PUSAT"
+                      distance: 951.0729
+                      jadwal: "Senin : 07:30 - 14:00, 08:00 - 17:00;14:00 - 19:00"
+                      jmlRujuk: 0
+                      kapasitas: 0
+                      persentase: 0
+                    - kdppk: "0113R052"
+                      nmppk: "KLINIK HD CIPTA HUSADA 2"
+                      alamatPpk: "Jalan Langit-Langit No.12"
+                      telpPpk: "021-4896807"
+                      kelas: "D"
+                      nmkc: "JAKARTA TIMUR"
+                      distance: 2012.9943
+                      jadwal: "Senin : 07:30 - 14:00, 08:00 - 17:00;14:00 - 19:00"
+                      jmlRujuk: 0
+                      kapasitas: 0
+                      persentase: 0
+                metaData:
+                  message: "OK"
+                  code: 200
+
+components:
+  securitySchemes:
+    bpjsSecurity:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Dibutuhkan 5 header khusus untuk autentikasi:
+        1. X-cons-id - Consumer ID dari BPJS Kesehatan
+        2. X-timestamp - Generated unix-based timestamp
+        3. X-signature - Generated signature dengan pola HMAC-256
+        4. X-authorization - Generated signature dengan pola Base64
+        5. user_key - User key untuk akses webservice
+
+  schemas:
+    Spesialis:
+      type: object
+      properties:
+        kdSpesialis:
+          type: string
+          description: Kode spesialis
+        nmSpesialis:
+          type: string
+          description: Nama spesialis
+
+    SpesialisListResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Jumlah total data spesialis
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/Spesialis'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response
+
+    SubSpesialis:
+      type: object
+      properties:
+        kdSubSpesialis:
+          type: string
+          description: Kode sub spesialis
+        nmSubSpesialis:
+          type: string
+          description: Nama sub spesialis
+        kdPoliRujuk:
+          type: string
+          description: Kode poli rujukan
+
+    SubSpesialisListResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Jumlah total data sub spesialis
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/SubSpesialis'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response
+
+    Sarana:
+      type: object
+      properties:
+        kdSarana:
+          type: string
+          description: Kode sarana
+        nmSarana:
+          type: string
+          description: Nama sarana
+
+    SaranaListResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Jumlah total data sarana
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/Sarana'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response
+
+    Khusus:
+      type: object
+      properties:
+        kdKhusus:
+          type: string
+          description: Kode khusus
+        nmKhusus:
+          type: string
+          description: Nama khusus
+
+    KhususListResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Jumlah total data khusus
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/Khusus'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response
+
+    FaskesRujukan:
+      type: object
+      properties:
+        kdppk:
+          type: string
+          description: Kode faskes
+        nmppk:
+          type: string
+          description: Nama faskes
+        alamatPpk:
+          type: string
+          description: Alamat faskes
+        telpPpk:
+          type: string
+          description: Telepon faskes
+        kelas:
+          type: string
+          description: Kelas faskes
+        nmkc:
+          type: string
+          description: Nama kabupaten/kota
+        distance:
+          type: number
+          format: float
+          description: Jarak ke faskes
+        jadwal:
+          type: string
+          description: Jadwal pelayanan
+        jmlRujuk:
+          type: integer
+          description: Jumlah rujukan
+        kapasitas:
+          type: integer
+          description: Kapasitas faskes
+        persentase:
+          type: number
+          format: float
+          description: Persentase kapasitas
+
+    FaskesRujukanListResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Jumlah total data faskes rujukan
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/FaskesRujukan'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response

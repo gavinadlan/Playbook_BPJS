@@ -1,0 +1,627 @@
+openapi: 3.0.0
+info:
+  title: PCare MCU API
+  version: 1.0.0
+  description: Layanan untuk data Medical Check Up (MCU) pasien PCare
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev
+    description: PCare Development Server
+tags:
+  - name: MCU
+    description: Data Medical Check Up (MCU) pasien
+
+paths:
+  /MCU/kunjungan/{noKunjungan}:
+    get:
+      tags: [MCU]
+      summary: Get MCU
+      description: |
+        Get Data MCU berdasarkan nomor kunjungan
+        
+        ## URL Format
+        `{Base URL}/{Service Name}/MCU/kunjungan/{noKunjungan}`
+      parameters:
+        - name: noKunjungan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kunjungan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data MCU berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MCUResponse'
+              example:
+                response:
+                  count: 1
+                  list:
+                    - kdMCU: 43
+                      noKunjungan: "0114U1630316Y000003"
+                      kdProvider: "0114u163"
+                      tglPelayanan: "22-03-2016"
+                      tekananDarahSistole: 0
+                      tekananDarahDiastole: 0
+                      radiologiFoto: null
+                      darahRutinHemo: 0
+                      darahRutinLeu: 0
+                      darahRutinErit: 7
+                      darahRutinLaju: 0
+                      darahRutinHema: 0
+                      darahRutinTrom: 0
+                      lemakDarahHDL: 0
+                      lemakDarahLDL: 0
+                      lemakDarahChol: 0
+                      lemakDarahTrigli: 0
+                      gulaDarahSewaktu: 0
+                      gulaDarahPuasa: 0
+                      gulaDarahPostPrandial: 0
+                      gulaDarahHbA1c: 0
+                      fungsiHatiSGOT: 0
+                      fungsiHatiSGPT: 0
+                      fungsiHatiGamma: 0
+                      fungsiHatiProtKual: 0
+                      fungsiHatiAlbumin: 0
+                      fungsiGinjalCrea: 0
+                      fungsiGinjalUreum: 0
+                      fungsiGinjalAsam: 0
+                      fungsiJantungABI: 0
+                      fungsiJantungEKG: null
+                      fungsiJantungEcho: null
+                      funduskopi: null
+                      pemeriksaanLain: null
+                      keterangan: null
+                metaData:
+                  message: "OK"
+                  code: 200
+
+  /MCU:
+    post:
+      tags: [MCU]
+      summary: Add MCU
+      description: |
+        Add Data MCU
+        
+        ## URL Format
+        `{Base URL}/{Service Name}/MCU`
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/MCURequest'
+            example:
+              kdMCU: 0
+              noKunjungan: "0114U1630316Y000003"
+              kdProvider: "0114u163"
+              tglPelayanan: "22-03-2016"
+              tekananDarahSistole: 0
+              tekananDarahDiastole: 0
+              radiologiFoto: null
+              darahRutinHemo: 0
+              darahRutinLeu: 0
+              darahRutinErit: 7
+              darahRutinLaju: 0
+              darahRutinHema: 0
+              darahRutinTrom: 0
+              lemakDarahHDL: 0
+              lemakDarahLDL: 0
+              lemakDarahChol: 0
+              lemakDarahTrigli: 0
+              gulaDarahSewaktu: 0
+              gulaDarahPuasa: 0
+              gulaDarahPostPrandial: 0
+              gulaDarahHbA1c: 0
+              fungsiHatiSGOT: 0
+              fungsiHatiSGPT: 0
+              fungsiHatiGamma: 0
+              fungsiHatiProtKual: 0
+              fungsiHatiAlbumin: 0
+              fungsiGinjalCrea: 0
+              fungsiGinjalUreum: 0
+              fungsiGinjalAsam: 0
+              fungsiJantungABI: 0
+              fungsiJantungEKG: null
+              fungsiJantungEcho: null
+              funduskopi: null
+              pemeriksaanLain: null
+              keterangan: null
+      responses:
+        '201':
+          description: Data MCU berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      field:
+                        type: string
+                        description: Field yang diupdate
+                        example: "kdMCU"
+                      message:
+                        type: string
+                        description: ID MCU yang dibuat
+                        example: "33"
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "CREATED"
+                      code:
+                        type: integer
+                        example: 201
+              example:
+                response:
+                  field: "kdMCU"
+                  message: "33"
+                metaData:
+                  message: "CREATED"
+                  code: 201
+    put:
+      tags: [MCU]
+      summary: Edit MCU
+      description: |
+        Edit Data MCU
+        
+        ## URL Format
+        `{Base URL}/{Service Name}/MCU`
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/MCURequest'
+            example:
+              kdMCU: 44
+              noKunjungan: "0114U1630316Y000003"
+              kdProvider: "1301U007"
+              tglPelayanan: "22-03-2016"
+              tekananDarahSistole: 20
+              tekananDarahDiastole: 0
+              radiologiFoto: null
+              darahRutinHemo: 0
+              darahRutinLeu: 0
+              darahRutinErit: 0
+              darahRutinLaju: 0
+              darahRutinHema: 0
+              darahRutinTrom: 0
+              lemakDarahHDL: 0
+              lemakDarahLDL: 0
+              lemakDarahChol: 0
+              lemakDarahTrigli: 0
+              gulaDarahSewaktu: 0
+              gulaDarahPuasa: 0
+              gulaDarahPostPrandial: 0
+              gulaDarahHbA1c: 0
+              fungsiHatiSGOT: 0
+              fungsiHatiSGPT: 0
+              fungsiHatiGamma: 0
+              fungsiHatiProtKual: 0
+              fungsiHatiAlbumin: 0
+              fungsiGinjalCrea: 0
+              fungsiGinjalUreum: 0
+              fungsiGinjalAsam: 0
+              fungsiJantungABI: 0
+              fungsiJantungEKG: null
+              fungsiJantungEcho: null
+              funduskopi: null
+              pemeriksaanLain: null
+              keterangan: null
+      responses:
+        '200':
+          description: Data MCU berhasil diupdate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    nullable: true
+                    description: Response data (null jika berhasil)
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "OK"
+                      code:
+                        type: integer
+                        example: 200
+              example:
+                response: null
+                metaData:
+                  message: "OK"
+                  code: 200
+
+  /MCU/{kdMCU}/kunjungan/{noKunjungan}:
+    delete:
+      tags: [MCU]
+      summary: Delete MCU
+      description: |
+        Delete Data MCU berdasarkan kode MCU dan nomor kunjungan
+        
+        ## URL Format
+        `{Base URL}/{Service Name}/MCU/{kdMCU}/kunjungan/{noKunjungan}`
+      parameters:
+        - name: kdMCU
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Kode MCU
+        - name: noKunjungan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kunjungan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data MCU berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    nullable: true
+                    description: Response data (null jika berhasil)
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "OK"
+                      code:
+                        type: integer
+                        example: 200
+              example:
+                response: null
+                metaData:
+                  message: "OK"
+                  code: 200
+
+components:
+  securitySchemes:
+    pcareAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    pcareTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    pcareSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    pcareAuthorization:
+      type: apiKey
+      in: header
+      name: X-authorization
+      description: Generated signature dengan pola Base64
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
+  schemas:
+    MCU:
+      type: object
+      properties:
+        kdMCU:
+          type: integer
+          description: Kode MCU
+          example: 43
+        noKunjungan:
+          type: string
+          description: Nomor Kunjungan
+          example: "0114U1630316Y000003"
+        kdProvider:
+          type: string
+          description: Kode Provider
+          example: "0114u163"
+        tglPelayanan:
+          type: string
+          description: Tanggal Pelayanan
+          example: "22-03-2016"
+        tekananDarahSistole:
+          type: integer
+          description: Tekanan darah sistole
+        tekananDarahDiastole:
+          type: integer
+          description: Tekanan darah diastole
+        radiologiFoto:
+          type: string
+          nullable: true
+          description: Hasil radiologi foto
+        darahRutinHemo:
+          type: integer
+          description: Darah rutin hemoglobin
+        darahRutinLeu:
+          type: integer
+          description: Darah rutin leukosit
+        darahRutinErit:
+          type: integer
+          description: Darah rutin eritrosit
+        darahRutinLaju:
+          type: integer
+          description: Darah rutin laju endap darah
+        darahRutinHema:
+          type: integer
+          description: Darah rutin hematokrit
+        darahRutinTrom:
+          type: integer
+          description: Darah rutin trombosit
+        lemakDarahHDL:
+          type: integer
+          description: Lemak darah HDL
+        lemakDarahLDL:
+          type: integer
+          description: Lemak darah LDL
+        lemakDarahChol:
+          type: integer
+          description: Lemak darah Cholesterol
+        lemakDarahTrigli:
+          type: integer
+          description: Lemak darah Trigliserida
+        gulaDarahSewaktu:
+          type: integer
+          description: Gula darah sewaktu
+        gulaDarahPuasa:
+          type: integer
+          description: Gula darah puasa
+        gulaDarahPostPrandial:
+          type: integer
+          description: Gula darah post prandial
+        gulaDarahHbA1c:
+          type: integer
+          description: Gula darah HbA1c
+        fungsiHatiSGOT:
+          type: integer
+          description: Fungsi hati SGOT
+        fungsiHatiSGPT:
+          type: integer
+          description: Fungsi hati SGPT
+        fungsiHatiGamma:
+          type: integer
+          description: Fungsi hati Gamma GT
+        fungsiHatiProtKual:
+          type: integer
+          description: Fungsi hati Protein Kualitatif
+        fungsiHatiAlbumin:
+          type: integer
+          description: Fungsi hati Albumin
+        fungsiGinjalCrea:
+          type: integer
+          description: Fungsi ginjal Creatinin
+        fungsiGinjalUreum:
+          type: integer
+          description: Fungsi ginjal Ureum
+        fungsiGinjalAsam:
+          type: integer
+          description: Fungsi ginjal Asam Urat
+        fungsiJantungABI:
+          type: integer
+          description: Fungsi jantung ABI
+        fungsiJantungEKG:
+          type: string
+          nullable: true
+          description: Fungsi jantung EKG
+        fungsiJantungEcho:
+          type: string
+          nullable: true
+          description: Fungsi jantung Echo
+        funduskopi:
+          type: string
+          nullable: true
+          description: Funduskopi
+        pemeriksaanLain:
+          type: string
+          nullable: true
+          description: Pemeriksaan lain-lain
+        keterangan:
+          type: string
+          nullable: true
+          description: Keterangan
+    MCUResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Jumlah total data MCU
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/MCU'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response
+    MCURequest:
+      type: object
+      required:
+        - kdMCU
+        - noKunjungan
+        - kdProvider
+        - tglPelayanan
+        - tekananDarahSistole
+        - tekananDarahDiastole
+        - darahRutinHemo
+        - darahRutinLeu
+        - darahRutinErit
+        - darahRutinLaju
+        - darahRutinHema
+        - darahRutinTrom
+        - lemakDarahHDL
+        - lemakDarahLDL
+        - lemakDarahChol
+        - lemakDarahTrigli
+        - gulaDarahSewaktu
+        - gulaDarahPuasa
+        - gulaDarahPostPrandial
+        - gulaDarahHbA1c
+        - fungsiHatiSGOT
+        - fungsiHatiSGPT
+        - fungsiHatiGamma
+        - fungsiHatiProtKual
+        - fungsiHatiAlbumin
+        - fungsiGinjalCrea
+        - fungsiGinjalUreum
+        - fungsiGinjalAsam
+        - fungsiJantungABI
+      properties:
+        kdMCU:
+          type: integer
+          description: Kode MCU
+        noKunjungan:
+          type: string
+          description: Nomor Kunjungan
+        kdProvider:
+          type: string
+          description: Kode Provider
+        tglPelayanan:
+          type: string
+          description: Tanggal Pelayanan
+        tekananDarahSistole:
+          type: integer
+          description: Tekanan darah sistole
+        tekananDarahDiastole:
+          type: integer
+          description: Tekanan darah diastole
+        radiologiFoto:
+          type: string
+          nullable: true
+          description: Hasil radiologi foto
+        darahRutinHemo:
+          type: integer
+          description: Darah rutin hemoglobin
+        darahRutinLeu:
+          type: integer
+          description: Darah rutin leukosit
+        darahRutinErit:
+          type: integer
+          description: Darah rutin eritrosit
+        darahRutinLaju:
+          type: integer
+          description: Darah rutin laju endap darah
+        darahRutinHema:
+          type: integer
+          description: Darah rutin hematokrit
+        darahRutinTrom:
+          type: integer
+          description: Darah rutin trombosit
+        lemakDarahHDL:
+          type: integer
+          description: Lemak darah HDL
+        lemakDarahLDL:
+          type: integer
+          description: Lemak darah LDL
+        lemakDarahChol:
+          type: integer
+          description: Lemak darah Cholesterol
+        lemakDarahTrigli:
+          type: integer
+          description: Lemak darah Trigliserida
+        gulaDarahSewaktu:
+          type: integer
+          description: Gula darah sewaktu
+        gulaDarahPuasa:
+          type: integer
+          description: Gula darah puasa
+        gulaDarahPostPrandial:
+          type: integer
+          description: Gula darah post prandial
+        gulaDarahHbA1c:
+          type: integer
+          description: Gula darah HbA1c
+        fungsiHatiSGOT:
+          type: integer
+          description: Fungsi hati SGOT
+        fungsiHatiSGPT:
+          type: integer
+          description: Fungsi hati SGPT
+        fungsiHatiGamma:
+          type: integer
+          description: Fungsi hati Gamma GT
+        fungsiHatiProtKual:
+          type: integer
+          description: Fungsi hati Protein Kualitatif
+        fungsiHatiAlbumin:
+          type: integer
+          description: Fungsi hati Albumin
+        fungsiGinjalCrea:
+          type: integer
+          description: Fungsi ginjal Creatinin
+        fungsiGinjalUreum:
+          type: integer
+          description: Fungsi ginjal Ureum
+        fungsiGinjalAsam:
+          type: integer
+          description: Fungsi ginjal Asam Urat
+        fungsiJantungABI:
+          type: integer
+          description: Fungsi jantung ABI
+        fungsiJantungEKG:
+          type: string
+          nullable: true
+          description: Fungsi jantung EKG
+        fungsiJantungEcho:
+          type: string
+          nullable: true
+          description: Fungsi jantung Echo
+        funduskopi:
+          type: string
+          nullable: true
+          description: Funduskopi
+        pemeriksaanLain:
+          type: string
+          nullable: true
+          description: Pemeriksaan lain-lain
+        keterangan:
+          type: string
+          nullable: true
+          description: Keterangan

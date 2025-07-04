@@ -1,0 +1,921 @@
+openapi: 3.0.0
+info:
+  title: PCare Kelompok API
+  version: 1.0.0
+  description: Layanan untuk pengelolaan Club Prolanis PCare
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev
+    description: PCare Development Server
+tags:
+  - name: Kelompok
+    description: Pengelolaan Club Prolanis (Diabetes Melitus, Hipertensi, Asthma)
+
+paths:
+  /kelompok/club/{kdProgram}:
+    get:
+      tags: [Kelompok]
+      summary: Get Club Prolanis
+      description: |
+        Get Data Club Prolanis berdasarkan kode jenis kelompok
+        
+        ## Parameter
+        - `kdProgram`: Kode Jenis Kelompok
+          - `01`: Diabetes Melitus
+          - `02`: Hipertensi
+          - `03`: Asthma
+        
+        ## Example
+        ```
+        GET /kelompok/club/01
+        GET /kelompok/club/02
+        ```
+      parameters:
+        - name: kdProgram
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: ["01", "02", "03"]
+          description: Kode Jenis Kelompok (01=Diabetes Melitus, 02=Hipertensi, 03=Asthma)
+          example: "01"
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data Club Prolanis berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubResponse'
+              example:
+                response:
+                  count: 2
+                  list:
+                    - clubId: 33
+                      jnsKelompok:
+                        kdProgram: "01"
+                        nmProgram: "Diabetes Melitus"
+                      tglMulai: "23-08-2015"
+                      tglAkhir: null
+                      alamat: "alamat club 1"
+                      nama: "Club DM satu"
+                      ketua_noHP: "085720127801"
+                      ketua_nama: "Bambang"
+                    - clubId: 34
+                      jnsKelompok:
+                        kdProgram: "01"
+                        nmProgram: "Diabetes Melitus"
+                      tglMulai: "23-08-2015"
+                      tglAkhir: null
+                      alamat: "alamat club dm 2"
+                      nama: "club DM dua"
+                      ketua_noHP: "085720293132"
+                      ketua_nama: "Susi"
+                metaData:
+                  message: "OK"
+                  code: 200
+
+  /kelompok/kegiatan/{bulan}:
+    get:
+      tags: [Kelompok]
+      summary: Get Kegiatan Kelompok
+      description: |
+        Get Data Kegiatan Kelompok berdasarkan bulan
+        
+        ## Parameter
+        - `bulan`: Bulan dalam format dd-mm-yyyy
+        
+        ## Example
+        ```
+        GET /kelompok/kegiatan/01-2016
+        ```
+      parameters:
+        - name: bulan
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^\\d{2}-\\d{4}$'
+          description: Bulan dalam format dd-mm-yyyy
+          example: "01-2016"
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data Kegiatan Kelompok berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KegiatanResponse'
+              example:
+                response:
+                  count: 2
+                  list:
+                    - eduId: "16010000003"
+                      clubProl:
+                        clubId: 36
+                        jnsKelompok:
+                          kdProgram: "03"
+                          nmProgram: "Asthma"
+                        tglMulai: "30-01-2016"
+                        tglAkhir: null
+                        alamat: "Alamat asma satu"
+                        nama: "Asthma satu"
+                        ketua_noHP: "083"
+                        ketua_nama: "ketua"
+                      tglPelayanan: "30-01-2016"
+                      kegiatan:
+                        nama: "Senam"
+                        kode: "01"
+                      kelompok:
+                        nama: "Asthma"
+                        kode: "03"
+                      materi: "senam asthma satu"
+                      pembicara: "pembicara asthma satu"
+                      lokasi: "lokasi"
+                      keterangan: "ket asma"
+                      biaya: 30000
+                    - eduId: "16010000001"
+                      clubProl:
+                        clubId: 34
+                        jnsKelompok:
+                          kdProgram: "01"
+                          nmProgram: "Diabetes Melitus"
+                        tglMulai: "23-08-2015"
+                        tglAkhir: null
+                        alamat: "alamat club dm 2"
+                        nama: "club DM dua"
+                        ketua_noHP: "085720293132"
+                        ketua_nama: "erna"
+                      tglPelayanan: "29-01-2016"
+                      kegiatan:
+                        nama: "Penyuluhan"
+                        kode: "10"
+                      kelompok:
+                        nama: "Diabetes Melitus"
+                        kode: "01"
+                      materi: "d"
+                      pembicara: "d"
+                      lokasi: "d"
+                      keterangan: ""
+                      biaya: 0
+                metaData:
+                  message: "OK"
+                  code: 200
+
+  /kelompok/peserta/{eduId}:
+    get:
+      tags: [Kelompok]
+      summary: Get Peserta Kegiatan Kelompok
+      description: |
+        Get Data Peserta Kegiatan Kelompok berdasarkan eduId
+        
+        ## Parameter
+        - `eduId`: ID kegiatan kelompok
+        
+        ## Example
+        ```
+        GET /kelompok/peserta/16020000001
+        ```
+      parameters:
+        - name: eduId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID kegiatan kelompok
+          example: "16020000001"
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data Peserta Kegiatan Kelompok berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PesertaKegiatanResponse'
+              example:
+                response:
+                  count: 2
+                  list:
+                    - eduId: "16020000001"
+                      peserta:
+                        noKartu: "0001101521158"
+                        nama: "MULIANA"
+                        hubunganKeluarga: "Peserta"
+                        sex: "L"
+                        tglLahir: "10-05-1975"
+                        tglMulaiAktif: "27-01-1995"
+                        tglAkhirBerlaku: "10-05-2075"
+                        kdProviderPst:
+                          kdProvider: "0114U163"
+                          nmProvider: "cemput jst"
+                        kdProviderGigi:
+                          kdProvider: null
+                          nmProvider: null
+                        jnsKelas:
+                          nama: "KELAS II"
+                          kode: "2"
+                        jnsPeserta:
+                          nama: "TNI ANGKATAN DARAT"
+                          kode: "5"
+                        golDarah: "0"
+                        noHP: null
+                        noKTP: " "
+                        pstProl: ""
+                        pstPrb: ""
+                        aktif: true
+                        ketAktif: "AKTIF"
+                        asuransi:
+                          kdAsuransi: null
+                          nmAsuransi: null
+                          noAsuransi: null
+                          cob: false
+                        tunggakan: 0
+                    - eduId: "16020000001"
+                      peserta:
+                        noKartu: "0001101615759"
+                        nama: "TOGU ELIOT FERNANDO"
+                        hubunganKeluarga: "Peserta"
+                        sex: "L"
+                        tglLahir: "11-11-1983"
+                        tglMulaiAktif: "08-11-2003"
+                        tglAkhirBerlaku: "11-11-2083"
+                        kdProviderPst:
+                          kdProvider: "0114U163"
+                          nmProvider: "cemput jst"
+                        kdProviderGigi:
+                          kdProvider: null
+                          nmProvider: null
+                        jnsKelas:
+                          nama: "KELAS II"
+                          kode: "2"
+                        jnsPeserta:
+                          nama: "TNI ANGKATAN DARAT"
+                          kode: "5"
+                        golDarah: "0"
+                        noHP: null
+                        noKTP: " "
+                        pstProl: ""
+                        pstPrb: ""
+                        aktif: true
+                        ketAktif: "AKTIF"
+                        asuransi:
+                          kdAsuransi: null
+                          nmAsuransi: null
+                          noAsuransi: null
+                          cob: false
+                        tunggakan: 0
+                metaData:
+                  message: "OK"
+                  code: 200
+
+  /kelompok/kegiatan:
+    post:
+      tags: [Kelompok]
+      summary: Add Kegiatan Kelompok
+      description: |
+        Add Data Kegiatan Kelompok
+        
+        ## Kode Kelompok
+        - `01`: Diabetes Melitus
+        - `02`: Hipertensi
+        - `03`: Asthma
+        
+        ## Kode Kegiatan
+        - `01`: Senam
+        - `10`: Penyuluhan
+        - `11`: Penyuluhan dan Senam
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/KegiatanRequest'
+            example:
+              eduId: null
+              clubId: 36
+              tglPelayanan: "27-03-2016"
+              kdKegiatan: "01"
+              kdKelompok: "03"
+              materi: "materi"
+              pembicara: "pembicara"
+              lokasi: "lokasi"
+              keterangan: "keterangan"
+              biaya: 20000
+      responses:
+        '201':
+          description: Kegiatan Kelompok berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      field:
+                        type: string
+                        description: Field yang diupdate
+                        example: "eduId"
+                      message:
+                        type: string
+                        description: ID kegiatan yang dibuat
+                        example: "16030000009"
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "CREATED"
+                      code:
+                        type: integer
+                        example: 201
+              example:
+                response:
+                  field: "eduId"
+                  message: "16030000009"
+                metaData:
+                  message: "CREATED"
+                  code: 201
+
+  /kelompok/peserta:
+    post:
+      tags: [Kelompok]
+      summary: Add Peserta Kegiatan Kelompok
+      description: Add Data Peserta Kegiatan Kelompok
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/PesertaKegiatanRequest'
+            example:
+              eduId: "16030000009"
+              noKartu: "0001101615759"
+      responses:
+        '201':
+          description: Peserta Kegiatan Kelompok berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    nullable: true
+                    description: Response data (null jika berhasil)
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "CREATED"
+                      code:
+                        type: integer
+                        example: 201
+              example:
+                response: null
+                metaData:
+                  message: "CREATED"
+                  code: 201
+
+  /kelompok/kegiatan/{eduId}:
+    delete:
+      tags: [Kelompok]
+      summary: Delete Kegiatan Kelompok
+      description: |
+        Delete Data Kegiatan Kelompok berdasarkan eduId
+        
+        ## Parameter
+        - `eduId`: ID kegiatan kelompok
+      parameters:
+        - name: eduId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID kegiatan kelompok
+          example: "16030000009"
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Kegiatan Kelompok berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    nullable: true
+                    description: Response data (null jika berhasil)
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "OK"
+                      code:
+                        type: integer
+                        example: 200
+              example:
+                response: null
+                metaData:
+                  message: "OK"
+                  code: 200
+
+  /kelompok/peserta/{eduId}/{noKartu}:
+    delete:
+      tags: [Kelompok]
+      summary: Delete Peserta Kegiatan Kelompok
+      description: |
+        Delete Data Peserta Kegiatan Kelompok
+        
+        ## Parameter
+        - `eduId`: ID kegiatan kelompok
+        - `noKartu`: Nomor Kartu Peserta
+      parameters:
+        - name: eduId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID kegiatan kelompok
+          example: "16030000009"
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kartu Peserta
+          example: "0001101615759"
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Peserta Kegiatan Kelompok berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    nullable: true
+                    description: Response data (null jika berhasil)
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "OK"
+                      code:
+                        type: integer
+                        example: 200
+              example:
+                response: null
+                metaData:
+                  message: "OK"
+                  code: 200
+
+components:
+  securitySchemes:
+    pcareAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    pcareTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    pcareSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    pcareAuthorization:
+      type: apiKey
+      in: header
+      name: X-authorization
+      description: Generated signature dengan pola Base64
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
+  schemas:
+    JnsKelompok:
+      type: object
+      properties:
+        kdProgram:
+          type: string
+          description: Kode program
+          example: "01"
+        nmProgram:
+          type: string
+          description: Nama program
+          example: "Diabetes Melitus"
+    
+    Club:
+      type: object
+      properties:
+        clubId:
+          type: integer
+          description: ID club
+          example: 33
+        jnsKelompok:
+          $ref: '#/components/schemas/JnsKelompok'
+        tglMulai:
+          type: string
+          description: Tanggal mulai club
+          example: "23-08-2015"
+        tglAkhir:
+          type: string
+          nullable: true
+          description: Tanggal akhir club
+          example: null
+        alamat:
+          type: string
+          description: Alamat club
+          example: "alamat club 1"
+        nama:
+          type: string
+          description: Nama club
+          example: "Club DM satu"
+        ketua_noHP:
+          type: string
+          description: Nomor HP ketua
+          example: "085720127801"
+        ketua_nama:
+          type: string
+          description: Nama ketua
+          example: "Bambang"
+    
+    ClubResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Jumlah total data club
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/Club'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response
+    
+    Kegiatan:
+      type: object
+      properties:
+        nama:
+          type: string
+          description: Nama kegiatan
+          example: "Senam"
+        kode:
+          type: string
+          description: Kode kegiatan
+          example: "01"
+    
+    ClubProl:
+      type: object
+      properties:
+        clubId:
+          type: integer
+          description: ID club
+          example: 36
+        jnsKelompok:
+          $ref: '#/components/schemas/JnsKelompok'
+        tglMulai:
+          type: string
+          description: Tanggal mulai
+          example: "30-01-2016"
+        tglAkhir:
+          type: string
+          nullable: true
+          description: Tanggal akhir
+          example: null
+        alamat:
+          type: string
+          description: Alamat
+          example: "Alamat asma satu"
+        nama:
+          type: string
+          description: Nama
+          example: "Asthma satu"
+        ketua_noHP:
+          type: string
+          description: Nomor HP ketua
+          example: "083"
+        ketua_nama:
+          type: string
+          description: Nama ketua
+          example: "ketua"
+    
+    KegiatanKelompok:
+      type: object
+      properties:
+        eduId:
+          type: string
+          description: ID kegiatan
+          example: "16010000003"
+        clubProl:
+          $ref: '#/components/schemas/ClubProl'
+        tglPelayanan:
+          type: string
+          description: Tanggal pelayanan
+          example: "30-01-2016"
+        kegiatan:
+          $ref: '#/components/schemas/Kegiatan'
+        kelompok:
+          $ref: '#/components/schemas/JnsKelompok'
+        materi:
+          type: string
+          description: Materi kegiatan
+          example: "senam asthma satu"
+        pembicara:
+          type: string
+          description: Pembicara
+          example: "pembicara asthma satu"
+        lokasi:
+          type: string
+          description: Lokasi kegiatan
+          example: "lokasi"
+        keterangan:
+          type: string
+          description: Keterangan
+          example: "ket asma"
+        biaya:
+          type: integer
+          description: Biaya kegiatan
+          example: 30000
+    
+    KegiatanResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Jumlah total data kegiatan
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/KegiatanKelompok'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response
+    
+    KegiatanRequest:
+      type: object
+      required:
+        - clubId
+        - tglPelayanan
+        - kdKegiatan
+        - kdKelompok
+        - materi
+        - pembicara
+        - lokasi
+        - keterangan
+        - biaya
+      properties:
+        eduId:
+          type: string
+          nullable: true
+          description: ID kegiatan (null untuk create baru)
+          example: null
+        clubId:
+          type: integer
+          description: ID club
+          example: 36
+        tglPelayanan:
+          type: string
+          description: Tanggal pelayanan
+          example: "27-03-2016"
+        kdKegiatan:
+          type: string
+          description: Kode kegiatan (01=Senam, 10=Penyuluhan, 11=Penyuluhan dan Senam)
+          example: "01"
+        kdKelompok:
+          type: string
+          description: Kode kelompok (01=Diabetes Melitus, 02=Hipertensi, 03=Asthma)
+          example: "03"
+        materi:
+          type: string
+          description: Materi kegiatan
+          example: "materi"
+        pembicara:
+          type: string
+          description: Pembicara
+          example: "pembicara"
+        lokasi:
+          type: string
+          description: Lokasi kegiatan
+          example: "lokasi"
+        keterangan:
+          type: string
+          description: Keterangan
+          example: "keterangan"
+        biaya:
+          type: integer
+          description: Biaya kegiatan
+          example: 20000
+    
+    PesertaKegiatanRequest:
+      type: object
+      required:
+        - eduId
+        - noKartu
+      properties:
+        eduId:
+          type: string
+          description: ID kegiatan kelompok
+          example: "16030000009"
+        noKartu:
+          type: string
+          description: Nomor kartu peserta
+          example: "0001101615759"
+    
+    PesertaKegiatanResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Jumlah total data peserta
+            list:
+              type: array
+              items:
+                type: object
+                properties:
+                  eduId:
+                    type: string
+                    description: ID kegiatan
+                  peserta:
+                    type: object
+                    properties:
+                      noKartu:
+                        type: string
+                        description: Nomor kartu
+                      nama:
+                        type: string
+                        description: Nama peserta
+                      hubunganKeluarga:
+                        type: string
+                        description: Hubungan keluarga
+                      sex:
+                        type: string
+                        description: Jenis kelamin
+                      tglLahir:
+                        type: string
+                        description: Tanggal lahir
+                      tglMulaiAktif:
+                        type: string
+                        description: Tanggal mulai aktif
+                      tglAkhirBerlaku:
+                        type: string
+                        description: Tanggal akhir berlaku
+                      kdProviderPst:
+                        type: object
+                        properties:
+                          kdProvider:
+                            type: string
+                            description: Kode provider
+                          nmProvider:
+                            type: string
+                            description: Nama provider
+                      kdProviderGigi:
+                        type: object
+                        properties:
+                          kdProvider:
+                            type: string
+                            nullable: true
+                            description: Kode provider gigi
+                          nmProvider:
+                            type: string
+                            nullable: true
+                            description: Nama provider gigi
+                      jnsKelas:
+                        type: object
+                        properties:
+                          nama:
+                            type: string
+                            description: Nama kelas
+                          kode:
+                            type: string
+                            description: Kode kelas
+                      jnsPeserta:
+                        type: object
+                        properties:
+                          nama:
+                            type: string
+                            description: Nama jenis peserta
+                          kode:
+                            type: string
+                            description: Kode jenis peserta
+                      golDarah:
+                        type: string
+                        description: Golongan darah
+                      noHP:
+                        type: string
+                        nullable: true
+                        description: Nomor HP
+                      noKTP:
+                        type: string
+                        description: Nomor KTP
+                      pstProl:
+                        type: string
+                        description: Peserta prolanis
+                      pstPrb:
+                        type: string
+                        description: Peserta PRB
+                      aktif:
+                        type: boolean
+                        description: Status aktif
+                      ketAktif:
+                        type: string
+                        description: Keterangan aktif
+                      asuransi:
+                        type: object
+                        properties:
+                          kdAsuransi:
+                            type: string
+                            nullable: true
+                            description: Kode asuransi
+                          nmAsuransi:
+                            type: string
+                            nullable: true
+                            description: Nama asuransi
+                          noAsuransi:
+                            type: string
+                            nullable: true
+                            description: Nomor asuransi
+                          cob:
+                            type: boolean
+                            description: Status COB
+                      tunggakan:
+                        type: integer
+                        description: Jumlah tunggakan
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response

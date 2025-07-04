@@ -1,0 +1,89 @@
+openapi: 3.0.0
+info:
+  title: PCare Prognosa API
+  version: 1.0.0
+  description: Layanan untuk data referensi prognosa PCare
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev
+    description: PCare Development Server
+tags:
+  - name: Prognosa
+    description: Data referensi prognosa
+
+paths:
+  /prognosa:
+    get:
+      tags:
+        - Prognosa
+      summary: Get Data Prognosa
+      description: Get Data Referensi Prognosa
+      security:
+        - bpjsSecurity: []
+      responses:
+        '200':
+          description: Data referensi prognosa berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrognosaListResponse'
+              example:
+                response:
+                  list:
+                    - kdPrognosa: "01"
+                      nmPrognosa: "Sanam (Sembuh)"
+                    - kdPrognosa: "02"
+                      nmPrognosa: "Bonam (Baik)"
+                    - kdPrognosa: "03"
+                      nmPrognosa: "Malam (Buruk/Jelek)"
+                    - kdPrognosa: "04"
+                      nmPrognosa: "Dubia Ad Sanam/Bolam (Tidak tentu/Ragu-ragu, Cenderung Sembuh/Baik)"
+                    - kdPrognosa: "05"
+                      nmPrognosa: "Dubia Ad Malam (Tidak tentu/Ragu-ragu, Cenderung Sembuh/Baik)"
+                metaData:
+                  message: "OK"
+                  code: 200
+
+components:
+  securitySchemes:
+    bpjsSecurity:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Dibutuhkan 5 header khusus untuk autentikasi:
+        1. X-cons-id - Consumer ID dari BPJS Kesehatan
+        2. X-timestamp - Generated unix-based timestamp
+        3. X-signature - Generated signature dengan pola HMAC-256
+        4. X-authorization - Generated signature dengan pola Base64
+        5. user_key - User key untuk akses webservice
+
+  schemas:
+    Prognosa:
+      type: object
+      properties:
+        kdPrognosa:
+          type: string
+          description: Kode prognosa
+        nmPrognosa:
+          type: string
+          description: Nama prognosa
+
+    PrognosaListResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/Prognosa'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response

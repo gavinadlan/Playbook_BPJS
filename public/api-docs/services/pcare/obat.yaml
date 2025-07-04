@@ -1,0 +1,424 @@
+openapi: 3.0.0
+info:
+  title: PCare Obat API
+  version: 1.0.0
+  description: Layanan untuk data obat dan DPHO PCare
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev
+    description: PCare Development Server
+tags:
+  - name: Obat
+    description: Data obat dan DPHO pasien
+
+paths:
+  /obat/dpho/{query}/{start}/{limit}:
+    get:
+      tags: [Obat]
+      summary: Get DPHO
+      description: |
+        Get Data DPHO berdasarkan kode/nama, start, dan limit
+        
+        ## URL Format
+        `{Base URL}/{Service Name}/obat/dpho/{query}/{start}/{limit}`
+      parameters:
+        - name: query
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode atau nama DPHO
+        - name: start
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+          description: Row data awal yang akan ditampilkan
+        - name: limit
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          description: Limit jumlah data yang akan ditampilkan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data DPHO berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DPHOResponse'
+              example:
+                response:
+                  count: 100
+                  list:
+                    - kdObat: "130199999"
+                      nmObat: "Kapsul Kosong Kapsul Apt kaps"
+                      sedia: 1
+                    - kdObat: "130103595"
+                      nmObat: "Canderin 16 mg Dexa tab"
+                      sedia: 16
+                    - kdObat: "130103594"
+                      nmObat: "Quinin 25 %, 2 ml Kifa amp"
+                      sedia: 1
+                metaData:
+                  message: "OK"
+                  code: 200
+
+  /obat/kunjungan/{noKunjungan}:
+    get:
+      tags: [Obat]
+      summary: Get Obat by Kunjungan
+      description: |
+        Get Data Obat berdasarkan nomor kunjungan
+        
+        ## URL Format
+        `{Base URL}/{Service Name}/obat/kunjungan/{noKunjungan}`
+      parameters:
+        - name: noKunjungan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kunjungan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data obat berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObatKunjunganResponse'
+              example:
+                response:
+                  count: 1
+                  list:
+                    - kdObatSK: 38
+                      kdRacikan: "R.01"
+                      obat:
+                        kdObat: "130199999"
+                        nmObat: "Kapsul Kosong Apt Kapsul"
+                        sedia: 0
+                      signa1: 3
+                      signa2: 1
+                      jmlObat: 10
+                      jmlHari: 3
+                      kekuatan: 2
+                      jmlPermintaan: 0
+                      jmlObatRacikan: 20
+                metaData:
+                  message: "OK"
+                  code: 200
+
+  /obat/kunjungan:
+    post:
+      tags: [Obat]
+      summary: Add Obat
+      description: |
+        Add Data Obat
+        
+        ## URL Format
+        `{Base URL}/{Service Name}/obat/kunjungan}`
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/ObatRequest'
+            example:
+              kdObatSK: 0
+              noKunjungan: "1301U0070815Y000004"
+              racikan: true
+              kdRacikan: null
+              obatDPHO: true
+              kdObat: "130199999"
+              signa1: 3
+              signa2: 1
+              jmlObat: 10
+              jmlPermintaan: 2
+              nmObatNonDPHO: "racikan 1 obat 1"
+      responses:
+        '201':
+          description: Data obat berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          description: Field yang diupdate
+                        message:
+                          type: string
+                          description: ID atau kode yang dibuat
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "CREATED"
+                      code:
+                        type: integer
+                        example: 201
+              example:
+                response:
+                  - field: "kdObatSK"
+                    message: "37"
+                  - field: "kdRacikan"
+                    message: "R.12"
+                metaData:
+                  message: "CREATED"
+                  code: 201
+
+  /obat/{kdObatSK}/kunjungan/{noKunjungan}:
+    delete:
+      tags: [Obat]
+      summary: Delete Obat
+      description: |
+        Delete Data Obat berdasarkan kode ObatSK dan nomor kunjungan
+        
+        ## URL Format
+        `{Base URL}/{Service Name}/obat/{kdObatSK}/kunjungan/{noKunjungan}`
+      parameters:
+        - name: kdObatSK
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Kode ObatSK
+        - name: noKunjungan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kunjungan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data obat berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    nullable: true
+                    description: Response data (null jika berhasil)
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "OK"
+                      code:
+                        type: integer
+                        example: 200
+              example:
+                response: null
+                metaData:
+                  message: "OK"
+                  code: 200
+
+components:
+  securitySchemes:
+    pcareAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    pcareTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    pcareSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    pcareAuthorization:
+      type: apiKey
+      in: header
+      name: X-authorization
+      description: Generated signature dengan pola Base64
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
+  schemas:
+    DPHO:
+      type: object
+      properties:
+        kdObat:
+          type: string
+          description: Kode obat
+        nmObat:
+          type: string
+          description: Nama obat
+        sedia:
+          type: integer
+          description: Jumlah sediaan
+    DPHOResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Jumlah total data DPHO
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/DPHO'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response
+    ObatKunjungan:
+      type: object
+      properties:
+        kdObatSK:
+          type: integer
+          description: Kode ObatSK
+        kdRacikan:
+          type: string
+          description: Kode Racikan
+        obat:
+          type: object
+          properties:
+            kdObat:
+              type: string
+              description: Kode obat
+            nmObat:
+              type: string
+              description: Nama obat
+            sedia:
+              type: integer
+              description: Jumlah sediaan
+        signa1:
+          type: integer
+          description: Signa 1
+        signa2:
+          type: integer
+          description: Signa 2
+        jmlObat:
+          type: integer
+          description: Jumlah obat
+        jmlHari:
+          type: integer
+          description: Jumlah hari
+        kekuatan:
+          type: integer
+          description: Kekuatan
+        jmlPermintaan:
+          type: integer
+          description: Jumlah permintaan
+        jmlObatRacikan:
+          type: integer
+          description: Jumlah obat racikan
+    ObatKunjunganResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Jumlah total data obat
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/ObatKunjungan'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response
+    ObatRequest:
+      type: object
+      required:
+        - kdObatSK
+        - noKunjungan
+        - racikan
+        - obatDPHO
+        - kdObat
+        - signa1
+        - signa2
+        - jmlObat
+        - jmlPermintaan
+      properties:
+        kdObatSK:
+          type: integer
+          description: Kode ObatSK (0 untuk create baru)
+        noKunjungan:
+          type: string
+          description: Nomor Kunjungan
+        racikan:
+          type: boolean
+          description: Apakah racikan
+        kdRacikan:
+          type: string
+          nullable: true
+          description: Kode Racikan (null jika tidak racikan)
+        obatDPHO:
+          type: boolean
+          description: Apakah obat DPHO
+        kdObat:
+          type: string
+          description: Kode obat
+        signa1:
+          type: integer
+          description: Signa 1
+        signa2:
+          type: integer
+          description: Signa 2
+        jmlObat:
+          type: integer
+          description: Jumlah obat
+        jmlPermintaan:
+          type: integer
+          description: Jumlah permintaan
+        nmObatNonDPHO:
+          type: string
+          nullable: true
+          description: Nama obat non DPHO (jika bukan DPHO)

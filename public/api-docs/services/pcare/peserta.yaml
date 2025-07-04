@@ -1,0 +1,284 @@
+openapi: 3.0.0
+info:
+  title: PCare Peserta API
+  version: 1.0.0
+  description: Layanan untuk data peserta BPJS Kesehatan PCare
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev
+    description: PCare Development Server
+tags:
+  - name: Peserta
+    description: Data peserta BPJS Kesehatan
+paths:
+  /peserta/{noKartu}:
+    get:
+      tags:
+        - Peserta
+      summary: Get Peserta
+      description: Get Data Peserta berdasarkan nomor kartu peserta
+      parameters:
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kartu Peserta
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data peserta berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PesertaResponse'
+              example:
+                response:
+                  noKartu: "0000039043765"
+                  nama: "SUSIAMINI IMAM SOERADI"
+                  hubunganKeluarga: "Peserta"
+                  sex: "P"
+                  tglLahir: "25-10-1939"
+                  tglMulaiAktif: "12-11-2014"
+                  tglAkhirBerlaku: "01-01-2050"
+                  kdProviderPst:
+                    kdProvider: "0114U163"
+                    nmProvider: "Klinik Cempaka Putih"
+                  kdProviderGigi:
+                    kdProvider: null
+                    nmProvider: null
+                  jnsKelas:
+                    nama: "KELAS I"
+                    kode: "1"
+                  jnsPeserta:
+                    nama: "PENERIMA PENSIUN PNS"
+                    kode: "15"
+                  golDarah: "0"
+                  noHP: ""
+                  noKTP: ""
+                  pstProl: "HT"
+                  pstPrb: "HT"
+                  aktif: true
+                  ketAktif: "AKTIF"
+                  asuransi:
+                    kdAsuransi: null
+                    nmAsuransi: null
+                    noAsuransi: null
+                    cob: false
+                  tunggakan: 0
+                metaData:
+                  message: "OK"
+                  code: 200
+  /peserta/{jenisKartu}/{nomor}:
+    get:
+      tags:
+        - Peserta
+      summary: Get Peserta by Jenis Kartu
+      description: Get Data Peserta berdasarkan jenis kartu (nik/noka) dan nomor kartu/NIK
+      parameters:
+        - name: jenisKartu
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - nik
+              - noka
+          description: "Jenis kartu nik atau noka"
+        - name: nomor
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor NIK atau kartu peserta
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data peserta berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PesertaResponse'
+              example:
+                response:
+                  noKartu: "0001261832477"
+                  nama: "TRI ARNI"
+                  hubunganKeluarga: "Istri"
+                  sex: "P"
+                  tglLahir: "29-09-1965"
+                  tglMulaiAktif: "09-01-2014"
+                  tglAkhirBerlaku: "31-12-2050"
+                  kdProviderPst:
+                    kdProvider: "09020107"
+                    nmProvider: "KEL. MANGGARAI SELATAN"
+                  kdProviderGigi:
+                    kdProvider: null
+                    nmProvider: null
+                  jnsKelas:
+                    kode: "3"
+                    nama: "KELAS III"
+                  jnsPeserta:
+                    kode: "22"
+                    nama: "PBI (APBD)"
+                  golDarah: "0"
+                  noHP: "083876592594"
+                  noKTP: "3174016909650001"
+                  aktif: true
+                  ketAktif: "AKTIF"
+                  asuransi:
+                    kdAsuransi: null
+                    nmAsuransi: null
+                    noAsuransi: null
+                  tunggakan: 0
+                metaData:
+                  message: "OK"
+                  code: 200
+components:
+  securitySchemes:
+    pcareAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    pcareTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    pcareSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    pcareAuthorization:
+      type: apiKey
+      in: header
+      name: X-authorization
+      description: Generated signature dengan pola Base64
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
+  schemas:
+    Provider:
+      type: object
+      properties:
+        kdProvider:
+          type: string
+          description: Kode provider
+        nmProvider:
+          type: string
+          description: Nama provider
+    Asuransi:
+      type: object
+      properties:
+        kdAsuransi:
+          type: string
+          nullable: true
+          description: Kode asuransi
+        nmAsuransi:
+          type: string
+          nullable: true
+          description: Nama asuransi
+        noAsuransi:
+          type: string
+          nullable: true
+          description: Nomor asuransi
+        cob:
+          type: boolean
+          description: Status COB
+          nullable: true
+    Peserta:
+      type: object
+      properties:
+        noKartu:
+          type: string
+          description: Nomor kartu peserta
+        nama:
+          type: string
+          description: Nama peserta
+        hubunganKeluarga:
+          type: string
+          description: Hubungan keluarga
+        sex:
+          type: string
+          description: Jenis kelamin
+        tglLahir:
+          type: string
+          description: Tanggal lahir
+        tglMulaiAktif:
+          type: string
+          description: Tanggal mulai aktif
+        tglAkhirBerlaku:
+          type: string
+          description: Tanggal akhir berlaku
+        kdProviderPst:
+          $ref: '#/components/schemas/Provider'
+        kdProviderGigi:
+          $ref: '#/components/schemas/Provider'
+        jnsKelas:
+          type: object
+          properties:
+            nama:
+              type: string
+            kode:
+              type: string
+        jnsPeserta:
+          type: object
+          properties:
+            nama:
+              type: string
+            kode:
+              type: string
+        golDarah:
+          type: string
+          description: Golongan darah
+        noHP:
+          type: string
+          description: Nomor HP
+        noKTP:
+          type: string
+          description: Nomor KTP
+        pstProl:
+          type: string
+          description: Peserta prolanis
+          nullable: true
+        pstPrb:
+          type: string
+          description: Peserta PRB
+          nullable: true
+        aktif:
+          type: boolean
+          description: Status aktif
+        ketAktif:
+          type: string
+          description: Keterangan aktif
+        asuransi:
+          $ref: '#/components/schemas/Asuransi'
+        tunggakan:
+          type: integer
+          description: Jumlah tunggakan
+    PesertaResponse:
+      type: object
+      properties:
+        response:
+          $ref: '#/components/schemas/Peserta'
+        metaData:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Pesan response
+            code:
+              type: integer
+              description: Kode response

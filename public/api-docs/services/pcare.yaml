@@ -1,0 +1,284 @@
+openapi: 3.0.0
+info:
+  title: PCare API - Complete Documentation
+  version: 1.0.0
+  description: |
+    API PCare untuk pengelolaan layanan primer BPJS Kesehatan
+    
+    ## Authentication
+    Semua endpoint memerlukan header authentication:
+    - `X-cons-id`: Consumer ID dari BPJS Kesehatan
+    - `X-timestamp`: Generated unix-based timestamp
+    - `X-signature`: Generated signature dengan pola HMAC-256
+    - `X-authorization`: Generated signature dengan pola Base64 (username:password:kdAplikasi)
+    - `user_key`: User key untuk akses webservice
+    
+    ## Signature Generation
+    ```
+    signature = HMAC-SHA256(consId + "&" + timestamp, secretKey)
+    ```
+    
+    ## Authorization Generation
+    ```
+    authorization = Base64(username:password:kdAplikasi)
+    ```
+    
+    ## Decryption
+    Response yang dienkripsi menggunakan AES-256-CBC dengan:
+    - Key: SHA256 hash dari (consId + consSecret + timestamp)
+    - IV: 16 byte pertama dari SHA256 hash
+    - Decompression: LZString (decompressFromEncodedURIComponent)
+    
+    ## File Structure
+    Dokumentasi ini terbagi menjadi beberapa file:
+    - `create-signature.yaml`: Header authentication dan signature generation
+    - `decrypt.yaml`: Panduan decrypt response
+    - `peserta.yaml`: Data peserta PCare
+    - `kunjungan.yaml`: Data kunjungan peserta
+    - `obat.yaml`: Data obat dan resep
+    - `tindakan.yaml`: Data tindakan medis
+    - `referensi.yaml`: Data referensi (poli, dokter, dll)
+
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev
+    description: Server Development
+
+tags:
+  - name: Diagnosa
+    description: Data diagnosa PCare
+  - name: Dokter
+    description: Data dokter PCare
+  - name: Kelompok
+    description: Pengelolaan Club Prolanis (Diabetes Melitus, Hipertensi, Asthma)
+  - name: Kesadaran
+    description: Data tingkat kesadaran pasien
+  - name: Kunjungan
+    description: Operasi data kunjungan pasien
+  - name: MCU
+    description: Data Medical Check Up (MCU) pasien
+  - name: Obat
+    description: Data obat dan DPHO pasien
+  - name: Pendaftaran
+    description: Data pendaftaran pasien
+  - name: Peserta
+    description: Data peserta BPJS Kesehatan
+  - name: Poli
+    description: Data poli FKTP
+  - name: Provider
+    description: Data provider rayonisasi
+  - name: Spesialis
+    description: Data referensi spesialis dan rujukan
+  - name: Status Pulang
+    description: Data status pulang pasien
+  - name: Tindakan
+    description: Data tindakan dan referensi tindakan
+  - name: Alergi
+    description: Data referensi alergi
+  - name: Prognosa
+    description: Data referensi prognosa
+
+components:
+  securitySchemes:
+    pcareAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    pcareTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    pcareSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    pcareAuthorization:
+      type: apiKey
+      in: header
+      name: X-authorization
+      description: Generated signature dengan pola Base64
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
+
+paths:
+  # Create Signature
+  /auth/signature:
+    get:
+      $ref: './pcare/create-signature.yaml#/paths/~1auth~1signature/get'
+
+  # Decrypt
+  /decrypt:
+    post:
+      $ref: './pcare/decrypt.yaml#/paths/~1decrypt/post'
+
+  # Diagnosa
+  /diagnosa/{keyword}/{start}/{limit}:
+    get:
+      $ref: './pcare/diagnosa.yaml#/paths/~1diagnosa~1{keyword}~1{start}~1{limit}/get'
+
+  # Dokter
+  /dokter/{start}/{limit}:
+    get:
+      $ref: './pcare/dokter.yaml#/paths/~1dokter~1{start}~1{limit}/get'
+
+  # Kelompok
+  /kelompok/club/{kdProgram}:
+    get:
+      $ref: './pcare/kelompok.yaml#/paths/~1kelompok~1club~1{kdProgram}/get'
+  /kelompok/kegiatan/{bulan}:
+    get:
+      $ref: './pcare/kelompok.yaml#/paths/~1kelompok~1kegiatan~1{bulan}/get'
+  /kelompok/peserta/{eduId}:
+    get:
+      $ref: './pcare/kelompok.yaml#/paths/~1kelompok~1peserta~1{eduId}/get'
+  /kelompok/kegiatan:
+    post:
+      $ref: './pcare/kelompok.yaml#/paths/~1kelompok~1kegiatan/post'
+  /kelompok/peserta:
+    post:
+      $ref: './pcare/kelompok.yaml#/paths/~1kelompok~1peserta/post'
+  /kelompok/kegiatan/{eduId}:
+    delete:
+      $ref: './pcare/kelompok.yaml#/paths/~1kelompok~1kegiatan~1{eduId}/delete'
+  /kelompok/peserta/{eduId}/{noKartu}:
+    delete:
+      $ref: './pcare/kelompok.yaml#/paths/~1kelompok~1peserta~1{eduId}~1{noKartu}/delete'
+
+  # Kesadaran
+  /pcare-rest-dev/kesadaran:
+    get:
+      $ref: './pcare/kesadaran.yaml#/paths/~1pcare-rest-dev~1kesadaran/get'
+
+  # Kunjungan
+  /kunjungan/rujukan/{noKunjungan}:
+    get:
+      $ref: './pcare/kunjungan.yaml#/paths/~1kunjungan~1rujukan~1{noKunjungan}/get'
+  /kunjungan/peserta/{noKartu}:
+    get:
+      $ref: './pcare/kunjungan.yaml#/paths/~1kunjungan~1peserta~1{noKartu}/get'
+  /kunjungan:
+    post:
+      $ref: './pcare/kunjungan.yaml#/paths/~1kunjungan/post'
+    put:
+      $ref: './pcare/kunjungan.yaml#/paths/~1kunjungan/put'
+  /kunjungan/{noKunjungan}:
+    delete:
+      $ref: './pcare/kunjungan.yaml#/paths/~1kunjungan~1{noKunjungan}/delete'
+
+  # MCU
+  /MCU/kunjungan/{noKunjungan}:
+    get:
+      $ref: './pcare/mcu.yaml#/paths/~1MCU~1kunjungan~1{noKunjungan}/get'
+  /MCU:
+    post:
+      $ref: './pcare/mcu.yaml#/paths/~1MCU/post'
+    put:
+      $ref: './pcare/mcu.yaml#/paths/~1MCU/put'
+  /MCU/{kdMCU}/kunjungan/{noKunjungan}:
+    delete:
+      $ref: './pcare/mcu.yaml#/paths/~1MCU~1{kdMCU}~1kunjungan~1{noKunjungan}/delete'
+
+  # Obat
+  /obat/dpho/{query}/{start}/{limit}:
+    get:
+      $ref: './pcare/obat.yaml#/paths/~1obat~1dpho~1{query}~1{start}~1{limit}/get'
+  /obat/kunjungan/{noKunjungan}:
+    get:
+      $ref: './pcare/obat.yaml#/paths/~1obat~1kunjungan~1{noKunjungan}/get'
+  /obat/kunjungan:
+    post:
+      $ref: './pcare/obat.yaml#/paths/~1obat~1kunjungan/post'
+  /obat/{kdObatSK}/kunjungan/{noKunjungan}:
+    delete:
+      $ref: './pcare/obat.yaml#/paths/~1obat~1{kdObatSK}~1kunjungan~1{noKunjungan}/delete'
+
+  # Pendaftaran
+  /pendaftaran/noUrut/{noUrut}/tglDaftar/{tglDaftar}:
+    get:
+      $ref: './pcare/pendaftaran.yaml#/paths/~1pendaftaran~1noUrut~1{noUrut}~1tglDaftar~1{tglDaftar}/get'
+  /pendaftaran/tglDaftar/{tglDaftar}/{start}/{limit}:
+    get:
+      $ref: './pcare/pendaftaran.yaml#/paths/~1pendaftaran~1tglDaftar~1{tglDaftar}~1{start}~1{limit}/get'
+  /pendaftaran:
+    post:
+      $ref: './pcare/pendaftaran.yaml#/paths/~1pendaftaran/post'
+  /pendaftaran/peserta/{noKartu}/tglDaftar/{tglDaftar}/noUrut/{noUrut}/kdPoli/{kdPoli}:
+    delete:
+      $ref: './pcare/pendaftaran.yaml#/paths/~1pendaftaran~1peserta~1{noKartu}~1tglDaftar~1{tglDaftar}~1noUrut~1{noUrut}~1kdPoli~1{kdPoli}/delete'
+
+  # Peserta
+  /peserta/{noKartu}:
+    get:
+      $ref: './pcare/peserta.yaml#/paths/~1peserta~1{noKartu}/get'
+  /peserta/{jenisKartu}/{nomor}:
+    get:
+      $ref: './pcare/peserta.yaml#/paths/~1peserta~1{jenisKartu}~1{nomor}/get'
+
+  # Poli
+  /poli/fktp/{start}/{limit}:
+    get:
+      $ref: './pcare/poli.yaml#/paths/~1poli~1fktp~1{start}~1{limit}/get'
+
+  # Provider
+  /provider/{start}/{limit}:
+    get:
+      $ref: './pcare/provider.yaml#/paths/~1provider~1{start}~1{limit}/get'
+
+  # Spesialis
+  /spesialis:
+    get:
+      $ref: './pcare/spesialis.yaml#/paths/~1spesialis/get'
+  /spesialis/{kdSpesialis}/subspesialis:
+    get:
+      $ref: './pcare/spesialis.yaml#/paths/~1spesialis~1{kdSpesialis}~1subspesialis/get'
+  /spesialis/sarana:
+    get:
+      $ref: './pcare/spesialis.yaml#/paths/~1spesialis~1sarana/get'
+  /spesialis/khusus:
+    get:
+      $ref: './pcare/spesialis.yaml#/paths/~1spesialis~1khusus/get'
+  /spesialis/rujuk/subspesialis/{kdSubSpesialis}/sarana/{kdSarana}/tglEstRujuk/{tglEstRujuk}:
+    get:
+      $ref: './pcare/spesialis.yaml#/paths/~1spesialis~1rujuk~1subspesialis~1{kdSubSpesialis}~1sarana~1{kdSarana}~1tglEstRujuk~1{tglEstRujuk}/get'
+  /spesialis/rujuk/khusus/{kdKhusus}/noKartu/{noKartu}/tglEstRujuk/{tglEstRujuk}:
+    get:
+      $ref: './pcare/spesialis.yaml#/paths/~1spesialis~1rujuk~1khusus~1{kdKhusus}~1noKartu~1{noKartu}~1tglEstRujuk~1{tglEstRujuk}/get'
+  /spesialis/rujuk/khusus/{kdKhusus}/subspesialis/{kdSubSpesialis}/noKartu/{noKartu}/tglEstRujuk/{tglEstRujuk}:
+    get:
+      $ref: './pcare/spesialis.yaml#/paths/~1spesialis~1rujuk~1khusus~1{kdKhusus}~1subspesialis~1{kdSubSpesialis}~1noKartu~1{noKartu}~1tglEstRujuk~1{tglEstRujuk}/get'
+
+  # Status Pulang
+  /status-pulang:
+    get:
+      $ref: './pcare/status-pulang.yaml#/paths/~1status-pulang/get'
+
+  # Tindakan
+  /tindakan/kunjungan/{noKunjungan}:
+    get:
+      $ref: './pcare/tindakan.yaml#/paths/~1tindakan~1kunjungan~1{noKunjungan}/get'
+  /tindakan/kdTkp/{kdTkp}/{start}/{limit}:
+    get:
+      $ref: './pcare/tindakan.yaml#/paths/~1tindakan~1kdTkp~1{kdTkp}~1{start}~1{limit}/get'
+  /tindakan:
+    post:
+      $ref: './pcare/tindakan.yaml#/paths/~1tindakan/post'
+    put:
+      $ref: './pcare/tindakan.yaml#/paths/~1tindakan/put'
+  /tindakan/{kdTindakanSK}/kunjungan/{noKunjungan}:
+    delete:
+      $ref: './pcare/tindakan.yaml#/paths/~1tindakan~1{kdTindakanSK}~1kunjungan~1{noKunjungan}/delete'
+
+  # Alergi
+  /alergi/jenis/{jenisAlergi}:
+    get:
+      $ref: './pcare/alergi.yaml#/paths/~1alergi~1jenis~1{jenisAlergi}/get'
+
+  # Prognosa
+  /prognosa:
+    get:
+      $ref: './pcare/prognosa.yaml#/paths/~1prognosa/get'

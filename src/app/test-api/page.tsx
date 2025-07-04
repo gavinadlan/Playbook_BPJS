@@ -70,9 +70,9 @@ const apiServices: ApiService[] = [
   },
   {
     name: 'i-Care',
-    file: '/api-docs/services/icare.yaml',
+    file: '/api-docs/services/icare/merged.yaml',
     description: 'Layanan i-Care JKN',
-    status: 'inactive'
+    status: 'active'
   },
   {
     name: 'RekamMedis',

@@ -58,9 +58,9 @@ const apiServices: ApiService[] = [
   },
   {
     name: 'PCare',
-    file: '/api-docs/services/pcare.yaml',
+    file: '/api-docs/services/pcare/merged.yaml',
     description: 'Layanan PCare',
-    status: 'inactive'
+    status: 'active'
   },
   {
     name: 'AntreanFKTP',

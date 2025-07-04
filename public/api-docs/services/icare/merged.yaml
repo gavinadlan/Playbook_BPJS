@@ -1,0 +1,233 @@
+openapi: 3.0.0
+info:
+  title: iCare API - Complete Documentation
+  version: 1.0.0
+  description: |
+    API PCare untuk pengelolaan layanan primer BPJS Kesehatan
+servers:
+  - url: 'https://apijkn-dev.bpjs-kesehatan.go.id/ihs_dev'
+    description: Server Development
+paths:
+  /auth/signature:
+    get:
+      tags:
+        - Authentication
+      summary: Generate Signature
+      description: |
+        Panduan untuk generate signature HMAC-SHA256 untuk iCare FKRTL API
+
+        ## Formula
+        ```
+        signature = HMAC-SHA256(consId + "&" + timestamp, secretKey)
+        ```
+
+        ## Parameters
+        - `consId`: Consumer ID dari BPJS Kesehatan
+        - `timestamp`: Unix-based timestamp
+        - `secretKey`: Consumer Secret (tidak dikirim ke server)
+
+        ## Example
+        ```
+        consId: 1234
+        timestamp: 433223232
+        secretKey: pwd
+        data: 1234&433223232
+        signature: HMAC-SHA256(data, secretKey)
+        ```
+      responses:
+        '200':
+          description: Signature generation guide
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Signature generation guide
+                  formula:
+                    type: string
+                    example: 'HMAC-SHA256(consId + ''&'' + timestamp, secretKey)'
+  /auth/signature-fktp:
+    get:
+      tags:
+        - Authentication
+      summary: Generate Signature
+      description: |
+        Panduan untuk generate signature HMAC-SHA256 untuk iCare FKTP API
+
+        ## Formula
+        ```
+        signature = HMAC-SHA256(consId + "&" + timestamp, secretKey)
+        ```
+
+        ## Parameters
+        - `consId`: Consumer ID dari BPJS Kesehatan
+        - `timestamp`: Unix-based timestamp
+        - `secretKey`: Consumer Secret (tidak dikirim ke server)
+
+        ## Example
+        ```
+        consId: 1234
+        timestamp: 433223232
+        secretKey: pwd
+        data: 1234&433223232
+        signature: HMAC-SHA256(data, secretKey)
+        ```
+      responses:
+        '200':
+          description: Signature generation guide
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Signature generation guide
+                  formula:
+                    type: string
+                    example: 'HMAC-SHA256(consId + ''&'' + timestamp, secretKey)'
+  /decrypt:
+    get:
+      tags:
+        - Decryption
+      summary: How to Decrypt Response
+      description: |
+        Panduan untuk melakukan dekripsi response dari iCare API.
+
+        1. Dekripsi: AES 256 (mode CBC) - SHA256
+        2. Dekompresi: Lz-string (decompressFromEncodedURIComponent)
+
+        Key: `consid + conspwd + timestamp request` (concatenate string)
+      responses:
+        '200':
+          description: Decrypt guide
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Decrypt guide
+                  steps:
+                    type: string
+                    example: 'AES-256-CBC decryption, then LZ-string decompress'
+  '/{serviceName}/api/rs/validate':
+    post:
+      tags:
+        - FKRTL
+      summary: Validasi Data Riwayat Pelayanan FKRTL
+      description: Endpoint untuk validasi dan mendapatkan data riwayat pelayanan FKRTL.
+      operationId: validateFKRTL
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - param
+                - kodedokter
+              properties:
+                param:
+                  type: string
+                  description: Nomor kartu peserta
+                  example: '2200009338321'
+                kodedokter:
+                  type: integer
+                  description: Kode dokter
+                  example: 11111
+            example:
+              param: '2200009338321'
+              kodedokter: 11111
+      responses:
+        '200':
+          description: Berhasil mendapatkan data riwayat pelayanan FKRTL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                        description: URL hasil validasi
+                        example: 'https://dvlp.bpjs-kesehatan.go.id/ihs/history?token=e6b610b4-2960-46a3-8420-de879756dce3'
+                  metaData:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        description: Kode response
+                        example: 200
+                      message:
+                        type: string
+                        description: Pesan response
+                        example: Sukses
+              example:
+                response:
+                  url: 'https://dvlp.bpjs-kesehatan.go.id/ihs/history?token=e6b610b4-2960-46a3-8420-de879756dce3'
+                metaData:
+                  code: 200
+                  message: Sukses
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  '/{serviceName}/api/pcare/validate':
+    post:
+      tags:
+        - FKTP
+      summary: Validasi Data Riwayat Pelayanan FKTP
+      description: Endpoint untuk validasi dan mendapatkan data riwayat pelayanan FKTP.
+      operationId: validateFKTP
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nama service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - param
+              properties:
+                param:
+                  type: string
+                  description: Nomor kartu peserta
+                  example: '2200009338321'
+            example:
+              param: '2200009338321'
+      responses:
+        '200':
+          description: Berhasil mendapatkan data riwayat pelayanan FKTP
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1%7BserviceName%7D~1api~1rs~1validate/post/responses/200/content/application~1json/schema'
+              example:
+                response:
+                  url: 'https://dvlp.bpjs-kesehatan.go.id/ihs/history?token=e6b610b4-2960-46a3-8420-de879756dce3'
+                metaData:
+                  code: 200
+                  message: Sukses
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error

@@ -1,0 +1,5307 @@
+openapi: 3.0.0
+info:
+  title: PCare API - Complete Documentation
+  version: 1.0.0
+  description: |
+    API PCare untuk pengelolaan layanan primer BPJS Kesehatan
+
+    ## Authentication
+    Semua endpoint memerlukan header authentication:
+    - `X-cons-id`: Consumer ID dari BPJS Kesehatan
+    - `X-timestamp`: Generated unix-based timestamp
+    - `X-signature`: Generated signature dengan pola HMAC-256
+    - `X-authorization`: Generated signature dengan pola Base64 (username:password:kdAplikasi)
+    - `user_key`: User key untuk akses webservice
+
+    ## Signature Generation
+    ```
+    signature = HMAC-SHA256(consId + "&" + timestamp, secretKey)
+    ```
+
+    ## Authorization Generation
+    ```
+    authorization = Base64(username:password:kdAplikasi)
+    ```
+
+    ## Decryption
+    Response yang dienkripsi menggunakan AES-256-CBC dengan:
+    - Key: SHA256 hash dari (consId + consSecret + timestamp)
+    - IV: 16 byte pertama dari SHA256 hash
+    - Decompression: LZString (decompressFromEncodedURIComponent)
+
+    ## File Structure
+    Dokumentasi ini terbagi menjadi beberapa file:
+    - `create-signature.yaml`: Header authentication dan signature generation
+    - `decrypt.yaml`: Panduan decrypt response
+    - `peserta.yaml`: Data peserta PCare
+    - `kunjungan.yaml`: Data kunjungan peserta
+    - `obat.yaml`: Data obat dan resep
+    - `tindakan.yaml`: Data tindakan medis
+    - `referensi.yaml`: Data referensi (poli, dokter, dll)
+servers:
+  - url: 'https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev'
+    description: Server Development
+tags:
+  - name: Diagnosa
+    description: Data diagnosa PCare
+  - name: Dokter
+    description: Data dokter PCare
+  - name: Kelompok
+    description: 'Pengelolaan Club Prolanis (Diabetes Melitus, Hipertensi, Asthma)'
+  - name: Kesadaran
+    description: Data tingkat kesadaran pasien
+  - name: Kunjungan
+    description: Operasi data kunjungan pasien
+  - name: MCU
+    description: Data Medical Check Up (MCU) pasien
+  - name: Obat
+    description: Data obat dan DPHO pasien
+  - name: Pendaftaran
+    description: Data pendaftaran pasien
+  - name: Peserta
+    description: Data peserta BPJS Kesehatan
+  - name: Poli
+    description: Data poli FKTP
+  - name: Provider
+    description: Data provider rayonisasi
+  - name: Spesialis
+    description: Data referensi spesialis dan rujukan
+  - name: Status Pulang
+    description: Data status pulang pasien
+  - name: Tindakan
+    description: Data tindakan dan referensi tindakan
+  - name: Alergi
+    description: Data referensi alergi
+  - name: Prognosa
+    description: Data referensi prognosa
+components:
+  securitySchemes:
+    pcareAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    pcareTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    pcareSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    pcareAuthorization:
+      type: apiKey
+      in: header
+      name: X-authorization
+      description: Generated signature dengan pola Base64
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
+paths:
+  /auth/signature:
+    get:
+      tags:
+        - Authentication
+      summary: Generate Signature
+      description: |
+        Panduan untuk generate signature HMAC-SHA256 untuk PCare API
+
+        ## Formula
+        ```
+        signature = HMAC-SHA256(consId + "&" + timestamp, secretKey)
+        ```
+
+        ## Parameters
+        - `consId`: Consumer ID dari BPJS Kesehatan
+        - `timestamp`: Unix-based timestamp
+        - `secretKey`: Consumer Secret (tidak dikirim ke server)
+
+        ## Example
+        ```
+        consId: 1234
+        timestamp: 433223232
+        secretKey: pwd
+        data: 1234&433223232
+        signature: HMAC-SHA256(data, secretKey)
+        ```
+      responses:
+        '200':
+          description: Signature generation guide
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Signature generation guide
+                  formula:
+                    type: string
+                    example: 'HMAC-SHA256(consId + ''&'' + timestamp, secretKey)'
+  /decrypt:
+    post:
+      tags:
+        - Decryption
+      summary: Decrypt Response
+      description: |
+        Panduan untuk decrypt response dari PCare API
+
+        ## Process
+        1. Generate key: `consId + consSecret + timestamp`
+        2. Generate SHA256 hash dari key
+        3. Decrypt AES-256-CBC dengan key dan IV dari hash
+        4. Decompress menggunakan LZString
+
+        ## Formula
+        ```
+        key = consId + consSecret + timestamp
+        keyHash = SHA256(key)
+        aesKey = keyHash[0:32]
+        iv = keyHash[0:16]
+        decrypted = AES-256-CBC-Decrypt(encryptedText, aesKey, iv)
+        result = LZString.decompressFromEncodedURIComponent(decrypted)
+        ```
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - key
+                - encryptedText
+              properties:
+                key:
+                  type: string
+                  description: Key untuk decrypt (consId + consSecret + timestamp)
+                  example: 1234pwd433223232
+                encryptedText:
+                  type: string
+                  description: Base64 encoded encrypted text
+                  example: U2FsdGVkX1+...
+      responses:
+        '200':
+          description: Decrypt berhasil
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: Status decrypt berhasil atau tidak
+                  data:
+                    type: object
+                    description: Data hasil decrypt
+                  error:
+                    type: string
+                    description: Pesan error jika decrypt gagal
+        '400':
+          description: Request tidak valid
+        '500':
+          description: Error decrypt
+  '/diagnosa/{keyword}/{start}/{limit}':
+    get:
+      tags:
+        - Diagnosa
+      summary: Get Diagnosa
+      description: |
+        Get Data Diagnosa berdasarkan kode atau nama diagnosa
+
+        ## Parameter
+        - `keyword`: Kode atau nama diagnosa yang dicari
+        - `start`: Row data awal yang akan ditampilkan
+        - `limit`: Limit jumlah data yang akan ditampilkan
+
+        ## Example
+        ```
+        GET /diagnosa/A001/0/10
+        GET /diagnosa/Cholera/0/20
+        ```
+      parameters:
+        - name: keyword
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode atau nama diagnosa
+          example: A001
+        - name: start
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+          description: Row data awal yang akan ditampilkan
+          example: 0
+        - name: limit
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          description: Limit jumlah data yang akan ditampilkan
+          example: 10
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data diagnosa berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Jumlah total data diagnosa
+                        example: 33
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kdDiag:
+                              type: string
+                              description: Kode diagnosa
+                              example: A001
+                            nmDiag:
+                              type: string
+                              description: Nama diagnosa
+                              example: 'Cholera due to vibrio cholerae 01, biovar eltor'
+                            nonSpesialis:
+                              type: boolean
+                              description: Apakah diagnosa non-spesialis
+                              example: false
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                        example: OK
+                      code:
+                        type: integer
+                        description: Kode response
+                        example: 200
+              example:
+                response:
+                  count: 33
+                  list:
+                    - kdDiag: A001
+                      nmDiag: 'Cholera due to vibrio cholerae 01, biovar eltor'
+                      nonSpesialis: false
+                    - kdDiag: B001
+                      nmDiag: Herpesviral vesicular dermatitis
+                      nonSpesialis: true
+                metaData:
+                  message: OK
+                  code: 200
+        '400':
+          description: Bad Request - Parameter tidak valid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Parameter tidak valid
+                      code:
+                        type: integer
+                        example: 400
+        '401':
+          description: Unauthorized - Authentication gagal
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Authentication gagal
+                      code:
+                        type: integer
+                        example: 401
+        '404':
+          description: Not Found - Data diagnosa tidak ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Data diagnosa tidak ditemukan
+                      code:
+                        type: integer
+                        example: 404
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Internal Server Error
+                      code:
+                        type: integer
+                        example: 500
+  '/dokter/{start}/{limit}':
+    get:
+      tags:
+        - Dokter
+      summary: Get Dokter
+      description: |
+        Get Data Dokter
+
+        ## Parameter
+        - `start`: Row data awal yang akan ditampilkan
+        - `limit`: Limit jumlah data yang akan ditampilkan
+
+        ## Example
+        ```
+        GET /dokter/0/10
+        GET /dokter/10/20
+        ```
+      parameters:
+        - name: start
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+          description: Row data awal yang akan ditampilkan
+          example: 0
+        - name: limit
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          description: Limit jumlah data yang akan ditampilkan
+          example: 10
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data dokter berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Jumlah total data dokter
+                        example: 19
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kdDokter:
+                              type: string
+                              description: Kode dokter
+                              example: '001'
+                            nmDokter:
+                              type: string
+                              description: Nama dokter
+                              example: dr. Muna Hasnita Harahap
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                        example: OK
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  count: 19
+                  list:
+                    - kdDokter: '001'
+                      nmDokter: dr...
+                    - kdDokter: '002'
+                      nmDokter: dr. Muna Hasnita Harahap
+                    - kdDokter: '003'
+                      nmDokter: dr. fauzi
+                metaData:
+                  message: OK
+                  code: 200
+        '400':
+          description: Bad Request - Parameter tidak valid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Parameter tidak valid
+                      code:
+                        type: integer
+                        example: 400
+        '401':
+          description: Unauthorized - Authentication gagal
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Authentication gagal
+                      code:
+                        type: integer
+                        example: 401
+        '404':
+          description: Not Found - Data dokter tidak ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Data dokter tidak ditemukan
+                      code:
+                        type: integer
+                        example: 404
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Internal Server Error
+                      code:
+                        type: integer
+                        example: 500
+  '/kelompok/club/{kdProgram}':
+    get:
+      tags:
+        - Kelompok
+      summary: Get Club Prolanis
+      description: |
+        Get Data Club Prolanis berdasarkan kode jenis kelompok
+
+        ## Parameter
+        - `kdProgram`: Kode Jenis Kelompok
+          - `01`: Diabetes Melitus
+          - `02`: Hipertensi
+          - `03`: Asthma
+
+        ## Example
+        ```
+        GET /kelompok/club/01
+        GET /kelompok/club/02
+        ```
+      parameters:
+        - name: kdProgram
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - '01'
+              - '02'
+              - '03'
+          description: 'Kode Jenis Kelompok (01=Diabetes Melitus, 02=Hipertensi, 03=Asthma)'
+          example: '01'
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data Club Prolanis berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Jumlah total data club
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            clubId:
+                              type: integer
+                              description: ID club
+                              example: 33
+                            jnsKelompok:
+                              $ref: '#/paths/~1kelompok~1kegiatan~1%7Bbulan%7D/get/responses/200/content/application~1json/schema/properties/response/properties/list/items/properties/kelompok'
+                            tglMulai:
+                              type: string
+                              description: Tanggal mulai club
+                              example: 23-08-2015
+                            tglAkhir:
+                              type: string
+                              nullable: true
+                              description: Tanggal akhir club
+                              example: null
+                            alamat:
+                              type: string
+                              description: Alamat club
+                              example: alamat club 1
+                            nama:
+                              type: string
+                              description: Nama club
+                              example: Club DM satu
+                            ketua_noHP:
+                              type: string
+                              description: Nomor HP ketua
+                              example: 085720127801
+                            ketua_nama:
+                              type: string
+                              description: Nama ketua
+                              example: Bambang
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  count: 2
+                  list:
+                    - clubId: 33
+                      jnsKelompok:
+                        kdProgram: '01'
+                        nmProgram: Diabetes Melitus
+                      tglMulai: 23-08-2015
+                      tglAkhir: null
+                      alamat: alamat club 1
+                      nama: Club DM satu
+                      ketua_noHP: 085720127801
+                      ketua_nama: Bambang
+                    - clubId: 34
+                      jnsKelompok:
+                        kdProgram: '01'
+                        nmProgram: Diabetes Melitus
+                      tglMulai: 23-08-2015
+                      tglAkhir: null
+                      alamat: alamat club dm 2
+                      nama: club DM dua
+                      ketua_noHP: 085720293132
+                      ketua_nama: Susi
+                metaData:
+                  message: OK
+                  code: 200
+  '/kelompok/kegiatan/{bulan}':
+    get:
+      tags:
+        - Kelompok
+      summary: Get Kegiatan Kelompok
+      description: |
+        Get Data Kegiatan Kelompok berdasarkan bulan
+
+        ## Parameter
+        - `bulan`: Bulan dalam format dd-mm-yyyy
+
+        ## Example
+        ```
+        GET /kelompok/kegiatan/01-2016
+        ```
+      parameters:
+        - name: bulan
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^\\d{2}-\\d{4}$'
+          description: Bulan dalam format dd-mm-yyyy
+          example: 01-2016
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data Kegiatan Kelompok berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Jumlah total data kegiatan
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            eduId:
+                              type: string
+                              description: ID kegiatan
+                              example: '16010000003'
+                            clubProl:
+                              type: object
+                              properties:
+                                clubId:
+                                  type: integer
+                                  description: ID club
+                                  example: 36
+                                jnsKelompok:
+                                  $ref: '#/paths/~1kelompok~1kegiatan~1%7Bbulan%7D/get/responses/200/content/application~1json/schema/properties/response/properties/list/items/properties/kelompok'
+                                tglMulai:
+                                  type: string
+                                  description: Tanggal mulai
+                                  example: 30-01-2016
+                                tglAkhir:
+                                  type: string
+                                  nullable: true
+                                  description: Tanggal akhir
+                                  example: null
+                                alamat:
+                                  type: string
+                                  description: Alamat
+                                  example: Alamat asma satu
+                                nama:
+                                  type: string
+                                  description: Nama
+                                  example: Asthma satu
+                                ketua_noHP:
+                                  type: string
+                                  description: Nomor HP ketua
+                                  example: 083
+                                ketua_nama:
+                                  type: string
+                                  description: Nama ketua
+                                  example: ketua
+                            tglPelayanan:
+                              type: string
+                              description: Tanggal pelayanan
+                              example: 30-01-2016
+                            kegiatan:
+                              type: object
+                              properties:
+                                nama:
+                                  type: string
+                                  description: Nama kegiatan
+                                  example: Senam
+                                kode:
+                                  type: string
+                                  description: Kode kegiatan
+                                  example: '01'
+                            kelompok:
+                              type: object
+                              properties:
+                                kdProgram:
+                                  type: string
+                                  description: Kode program
+                                  example: '01'
+                                nmProgram:
+                                  type: string
+                                  description: Nama program
+                                  example: Diabetes Melitus
+                            materi:
+                              type: string
+                              description: Materi kegiatan
+                              example: senam asthma satu
+                            pembicara:
+                              type: string
+                              description: Pembicara
+                              example: pembicara asthma satu
+                            lokasi:
+                              type: string
+                              description: Lokasi kegiatan
+                              example: lokasi
+                            keterangan:
+                              type: string
+                              description: Keterangan
+                              example: ket asma
+                            biaya:
+                              type: integer
+                              description: Biaya kegiatan
+                              example: 30000
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  count: 2
+                  list:
+                    - eduId: '16010000003'
+                      clubProl:
+                        clubId: 36
+                        jnsKelompok:
+                          kdProgram: '03'
+                          nmProgram: Asthma
+                        tglMulai: 30-01-2016
+                        tglAkhir: null
+                        alamat: Alamat asma satu
+                        nama: Asthma satu
+                        ketua_noHP: 083
+                        ketua_nama: ketua
+                      tglPelayanan: 30-01-2016
+                      kegiatan:
+                        nama: Senam
+                        kode: '01'
+                      kelompok:
+                        nama: Asthma
+                        kode: '03'
+                      materi: senam asthma satu
+                      pembicara: pembicara asthma satu
+                      lokasi: lokasi
+                      keterangan: ket asma
+                      biaya: 30000
+                    - eduId: '16010000001'
+                      clubProl:
+                        clubId: 34
+                        jnsKelompok:
+                          kdProgram: '01'
+                          nmProgram: Diabetes Melitus
+                        tglMulai: 23-08-2015
+                        tglAkhir: null
+                        alamat: alamat club dm 2
+                        nama: club DM dua
+                        ketua_noHP: 085720293132
+                        ketua_nama: erna
+                      tglPelayanan: 29-01-2016
+                      kegiatan:
+                        nama: Penyuluhan
+                        kode: '10'
+                      kelompok:
+                        nama: Diabetes Melitus
+                        kode: '01'
+                      materi: d
+                      pembicara: d
+                      lokasi: d
+                      keterangan: ''
+                      biaya: 0
+                metaData:
+                  message: OK
+                  code: 200
+  '/kelompok/peserta/{eduId}':
+    get:
+      tags:
+        - Kelompok
+      summary: Get Peserta Kegiatan Kelompok
+      description: |
+        Get Data Peserta Kegiatan Kelompok berdasarkan eduId
+
+        ## Parameter
+        - `eduId`: ID kegiatan kelompok
+
+        ## Example
+        ```
+        GET /kelompok/peserta/16020000001
+        ```
+      parameters:
+        - name: eduId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID kegiatan kelompok
+          example: '16020000001'
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data Peserta Kegiatan Kelompok berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Jumlah total data peserta
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            eduId:
+                              type: string
+                              description: ID kegiatan
+                            peserta:
+                              type: object
+                              properties:
+                                noKartu:
+                                  type: string
+                                  description: Nomor kartu
+                                nama:
+                                  type: string
+                                  description: Nama peserta
+                                hubunganKeluarga:
+                                  type: string
+                                  description: Hubungan keluarga
+                                sex:
+                                  type: string
+                                  description: Jenis kelamin
+                                tglLahir:
+                                  type: string
+                                  description: Tanggal lahir
+                                tglMulaiAktif:
+                                  type: string
+                                  description: Tanggal mulai aktif
+                                tglAkhirBerlaku:
+                                  type: string
+                                  description: Tanggal akhir berlaku
+                                kdProviderPst:
+                                  type: object
+                                  properties:
+                                    kdProvider:
+                                      type: string
+                                      description: Kode provider
+                                    nmProvider:
+                                      type: string
+                                      description: Nama provider
+                                kdProviderGigi:
+                                  type: object
+                                  properties:
+                                    kdProvider:
+                                      type: string
+                                      nullable: true
+                                      description: Kode provider gigi
+                                    nmProvider:
+                                      type: string
+                                      nullable: true
+                                      description: Nama provider gigi
+                                jnsKelas:
+                                  type: object
+                                  properties:
+                                    nama:
+                                      type: string
+                                      description: Nama kelas
+                                    kode:
+                                      type: string
+                                      description: Kode kelas
+                                jnsPeserta:
+                                  type: object
+                                  properties:
+                                    nama:
+                                      type: string
+                                      description: Nama jenis peserta
+                                    kode:
+                                      type: string
+                                      description: Kode jenis peserta
+                                golDarah:
+                                  type: string
+                                  description: Golongan darah
+                                noHP:
+                                  type: string
+                                  nullable: true
+                                  description: Nomor HP
+                                noKTP:
+                                  type: string
+                                  description: Nomor KTP
+                                pstProl:
+                                  type: string
+                                  description: Peserta prolanis
+                                pstPrb:
+                                  type: string
+                                  description: Peserta PRB
+                                aktif:
+                                  type: boolean
+                                  description: Status aktif
+                                ketAktif:
+                                  type: string
+                                  description: Keterangan aktif
+                                asuransi:
+                                  type: object
+                                  properties:
+                                    kdAsuransi:
+                                      type: string
+                                      nullable: true
+                                      description: Kode asuransi
+                                    nmAsuransi:
+                                      type: string
+                                      nullable: true
+                                      description: Nama asuransi
+                                    noAsuransi:
+                                      type: string
+                                      nullable: true
+                                      description: Nomor asuransi
+                                    cob:
+                                      type: boolean
+                                      description: Status COB
+                                tunggakan:
+                                  type: integer
+                                  description: Jumlah tunggakan
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  count: 2
+                  list:
+                    - eduId: '16020000001'
+                      peserta:
+                        noKartu: 0001101521158
+                        nama: MULIANA
+                        hubunganKeluarga: Peserta
+                        sex: L
+                        tglLahir: 10-05-1975
+                        tglMulaiAktif: 27-01-1995
+                        tglAkhirBerlaku: 10-05-2075
+                        kdProviderPst:
+                          kdProvider: 0114U163
+                          nmProvider: cemput jst
+                        kdProviderGigi:
+                          kdProvider: null
+                          nmProvider: null
+                        jnsKelas:
+                          nama: KELAS II
+                          kode: '2'
+                        jnsPeserta:
+                          nama: TNI ANGKATAN DARAT
+                          kode: '5'
+                        golDarah: '0'
+                        noHP: null
+                        noKTP: ' '
+                        pstProl: ''
+                        pstPrb: ''
+                        aktif: true
+                        ketAktif: AKTIF
+                        asuransi:
+                          kdAsuransi: null
+                          nmAsuransi: null
+                          noAsuransi: null
+                          cob: false
+                        tunggakan: 0
+                    - eduId: '16020000001'
+                      peserta:
+                        noKartu: 0001101615759
+                        nama: TOGU ELIOT FERNANDO
+                        hubunganKeluarga: Peserta
+                        sex: L
+                        tglLahir: 11-11-1983
+                        tglMulaiAktif: 08-11-2003
+                        tglAkhirBerlaku: 11-11-2083
+                        kdProviderPst:
+                          kdProvider: 0114U163
+                          nmProvider: cemput jst
+                        kdProviderGigi:
+                          kdProvider: null
+                          nmProvider: null
+                        jnsKelas:
+                          nama: KELAS II
+                          kode: '2'
+                        jnsPeserta:
+                          nama: TNI ANGKATAN DARAT
+                          kode: '5'
+                        golDarah: '0'
+                        noHP: null
+                        noKTP: ' '
+                        pstProl: ''
+                        pstPrb: ''
+                        aktif: true
+                        ketAktif: AKTIF
+                        asuransi:
+                          kdAsuransi: null
+                          nmAsuransi: null
+                          noAsuransi: null
+                          cob: false
+                        tunggakan: 0
+                metaData:
+                  message: OK
+                  code: 200
+  /kelompok/kegiatan:
+    post:
+      tags:
+        - Kelompok
+      summary: Add Kegiatan Kelompok
+      description: |
+        Add Data Kegiatan Kelompok
+
+        ## Kode Kelompok
+        - `01`: Diabetes Melitus
+        - `02`: Hipertensi
+        - `03`: Asthma
+
+        ## Kode Kegiatan
+        - `01`: Senam
+        - `10`: Penyuluhan
+        - `11`: Penyuluhan dan Senam
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: object
+              required:
+                - clubId
+                - tglPelayanan
+                - kdKegiatan
+                - kdKelompok
+                - materi
+                - pembicara
+                - lokasi
+                - keterangan
+                - biaya
+              properties:
+                eduId:
+                  type: string
+                  nullable: true
+                  description: ID kegiatan (null untuk create baru)
+                  example: null
+                clubId:
+                  type: integer
+                  description: ID club
+                  example: 36
+                tglPelayanan:
+                  type: string
+                  description: Tanggal pelayanan
+                  example: 27-03-2016
+                kdKegiatan:
+                  type: string
+                  description: 'Kode kegiatan (01=Senam, 10=Penyuluhan, 11=Penyuluhan dan Senam)'
+                  example: '01'
+                kdKelompok:
+                  type: string
+                  description: 'Kode kelompok (01=Diabetes Melitus, 02=Hipertensi, 03=Asthma)'
+                  example: '03'
+                materi:
+                  type: string
+                  description: Materi kegiatan
+                  example: materi
+                pembicara:
+                  type: string
+                  description: Pembicara
+                  example: pembicara
+                lokasi:
+                  type: string
+                  description: Lokasi kegiatan
+                  example: lokasi
+                keterangan:
+                  type: string
+                  description: Keterangan
+                  example: keterangan
+                biaya:
+                  type: integer
+                  description: Biaya kegiatan
+                  example: 20000
+            example:
+              eduId: null
+              clubId: 36
+              tglPelayanan: 27-03-2016
+              kdKegiatan: '01'
+              kdKelompok: '03'
+              materi: materi
+              pembicara: pembicara
+              lokasi: lokasi
+              keterangan: keterangan
+              biaya: 20000
+      responses:
+        '201':
+          description: Kegiatan Kelompok berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      field:
+                        type: string
+                        description: Field yang diupdate
+                        example: eduId
+                      message:
+                        type: string
+                        description: ID kegiatan yang dibuat
+                        example: '16030000009'
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: CREATED
+                      code:
+                        type: integer
+                        example: 201
+              example:
+                response:
+                  field: eduId
+                  message: '16030000009'
+                metaData:
+                  message: CREATED
+                  code: 201
+  /kelompok/peserta:
+    post:
+      tags:
+        - Kelompok
+      summary: Add Peserta Kegiatan Kelompok
+      description: Add Data Peserta Kegiatan Kelompok
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: object
+              required:
+                - eduId
+                - noKartu
+              properties:
+                eduId:
+                  type: string
+                  description: ID kegiatan kelompok
+                  example: '16030000009'
+                noKartu:
+                  type: string
+                  description: Nomor kartu peserta
+                  example: 0001101615759
+            example:
+              eduId: '16030000009'
+              noKartu: 0001101615759
+      responses:
+        '201':
+          description: Peserta Kegiatan Kelompok berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    nullable: true
+                    description: Response data (null jika berhasil)
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: CREATED
+                      code:
+                        type: integer
+                        example: 201
+              example:
+                response: null
+                metaData:
+                  message: CREATED
+                  code: 201
+  '/kelompok/kegiatan/{eduId}':
+    delete:
+      tags:
+        - Kelompok
+      summary: Delete Kegiatan Kelompok
+      description: |
+        Delete Data Kegiatan Kelompok berdasarkan eduId
+
+        ## Parameter
+        - `eduId`: ID kegiatan kelompok
+      parameters:
+        - name: eduId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID kegiatan kelompok
+          example: '16030000009'
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Kegiatan Kelompok berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    nullable: true
+                    description: Response data (null jika berhasil)
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: OK
+                      code:
+                        type: integer
+                        example: 200
+              example:
+                response: null
+                metaData:
+                  message: OK
+                  code: 200
+  '/kelompok/peserta/{eduId}/{noKartu}':
+    delete:
+      tags:
+        - Kelompok
+      summary: Delete Peserta Kegiatan Kelompok
+      description: |
+        Delete Data Peserta Kegiatan Kelompok
+
+        ## Parameter
+        - `eduId`: ID kegiatan kelompok
+        - `noKartu`: Nomor Kartu Peserta
+      parameters:
+        - name: eduId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID kegiatan kelompok
+          example: '16030000009'
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kartu Peserta
+          example: 0001101615759
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Peserta Kegiatan Kelompok berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    nullable: true
+                    description: Response data (null jika berhasil)
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: OK
+                      code:
+                        type: integer
+                        example: 200
+              example:
+                response: null
+                metaData:
+                  message: OK
+                  code: 200
+  /pcare-rest-dev/kesadaran:
+    get:
+      tags:
+        - Kesadaran
+      summary: Get Kesadaran
+      description: |
+        Get Data Kesadaran untuk tingkat kesadaran pasien
+
+        ## URL Format
+        `{Base URL}/{Service Name}/kesadaran`
+
+        ## Response
+        Mengembalikan daftar tingkat kesadaran yang tersedia:
+        - `01`: Compos mentis
+        - `02`: Somnolence  
+        - `03`: Sopor
+        - `04`: Coma
+
+        ## Example
+        ```
+        GET https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev/kesadaran
+        ```
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data kesadaran berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Jumlah total data kesadaran
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kdSadar:
+                              type: string
+                              description: Kode tingkat kesadaran
+                              example: '01'
+                            nmSadar:
+                              type: string
+                              description: Nama tingkat kesadaran
+                              example: Compos mentis
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  count: 4
+                  list:
+                    - kdSadar: '01'
+                      nmSadar: Compos mentis
+                    - kdSadar: '02'
+                      nmSadar: Somnolence
+                    - kdSadar: '03'
+                      nmSadar: Sopor
+                    - kdSadar: '04'
+                      nmSadar: Coma
+                metaData:
+                  message: OK
+                  code: 200
+  '/kunjungan/rujukan/{noKunjungan}':
+    get:
+      tags:
+        - Kunjungan
+      summary: Get Data Rujukan
+      description: Mendapatkan data rujukan berdasarkan nomor kunjungan
+      parameters:
+        - name: noKunjungan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor kunjungan
+          example: 0114U1630316Y000003
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data rujukan berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      noRujukan:
+                        type: string
+                        example: 0114U1630316Y000003
+                      ppk:
+                        type: object
+                        properties:
+                          kdPPK:
+                            type: string
+                            example: 0114U163
+                          nmPPK:
+                            type: string
+                            example: Klinik Cempaka Putih (JST)
+                          alamat:
+                            type: string
+                            nullable: true
+                            example: null
+                          kc:
+                            type: object
+                            properties:
+                              kdKC:
+                                type: string
+                                example: 0901
+                              nmKC:
+                                type: string
+                                example: JAKARTA PUSAT
+                              alamat:
+                                type: string
+                                nullable: true
+                                example: null
+                              telp:
+                                type: string
+                                nullable: true
+                                example: null
+                              fax:
+                                type: string
+                                nullable: true
+                                example: null
+                              dati:
+                                type: object
+                                properties:
+                                  kdProp:
+                                    type: string
+                                    nullable: true
+                                    example: null
+                                  kdDati:
+                                    type: string
+                                    example: '0114'
+                                  nmDati:
+                                    type: string
+                                    example: KOTA JAKARTA PUSAT
+                              kdKR:
+                                type: object
+                                properties:
+                                  kdKR:
+                                    type: string
+                                    example: '04'
+                                  nmKR:
+                                    type: string
+                                    example: REGIONAL   IV - JAKARTA
+                                  alamat:
+                                    type: string
+                                    nullable: true
+                                    example: null
+                                  telp:
+                                    type: string
+                                    nullable: true
+                                    example: null
+                                  fax:
+                                    type: string
+                                    nullable: true
+                                    example: null
+                      tglKunjungan:
+                        type: string
+                        format: date
+                        example: 31-07-2016
+                      poli:
+                        type: object
+                        properties:
+                          kdPoli:
+                            type: string
+                            example: UGD
+                          nmPoli:
+                            type: string
+                            example: Unit Gawat Darurat
+                          poliSakit:
+                            type: boolean
+                            example: true
+                      nokaPst:
+                        type: string
+                        example: 0001149957551
+                      nmPst:
+                        type: string
+                        example: HANY TJOA
+                      tglLahir:
+                        type: string
+                        format: date
+                        example: 16-06-1970
+                      pisa:
+                        type: string
+                        example: '1'
+                      ketPisa:
+                        type: string
+                        example: Peserta
+                      sex:
+                        type: string
+                        enum:
+                          - L
+                          - P
+                        example: L
+                      diag1:
+                        type: object
+                        properties:
+                          kdDiag:
+                            type: string
+                            example: A01.1
+                          nmDiag:
+                            type: string
+                            example: Paratyphoid fever A
+                          nonSpesialis:
+                            type: boolean
+                            example: false
+                      diag2:
+                        $ref: '#/paths/~1kunjungan~1rujukan~1%7BnoKunjungan%7D/get/responses/200/content/application~1json/schema/properties/response/properties/diag1'
+                      diag3:
+                        $ref: '#/paths/~1kunjungan~1rujukan~1%7BnoKunjungan%7D/get/responses/200/content/application~1json/schema/properties/response/properties/diag1'
+                      catatan:
+                        type: string
+                        example: ''
+                      dokter:
+                        type: object
+                        properties:
+                          kdDokter:
+                            type: string
+                            example: 019
+                          nmDokter:
+                            type: string
+                            example: dr henny
+                      tacc:
+                        type: object
+                        properties:
+                          nmTacc:
+                            type: string
+                            nullable: true
+                            example: null
+                          alasanTacc:
+                            type: string
+                            nullable: true
+                            example: null
+                      infoDenda:
+                        type: string
+                        example: 'Anda memasuki masa denda 45 hari jika melakukan rawat inap di FKRTL mulai tanggal : 01-08-2016 sampai tanggal : 15-09-2016'
+                  metaData:
+                    $ref: '#/paths/~1kunjungan/put/responses/200/content/application~1json/schema/properties/metaData'
+        '400':
+          $ref: '#/paths/~1kunjungan/put/responses/400'
+        '401':
+          $ref: '#/paths/~1kunjungan/put/responses/401'
+        '404':
+          $ref: '#/paths/~1kunjungan/put/responses/404'
+        '500':
+          $ref: '#/paths/~1kunjungan/put/responses/500'
+  '/kunjungan/peserta/{noKartu}':
+    get:
+      tags:
+        - Kunjungan
+      summary: Get Riwayat Kunjungan
+      description: Mendapatkan riwayat kunjungan berdasarkan nomor kartu peserta
+      parameters:
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor kartu peserta
+          example: 0000029247423
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data riwayat kunjungan berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        example: 1
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            noKunjungan:
+                              type: string
+                              example: 0114A0260815Y000003
+                            tglKunjungan:
+                              type: string
+                              format: date
+                              example: 25-08-2015
+                            providerPelayanan:
+                              type: object
+                              properties:
+                                kdProvider:
+                                  type: string
+                                  example: 0114A026
+                                nmProvider:
+                                  type: string
+                                  example: IF RS THAMRIN
+                            peserta:
+                              type: object
+                              properties:
+                                noKartu:
+                                  type: string
+                                  example: 0000029247423
+                                nama:
+                                  type: string
+                                  nullable: true
+                                  example: null
+                                hubunganKeluarga:
+                                  type: string
+                                  example: Peserta
+                                sex:
+                                  type: string
+                                  nullable: true
+                                  example: null
+                                tglLahir:
+                                  type: string
+                                  nullable: true
+                                  format: date
+                                  example: null
+                                tglMulaiAktif:
+                                  type: string
+                                  nullable: true
+                                  format: date
+                                  example: null
+                                tglAkhirBerlaku:
+                                  type: string
+                                  nullable: true
+                                  format: date
+                                  example: null
+                                kdPpkPst:
+                                  type: string
+                                  nullable: true
+                                  example: null
+                                kdPpkGigi:
+                                  type: string
+                                  nullable: true
+                                  example: null
+                                jnsKelas:
+                                  type: string
+                                  nullable: true
+                                  example: null
+                                jnsPeserta:
+                                  type: string
+                                  nullable: true
+                                  example: null
+                                golDarah:
+                                  type: string
+                                  nullable: true
+                                  example: null
+                                noHP:
+                                  type: string
+                                  nullable: true
+                                  example: null
+                                noKTP:
+                                  type: string
+                                  nullable: true
+                                  example: null
+                                asuransi:
+                                  type: string
+                                  nullable: true
+                                  example: null
+                            poli:
+                              $ref: '#/paths/~1kunjungan~1rujukan~1%7BnoKunjungan%7D/get/responses/200/content/application~1json/schema/properties/response/properties/poli'
+                            progProlanis:
+                              type: object
+                              properties:
+                                kdProgram:
+                                  type: string
+                                  example: ''
+                                nmProgram:
+                                  type: string
+                                  example: ''
+                            keluhan:
+                              type: string
+                              example: keluhan
+                            diagnosa1:
+                              $ref: '#/paths/~1kunjungan~1rujukan~1%7BnoKunjungan%7D/get/responses/200/content/application~1json/schema/properties/response/properties/diag1'
+                            diagnosa2:
+                              $ref: '#/paths/~1kunjungan~1rujukan~1%7BnoKunjungan%7D/get/responses/200/content/application~1json/schema/properties/response/properties/diag1'
+                            diagnosa3:
+                              $ref: '#/paths/~1kunjungan~1rujukan~1%7BnoKunjungan%7D/get/responses/200/content/application~1json/schema/properties/response/properties/diag1'
+                            kesadaran:
+                              type: object
+                              properties:
+                                kdSadar:
+                                  type: string
+                                  example: '01'
+                                nmSadar:
+                                  type: string
+                                  example: Compos mentis
+                            sistole:
+                              type: integer
+                              example: 0
+                            diastole:
+                              type: integer
+                              example: 0
+                            beratBadan:
+                              type: integer
+                              example: 0
+                            tinggiBadan:
+                              type: integer
+                              example: 0
+                            respRate:
+                              type: integer
+                              example: 0
+                            heartRate:
+                              type: integer
+                              example: 0
+                            catatan:
+                              type: string
+                              example: catatan
+                            rujukBalik:
+                              type: integer
+                              example: 0
+                            providerAsalRujuk:
+                              type: object
+                              properties:
+                                kdProvider:
+                                  type: string
+                                  example: ''
+                                nmProvider:
+                                  type: string
+                                  nullable: true
+                                  example: null
+                            providerRujukLanjut:
+                              type: object
+                              properties:
+                                kdProvider:
+                                  type: string
+                                  example: '00010003'
+                                nmProvider:
+                                  type: string
+                                  example: POLIKLINIK POLRES LANGSA
+                            pemFisikLain:
+                              type: string
+                              example: ''
+                            dokter:
+                              $ref: '#/paths/~1kunjungan~1rujukan~1%7BnoKunjungan%7D/get/responses/200/content/application~1json/schema/properties/response/properties/dokter'
+                            statusPulang:
+                              type: object
+                              properties:
+                                kdStatusPulang:
+                                  type: string
+                                  example: '4'
+                                nmStatusPulang:
+                                  type: string
+                                  example: Rujuk Lanjut
+                            tkp:
+                              type: object
+                              properties:
+                                kdTkp:
+                                  type: string
+                                  example: '10'
+                                nmTkp:
+                                  type: string
+                                  example: RJTP
+                            poliRujukInternal:
+                              $ref: '#/paths/~1kunjungan~1rujukan~1%7BnoKunjungan%7D/get/responses/200/content/application~1json/schema/properties/response/properties/poli'
+                            poliRujukLanjut:
+                              $ref: '#/paths/~1kunjungan~1rujukan~1%7BnoKunjungan%7D/get/responses/200/content/application~1json/schema/properties/response/properties/poli'
+                            tglPulang:
+                              type: string
+                              format: date
+                              example: 25-08-2015
+                  metaData:
+                    $ref: '#/paths/~1kunjungan/put/responses/200/content/application~1json/schema/properties/metaData'
+        '400':
+          $ref: '#/paths/~1kunjungan/put/responses/400'
+        '401':
+          $ref: '#/paths/~1kunjungan/put/responses/401'
+        '404':
+          $ref: '#/paths/~1kunjungan/put/responses/404'
+        '500':
+          $ref: '#/paths/~1kunjungan/put/responses/500'
+  /kunjungan:
+    post:
+      tags:
+        - Kunjungan
+      summary: Add Data Kunjungan
+      description: Menambahkan data kunjungan baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                noKunjungan:
+                  type: string
+                  nullable: true
+                  example: null
+                noKartu:
+                  type: string
+                  example: 0000043678034
+                tglDaftar:
+                  type: string
+                  format: date
+                  example: 13-08-2018
+                kdPoli:
+                  type: string
+                  nullable: true
+                  example: null
+                keluhan:
+                  type: string
+                  example: keluhan
+                kdSadar:
+                  type: string
+                  example: '01'
+                sistole:
+                  type: integer
+                  example: 0
+                diastole:
+                  type: integer
+                  example: 0
+                beratBadan:
+                  type: integer
+                  example: 0
+                tinggiBadan:
+                  type: integer
+                  example: 0
+                respRate:
+                  type: integer
+                  example: 0
+                heartRate:
+                  type: integer
+                  example: 0
+                lingkarPerut:
+                  type: integer
+                  example: 36
+                kdStatusPulang:
+                  type: string
+                  example: '4'
+                tglPulang:
+                  type: string
+                  format: date
+                  example: 19-05-2016
+                kdDokter:
+                  type: string
+                  example: '73229'
+                kdDiag1:
+                  type: string
+                  example: A01.0
+                kdDiag2:
+                  type: string
+                  nullable: true
+                  example: null
+                kdDiag3:
+                  type: string
+                  nullable: true
+                  example: null
+                kdPoliRujukInternal:
+                  type: string
+                  nullable: true
+                  example: null
+                rujukLanjut:
+                  type: object
+                  properties:
+                    tglEstRujuk:
+                      type: string
+                      format: date
+                      example: 02-10-2018
+                    kdppk:
+                      type: string
+                      example: 0116R028
+                    subSpesialis:
+                      type: object
+                      nullable: true
+                      properties:
+                        kdSubSpesialis1:
+                          type: string
+                          example: '16'
+                        kdSarana:
+                          type: string
+                          nullable: true
+                          example: null
+                    khusus:
+                      type: object
+                      nullable: true
+                      properties:
+                        kdKhusus:
+                          type: string
+                          example: HDL
+                        kdSubSpesialis:
+                          type: string
+                          nullable: true
+                          example: null
+                        catatan:
+                          type: string
+                          example: peserta sudah biasa hemodialisa
+                kdTacc:
+                  type: integer
+                  example: 0
+                alasanTacc:
+                  type: string
+                  nullable: true
+                  example: null
+                anamnesa:
+                  type: string
+                  example: test anamnesa
+                alergiMakan:
+                  type: string
+                  example: '00'
+                alergiUdara:
+                  type: string
+                  example: '00'
+                alergiObat:
+                  type: string
+                  example: '00'
+                kdPrognosa:
+                  type: string
+                  example: '01'
+                terapiObat:
+                  type: string
+                  example: test terapi obat
+                terapiNonObat:
+                  type: string
+                  example: test terapi nonobat
+                bmhp:
+                  type: string
+                  example: bmhp
+                suhu:
+                  type: string
+                  example: '36,4'
+              required:
+                - noKartu
+                - tglDaftar
+                - keluhan
+                - kdSadar
+                - kdStatusPulang
+                - tglPulang
+                - kdDokter
+                - kdDiag1
+            examples:
+              rujukan_hemodialisa:
+                summary: Contoh Rujukan Hemodialisa
+                value:
+                  noKunjungan: null
+                  noKartu: 0000043678034
+                  tglDaftar: 13-08-2018
+                  kdPoli: null
+                  keluhan: keluhan
+                  kdSadar: '01'
+                  sistole: 0
+                  diastole: 0
+                  beratBadan: 0
+                  tinggiBadan: 0
+                  respRate: 0
+                  heartRate: 0
+                  lingkarPerut: 36
+                  kdStatusPulang: '4'
+                  tglPulang: 19-05-2016
+                  kdDokter: '73229'
+                  kdDiag1: A01.0
+                  kdDiag2: null
+                  kdDiag3: null
+                  kdPoliRujukInternal: null
+                  rujukLanjut:
+                    tglEstRujuk: 02-10-2018
+                    kdppk: 0116R028
+                    subSpesialis: null
+                    khusus:
+                      kdKhusus: HDL
+                      kdSubSpesialis: null
+                      catatan: peserta sudah biasa hemodialisa
+                  kdTacc: 0
+                  alasanTacc: null
+                  anamnesa: test anamnesa
+                  alergiMakan: '00'
+                  alergiUdara: '00'
+                  alergiObat: '00'
+                  kdPrognosa: '01'
+                  terapiObat: test terapi obat
+                  terapiNonObat: test terapi nonobat
+                  bmhp: bmhp
+                  suhu: '36,4'
+              rujukan_spesialis:
+                summary: Contoh Rujukan Spesialis
+                value:
+                  noKunjungan: null
+                  noKartu: 0000000114759
+                  tglDaftar: 26-03-2022
+                  kdPoli: '002'
+                  keluhan: keluhan
+                  kdSadar: '04'
+                  sistole: 80
+                  diastole: 80
+                  beratBadan: 50
+                  tinggiBadan: 170
+                  respRate: 80
+                  heartRate: 80
+                  lingkarPerut: 36
+                  kdStatusPulang: '4'
+                  tglPulang: 27-03-2022
+                  kdDokter: '179007'
+                  kdDiag1: O82
+                  kdDiag2: null
+                  kdDiag3: null
+                  kdPoliRujukInternal: null
+                  rujukLanjut:
+                    kdppk: 0112R016
+                    tglEstRujuk: 27-03-2022
+                    subSpesialis:
+                      kdSubSpesialis1: '16'
+                      kdSarana: null
+                    khusus: null
+                  kdTacc: -1
+                  alasanTacc: null
+                  anamnesa: test anamnesa
+                  alergiMakan: '00'
+                  alergiUdara: '00'
+                  alergiObat: '00'
+                  kdPrognosa: '01'
+                  terapiObat: test terapi obat
+                  terapiNonObat: test terapi nonobat
+                  bmhp: bmhp
+                  suhu: '36,4'
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '201':
+          description: Data kunjungan berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      field:
+                        type: string
+                        example: noKunjungan
+                      message:
+                        type: string
+                        example: 0114U1630316Y000001
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: CREATED
+                      code:
+                        type: integer
+                        example: 201
+        '400':
+          $ref: '#/paths/~1kunjungan/put/responses/400'
+        '401':
+          $ref: '#/paths/~1kunjungan/put/responses/401'
+        '500':
+          $ref: '#/paths/~1kunjungan/put/responses/500'
+    put:
+      tags:
+        - Kunjungan
+      summary: Edit Data Kunjungan
+      description: Mengubah data kunjungan yang sudah ada
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/paths/~1kunjungan/post/requestBody/content/application~1json/schema'
+                - type: object
+                  properties:
+                    noKunjungan:
+                      type: string
+                      example: 011200210322Y000012
+                  required:
+                    - noKunjungan
+            example:
+              noKunjungan: 011200210322Y000012
+              noKartu: 0000000114759
+              keluhan: keluhan
+              kdSadar: '03'
+              sistole: 90
+              diastole: 90
+              beratBadan: 50
+              tinggiBadan: 170
+              respRate: 90
+              heartRate: 90
+              lingkarPerut: 36
+              kdStatusPulang: '4'
+              tglPulang: 27-03-2022
+              kdDokter: '179007'
+              kdDiag1: B54
+              kdDiag2: null
+              kdDiag3: null
+              kdPoliRujukInternal: null
+              rujukLanjut:
+                tglEstRujuk: 27-03-2022
+                kdppk: 0112R016
+                subSpesialis: null
+                khusus:
+                  kdKhusus: HDL
+                  kdSubSpesialis: null
+                  catatan: peserta sudah biasa hemodialisa
+              kdTacc: 1
+              alasanTacc: < 3 Hari
+              anamnesa: test anamnesa
+              alergiMakan: '00'
+              alergiUdara: '00'
+              alergiObat: '00'
+              kdPrognosa: '01'
+              terapiObat: test terapi obat
+              terapiNonObat: test terapi nonobat
+              bmhp: bmhp
+              suhu: '36,4'
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data kunjungan berhasil diubah
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    nullable: true
+                    example: null
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: OK
+                      code:
+                        type: integer
+                        example: 200
+        '400':
+          description: Bad Request - Parameter tidak valid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Parameter tidak valid
+                      code:
+                        type: integer
+                        example: 400
+        '401':
+          description: Unauthorized - Authentication gagal
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Authentication gagal
+                      code:
+                        type: integer
+                        example: 401
+        '404':
+          description: Not Found - Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Data tidak ditemukan
+                      code:
+                        type: integer
+                        example: 404
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Internal Server Error
+                      code:
+                        type: integer
+                        example: 500
+  '/kunjungan/{noKunjungan}':
+    delete:
+      tags:
+        - Kunjungan
+      summary: Delete Data Kunjungan
+      description: Menghapus data kunjungan berdasarkan nomor kunjungan
+      parameters:
+        - name: noKunjungan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor kunjungan
+          example: 0114U1630316Y000003
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data kunjungan berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1kunjungan/put/responses/200/content/application~1json/schema'
+        '400':
+          $ref: '#/paths/~1kunjungan/put/responses/400'
+        '401':
+          $ref: '#/paths/~1kunjungan/put/responses/401'
+        '404':
+          $ref: '#/paths/~1kunjungan/put/responses/404'
+        '500':
+          $ref: '#/paths/~1kunjungan/put/responses/500'
+  '/MCU/kunjungan/{noKunjungan}':
+    get:
+      tags:
+        - MCU
+      summary: Get MCU
+      description: |
+        Get Data MCU berdasarkan nomor kunjungan
+
+        ## URL Format
+        `{Base URL}/{Service Name}/MCU/kunjungan/{noKunjungan}`
+      parameters:
+        - name: noKunjungan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kunjungan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data MCU berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Jumlah total data MCU
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kdMCU:
+                              type: integer
+                              description: Kode MCU
+                              example: 43
+                            noKunjungan:
+                              type: string
+                              description: Nomor Kunjungan
+                              example: 0114U1630316Y000003
+                            kdProvider:
+                              type: string
+                              description: Kode Provider
+                              example: 0114u163
+                            tglPelayanan:
+                              type: string
+                              description: Tanggal Pelayanan
+                              example: 22-03-2016
+                            tekananDarahSistole:
+                              type: integer
+                              description: Tekanan darah sistole
+                            tekananDarahDiastole:
+                              type: integer
+                              description: Tekanan darah diastole
+                            radiologiFoto:
+                              type: string
+                              nullable: true
+                              description: Hasil radiologi foto
+                            darahRutinHemo:
+                              type: integer
+                              description: Darah rutin hemoglobin
+                            darahRutinLeu:
+                              type: integer
+                              description: Darah rutin leukosit
+                            darahRutinErit:
+                              type: integer
+                              description: Darah rutin eritrosit
+                            darahRutinLaju:
+                              type: integer
+                              description: Darah rutin laju endap darah
+                            darahRutinHema:
+                              type: integer
+                              description: Darah rutin hematokrit
+                            darahRutinTrom:
+                              type: integer
+                              description: Darah rutin trombosit
+                            lemakDarahHDL:
+                              type: integer
+                              description: Lemak darah HDL
+                            lemakDarahLDL:
+                              type: integer
+                              description: Lemak darah LDL
+                            lemakDarahChol:
+                              type: integer
+                              description: Lemak darah Cholesterol
+                            lemakDarahTrigli:
+                              type: integer
+                              description: Lemak darah Trigliserida
+                            gulaDarahSewaktu:
+                              type: integer
+                              description: Gula darah sewaktu
+                            gulaDarahPuasa:
+                              type: integer
+                              description: Gula darah puasa
+                            gulaDarahPostPrandial:
+                              type: integer
+                              description: Gula darah post prandial
+                            gulaDarahHbA1c:
+                              type: integer
+                              description: Gula darah HbA1c
+                            fungsiHatiSGOT:
+                              type: integer
+                              description: Fungsi hati SGOT
+                            fungsiHatiSGPT:
+                              type: integer
+                              description: Fungsi hati SGPT
+                            fungsiHatiGamma:
+                              type: integer
+                              description: Fungsi hati Gamma GT
+                            fungsiHatiProtKual:
+                              type: integer
+                              description: Fungsi hati Protein Kualitatif
+                            fungsiHatiAlbumin:
+                              type: integer
+                              description: Fungsi hati Albumin
+                            fungsiGinjalCrea:
+                              type: integer
+                              description: Fungsi ginjal Creatinin
+                            fungsiGinjalUreum:
+                              type: integer
+                              description: Fungsi ginjal Ureum
+                            fungsiGinjalAsam:
+                              type: integer
+                              description: Fungsi ginjal Asam Urat
+                            fungsiJantungABI:
+                              type: integer
+                              description: Fungsi jantung ABI
+                            fungsiJantungEKG:
+                              type: string
+                              nullable: true
+                              description: Fungsi jantung EKG
+                            fungsiJantungEcho:
+                              type: string
+                              nullable: true
+                              description: Fungsi jantung Echo
+                            funduskopi:
+                              type: string
+                              nullable: true
+                              description: Funduskopi
+                            pemeriksaanLain:
+                              type: string
+                              nullable: true
+                              description: Pemeriksaan lain-lain
+                            keterangan:
+                              type: string
+                              nullable: true
+                              description: Keterangan
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  count: 1
+                  list:
+                    - kdMCU: 43
+                      noKunjungan: 0114U1630316Y000003
+                      kdProvider: 0114u163
+                      tglPelayanan: 22-03-2016
+                      tekananDarahSistole: 0
+                      tekananDarahDiastole: 0
+                      radiologiFoto: null
+                      darahRutinHemo: 0
+                      darahRutinLeu: 0
+                      darahRutinErit: 7
+                      darahRutinLaju: 0
+                      darahRutinHema: 0
+                      darahRutinTrom: 0
+                      lemakDarahHDL: 0
+                      lemakDarahLDL: 0
+                      lemakDarahChol: 0
+                      lemakDarahTrigli: 0
+                      gulaDarahSewaktu: 0
+                      gulaDarahPuasa: 0
+                      gulaDarahPostPrandial: 0
+                      gulaDarahHbA1c: 0
+                      fungsiHatiSGOT: 0
+                      fungsiHatiSGPT: 0
+                      fungsiHatiGamma: 0
+                      fungsiHatiProtKual: 0
+                      fungsiHatiAlbumin: 0
+                      fungsiGinjalCrea: 0
+                      fungsiGinjalUreum: 0
+                      fungsiGinjalAsam: 0
+                      fungsiJantungABI: 0
+                      fungsiJantungEKG: null
+                      fungsiJantungEcho: null
+                      funduskopi: null
+                      pemeriksaanLain: null
+                      keterangan: null
+                metaData:
+                  message: OK
+                  code: 200
+  /MCU:
+    post:
+      tags:
+        - MCU
+      summary: Add MCU
+      description: |
+        Add Data MCU
+
+        ## URL Format
+        `{Base URL}/{Service Name}/MCU`
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              $ref: '#/paths/~1MCU/put/requestBody/content/text~1plain/schema'
+            example:
+              kdMCU: 0
+              noKunjungan: 0114U1630316Y000003
+              kdProvider: 0114u163
+              tglPelayanan: 22-03-2016
+              tekananDarahSistole: 0
+              tekananDarahDiastole: 0
+              radiologiFoto: null
+              darahRutinHemo: 0
+              darahRutinLeu: 0
+              darahRutinErit: 7
+              darahRutinLaju: 0
+              darahRutinHema: 0
+              darahRutinTrom: 0
+              lemakDarahHDL: 0
+              lemakDarahLDL: 0
+              lemakDarahChol: 0
+              lemakDarahTrigli: 0
+              gulaDarahSewaktu: 0
+              gulaDarahPuasa: 0
+              gulaDarahPostPrandial: 0
+              gulaDarahHbA1c: 0
+              fungsiHatiSGOT: 0
+              fungsiHatiSGPT: 0
+              fungsiHatiGamma: 0
+              fungsiHatiProtKual: 0
+              fungsiHatiAlbumin: 0
+              fungsiGinjalCrea: 0
+              fungsiGinjalUreum: 0
+              fungsiGinjalAsam: 0
+              fungsiJantungABI: 0
+              fungsiJantungEKG: null
+              fungsiJantungEcho: null
+              funduskopi: null
+              pemeriksaanLain: null
+              keterangan: null
+      responses:
+        '201':
+          description: Data MCU berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      field:
+                        type: string
+                        description: Field yang diupdate
+                        example: kdMCU
+                      message:
+                        type: string
+                        description: ID MCU yang dibuat
+                        example: '33'
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: CREATED
+                      code:
+                        type: integer
+                        example: 201
+              example:
+                response:
+                  field: kdMCU
+                  message: '33'
+                metaData:
+                  message: CREATED
+                  code: 201
+    put:
+      tags:
+        - MCU
+      summary: Edit MCU
+      description: |
+        Edit Data MCU
+
+        ## URL Format
+        `{Base URL}/{Service Name}/MCU`
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: object
+              required:
+                - kdMCU
+                - noKunjungan
+                - kdProvider
+                - tglPelayanan
+                - tekananDarahSistole
+                - tekananDarahDiastole
+                - darahRutinHemo
+                - darahRutinLeu
+                - darahRutinErit
+                - darahRutinLaju
+                - darahRutinHema
+                - darahRutinTrom
+                - lemakDarahHDL
+                - lemakDarahLDL
+                - lemakDarahChol
+                - lemakDarahTrigli
+                - gulaDarahSewaktu
+                - gulaDarahPuasa
+                - gulaDarahPostPrandial
+                - gulaDarahHbA1c
+                - fungsiHatiSGOT
+                - fungsiHatiSGPT
+                - fungsiHatiGamma
+                - fungsiHatiProtKual
+                - fungsiHatiAlbumin
+                - fungsiGinjalCrea
+                - fungsiGinjalUreum
+                - fungsiGinjalAsam
+                - fungsiJantungABI
+              properties:
+                kdMCU:
+                  type: integer
+                  description: Kode MCU
+                noKunjungan:
+                  type: string
+                  description: Nomor Kunjungan
+                kdProvider:
+                  type: string
+                  description: Kode Provider
+                tglPelayanan:
+                  type: string
+                  description: Tanggal Pelayanan
+                tekananDarahSistole:
+                  type: integer
+                  description: Tekanan darah sistole
+                tekananDarahDiastole:
+                  type: integer
+                  description: Tekanan darah diastole
+                radiologiFoto:
+                  type: string
+                  nullable: true
+                  description: Hasil radiologi foto
+                darahRutinHemo:
+                  type: integer
+                  description: Darah rutin hemoglobin
+                darahRutinLeu:
+                  type: integer
+                  description: Darah rutin leukosit
+                darahRutinErit:
+                  type: integer
+                  description: Darah rutin eritrosit
+                darahRutinLaju:
+                  type: integer
+                  description: Darah rutin laju endap darah
+                darahRutinHema:
+                  type: integer
+                  description: Darah rutin hematokrit
+                darahRutinTrom:
+                  type: integer
+                  description: Darah rutin trombosit
+                lemakDarahHDL:
+                  type: integer
+                  description: Lemak darah HDL
+                lemakDarahLDL:
+                  type: integer
+                  description: Lemak darah LDL
+                lemakDarahChol:
+                  type: integer
+                  description: Lemak darah Cholesterol
+                lemakDarahTrigli:
+                  type: integer
+                  description: Lemak darah Trigliserida
+                gulaDarahSewaktu:
+                  type: integer
+                  description: Gula darah sewaktu
+                gulaDarahPuasa:
+                  type: integer
+                  description: Gula darah puasa
+                gulaDarahPostPrandial:
+                  type: integer
+                  description: Gula darah post prandial
+                gulaDarahHbA1c:
+                  type: integer
+                  description: Gula darah HbA1c
+                fungsiHatiSGOT:
+                  type: integer
+                  description: Fungsi hati SGOT
+                fungsiHatiSGPT:
+                  type: integer
+                  description: Fungsi hati SGPT
+                fungsiHatiGamma:
+                  type: integer
+                  description: Fungsi hati Gamma GT
+                fungsiHatiProtKual:
+                  type: integer
+                  description: Fungsi hati Protein Kualitatif
+                fungsiHatiAlbumin:
+                  type: integer
+                  description: Fungsi hati Albumin
+                fungsiGinjalCrea:
+                  type: integer
+                  description: Fungsi ginjal Creatinin
+                fungsiGinjalUreum:
+                  type: integer
+                  description: Fungsi ginjal Ureum
+                fungsiGinjalAsam:
+                  type: integer
+                  description: Fungsi ginjal Asam Urat
+                fungsiJantungABI:
+                  type: integer
+                  description: Fungsi jantung ABI
+                fungsiJantungEKG:
+                  type: string
+                  nullable: true
+                  description: Fungsi jantung EKG
+                fungsiJantungEcho:
+                  type: string
+                  nullable: true
+                  description: Fungsi jantung Echo
+                funduskopi:
+                  type: string
+                  nullable: true
+                  description: Funduskopi
+                pemeriksaanLain:
+                  type: string
+                  nullable: true
+                  description: Pemeriksaan lain-lain
+                keterangan:
+                  type: string
+                  nullable: true
+                  description: Keterangan
+            example:
+              kdMCU: 44
+              noKunjungan: 0114U1630316Y000003
+              kdProvider: 1301U007
+              tglPelayanan: 22-03-2016
+              tekananDarahSistole: 20
+              tekananDarahDiastole: 0
+              radiologiFoto: null
+              darahRutinHemo: 0
+              darahRutinLeu: 0
+              darahRutinErit: 0
+              darahRutinLaju: 0
+              darahRutinHema: 0
+              darahRutinTrom: 0
+              lemakDarahHDL: 0
+              lemakDarahLDL: 0
+              lemakDarahChol: 0
+              lemakDarahTrigli: 0
+              gulaDarahSewaktu: 0
+              gulaDarahPuasa: 0
+              gulaDarahPostPrandial: 0
+              gulaDarahHbA1c: 0
+              fungsiHatiSGOT: 0
+              fungsiHatiSGPT: 0
+              fungsiHatiGamma: 0
+              fungsiHatiProtKual: 0
+              fungsiHatiAlbumin: 0
+              fungsiGinjalCrea: 0
+              fungsiGinjalUreum: 0
+              fungsiGinjalAsam: 0
+              fungsiJantungABI: 0
+              fungsiJantungEKG: null
+              fungsiJantungEcho: null
+              funduskopi: null
+              pemeriksaanLain: null
+              keterangan: null
+      responses:
+        '200':
+          description: Data MCU berhasil diupdate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    nullable: true
+                    description: Response data (null jika berhasil)
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: OK
+                      code:
+                        type: integer
+                        example: 200
+              example:
+                response: null
+                metaData:
+                  message: OK
+                  code: 200
+  '/MCU/{kdMCU}/kunjungan/{noKunjungan}':
+    delete:
+      tags:
+        - MCU
+      summary: Delete MCU
+      description: |
+        Delete Data MCU berdasarkan kode MCU dan nomor kunjungan
+
+        ## URL Format
+        `{Base URL}/{Service Name}/MCU/{kdMCU}/kunjungan/{noKunjungan}`
+      parameters:
+        - name: kdMCU
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Kode MCU
+        - name: noKunjungan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kunjungan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data MCU berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    nullable: true
+                    description: Response data (null jika berhasil)
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: OK
+                      code:
+                        type: integer
+                        example: 200
+              example:
+                response: null
+                metaData:
+                  message: OK
+                  code: 200
+  '/obat/dpho/{query}/{start}/{limit}':
+    get:
+      tags:
+        - Obat
+      summary: Get DPHO
+      description: |
+        Get Data DPHO berdasarkan kode/nama, start, dan limit
+
+        ## URL Format
+        `{Base URL}/{Service Name}/obat/dpho/{query}/{start}/{limit}`
+      parameters:
+        - name: query
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode atau nama DPHO
+        - name: start
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+          description: Row data awal yang akan ditampilkan
+        - name: limit
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          description: Limit jumlah data yang akan ditampilkan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data DPHO berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Jumlah total data DPHO
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kdObat:
+                              type: string
+                              description: Kode obat
+                            nmObat:
+                              type: string
+                              description: Nama obat
+                            sedia:
+                              type: integer
+                              description: Jumlah sediaan
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  count: 100
+                  list:
+                    - kdObat: '130199999'
+                      nmObat: Kapsul Kosong Kapsul Apt kaps
+                      sedia: 1
+                    - kdObat: '130103595'
+                      nmObat: Canderin 16 mg Dexa tab
+                      sedia: 16
+                    - kdObat: '130103594'
+                      nmObat: 'Quinin 25 %, 2 ml Kifa amp'
+                      sedia: 1
+                metaData:
+                  message: OK
+                  code: 200
+  '/obat/kunjungan/{noKunjungan}':
+    get:
+      tags:
+        - Obat
+      summary: Get Obat by Kunjungan
+      description: |
+        Get Data Obat berdasarkan nomor kunjungan
+
+        ## URL Format
+        `{Base URL}/{Service Name}/obat/kunjungan/{noKunjungan}`
+      parameters:
+        - name: noKunjungan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kunjungan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data obat berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Jumlah total data obat
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kdObatSK:
+                              type: integer
+                              description: Kode ObatSK
+                            kdRacikan:
+                              type: string
+                              description: Kode Racikan
+                            obat:
+                              type: object
+                              properties:
+                                kdObat:
+                                  type: string
+                                  description: Kode obat
+                                nmObat:
+                                  type: string
+                                  description: Nama obat
+                                sedia:
+                                  type: integer
+                                  description: Jumlah sediaan
+                            signa1:
+                              type: integer
+                              description: Signa 1
+                            signa2:
+                              type: integer
+                              description: Signa 2
+                            jmlObat:
+                              type: integer
+                              description: Jumlah obat
+                            jmlHari:
+                              type: integer
+                              description: Jumlah hari
+                            kekuatan:
+                              type: integer
+                              description: Kekuatan
+                            jmlPermintaan:
+                              type: integer
+                              description: Jumlah permintaan
+                            jmlObatRacikan:
+                              type: integer
+                              description: Jumlah obat racikan
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  count: 1
+                  list:
+                    - kdObatSK: 38
+                      kdRacikan: R.01
+                      obat:
+                        kdObat: '130199999'
+                        nmObat: Kapsul Kosong Apt Kapsul
+                        sedia: 0
+                      signa1: 3
+                      signa2: 1
+                      jmlObat: 10
+                      jmlHari: 3
+                      kekuatan: 2
+                      jmlPermintaan: 0
+                      jmlObatRacikan: 20
+                metaData:
+                  message: OK
+                  code: 200
+  /obat/kunjungan:
+    post:
+      tags:
+        - Obat
+      summary: Add Obat
+      description: |
+        Add Data Obat
+
+        ## URL Format
+        `{Base URL}/{Service Name}/obat/kunjungan}`
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: object
+              required:
+                - kdObatSK
+                - noKunjungan
+                - racikan
+                - obatDPHO
+                - kdObat
+                - signa1
+                - signa2
+                - jmlObat
+                - jmlPermintaan
+              properties:
+                kdObatSK:
+                  type: integer
+                  description: Kode ObatSK (0 untuk create baru)
+                noKunjungan:
+                  type: string
+                  description: Nomor Kunjungan
+                racikan:
+                  type: boolean
+                  description: Apakah racikan
+                kdRacikan:
+                  type: string
+                  nullable: true
+                  description: Kode Racikan (null jika tidak racikan)
+                obatDPHO:
+                  type: boolean
+                  description: Apakah obat DPHO
+                kdObat:
+                  type: string
+                  description: Kode obat
+                signa1:
+                  type: integer
+                  description: Signa 1
+                signa2:
+                  type: integer
+                  description: Signa 2
+                jmlObat:
+                  type: integer
+                  description: Jumlah obat
+                jmlPermintaan:
+                  type: integer
+                  description: Jumlah permintaan
+                nmObatNonDPHO:
+                  type: string
+                  nullable: true
+                  description: Nama obat non DPHO (jika bukan DPHO)
+            example:
+              kdObatSK: 0
+              noKunjungan: 1301U0070815Y000004
+              racikan: true
+              kdRacikan: null
+              obatDPHO: true
+              kdObat: '130199999'
+              signa1: 3
+              signa2: 1
+              jmlObat: 10
+              jmlPermintaan: 2
+              nmObatNonDPHO: racikan 1 obat 1
+      responses:
+        '201':
+          description: Data obat berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          description: Field yang diupdate
+                        message:
+                          type: string
+                          description: ID atau kode yang dibuat
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: CREATED
+                      code:
+                        type: integer
+                        example: 201
+              example:
+                response:
+                  - field: kdObatSK
+                    message: '37'
+                  - field: kdRacikan
+                    message: R.12
+                metaData:
+                  message: CREATED
+                  code: 201
+  '/obat/{kdObatSK}/kunjungan/{noKunjungan}':
+    delete:
+      tags:
+        - Obat
+      summary: Delete Obat
+      description: |
+        Delete Data Obat berdasarkan kode ObatSK dan nomor kunjungan
+
+        ## URL Format
+        `{Base URL}/{Service Name}/obat/{kdObatSK}/kunjungan/{noKunjungan}`
+      parameters:
+        - name: kdObatSK
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Kode ObatSK
+        - name: noKunjungan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kunjungan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data obat berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    nullable: true
+                    description: Response data (null jika berhasil)
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: OK
+                      code:
+                        type: integer
+                        example: 200
+              example:
+                response: null
+                metaData:
+                  message: OK
+                  code: 200
+  '/pendaftaran/noUrut/{noUrut}/tglDaftar/{tglDaftar}':
+    get:
+      tags:
+        - Pendaftaran
+      summary: Get Pendaftaran by Nomor Urut
+      description: |
+        Get Data Pendaftaran berdasarkan nomor urut dan tanggal daftar
+
+        ## URL Format
+        `{Base URL}/{Service Name}/pendaftaran/noUrut/{noUrut}/tglDaftar/{tglDaftar}`
+      parameters:
+        - name: noUrut
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Urut Pendaftaran
+        - name: tglDaftar
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Tanggal Pendaftaran (format dd-mm-yyyy)
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data pendaftaran berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      noUrut:
+                        type: string
+                        description: Nomor urut pendaftaran
+                      tgldaftar:
+                        type: string
+                        description: Tanggal daftar
+                      providerPelayanan:
+                        nullable: true
+                        type: object
+                        properties:
+                          kdProvider:
+                            type: string
+                            description: Kode provider
+                          nmProvider:
+                            type: string
+                            description: Nama provider
+                      peserta:
+                        type: object
+                        properties:
+                          noKartu:
+                            type: string
+                            description: Nomor kartu peserta
+                          nama:
+                            type: string
+                            description: Nama peserta
+                          hubunganKeluarga:
+                            type: string
+                            description: Hubungan keluarga
+                            nullable: true
+                          sex:
+                            type: string
+                            description: Jenis kelamin
+                          tglLahir:
+                            type: string
+                            description: Tanggal lahir
+                          tglMulaiAktif:
+                            type: string
+                            description: Tanggal mulai aktif
+                            nullable: true
+                          tglAkhirBerlaku:
+                            type: string
+                            description: Tanggal akhir berlaku
+                            nullable: true
+                          kdProviderPst:
+                            $ref: '#/paths/~1pendaftaran~1noUrut~1%7BnoUrut%7D~1tglDaftar~1%7BtglDaftar%7D/get/responses/200/content/application~1json/schema/properties/response/properties/providerPelayanan'
+                            nullable: true
+                          kdProviderGigi:
+                            $ref: '#/paths/~1pendaftaran~1noUrut~1%7BnoUrut%7D~1tglDaftar~1%7BtglDaftar%7D/get/responses/200/content/application~1json/schema/properties/response/properties/providerPelayanan'
+                            nullable: true
+                          jnsKelas:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                              nama:
+                                type: string
+                            nullable: true
+                          jnsPeserta:
+                            type: object
+                            properties:
+                              kode:
+                                type: string
+                              nama:
+                                type: string
+                            nullable: true
+                          golDarah:
+                            type: string
+                            description: Golongan darah
+                            nullable: true
+                          noHP:
+                            type: string
+                            description: Nomor HP
+                            nullable: true
+                          noKTP:
+                            type: string
+                            description: Nomor KTP
+                            nullable: true
+                          aktif:
+                            type: boolean
+                            description: Status aktif
+                          ketAktif:
+                            type: string
+                            description: Keterangan aktif
+                            nullable: true
+                          asuransi:
+                            nullable: true
+                            type: object
+                            properties:
+                              kdAsuransi:
+                                type: string
+                                description: Kode asuransi
+                              nmAsuransi:
+                                type: string
+                                description: Nama asuransi
+                              noAsuransi:
+                                type: string
+                                description: Nomor asuransi
+                      poli:
+                        type: object
+                        properties:
+                          kdPoli:
+                            type: string
+                            description: Kode poli
+                          nmPoli:
+                            type: string
+                            description: Nama poli
+                          poliSakit:
+                            type: boolean
+                            description: Apakah poli sakit
+                            nullable: true
+                      keluhan:
+                        type: string
+                        description: Keluhan
+                      kunjSakit:
+                        type: boolean
+                        description: Kunjungan sakit
+                        nullable: true
+                      status:
+                        type: string
+                        description: Status pendaftaran
+                      sistole:
+                        type: integer
+                        description: Tekanan darah sistole
+                      diastole:
+                        type: integer
+                        description: Tekanan darah diastole
+                      beratBadan:
+                        type: integer
+                        description: Berat badan
+                      tinggiBadan:
+                        type: integer
+                        description: Tinggi badan
+                      respRate:
+                        type: integer
+                        description: Respiratory rate
+                      heartRate:
+                        type: integer
+                        description: Heart rate
+                      tkp:
+                        type: object
+                        properties:
+                          kdTkp:
+                            type: string
+                            description: Kode TKP
+                          nmTkp:
+                            type: string
+                            description: Nama TKP
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  noUrut: A1
+                  tgldaftar: 13-08-2015
+                  providerPelayanan:
+                    kdProvider: 1301U007
+                    nmProvider: 'MAULIDA JUNIAR, dr'
+                  peserta:
+                    noKartu: 0000029247423
+                    nama: ANDIKA TRI UTARI
+                    hubunganKeluarga: Peserta
+                    sex: P
+                    tglLahir: 01-11-1992
+                    tglMulaiAktif: 12-09-2002
+                    tglAkhirBerlaku: 31-12-2050
+                    kdProviderPst:
+                      kdProvider: 0611U006
+                      nmProvider: dr. HESTI WIDYANINGSIH
+                    kdProviderGigi:
+                      kdProvider: 0091G002
+                      nmProvider: drg. SRIWIDIASTUTI
+                    jnsKelas:
+                      kode: '2'
+                      nama: KELAS II
+                    jnsPeserta:
+                      kode: '13'
+                      nama: PEGAWAI SWASTA
+                    golDarah: '4'
+                    noHP: ''
+                    noKTP: '1674010000'
+                    aktif: true
+                    ketAktif: AKTIF
+                    asuransi:
+                      kdAsuransi: '05'
+                      nmAsuransi: PT ASURANSI SINAR MAS
+                      noAsuransi: 056M000045274004792a
+                  poli:
+                    kdPoli: '001'
+                    nmPoli: Umum
+                  keluhan: ''
+                  status: Sudah dilayani
+                  sistole: 0
+                  diastole: 0
+                  beratBadan: 0
+                  tinggiBadan: 0
+                  respRate: 0
+                  heartRate: 0
+                  tkp:
+                    kdTkp: '10'
+                    nmTkp: RJTP
+                metaData:
+                  message: OK
+                  code: 200
+  '/pendaftaran/tglDaftar/{tglDaftar}/{start}/{limit}':
+    get:
+      tags:
+        - Pendaftaran
+      summary: Get Pendaftaran Provider
+      description: |
+        Get Data Pendaftaran Provider berdasarkan tanggal daftar, start, dan limit
+
+        ## URL Format
+        `{Base URL}/{Service Name}/pendaftaran/tglDaftar/{tglDaftar}/{start}/{limit}`
+      parameters:
+        - name: tglDaftar
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Tanggal Pendaftaran (format dd-mm-yyyy)
+        - name: start
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+          description: Row data awal yang akan ditampilkan
+        - name: limit
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          description: Limit jumlah data yang akan ditampilkan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data pendaftaran provider berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Jumlah total data pendaftaran
+                      list:
+                        type: array
+                        items:
+                          $ref: '#/paths/~1pendaftaran~1noUrut~1%7BnoUrut%7D~1tglDaftar~1%7BtglDaftar%7D/get/responses/200/content/application~1json/schema/properties/response'
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  count: 1
+                  list:
+                    - noUrut: A1
+                      tgldaftar: 15-05-2018
+                      providerPelayanan: null
+                      peserta:
+                        noKartu: 0000043678034
+                        nama: FERRY APRIADI
+                        hubunganKeluarga: null
+                        sex: L
+                        tglLahir: 05-04-1965
+                        tglMulaiAktif: null
+                        tglAkhirBerlaku: null
+                        kdProviderPst: null
+                        kdProviderGigi: null
+                        jnsKelas: null
+                        jnsPeserta: null
+                        golDarah: null
+                        noHP: null
+                        noKTP: null
+                        aktif: false
+                        ketAktif: null
+                        asuransi: null
+                      poli:
+                        kdPoli: '001'
+                        nmPoli: Umum
+                        poliSakit: true
+                      keluhan: ''
+                      kunjSakit: true
+                      status: Baru
+                      sistole: 0
+                      diastole: 0
+                      beratBadan: 0
+                      tinggiBadan: 0
+                      respRate: 0
+                      heartRate: 0
+                      tkp:
+                        kdTkp: '10'
+                        nmTkp: RJTP
+                metaData:
+                  message: OK
+                  code: 200
+  /pendaftaran:
+    post:
+      tags:
+        - Pendaftaran
+      summary: Add Pendaftaran
+      description: |
+        Add Data Pendaftaran
+
+        ## URL Format
+        `{Base URL}/{Service Name}/pendaftaran`
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: object
+              required:
+                - kdProviderPeserta
+                - tglDaftar
+                - noKartu
+                - kdPoli
+                - kunjSakit
+                - sistole
+                - diastole
+                - beratBadan
+                - tinggiBadan
+                - respRate
+                - lingkarPerut
+                - heartRate
+                - rujukBalik
+                - kdTkp
+              properties:
+                kdProviderPeserta:
+                  type: string
+                  description: Kode provider peserta
+                tglDaftar:
+                  type: string
+                  description: Tanggal daftar
+                noKartu:
+                  type: string
+                  description: Nomor kartu peserta
+                kdPoli:
+                  type: string
+                  description: Kode poli
+                keluhan:
+                  type: string
+                  nullable: true
+                  description: Keluhan
+                kunjSakit:
+                  type: boolean
+                  description: Kunjungan sakit
+                sistole:
+                  type: integer
+                  description: Tekanan darah sistole
+                diastole:
+                  type: integer
+                  description: Tekanan darah diastole
+                beratBadan:
+                  type: integer
+                  description: Berat badan
+                tinggiBadan:
+                  type: integer
+                  description: Tinggi badan
+                respRate:
+                  type: integer
+                  description: Respiratory rate
+                lingkarPerut:
+                  type: integer
+                  description: Lingkar perut
+                heartRate:
+                  type: integer
+                  description: Heart rate
+                rujukBalik:
+                  type: integer
+                  description: Rujuk balik
+                kdTkp:
+                  type: string
+                  description: Kode TKP
+            example:
+              kdProviderPeserta: 0114A026
+              tglDaftar: 12-08-2015
+              noKartu: 0001113569638
+              kdPoli: '001'
+              keluhan: null
+              kunjSakit: true
+              sistole: 0
+              diastole: 0
+              beratBadan: 0
+              tinggiBadan: 0
+              respRate: 0
+              lingkarPerut: 0
+              heartRate: 0
+              rujukBalik: 0
+              kdTkp: '10'
+      responses:
+        '201':
+          description: Data pendaftaran berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      field:
+                        type: string
+                        description: Field yang diupdate
+                        example: noUrut
+                      message:
+                        type: string
+                        description: Nomor urut pendaftaran yang dibuat
+                        example: A1
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: CREATED
+                      code:
+                        type: integer
+                        example: 201
+              example:
+                response:
+                  field: noUrut
+                  message: A1
+                metaData:
+                  message: CREATED
+                  code: 201
+  '/pendaftaran/peserta/{noKartu}/tglDaftar/{tglDaftar}/noUrut/{noUrut}/kdPoli/{kdPoli}':
+    delete:
+      tags:
+        - Pendaftaran
+      summary: Delete Pendaftaran
+      description: |
+        Delete Data Pendaftaran berdasarkan nomor kartu peserta, tanggal daftar, nomor urut, dan kode poli
+
+        ## URL Format
+        `{Base URL}/{Service Name}/pendaftaran/peserta/{noKartu}/tglDaftar/{tglDaftar}/noUrut/{noUrut}/kdPoli/{kdPoli}`
+      parameters:
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kartu Peserta
+        - name: tglDaftar
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Tanggal Pendaftaran (format dd-mm-yyyy)
+        - name: noUrut
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Urut Pendaftaran
+        - name: kdPoli
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode Poli
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data pendaftaran berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    description: Response data (string kosong jika berhasil)
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: OK
+                      code:
+                        type: integer
+                        example: 200
+              example:
+                response: ''
+                metaData:
+                  message: OK
+                  code: 200
+  '/peserta/{noKartu}':
+    get:
+      tags:
+        - Peserta
+      summary: Get Peserta
+      description: Get Data Peserta berdasarkan nomor kartu peserta
+      parameters:
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kartu Peserta
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data peserta berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      noKartu:
+                        type: string
+                        description: Nomor kartu peserta
+                      nama:
+                        type: string
+                        description: Nama peserta
+                      hubunganKeluarga:
+                        type: string
+                        description: Hubungan keluarga
+                      sex:
+                        type: string
+                        description: Jenis kelamin
+                      tglLahir:
+                        type: string
+                        description: Tanggal lahir
+                      tglMulaiAktif:
+                        type: string
+                        description: Tanggal mulai aktif
+                      tglAkhirBerlaku:
+                        type: string
+                        description: Tanggal akhir berlaku
+                      kdProviderPst:
+                        type: object
+                        properties:
+                          kdProvider:
+                            type: string
+                            description: Kode provider
+                          nmProvider:
+                            type: string
+                            description: Nama provider
+                      kdProviderGigi:
+                        $ref: '#/paths/~1peserta~1%7BnoKartu%7D/get/responses/200/content/application~1json/schema/properties/response/properties/kdProviderPst'
+                      jnsKelas:
+                        type: object
+                        properties:
+                          nama:
+                            type: string
+                          kode:
+                            type: string
+                      jnsPeserta:
+                        type: object
+                        properties:
+                          nama:
+                            type: string
+                          kode:
+                            type: string
+                      golDarah:
+                        type: string
+                        description: Golongan darah
+                      noHP:
+                        type: string
+                        description: Nomor HP
+                      noKTP:
+                        type: string
+                        description: Nomor KTP
+                      pstProl:
+                        type: string
+                        description: Peserta prolanis
+                        nullable: true
+                      pstPrb:
+                        type: string
+                        description: Peserta PRB
+                        nullable: true
+                      aktif:
+                        type: boolean
+                        description: Status aktif
+                      ketAktif:
+                        type: string
+                        description: Keterangan aktif
+                      asuransi:
+                        type: object
+                        properties:
+                          kdAsuransi:
+                            type: string
+                            nullable: true
+                            description: Kode asuransi
+                          nmAsuransi:
+                            type: string
+                            nullable: true
+                            description: Nama asuransi
+                          noAsuransi:
+                            type: string
+                            nullable: true
+                            description: Nomor asuransi
+                          cob:
+                            type: boolean
+                            description: Status COB
+                            nullable: true
+                      tunggakan:
+                        type: integer
+                        description: Jumlah tunggakan
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  noKartu: 0000039043765
+                  nama: SUSIAMINI IMAM SOERADI
+                  hubunganKeluarga: Peserta
+                  sex: P
+                  tglLahir: 25-10-1939
+                  tglMulaiAktif: 12-11-2014
+                  tglAkhirBerlaku: 01-01-2050
+                  kdProviderPst:
+                    kdProvider: 0114U163
+                    nmProvider: Klinik Cempaka Putih
+                  kdProviderGigi:
+                    kdProvider: null
+                    nmProvider: null
+                  jnsKelas:
+                    nama: KELAS I
+                    kode: '1'
+                  jnsPeserta:
+                    nama: PENERIMA PENSIUN PNS
+                    kode: '15'
+                  golDarah: '0'
+                  noHP: ''
+                  noKTP: ''
+                  pstProl: HT
+                  pstPrb: HT
+                  aktif: true
+                  ketAktif: AKTIF
+                  asuransi:
+                    kdAsuransi: null
+                    nmAsuransi: null
+                    noAsuransi: null
+                    cob: false
+                  tunggakan: 0
+                metaData:
+                  message: OK
+                  code: 200
+  '/peserta/{jenisKartu}/{nomor}':
+    get:
+      tags:
+        - Peserta
+      summary: Get Peserta by Jenis Kartu
+      description: Get Data Peserta berdasarkan jenis kartu (nik/noka) dan nomor kartu/NIK
+      parameters:
+        - name: jenisKartu
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - nik
+              - noka
+          description: Jenis kartu nik atau noka
+        - name: nomor
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor NIK atau kartu peserta
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data peserta berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1peserta~1%7BnoKartu%7D/get/responses/200/content/application~1json/schema'
+              example:
+                response:
+                  noKartu: 0001261832477
+                  nama: TRI ARNI
+                  hubunganKeluarga: Istri
+                  sex: P
+                  tglLahir: 29-09-1965
+                  tglMulaiAktif: 09-01-2014
+                  tglAkhirBerlaku: 31-12-2050
+                  kdProviderPst:
+                    kdProvider: 09020107
+                    nmProvider: KEL. MANGGARAI SELATAN
+                  kdProviderGigi:
+                    kdProvider: null
+                    nmProvider: null
+                  jnsKelas:
+                    kode: '3'
+                    nama: KELAS III
+                  jnsPeserta:
+                    kode: '22'
+                    nama: PBI (APBD)
+                  golDarah: '0'
+                  noHP: 083876592594
+                  noKTP: '3174016909650001'
+                  aktif: true
+                  ketAktif: AKTIF
+                  asuransi:
+                    kdAsuransi: null
+                    nmAsuransi: null
+                    noAsuransi: null
+                  tunggakan: 0
+                metaData:
+                  message: OK
+                  code: 200
+  '/poli/fktp/{start}/{limit}':
+    get:
+      tags:
+        - Poli
+      summary: Get Poli FKTP
+      description: |
+        Get Data Poli FKTP berdasarkan start dan limit
+
+        ## URL Format
+        `{Base URL}/{Service Name}/poli/fktp/{start}/{limit}`
+      parameters:
+        - name: start
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+          description: Row data awal yang akan ditampilkan
+        - name: limit
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          description: Limit jumlah data yang akan ditampilkan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data poli FKTP berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Jumlah total data poli
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kdPoli:
+                              type: string
+                              description: Kode poli
+                            nmPoli:
+                              type: string
+                              description: Nama poli
+                            poliSakit:
+                              type: boolean
+                              description: Apakah poli sakit
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  count: 2
+                  list:
+                    - kdPoli: '001'
+                      nmPoli: Umum
+                      poliSakit: true
+                    - kdPoli: '003'
+                      nmPoli: K I A
+                      poliSakit: true
+                metaData:
+                  message: OK
+                  code: 200
+  '/provider/{start}/{limit}':
+    get:
+      tags:
+        - Provider
+      summary: Get Provider Rayonisasi
+      description: |
+        Get Data Provider Rayonisasi berdasarkan start dan limit
+
+        ## URL Format
+        `{Base URL}/{Service Name}/provider/{start}/{limit}`
+      parameters:
+        - name: start
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+          description: Row data awal yang akan ditampilkan
+        - name: limit
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          description: Limit jumlah data yang akan ditampilkan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data provider rayonisasi berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Jumlah total data provider
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kdProvider:
+                              type: string
+                              description: Kode provider
+                            nmProvider:
+                              type: string
+                              description: Nama provider
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  count: 47
+                  list:
+                    - kdProvider: 0195R001
+                      nmProvider: RUMKITBAN SIDOARJO
+                    - kdProvider: 0195R027
+                      nmProvider: RSU AL-Islam HM Mawardi
+                metaData:
+                  message: OK
+                  code: 200
+  /spesialis:
+    get:
+      tags:
+        - Spesialis
+      summary: Get Referensi Spesialis
+      description: Get Data Referensi Spesialis
+      security:
+        - bpjsSecurity: []
+      responses:
+        '200':
+          description: Data referensi spesialis berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Jumlah total data spesialis
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kdSpesialis:
+                              type: string
+                              description: Kode spesialis
+                            nmSpesialis:
+                              type: string
+                              description: Nama spesialis
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  count: 2
+                  list:
+                    - kdSpesialis: ANA
+                      nmSpesialis: ANAK
+                    - kdSpesialis: AND
+                      nmSpesialis: ANDROLOGI
+                metaData:
+                  message: OK
+                  code: 200
+  '/spesialis/{kdSpesialis}/subspesialis':
+    get:
+      tags:
+        - Spesialis
+      summary: Get Referensi Sub Spesialis
+      description: Get Data Referensi Sub Spesialis berdasarkan kode spesialis
+      parameters:
+        - name: kdSpesialis
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode Spesialis
+      security:
+        - bpjsSecurity: []
+      responses:
+        '200':
+          description: Data referensi sub spesialis berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Jumlah total data sub spesialis
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kdSubSpesialis:
+                              type: string
+                              description: Kode sub spesialis
+                            nmSubSpesialis:
+                              type: string
+                              description: Nama sub spesialis
+                            kdPoliRujuk:
+                              type: string
+                              description: Kode poli rujukan
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  count: 2
+                  list:
+                    - kdSubSpesialis: '26'
+                      nmSubSpesialis: Anak
+                      kdPoliRujuk: ANA
+                    - kdSubSpesialis: '27'
+                      nmSubSpesialis: Anak Alergi Imunologi
+                      kdPoliRujuk: '027'
+                metaData:
+                  message: OK
+                  code: 200
+  /spesialis/sarana:
+    get:
+      tags:
+        - Spesialis
+      summary: Get Referensi Sarana
+      description: Get Data Referensi Sarana
+      security:
+        - bpjsSecurity: []
+      responses:
+        '200':
+          description: Data referensi sarana berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Jumlah total data sarana
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kdSarana:
+                              type: string
+                              description: Kode sarana
+                            nmSarana:
+                              type: string
+                              description: Nama sarana
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  count: 2
+                  list:
+                    - kdSarana: '1'
+                      nmSarana: Rekam Medik
+                    - kdSarana: '2'
+                      nmSarana: Laboratorium
+                metaData:
+                  message: OK
+                  code: 200
+  /spesialis/khusus:
+    get:
+      tags:
+        - Spesialis
+      summary: Get Referensi Khusus
+      description: Get Data Referensi Khusus
+      security:
+        - bpjsSecurity: []
+      responses:
+        '200':
+          description: Data referensi khusus berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Jumlah total data khusus
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kdKhusus:
+                              type: string
+                              description: Kode khusus
+                            nmKhusus:
+                              type: string
+                              description: Nama khusus
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  count: 10
+                  list:
+                    - kdKhusus: HDL
+                      nmKhusus: HEMODIALISA
+                    - kdKhusus: THA
+                      nmKhusus: THALASEMIA
+                    - kdKhusus: HEM
+                      nmKhusus: HEMOFILI
+                    - kdKhusus: IGD
+                      nmKhusus: ALIH RAWAT
+                    - kdKhusus: JIW
+                      nmKhusus: JIWA
+                    - kdKhusus: KLT
+                      nmKhusus: KUSTA
+                    - kdKhusus: PAR
+                      nmKhusus: TB-MDR
+                    - kdKhusus: KEM
+                      nmKhusus: SARANA KEMOTERAPI
+                    - kdKhusus: RAT
+                      nmKhusus: SARANA RADIOTERAPI
+                    - kdKhusus: HIV
+                      nmKhusus: HIV-ODHA
+                metaData:
+                  message: OK
+                  code: 200
+  '/spesialis/rujuk/subspesialis/{kdSubSpesialis}/sarana/{kdSarana}/tglEstRujuk/{tglEstRujuk}':
+    get:
+      tags:
+        - Spesialis
+      summary: Get Faskes Rujukan Sub Spesialis
+      description: Get Data Faskes Rujukan Sub Spesialis
+      parameters:
+        - name: kdSubSpesialis
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode Sub Spesialis
+        - name: kdSarana
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode Sarana
+        - name: tglEstRujuk
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{2}-\d{2}-\d{4}$'
+          description: Tanggal Estimasi Rujuk (format dd-mm-yyyy)
+      security:
+        - bpjsSecurity: []
+      responses:
+        '200':
+          description: Data faskes rujukan sub spesialis berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1spesialis~1rujuk~1khusus~1%7BkdKhusus%7D~1noKartu~1%7BnoKartu%7D~1tglEstRujuk~1%7BtglEstRujuk%7D/get/responses/200/content/application~1json/schema'
+              example:
+                response:
+                  count: 36
+                  list:
+                    - kdppk: 0114R049
+                      nmppk: RSUD CEMPAKA PUTIH
+                      alamatPpk: JALAN RAWASARI SELATAN NO. 1
+                      telpPpk: 021-4224243
+                      kelas: D
+                      nmkc: JAKARTA PUSAT
+                      distance: 951.0729
+                      jadwal: 'Senin : 07:30 - 14:00, 08:00 - 17:00;14:00 - 19:00'
+                      jmlRujuk: 0
+                      kapasitas: 0
+                      persentase: 0
+                    - kdppk: 0114R052
+                      nmppk: RSUD KEMAYORAN
+                      alamatPpk: Jl. Serdang Baru I
+                      telpPpk: (021) 4251005
+                      kelas: D
+                      nmkc: JAKARTA PUSAT
+                      distance: 2505.416
+                      jadwal: 'Senin : 07:30 - 14:00, 08:00 - 17:00;14:00 - 19:00'
+                      jmlRujuk: 0
+                      kapasitas: 0
+                      persentase: 0
+                metaData:
+                  message: OK
+                  code: 200
+  '/spesialis/rujuk/khusus/{kdKhusus}/noKartu/{noKartu}/tglEstRujuk/{tglEstRujuk}':
+    get:
+      tags:
+        - Spesialis
+      summary: 'Get Faskes Rujukan Khusus (Alih Rawat, Hemodialisa, Jiwa, Kusta, TB-MDR, Kemoterapi, Radioterapi, HIV-ODHA)'
+      description: 'Get Data Faskes Rujukan Khusus berdasarkan kode khusus, no kartu, dan tanggal estimasi rujuk'
+      parameters:
+        - name: kdKhusus
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'Kode Khusus (IGD, HDL, JIW, KLT, PAR, KEM, RAT, HIV)'
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kartu Peserta
+        - name: tglEstRujuk
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{2}-\d{2}-\d{4}$'
+          description: Tanggal Estimasi Rujuk (format dd-mm-yyyy)
+      security:
+        - bpjsSecurity: []
+      responses:
+        '200':
+          description: Data faskes rujukan khusus berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Jumlah total data faskes rujukan
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kdppk:
+                              type: string
+                              description: Kode faskes
+                            nmppk:
+                              type: string
+                              description: Nama faskes
+                            alamatPpk:
+                              type: string
+                              description: Alamat faskes
+                            telpPpk:
+                              type: string
+                              description: Telepon faskes
+                            kelas:
+                              type: string
+                              description: Kelas faskes
+                            nmkc:
+                              type: string
+                              description: Nama kabupaten/kota
+                            distance:
+                              type: number
+                              format: float
+                              description: Jarak ke faskes
+                            jadwal:
+                              type: string
+                              description: Jadwal pelayanan
+                            jmlRujuk:
+                              type: integer
+                              description: Jumlah rujukan
+                            kapasitas:
+                              type: integer
+                              description: Kapasitas faskes
+                            persentase:
+                              type: number
+                              format: float
+                              description: Persentase kapasitas
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  count: 36
+                  list:
+                    - kdppk: 0114R049
+                      nmppk: RSUD CEMPAKA PUTIH
+                      alamatPpk: JALAN RAWASARI SELATAN NO. 1
+                      telpPpk: 021-4224243
+                      kelas: D
+                      nmkc: JAKARTA PUSAT
+                      distance: 951.0729
+                      jadwal: 'Senin : 07:30 - 14:00, 08:00 - 17:00;14:00 - 19:00'
+                      jmlRujuk: 0
+                      kapasitas: 0
+                      persentase: 0
+                    - kdppk: 0114R052
+                      nmppk: RSUD KEMAYORAN
+                      alamatPpk: Jl. Serdang Baru I
+                      telpPpk: (021) 4251005
+                      kelas: D
+                      nmkc: JAKARTA PUSAT
+                      distance: 2505.416
+                      jadwal: 'Senin : 07:30 - 14:00, 08:00 - 17:00;14:00 - 19:00'
+                      jmlRujuk: 0
+                      kapasitas: 0
+                      persentase: 0
+                metaData:
+                  message: OK
+                  code: 200
+  '/spesialis/rujuk/khusus/{kdKhusus}/subspesialis/{kdSubSpesialis}/noKartu/{noKartu}/tglEstRujuk/{tglEstRujuk}':
+    get:
+      tags:
+        - Spesialis
+      summary: 'Get Faskes Rujukan Khusus (Thalasemia, Hemofili)'
+      description: Get Data Faskes Rujukan Khusus Thalasemia dan Hemofili
+      parameters:
+        - name: kdKhusus
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'Kode Khusus (THA, HEM)'
+        - name: kdSubSpesialis
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Kode Sub Spesialis
+        - name: noKartu
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kartu Peserta
+        - name: tglEstRujuk
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{2}-\d{2}-\d{4}$'
+          description: Tanggal Estimasi Rujuk (format dd-mm-yyyy)
+      security:
+        - bpjsSecurity: []
+      responses:
+        '200':
+          description: Data faskes rujukan khusus thalasemia/hemofili berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1spesialis~1rujuk~1khusus~1%7BkdKhusus%7D~1noKartu~1%7BnoKartu%7D~1tglEstRujuk~1%7BtglEstRujuk%7D/get/responses/200/content/application~1json/schema'
+              example:
+                response:
+                  count: 2
+                  list:
+                    - kdppk: 0114R049
+                      nmppk: RSUD CEMPAKA PUTIH
+                      alamatPpk: JALAN RAWASARI SELATAN NO. 1
+                      telpPpk: 021-4224243
+                      kelas: D
+                      nmkc: JAKARTA PUSAT
+                      distance: 951.0729
+                      jadwal: 'Senin : 07:30 - 14:00, 08:00 - 17:00;14:00 - 19:00'
+                      jmlRujuk: 0
+                      kapasitas: 0
+                      persentase: 0
+                    - kdppk: 0113R052
+                      nmppk: KLINIK HD CIPTA HUSADA 2
+                      alamatPpk: Jalan Langit-Langit No.12
+                      telpPpk: 021-4896807
+                      kelas: D
+                      nmkc: JAKARTA TIMUR
+                      distance: 2012.9943
+                      jadwal: 'Senin : 07:30 - 14:00, 08:00 - 17:00;14:00 - 19:00'
+                      jmlRujuk: 0
+                      kapasitas: 0
+                      persentase: 0
+                metaData:
+                  message: OK
+                  code: 200
+  /status-pulang:
+    get:
+      tags:
+        - Status Pulang
+      summary: Get Status Pulang
+      description: Get Data Referensi Status Pulang
+      responses:
+        '200':
+          description: Data status pulang berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Jumlah total data status pulang
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kdStatusPulang:
+                              type: string
+                              description: Kode status pulang
+                            nmStatusPulang:
+                              type: string
+                              description: Nama status pulang
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  count: 2
+                  list:
+                    - kdStatusPulang: '1'
+                      nmStatusPulang: Sembuh
+                    - kdStatusPulang: '2'
+                      nmStatusPulang: Rujuk
+                metaData:
+                  message: OK
+                  code: 200
+  '/tindakan/kunjungan/{noKunjungan}':
+    get:
+      tags:
+        - Tindakan
+      summary: Get Tindakan by Kunjungan
+      description: Get Data Tindakan berdasarkan nomor kunjungan
+      parameters:
+        - name: noKunjungan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kunjungan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data tindakan berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Jumlah total data tindakan
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kdTindakanSK:
+                              type: integer
+                              description: Kode TindakanSK
+                            noKunjungan:
+                              type: string
+                              description: Nomor Kunjungan
+                            kdTindakan:
+                              type: string
+                              description: Kode Tindakan
+                            nmTindakan:
+                              type: string
+                              description: Nama Tindakan
+                            biaya:
+                              type: integer
+                              description: Biaya
+                            keterangan:
+                              type: string
+                              nullable: true
+                              description: Keterangan
+                            hasil:
+                              type: integer
+                              description: Hasil
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  count: 1
+                  list:
+                    - kdTindakanSK: 199
+                      noKunjungan: 1301U0070815Y000005
+                      kdTindakan: '01006'
+                      nmTindakan: "Pelayanan KB : Suntik\r\n"
+                      biaya: 15000
+                      keterangan: '2000'
+                      hasil: 0
+                metaData:
+                  message: OK
+                  code: 200
+  '/tindakan/kdTkp/{kdTkp}/{start}/{limit}':
+    get:
+      tags:
+        - Tindakan
+      summary: Get Referensi Tindakan
+      description: 'Get Data Referensi Tindakan berdasarkan kdTkp, start, dan limit'
+      parameters:
+        - name: kdTkp
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - '10'
+              - '20'
+              - '50'
+          description: 'Kode TKP (10=RJTP, 20=RITP, 50=Promotif)'
+        - name: start
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+          description: Row data awal yang akan ditampilkan
+        - name: limit
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          description: Limit jumlah data yang akan ditampilkan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data referensi tindakan berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: Jumlah total data referensi tindakan
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kdTindakan:
+                              type: string
+                              description: Kode Tindakan
+                            nmTindakan:
+                              type: string
+                              description: Nama Tindakan
+                            maxTarif:
+                              type: integer
+                              description: Maksimal Tarif
+                            withValue:
+                              type: boolean
+                              description: Apakah dengan value
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  count: 212
+                  list:
+                    - kdTindakan: '02007'
+                      nmTindakan: "Penanganan pendarahan pasca keguguran\r\n"
+                      maxTarif: 750000
+                      withValue: false
+                    - kdTindakan: '02005'
+                      nmTindakan: Paket persalinan per vaginam normal
+                      maxTarif: 600000
+                      withValue: false
+                    - kdTindakan: '02003'
+                      nmTindakan: Pelayanan tindakan pasca persalinan
+                      maxTarif: 175000
+                      withValue: false
+                metaData:
+                  message: OK
+                  code: 200
+  /tindakan:
+    post:
+      tags:
+        - Tindakan
+      summary: Add Tindakan
+      description: Add Data Tindakan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              $ref: '#/paths/~1tindakan/put/requestBody/content/text~1plain/schema'
+            example:
+              kdTindakanSK: 0
+              noKunjungan: 1301U0070815Y000004
+              kdTindakan: '01007'
+              biaya: 0
+              keterangan: null
+              hasil: 0
+      responses:
+        '201':
+          description: Data tindakan berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      field:
+                        type: string
+                        description: Field yang diupdate
+                        example: kdTindakanSK
+                      message:
+                        type: string
+                        description: ID tindakan yang dibuat
+                        example: '218'
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: CREATED
+                      code:
+                        type: integer
+                        example: 201
+              example:
+                response:
+                  field: kdTindakanSK
+                  message: '218'
+                metaData:
+                  message: CREATED
+                  code: 201
+    put:
+      tags:
+        - Tindakan
+      summary: Edit Tindakan
+      description: Edit Data Tindakan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: object
+              required:
+                - kdTindakanSK
+                - noKunjungan
+                - kdTindakan
+                - biaya
+                - hasil
+              properties:
+                kdTindakanSK:
+                  type: integer
+                  description: Kode TindakanSK (0 untuk create baru)
+                noKunjungan:
+                  type: string
+                  description: Nomor Kunjungan
+                kdTindakan:
+                  type: string
+                  description: Kode Tindakan
+                biaya:
+                  type: integer
+                  description: Biaya
+                keterangan:
+                  type: string
+                  nullable: true
+                  description: Keterangan
+                hasil:
+                  type: integer
+                  description: Hasil
+            example:
+              kdTindakanSK: 218
+              noKunjungan: 1301U0070815Y000004
+              kdTindakan: '01007'
+              biaya: 0
+              keterangan: null
+              hasil: 0
+      responses:
+        '200':
+          description: Data tindakan berhasil diupdate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      field:
+                        type: string
+                        description: Field yang diupdate
+                        example: kdTindakanSK
+                      message:
+                        type: string
+                        description: ID tindakan yang diupdate
+                        example: '219'
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: OK
+                      code:
+                        type: integer
+                        example: 200
+              example:
+                response:
+                  field: kdTindakanSK
+                  message: '219'
+                metaData:
+                  message: OK
+                  code: 200
+  '/tindakan/{kdTindakanSK}/kunjungan/{noKunjungan}':
+    delete:
+      tags:
+        - Tindakan
+      summary: Delete Tindakan
+      description: Delete Data Tindakan berdasarkan kdTindakanSK dan nomor kunjungan
+      parameters:
+        - name: kdTindakanSK
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Kode TindakanSK
+        - name: noKunjungan
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nomor Kunjungan
+      security:
+        - pcareAuth: []
+        - pcareTimestamp: []
+        - pcareSignature: []
+        - pcareAuthorization: []
+        - userKey: []
+      responses:
+        '200':
+          description: Data tindakan berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    nullable: true
+                    description: Response data (null jika berhasil)
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: OK
+                      code:
+                        type: integer
+                        example: 200
+              example:
+                response: null
+                metaData:
+                  message: OK
+                  code: 200
+  '/alergi/jenis/{jenisAlergi}':
+    get:
+      tags:
+        - Alergi
+      summary: Get Data Alergi
+      description: Get Data Referensi Alergi berdasarkan jenis
+      parameters:
+        - name: jenisAlergi
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - '01'
+              - '02'
+              - '03'
+          description: |
+            Jenis Alergi:
+              - 01: Makanan
+              - 02: Udara
+              - 03: Obat
+      security:
+        - bpjsSecurity: []
+      responses:
+        '200':
+          description: Data referensi alergi berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kdAlergi:
+                              type: string
+                              description: Kode alergi
+                            nmAlergi:
+                              type: string
+                              description: Nama alergi
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  list:
+                    - kdAlergi: '00'
+                      nmAlergi: Tidak Ada
+                    - kdAlergi: '01'
+                      nmAlergi: Seafood
+                    - kdAlergi: '02'
+                      nmAlergi: Gandum
+                    - kdAlergi: '03'
+                      nmAlergi: Susu Sapi
+                    - kdAlergi: '04'
+                      nmAlergi: Kacang-Kacangan
+                    - kdAlergi: '05'
+                      nmAlergi: Makanan Lain
+                metaData:
+                  message: OK
+                  code: 200
+  /prognosa:
+    get:
+      tags:
+        - Prognosa
+      summary: Get Data Prognosa
+      description: Get Data Referensi Prognosa
+      security:
+        - bpjsSecurity: []
+      responses:
+        '200':
+          description: Data referensi prognosa berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            kdPrognosa:
+                              type: string
+                              description: Kode prognosa
+                            nmPrognosa:
+                              type: string
+                              description: Nama prognosa
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: Pesan response
+                      code:
+                        type: integer
+                        description: Kode response
+              example:
+                response:
+                  list:
+                    - kdPrognosa: '01'
+                      nmPrognosa: Sanam (Sembuh)
+                    - kdPrognosa: '02'
+                      nmPrognosa: Bonam (Baik)
+                    - kdPrognosa: '03'
+                      nmPrognosa: Malam (Buruk/Jelek)
+                    - kdPrognosa: '04'
+                      nmPrognosa: 'Dubia Ad Sanam/Bolam (Tidak tentu/Ragu-ragu, Cenderung Sembuh/Baik)'
+                    - kdPrognosa: '05'
+                      nmPrognosa: 'Dubia Ad Malam (Tidak tentu/Ragu-ragu, Cenderung Sembuh/Baik)'
+                metaData:
+                  message: OK
+                  code: 200

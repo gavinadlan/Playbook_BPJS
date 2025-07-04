@@ -1,0 +1,32 @@
+openapi: 3.0.0
+info:
+  title: iCare API - Complete Documentation
+  version: 1.0.0
+  description: |
+    API PCare untuk pengelolaan layanan primer BPJS Kesehatan
+    
+servers:
+  - url:  https://apijkn-dev.bpjs-kesehatan.go.id/ihs_dev
+    description: Server Development
+
+paths:
+  # ============================== SIGNATURE ==============================
+  /auth/signature:
+    get:
+      $ref: './icare/create-signature-fkrtl.yaml#/paths/~1auth~1signature/get'
+  /auth/signature-fktp:
+    get:
+      $ref: './icare/create-signature-fktp.yaml#/paths/~1auth~1signature/get'
+
+  # ============================== DECRYPT ==============================
+  /decrypt:
+    get:
+      $ref: './icare/decrypt.yaml#/paths/~1decrypt/get'
+
+  # ============================== KATALOG I-CARE ==============================
+  /{serviceName}/api/rs/validate:
+    post:
+      $ref: './icare/i-care.yaml#/paths/~1{serviceName}~1api~1rs~1validate/post'
+  /{serviceName}/api/pcare/validate:
+    post:
+      $ref: './icare/i-care.yaml#/paths/~1{serviceName}~1api~1pcare~1validate/post'

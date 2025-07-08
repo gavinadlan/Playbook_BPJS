@@ -23,6 +23,31 @@ paths:
           schema:
             type: string
           description: Nomor Kunjungan
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -82,6 +107,31 @@ paths:
             minimum: 1
             maximum: 100
           description: Limit jumlah data yang akan ditampilkan
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -120,6 +170,32 @@ paths:
       tags: [Tindakan]
       summary: Add Tindakan
       description: Add Data Tindakan
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -178,6 +254,32 @@ paths:
       tags: [Tindakan]
       summary: Edit Tindakan
       description: Edit Data Tindakan
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -251,6 +353,31 @@ paths:
           schema:
             type: string
           description: Nomor Kunjungan
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []

@@ -27,6 +27,31 @@ paths:
           schema:
             type: string
           description: Nomor Kunjungan
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -92,6 +117,32 @@ paths:
         
         ## URL Format
         `{Base URL}/{Service Name}/MCU`
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -183,6 +234,32 @@ paths:
         
         ## URL Format
         `{Base URL}/{Service Name}/MCU`
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -280,6 +357,31 @@ paths:
           schema:
             type: string
           description: Nomor Kunjungan
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []

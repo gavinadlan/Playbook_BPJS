@@ -17,6 +17,31 @@ paths:
       summary: Get Data Rujukan
       description: Mendapatkan data rujukan berdasarkan nomor kunjungan
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noKunjungan
           in: path
           required: true
@@ -24,12 +49,6 @@ paths:
             type: string
           description: Nomor kunjungan
           example: "0114U1630316Y000003"
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
       responses:
         '200':
           description: Data rujukan berhasil ditemukan
@@ -52,6 +71,31 @@ paths:
       summary: Get Riwayat Kunjungan
       description: Mendapatkan riwayat kunjungan berdasarkan nomor kartu peserta
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noKartu
           in: path
           required: true
@@ -59,12 +103,6 @@ paths:
             type: string
           description: Nomor kartu peserta
           example: "0000029247423"
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
       responses:
         '200':
           description: Data riwayat kunjungan berhasil ditemukan
@@ -176,12 +214,32 @@ paths:
                   terapiNonObat: "test terapi nonobat"
                   bmhp: "bmhp"
                   suhu: "36,4"
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '201':
           description: Data kunjungan berhasil ditambahkan
@@ -244,12 +302,32 @@ paths:
               terapiNonObat: "test terapi nonobat"
               bmhp: "bmhp"
               suhu: "36,4"
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Data kunjungan berhasil diubah
@@ -272,6 +350,31 @@ paths:
       summary: Delete Data Kunjungan
       description: Menghapus data kunjungan berdasarkan nomor kunjungan
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noKunjungan
           in: path
           required: true
@@ -279,12 +382,6 @@ paths:
             type: string
           description: Nomor kunjungan
           example: "0114U1630316Y000003"
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
       responses:
         '200':
           description: Data kunjungan berhasil dihapus

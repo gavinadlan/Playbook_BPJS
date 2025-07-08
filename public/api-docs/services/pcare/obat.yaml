@@ -21,6 +21,31 @@ paths:
         ## URL Format
         `{Base URL}/{Service Name}/obat/dpho/{query}/{start}/{limit}`
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: query
           in: path
           required: true
@@ -42,12 +67,6 @@ paths:
             minimum: 1
             maximum: 100
           description: Limit jumlah data yang akan ditampilkan
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
       responses:
         '200':
           description: Data DPHO berhasil ditemukan
@@ -82,18 +101,37 @@ paths:
         ## URL Format
         `{Base URL}/{Service Name}/obat/kunjungan/{noKunjungan}`
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noKunjungan
           in: path
           required: true
           schema:
             type: string
           description: Nomor Kunjungan
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
       responses:
         '200':
           description: Data obat berhasil ditemukan
@@ -131,12 +169,32 @@ paths:
         
         ## URL Format
         `{Base URL}/{Service Name}/obat/kunjungan}`
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -203,6 +261,31 @@ paths:
         ## URL Format
         `{Base URL}/{Service Name}/obat/{kdObatSK}/kunjungan/{noKunjungan}`
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: kdObatSK
           in: path
           required: true
@@ -215,12 +298,6 @@ paths:
           schema:
             type: string
           description: Nomor Kunjungan
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
       responses:
         '200':
           description: Data obat berhasil dihapus

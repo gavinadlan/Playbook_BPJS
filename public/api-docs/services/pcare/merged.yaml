@@ -28,16 +28,6 @@ info:
     - Key: SHA256 hash dari (consId + consSecret + timestamp)
     - IV: 16 byte pertama dari SHA256 hash
     - Decompression: LZString (decompressFromEncodedURIComponent)
-
-    ## File Structure
-    Dokumentasi ini terbagi menjadi beberapa file:
-    - `create-signature.yaml`: Header authentication dan signature generation
-    - `decrypt.yaml`: Panduan decrypt response
-    - `peserta.yaml`: Data peserta PCare
-    - `kunjungan.yaml`: Data kunjungan peserta
-    - `obat.yaml`: Data obat dan resep
-    - `tindakan.yaml`: Data tindakan medis
-    - `referensi.yaml`: Data referensi (poli, dokter, dll)
 servers:
   - url: 'https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev'
     description: Server Development
@@ -74,33 +64,6 @@ tags:
     description: Data referensi alergi
   - name: Prognosa
     description: Data referensi prognosa
-components:
-  securitySchemes:
-    pcareAuth:
-      type: apiKey
-      in: header
-      name: X-cons-id
-      description: Consumer ID dari BPJS Kesehatan
-    pcareTimestamp:
-      type: apiKey
-      in: header
-      name: X-timestamp
-      description: Generated unix-based timestamp
-    pcareSignature:
-      type: apiKey
-      in: header
-      name: X-signature
-      description: Generated signature dengan pola HMAC-256
-    pcareAuthorization:
-      type: apiKey
-      in: header
-      name: X-authorization
-      description: Generated signature dengan pola Base64
-    userKey:
-      type: apiKey
-      in: header
-      name: user_key
-      description: User key untuk akses webservice
 paths:
   /auth/signature:
     get:
@@ -247,6 +210,31 @@ paths:
             maximum: 100
           description: Limit jumlah data yang akan ditampilkan
           example: 10
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -408,6 +396,31 @@ paths:
             maximum: 100
           description: Limit jumlah data yang akan ditampilkan
           example: 10
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -560,6 +573,31 @@ paths:
               - '03'
           description: 'Kode Jenis Kelompok (01=Diabetes Melitus, 02=Hipertensi, 03=Asthma)'
           example: '01'
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -676,6 +714,31 @@ paths:
             pattern: '^\\d{2}-\\d{4}$'
           description: Bulan dalam format dd-mm-yyyy
           example: 01-2016
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -872,6 +935,31 @@ paths:
             type: string
           description: ID kegiatan kelompok
           example: '16020000001'
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -1293,6 +1381,31 @@ paths:
             type: string
           description: ID kegiatan kelompok
           example: '16030000009'
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -1351,6 +1464,31 @@ paths:
             type: string
           description: Nomor Kartu Peserta
           example: 0001101615759
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -1405,12 +1543,32 @@ paths:
         ```
         GET https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev/kesadaran
         ```
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Data kesadaran berhasil ditemukan
@@ -1469,6 +1627,31 @@ paths:
       summary: Get Data Rujukan
       description: Mendapatkan data rujukan berdasarkan nomor kunjungan
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noKunjungan
           in: path
           required: true
@@ -1476,12 +1659,6 @@ paths:
             type: string
           description: Nomor kunjungan
           example: 0114U1630316Y000003
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
       responses:
         '200':
           description: Data rujukan berhasil ditemukan
@@ -1661,6 +1838,31 @@ paths:
       summary: Get Riwayat Kunjungan
       description: Mendapatkan riwayat kunjungan berdasarkan nomor kartu peserta
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noKartu
           in: path
           required: true
@@ -1668,12 +1870,6 @@ paths:
             type: string
           description: Nomor kartu peserta
           example: 0000029247423
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
       responses:
         '200':
           description: Data riwayat kunjungan berhasil ditemukan
@@ -2128,12 +2324,32 @@ paths:
                   terapiNonObat: test terapi nonobat
                   bmhp: bmhp
                   suhu: '36,4'
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '201':
           description: Data kunjungan berhasil ditambahkan
@@ -2223,12 +2439,32 @@ paths:
               terapiNonObat: test terapi nonobat
               bmhp: bmhp
               suhu: '36,4'
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Data kunjungan berhasil diubah
@@ -2321,6 +2557,31 @@ paths:
       summary: Delete Data Kunjungan
       description: Menghapus data kunjungan berdasarkan nomor kunjungan
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noKunjungan
           in: path
           required: true
@@ -2328,12 +2589,6 @@ paths:
             type: string
           description: Nomor kunjungan
           example: 0114U1630316Y000003
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
       responses:
         '200':
           description: Data kunjungan berhasil dihapus
@@ -2366,6 +2621,31 @@ paths:
           schema:
             type: string
           description: Nomor Kunjungan
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -2567,6 +2847,32 @@ paths:
 
         ## URL Format
         `{Base URL}/{Service Name}/MCU`
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -2659,6 +2965,32 @@ paths:
 
         ## URL Format
         `{Base URL}/{Service Name}/MCU`
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -2898,6 +3230,31 @@ paths:
           schema:
             type: string
           description: Nomor Kunjungan
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -2941,6 +3298,31 @@ paths:
         ## URL Format
         `{Base URL}/{Service Name}/obat/dpho/{query}/{start}/{limit}`
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: query
           in: path
           required: true
@@ -2962,12 +3344,6 @@ paths:
             minimum: 1
             maximum: 100
           description: Limit jumlah data yang akan ditampilkan
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
       responses:
         '200':
           description: Data DPHO berhasil ditemukan
@@ -3032,18 +3408,37 @@ paths:
         ## URL Format
         `{Base URL}/{Service Name}/obat/kunjungan/{noKunjungan}`
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noKunjungan
           in: path
           required: true
           schema:
             type: string
           description: Nomor Kunjungan
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
       responses:
         '200':
           description: Data obat berhasil ditemukan
@@ -3141,12 +3536,32 @@ paths:
 
         ## URL Format
         `{Base URL}/{Service Name}/obat/kunjungan}`
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -3259,6 +3674,31 @@ paths:
         ## URL Format
         `{Base URL}/{Service Name}/obat/{kdObatSK}/kunjungan/{noKunjungan}`
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: kdObatSK
           in: path
           required: true
@@ -3271,12 +3711,6 @@ paths:
           schema:
             type: string
           description: Nomor Kunjungan
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
       responses:
         '200':
           description: Data obat berhasil dihapus
@@ -3314,6 +3748,31 @@ paths:
         ## URL Format
         `{Base URL}/{Service Name}/pendaftaran/noUrut/{noUrut}/tglDaftar/{tglDaftar}`
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noUrut
           in: path
           required: true
@@ -3326,12 +3785,6 @@ paths:
           schema:
             type: string
           description: Tanggal Pendaftaran (format dd-mm-yyyy)
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
       responses:
         '200':
           description: Data pendaftaran berhasil ditemukan
@@ -3563,6 +4016,31 @@ paths:
         ## URL Format
         `{Base URL}/{Service Name}/pendaftaran/tglDaftar/{tglDaftar}/{start}/{limit}`
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: tglDaftar
           in: path
           required: true
@@ -3584,12 +4062,6 @@ paths:
             minimum: 1
             maximum: 100
           description: Limit jumlah data yang akan ditampilkan
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
       responses:
         '200':
           description: Data pendaftaran provider berhasil ditemukan
@@ -3671,12 +4143,32 @@ paths:
 
         ## URL Format
         `{Base URL}/{Service Name}/pendaftaran`
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -3807,6 +4299,31 @@ paths:
         ## URL Format
         `{Base URL}/{Service Name}/pendaftaran/peserta/{noKartu}/tglDaftar/{tglDaftar}/noUrut/{noUrut}/kdPoli/{kdPoli}`
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noKartu
           in: path
           required: true
@@ -3831,12 +4348,6 @@ paths:
           schema:
             type: string
           description: Kode Poli
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
       responses:
         '200':
           description: Data pendaftaran berhasil dihapus
@@ -3869,18 +4380,37 @@ paths:
       summary: Get Peserta
       description: Get Data Peserta berdasarkan nomor kartu peserta
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noKartu
           in: path
           required: true
           schema:
             type: string
           description: Nomor Kartu Peserta
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
       responses:
         '200':
           description: Data peserta berhasil ditemukan
@@ -4036,6 +4566,31 @@ paths:
       summary: Get Peserta by Jenis Kartu
       description: Get Data Peserta berdasarkan jenis kartu (nik/noka) dan nomor kartu/NIK
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: jenisKartu
           in: path
           required: true
@@ -4051,12 +4606,6 @@ paths:
           schema:
             type: string
           description: Nomor NIK atau kartu peserta
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
       responses:
         '200':
           description: Data peserta berhasil ditemukan
@@ -4124,6 +4673,31 @@ paths:
             minimum: 1
             maximum: 100
           description: Limit jumlah data yang akan ditampilkan
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -4206,6 +4780,31 @@ paths:
             minimum: 1
             maximum: 100
           description: Limit jumlah data yang akan ditampilkan
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -4263,6 +4862,32 @@ paths:
         - Spesialis
       summary: Get Referensi Spesialis
       description: Get Data Referensi Spesialis
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - bpjsSecurity: []
       responses:
@@ -4323,6 +4948,31 @@ paths:
           schema:
             type: string
           description: Kode Spesialis
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - bpjsSecurity: []
       responses:
@@ -4381,6 +5031,32 @@ paths:
         - Spesialis
       summary: Get Referensi Sarana
       description: Get Data Referensi Sarana
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - bpjsSecurity: []
       responses:
@@ -4434,6 +5110,32 @@ paths:
         - Spesialis
       summary: Get Referensi Khusus
       description: Get Data Referensi Khusus
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - bpjsSecurity: []
       responses:
@@ -4523,6 +5225,31 @@ paths:
             type: string
             pattern: '^\d{2}-\d{2}-\d{4}$'
           description: Tanggal Estimasi Rujuk (format dd-mm-yyyy)
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - bpjsSecurity: []
       responses:
@@ -4587,6 +5314,31 @@ paths:
             type: string
             pattern: '^\d{2}-\d{2}-\d{4}$'
           description: Tanggal Estimasi Rujuk (format dd-mm-yyyy)
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - bpjsSecurity: []
       responses:
@@ -4713,6 +5465,31 @@ paths:
             type: string
             pattern: '^\d{2}-\d{2}-\d{4}$'
           description: Tanggal Estimasi Rujuk (format dd-mm-yyyy)
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - bpjsSecurity: []
       responses:
@@ -4757,6 +5534,32 @@ paths:
         - Status Pulang
       summary: Get Status Pulang
       description: Get Data Referensi Status Pulang
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Data status pulang berhasil ditemukan
@@ -4815,6 +5618,31 @@ paths:
           schema:
             type: string
           description: Nomor Kunjungan
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -4917,6 +5745,31 @@ paths:
             minimum: 1
             maximum: 100
           description: Limit jumlah data yang akan ditampilkan
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -4988,6 +5841,32 @@ paths:
         - Tindakan
       summary: Add Tindakan
       description: Add Data Tindakan
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -5047,6 +5926,32 @@ paths:
         - Tindakan
       summary: Edit Tindakan
       description: Edit Data Tindakan
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -5146,6 +6051,31 @@ paths:
           schema:
             type: string
           description: Nomor Kunjungan
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -5256,6 +6186,32 @@ paths:
         - Prognosa
       summary: Get Data Prognosa
       description: Get Data Referensi Prognosa
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - bpjsSecurity: []
       responses:

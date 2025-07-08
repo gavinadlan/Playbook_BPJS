@@ -38,6 +38,31 @@ paths:
             enum: ["01", "02", "03"]
           description: Kode Jenis Kelompok (01=Diabetes Melitus, 02=Hipertensi, 03=Asthma)
           example: "01"
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -102,6 +127,31 @@ paths:
             pattern: '^\\d{2}-\\d{4}$'
           description: Bulan dalam format dd-mm-yyyy
           example: "01-2016"
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -193,6 +243,31 @@ paths:
             type: string
           description: ID kegiatan kelompok
           example: "16020000001"
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -421,6 +496,31 @@ paths:
             type: string
           description: ID kegiatan kelompok
           example: "16030000009"
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []
@@ -479,6 +579,31 @@ paths:
             type: string
           description: Nomor Kartu Peserta
           example: "0001101615759"
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       security:
         - pcareAuth: []
         - pcareTimestamp: []

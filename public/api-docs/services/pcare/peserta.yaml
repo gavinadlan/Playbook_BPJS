@@ -17,18 +17,37 @@ paths:
       summary: Get Peserta
       description: Get Data Peserta berdasarkan nomor kartu peserta
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noKartu
           in: path
           required: true
           schema:
             type: string
           description: Nomor Kartu Peserta
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
       responses:
         '200':
           description: Data peserta berhasil ditemukan
@@ -80,6 +99,31 @@ paths:
       summary: Get Peserta by Jenis Kartu
       description: Get Data Peserta berdasarkan jenis kartu (nik/noka) dan nomor kartu/NIK
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: jenisKartu
           in: path
           required: true
@@ -95,12 +139,6 @@ paths:
           schema:
             type: string
           description: Nomor NIK atau kartu peserta
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
       responses:
         '200':
           description: Data peserta berhasil ditemukan

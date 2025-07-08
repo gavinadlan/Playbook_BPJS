@@ -21,6 +21,31 @@ paths:
         ## URL Format
         `{Base URL}/{Service Name}/pendaftaran/noUrut/{noUrut}/tglDaftar/{tglDaftar}`
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noUrut
           in: path
           required: true
@@ -33,12 +58,6 @@ paths:
           schema:
             type: string
           description: Tanggal Pendaftaran (format dd-mm-yyyy)
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
       responses:
         '200':
           description: Data pendaftaran berhasil ditemukan
@@ -110,6 +129,31 @@ paths:
         ## URL Format
         `{Base URL}/{Service Name}/pendaftaran/tglDaftar/{tglDaftar}/{start}/{limit}`
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: tglDaftar
           in: path
           required: true
@@ -131,12 +175,6 @@ paths:
             minimum: 1
             maximum: 100
           description: Limit jumlah data yang akan ditampilkan
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
       responses:
         '200':
           description: Data pendaftaran provider berhasil ditemukan
@@ -198,12 +236,32 @@ paths:
         
         ## URL Format
         `{Base URL}/{Service Name}/pendaftaran`
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -272,6 +330,31 @@ paths:
         ## URL Format
         `{Base URL}/{Service Name}/pendaftaran/peserta/{noKartu}/tglDaftar/{tglDaftar}/noUrut/{noUrut}/kdPoli/{kdPoli}`
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noKartu
           in: path
           required: true
@@ -296,12 +379,6 @@ paths:
           schema:
             type: string
           description: Kode Poli
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
       responses:
         '200':
           description: Data pendaftaran berhasil dihapus

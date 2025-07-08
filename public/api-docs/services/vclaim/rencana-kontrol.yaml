@@ -17,6 +17,27 @@ paths:
         - Rencana Kontrol
       summary: Insert Rencana Kontrol New
       description: Insert Rencana Kontrol
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -93,6 +114,27 @@ paths:
         - Rencana Kontrol
       summary: Update Rencana Kontrol New
       description: Update Rencana Kontrol
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -173,6 +215,26 @@ paths:
       summary: Hapus Rencana Kontrol New
       description: Hapus Data Rencana Kontrol
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noSuratKontrol
           in: query
           required: true
@@ -215,6 +277,27 @@ paths:
         - Rencana Kontrol
       summary: Insert SPRI New
       description: Insert SPRI
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -295,6 +378,27 @@ paths:
         - Rencana Kontrol
       summary: Update SPRI New
       description: Update SPRI
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -376,6 +480,26 @@ paths:
       summary: Cari SEP New
       description: Melihat data SEP untuk keperluan rencana kontrol
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noSEP
           in: path
           required: true
@@ -474,6 +598,26 @@ paths:
       summary: Cari Nomor Surat Kontrol New
       description: Melihat data SEP untuk keperluan rencana kontrol
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noSuratKontrol
           in: path
           required: true
@@ -547,6 +691,26 @@ paths:
       summary: Data Nomor Surat Kontrol Berdasarkan No Kartu New
       description: Data Rencana Kontrol By No Kartu
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: bulan
           in: path
           required: true
@@ -662,6 +826,26 @@ paths:
       summary: Data Nomor Surat Kontrol New
       description: Data Rencana Kontrol
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: tglAwal
           in: path
           required: true
@@ -769,6 +953,26 @@ paths:
       summary: Data Poli/Spesialistik New
       description: Data Rencana Kontrol
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: jnsKontrol
           in: path
           required: true
@@ -839,6 +1043,26 @@ paths:
       summary: Data Dokter New
       description: Data Rencana Kontrol
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: jnsKontrol
           in: path
           required: true

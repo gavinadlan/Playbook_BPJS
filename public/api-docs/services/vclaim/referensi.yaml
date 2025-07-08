@@ -15,6 +15,26 @@ paths:
       tags: [Referensi]
       summary: Pencarian data diagnosa (ICD-10)
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: parameter
           in: path
           required: true
@@ -62,6 +82,26 @@ paths:
       tags: [Referensi]
       summary: Pencarian data poli
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: parameter
           in: path
           required: true
@@ -113,6 +153,26 @@ paths:
       tags: [Referensi]
       summary: Pencarian data fasilitas kesehatan
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: parameter1
           in: path
           required: true
@@ -168,6 +228,26 @@ paths:
       tags: [Referensi]
       summary: Pencarian data dokter DPJP untuk pengisian DPJP Layan
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: parameter1
           in: path
           required: true
@@ -228,6 +308,27 @@ paths:
     get:
       tags: [Referensi]
       summary: Pencarian data propinsi
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Sukses
@@ -271,6 +372,26 @@ paths:
       tags: [Referensi]
       summary: Pencarian data kabupaten berdasarkan propinsi
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: parameter1
           in: path
           required: true
@@ -320,6 +441,26 @@ paths:
       tags: [Referensi]
       summary: Pencarian data kecamatan berdasarkan kabupaten
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: parameter1
           in: path
           required: true
@@ -368,6 +509,27 @@ paths:
     get:
       tags: [Referensi]
       summary: Pencarian data diagnosa program PRB
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Sukses
@@ -425,6 +587,26 @@ paths:
       tags: [Referensi]
       summary: Pencarian data obat generik PRB
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: parameter1
           in: path
           required: true
@@ -474,6 +656,26 @@ paths:
       tags: [Referensi]
       summary: Pencarian data procedure/tindakan
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: parameter
           in: path
           required: true
@@ -522,6 +724,27 @@ paths:
     get:
       tags: [Referensi]
       summary: Pencarian data kelas rawat
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Sukses
@@ -571,6 +794,26 @@ paths:
       tags: [Referensi]
       summary: Pencarian data dokter dalam faskes sesuai consid
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: parameter
           in: path
           required: true
@@ -619,6 +862,27 @@ paths:
     get:
       tags: [Referensi]
       summary: Pencarian data spesialistik
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Sukses
@@ -663,6 +927,27 @@ paths:
     get:
       tags: [Referensi]
       summary: Pencarian data ruang rawat
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Sukses
@@ -711,6 +996,27 @@ paths:
     get:
       tags: [Referensi]
       summary: Pencarian data cara keluar
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Sukses
@@ -759,6 +1065,27 @@ paths:
     get:
       tags: [Referensi]
       summary: Pencarian data pasca pulang
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Sukses

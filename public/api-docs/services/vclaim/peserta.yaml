@@ -177,12 +177,27 @@ paths:
       summary: Data Peserta berdasarkan No.Kartu BPJS
       description: Pencarian data peserta BPJS Kesehatan berdasarkan nomor kartu
       operationId: getPesertaByNoKartu
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noKartu
           in: path
           required: true
@@ -261,12 +276,27 @@ paths:
       summary: Data Peserta berdasarkan NIK
       description: Pencarian data peserta berdasarkan NIK Kependudukan
       operationId: getPesertaByNIK
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: nik
           in: path
           required: true

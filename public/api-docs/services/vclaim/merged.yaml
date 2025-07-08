@@ -24,15 +24,15 @@ info:
 
     ## File Structure
     Dokumentasi ini terbagi menjadi beberapa file:
-    - `authentication.yaml`: Header authentication dan signature
-    - `lpk.yaml`: Lembar Pengajuan Klaim
-    - `monitoring.yaml`: Monitoring data klaim dan kunjungan
-    - `peserta.yaml`: Data peserta BPJS Kesehatan
-    - `prb.yaml`: Pembuatan Rujuk Balik
-    - `rencana-kontrol.yaml`: Pembuatan Rencana Kontrol/SPRI
-    - `referensi.yaml`: Data referensi (diagnosa, poli, faskes, dll)
-    - `rujukan.yaml`: Pengelolaan rujukan
-    - `sep.yaml`: Pengelolaan SEP (Surat Eligibilitas Peserta)
+    - `authentication`: Header authentication dan signature
+    - `lpk`: Lembar Pengajuan Klaim
+    - `monitoring`: Monitoring data klaim dan kunjungan
+    - `peserta`: Data peserta BPJS Kesehatan
+    - `prb`: Pembuatan Rujuk Balik
+    - `rencana-kontrol`: Pembuatan Rencana Kontrol/SPRI
+    - `referensi`: Data referensi (diagnosa, poli, faskes, dll)
+    - `rujukan`: Pengelolaan rujukan
+    - `sep`: Pengelolaan SEP (Surat Eligibilitas Peserta)
 servers:
   - url: 'https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev'
     description: Server Development
@@ -53,28 +53,7 @@ tags:
     description: 'Pengelolaan rujukan (pencarian, pembuatan, update, delete)'
   - name: SEP
     description: 'Pengelolaan SEP (Surat Eligibilitas Peserta) - pembuatan, update, hapus, pencarian, approval, finger print, dan random question'
-components:
-  securitySchemes:
-    vclaimAuth:
-      type: apiKey
-      in: header
-      name: X-cons-id
-      description: Consumer ID dari BPJS Kesehatan
-    vclaimTimestamp:
-      type: apiKey
-      in: header
-      name: X-timestamp
-      description: Generated unix-based timestamp
-    vclaimSignature:
-      type: apiKey
-      in: header
-      name: X-signature
-      description: Generated signature dengan pola HMAC-256
-    userKey:
-      type: apiKey
-      in: header
-      name: user_key
-      description: User key untuk akses webservice
+
 paths:
   /vclaim-rest/LPK/insert:
     post:
@@ -83,11 +62,27 @@ paths:
       summary: Insert LPK
       description: Insert Lembar Pengajuan Klaim
       operationId: insertLPK
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -151,11 +146,27 @@ paths:
       summary: Update LPK
       description: Update Lembar Pengajuan Klaim
       operationId: updateLPK
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -511,11 +522,27 @@ paths:
       summary: Delete LPK
       description: Delete Lembar Pengajuan Klaim
       operationId: deleteLPK
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -562,12 +589,27 @@ paths:
       summary: Data Lembar Pengajuan Klaim
       description: Pencarian data LPK berdasarkan tanggal masuk dan jenis pelayanan
       operationId: getLPKData
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: tglMasuk
           in: path
           required: true
@@ -663,12 +705,27 @@ paths:
       summary: Data Peserta berdasarkan No.Kartu BPJS
       description: Pencarian data peserta BPJS Kesehatan berdasarkan nomor kartu
       operationId: getPesertaByNoKartu
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noKartu
           in: path
           required: true
@@ -746,12 +803,27 @@ paths:
       summary: Data Peserta berdasarkan NIK
       description: Pencarian data peserta berdasarkan NIK Kependudukan
       operationId: getPesertaByNIK
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: nik
           in: path
           required: true
@@ -959,12 +1031,27 @@ paths:
       summary: Data Kunjungan
       description: Data Kunjungan berdasarkan tanggal SEP dan jenis pelayanan
       operationId: getMonitoringKunjungan
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: tanggal
           in: path
           required: true
@@ -1076,12 +1163,27 @@ paths:
       summary: Data Klaim
       description: 'Data Klaim berdasarkan tanggal pulang, jenis pelayanan, dan status'
       operationId: getMonitoringKlaim
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: tanggal
           in: path
           required: true
@@ -1260,12 +1362,27 @@ paths:
       summary: Data Histori Pelayanan Peserta
       description: Histori Pelayanan Per Peserta berdasarkan nomor kartu dan rentang tanggal
       operationId: getHistoriPelayanan
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noKartu
           in: path
           required: true
@@ -1390,12 +1507,27 @@ paths:
       summary: Data Klaim Jaminan Jasa Raharja
       description: Monitoring Klaim Jasa Raharja berdasarkan jenis pelayanan dan rentang tanggal
       operationId: getJasaRaharja
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: jnsPelayanan
           in: path
           required: true
@@ -1571,11 +1703,27 @@ paths:
       summary: Insert PRB
       description: Insert Rujuk balik
       operationId: insertPRB
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -1730,11 +1878,27 @@ paths:
       summary: Update PRB
       description: Update PRB
       operationId: updatePRB
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -1948,11 +2112,27 @@ paths:
       summary: Hapus PRB
       description: Hapus Data PRB
       operationId: deletePRB
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -2009,12 +2189,27 @@ paths:
       summary: Pencarian Data PRB berdasarkan Nomor SRB
       description: Pencarian data PRB (Rujuk Balik) Berdasarkan Nomor SRB
       operationId: getPRBByNoSRB
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noSrb
           in: path
           required: true
@@ -2256,12 +2451,27 @@ paths:
       summary: Pencarian Data PRB berdasarkan Tanggal SRB
       description: Pencarian data PRB (Rujuk Balik) Berdasarkan Tanggal SRB
       operationId: getPRBByTanggal
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: tglMulai
           in: path
           required: true
@@ -2338,6 +2548,26 @@ paths:
         - Referensi
       summary: Pencarian data diagnosa (ICD-10)
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: parameter
           in: path
           required: true
@@ -2385,6 +2615,26 @@ paths:
         - Referensi
       summary: Pencarian data poli
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: parameter
           in: path
           required: true
@@ -2436,6 +2686,26 @@ paths:
         - Referensi
       summary: Pencarian data fasilitas kesehatan
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: parameter1
           in: path
           required: true
@@ -2491,6 +2761,26 @@ paths:
         - Referensi
       summary: Pencarian data dokter DPJP untuk pengisian DPJP Layan
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: parameter1
           in: path
           required: true
@@ -2551,6 +2841,27 @@ paths:
       tags:
         - Referensi
       summary: Pencarian data propinsi
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Sukses
@@ -2594,6 +2905,26 @@ paths:
         - Referensi
       summary: Pencarian data kabupaten berdasarkan propinsi
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: parameter1
           in: path
           required: true
@@ -2643,6 +2974,26 @@ paths:
         - Referensi
       summary: Pencarian data kecamatan berdasarkan kabupaten
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: parameter1
           in: path
           required: true
@@ -2691,6 +3042,27 @@ paths:
       tags:
         - Referensi
       summary: Pencarian data diagnosa program PRB
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Sukses
@@ -2748,6 +3120,26 @@ paths:
         - Referensi
       summary: Pencarian data obat generik PRB
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: parameter1
           in: path
           required: true
@@ -2797,6 +3189,26 @@ paths:
         - Referensi
       summary: Pencarian data procedure/tindakan
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: parameter
           in: path
           required: true
@@ -2845,6 +3257,27 @@ paths:
       tags:
         - Referensi
       summary: Pencarian data kelas rawat
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Sukses
@@ -2894,6 +3327,26 @@ paths:
         - Referensi
       summary: Pencarian data dokter dalam faskes sesuai consid
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: parameter
           in: path
           required: true
@@ -2942,6 +3395,27 @@ paths:
       tags:
         - Referensi
       summary: Pencarian data spesialistik
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Sukses
@@ -2986,6 +3460,27 @@ paths:
       tags:
         - Referensi
       summary: Pencarian data ruang rawat
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Sukses
@@ -3034,6 +3529,27 @@ paths:
       tags:
         - Referensi
       summary: Pencarian data cara keluar
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Sukses
@@ -3082,6 +3598,27 @@ paths:
       tags:
         - Referensi
       summary: Pencarian data pasca pulang
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Sukses
@@ -3131,6 +3668,27 @@ paths:
         - Rencana Kontrol
       summary: Insert Rencana Kontrol New
       description: Insert Rencana Kontrol
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -3206,6 +3764,27 @@ paths:
         - Rencana Kontrol
       summary: Update Rencana Kontrol New
       description: Update Rencana Kontrol
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -3285,6 +3864,26 @@ paths:
       summary: Hapus Rencana Kontrol New
       description: Hapus Data Rencana Kontrol
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noSuratKontrol
           in: query
           required: true
@@ -3326,6 +3925,27 @@ paths:
         - Rencana Kontrol
       summary: Insert SPRI New
       description: Insert SPRI
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -3405,6 +4025,27 @@ paths:
         - Rencana Kontrol
       summary: Update SPRI New
       description: Update SPRI
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -3485,6 +4126,26 @@ paths:
       summary: Cari SEP New
       description: Melihat data SEP untuk keperluan rencana kontrol
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noSEP
           in: path
           required: true
@@ -3582,6 +4243,26 @@ paths:
       summary: Cari Nomor Surat Kontrol New
       description: Melihat data SEP untuk keperluan rencana kontrol
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noSuratKontrol
           in: path
           required: true
@@ -3654,6 +4335,26 @@ paths:
       summary: Data Nomor Surat Kontrol Berdasarkan No Kartu New
       description: Data Rencana Kontrol By No Kartu
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: bulan
           in: path
           required: true
@@ -3768,6 +4469,26 @@ paths:
       summary: Data Nomor Surat Kontrol New
       description: Data Rencana Kontrol
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: tglAwal
           in: path
           required: true
@@ -3874,6 +4595,26 @@ paths:
       summary: Data Poli/Spesialistik New
       description: Data Rencana Kontrol
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: jnsKontrol
           in: path
           required: true
@@ -3943,6 +4684,26 @@ paths:
       summary: Data Dokter New
       description: Data Rencana Kontrol
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: jnsKontrol
           in: path
           required: true
@@ -4016,6 +4777,34 @@ paths:
             type: string
           description: Nomor Rujukan
           example: 030107010217Y001465
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+          example: '12345678901234567890123456789012'
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+          example: '20231215100000'
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+          example: sha256=...
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
+          example: '12345678901234567890123456789012'
       responses:
         '200':
           description: Data rujukan berhasil ditemukan
@@ -4198,7 +4987,7 @@ paths:
   '/vclaim-rest/Rujukan/RS/{noRujukan}':
     get:
       tags:
-        - Rujukan
+        - Cari Rujukan
       summary: Rujukan Berdasarkan Nomor Rujukan (Rumah Sakit)
       description: Pencarian data rujukan dari rumah sakit berdasarkan nomor rujukan
       parameters:
@@ -4209,6 +4998,34 @@ paths:
             type: string
           description: Nomor Rujukan
           example: 0304R0050217A000079
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+          example: '12345678901234567890123456789012'
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+          example: '20231215100000'
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+          example: sha256=...
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
+          example: '12345678901234567890123456789012'
       responses:
         '200':
           description: Data rujukan berhasil ditemukan
@@ -4391,7 +5208,7 @@ paths:
   '/vclaim-rest/Rujukan/Peserta/{noKartu}':
     get:
       tags:
-        - Rujukan
+        - Cari Rujukan
       summary: Rujukan Berdasarkan Nomor Kartu (1 Record - PCare)
       description: Pencarian data rujukan dari PCare berdasarkan nomor kartu
       parameters:
@@ -4402,6 +5219,34 @@ paths:
             type: string
           description: Nomor Kartu Peserta
           example: 0000416382632
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+          example: '12345678901234567890123456789012'
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+          example: '20231215100000'
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+          example: sha256=...
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
+          example: '12345678901234567890123456789012'
       responses:
         '200':
           description: Data rujukan berhasil ditemukan
@@ -4584,7 +5429,7 @@ paths:
   '/vclaim-rest/Rujukan/RS/Peserta/{noKartu}':
     get:
       tags:
-        - Rujukan
+        - Cari Rujukan
       summary: Rujukan Berdasarkan Nomor Kartu (1 Record - Rumah Sakit)
       description: Pencarian data rujukan dari rumah sakit berdasarkan nomor kartu
       parameters:
@@ -4595,6 +5440,34 @@ paths:
             type: string
           description: Nomor Kartu Peserta
           example: 0105986780439
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+          example: '12345678901234567890123456789012'
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+          example: '20231215100000'
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+          example: sha256=...
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
+          example: '12345678901234567890123456789012'
       responses:
         '200':
           description: Data rujukan berhasil ditemukan
@@ -4777,7 +5650,7 @@ paths:
   '/vclaim-rest/Rujukan/List/Peserta/{noKartu}':
     get:
       tags:
-        - Rujukan
+        - Cari Rujukan
       summary: Rujukan Berdasarkan Nomor Kartu (Multi Record - PCare)
       description: Pencarian data rujukan dari PCare berdasarkan nomor kartu
       parameters:
@@ -4788,6 +5661,34 @@ paths:
             type: string
           description: Nomor Kartu Peserta
           example: 0000416382632
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+          example: '12345678901234567890123456789012'
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+          example: '20231215100000'
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+          example: sha256=...
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
+          example: '12345678901234567890123456789012'
       responses:
         '200':
           description: Data rujukan berhasil ditemukan
@@ -4972,7 +5873,7 @@ paths:
   '/vclaim-rest/Rujukan/RS/List/Peserta/{noKartu}':
     get:
       tags:
-        - Rujukan
+        - Cari Rujukan
       summary: Rujukan Berdasarkan Nomor Kartu (Multi Record - Rumah Sakit)
       description: Pencarian data rujukan dari rumah sakit berdasarkan nomor kartu
       parameters:
@@ -4983,6 +5884,34 @@ paths:
             type: string
           description: Nomor Kartu Peserta
           example: 0105986780439
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+          example: '12345678901234567890123456789012'
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+          example: '20231215100000'
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+          example: sha256=...
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
+          example: '12345678901234567890123456789012'
       responses:
         '200':
           description: Data rujukan berhasil ditemukan
@@ -6145,6 +7074,27 @@ paths:
         - SEP
       summary: Insert SEP
       description: Insert SEP versi 1.1
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -7398,6 +8348,26 @@ paths:
       summary: Suplesi Jasa Raharja
       description: Pencarian data potensi SEP Sebagai Suplesi Jasa Raharja
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noKartu
           in: path
           required: true
@@ -7463,6 +8433,26 @@ paths:
       summary: Data Induk Kecelakaan New
       description: Pencarian data SEP Induk Kecelakaan Lalu Lintas
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noKartu
           in: path
           required: true
@@ -7642,6 +8632,26 @@ paths:
       summary: List Data Persetujuan SEP New
       description: Get List Data Persetujuan SEP
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: bulan
           in: path
           required: true
@@ -7814,6 +8824,26 @@ paths:
       summary: List Data Update Tanggal Pulang New
       description: Get List Data Update Tanggal Pulang
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: bulan
           in: path
           required: true
@@ -7906,6 +8936,26 @@ paths:
       summary: Integrasi SEP dengan Inacbg
       description: Pencarian No.SEP untuk Aplikasi Inacbg 4.1
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noSep
           in: path
           required: true
@@ -7970,6 +9020,26 @@ paths:
       summary: Data SEP Internal New
       description: Data SEP Internal
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noSep
           in: path
           required: true
@@ -8084,6 +9154,26 @@ paths:
       summary: Hapus SEP Internal New
       description: Hapus SEP Internal
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noSep
           in: query
           required: true
@@ -8147,6 +9237,26 @@ paths:
       summary: Get Finger Print
       description: Pencarian data fingerprint
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noKartu
           in: path
           required: true
@@ -8195,6 +9305,26 @@ paths:
       summary: Get List Finger Print
       description: List Finger Print
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: tglPelayanan
           in: path
           required: true
@@ -8241,6 +9371,26 @@ paths:
       summary: Get Random Question
       description: Menampilkan Random Question
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noKartu
           in: path
           required: true

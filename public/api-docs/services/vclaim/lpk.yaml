@@ -348,11 +348,27 @@ paths:
       summary: Insert LPK
       description: Insert Lembar Pengajuan Klaim
       operationId: insertLPK
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -417,11 +433,27 @@ paths:
       summary: Update LPK
       description: Update Lembar Pengajuan Klaim
       operationId: updateLPK
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -486,11 +518,27 @@ paths:
       summary: Delete LPK
       description: Delete Lembar Pengajuan Klaim
       operationId: deleteLPK
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -538,12 +586,27 @@ paths:
       summary: Data Lembar Pengajuan Klaim
       description: Pencarian data LPK berdasarkan tanggal masuk dan jenis pelayanan
       operationId: getLPKData
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: tglMasuk
           in: path
           required: true

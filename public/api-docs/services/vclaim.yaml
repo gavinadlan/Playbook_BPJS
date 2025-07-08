@@ -56,29 +56,6 @@ tags:
   - name: SEP
     description: Pengelolaan SEP (Surat Eligibilitas Peserta) - pembuatan, update, hapus, pencarian, approval, finger print, dan random question
 
-components:
-  securitySchemes:
-    vclaimAuth:
-      type: apiKey
-      in: header
-      name: X-cons-id
-      description: Consumer ID dari BPJS Kesehatan
-    vclaimTimestamp:
-      type: apiKey
-      in: header
-      name: X-timestamp
-      description: Generated unix-based timestamp
-    vclaimSignature:
-      type: apiKey
-      in: header
-      name: X-signature
-      description: Generated signature dengan pola HMAC-256
-    userKey:
-      type: apiKey
-      in: header
-      name: user_key
-      description: User key untuk akses webservice
-
 paths:
   # LPK
   /vclaim-rest/LPK/insert:

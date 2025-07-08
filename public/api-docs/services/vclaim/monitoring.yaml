@@ -186,12 +186,27 @@ paths:
       summary: Data Kunjungan
       description: Data Kunjungan berdasarkan tanggal SEP dan jenis pelayanan
       operationId: getMonitoringKunjungan
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: tanggal
           in: path
           required: true
@@ -254,12 +269,27 @@ paths:
       summary: Data Klaim
       description: Data Klaim berdasarkan tanggal pulang, jenis pelayanan, dan status
       operationId: getMonitoringKlaim
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: tanggal
           in: path
           required: true
@@ -353,12 +383,27 @@ paths:
       summary: Data Histori Pelayanan Peserta
       description: Histori Pelayanan Per Peserta berdasarkan nomor kartu dan rentang tanggal
       operationId: getHistoriPelayanan
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: noKartu
           in: path
           required: true
@@ -484,12 +529,27 @@ paths:
       summary: Data Klaim Jaminan Jasa Raharja
       description: Monitoring Klaim Jasa Raharja berdasarkan jenis pelayanan dan rentang tanggal
       operationId: getJasaRaharja
-      security:
-        - vclaimAuth: []
-        - vclaimTimestamp: []
-        - vclaimSignature: []
-        - userKey: []
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: jnsPelayanan
           in: path
           required: true

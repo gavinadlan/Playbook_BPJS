@@ -25,6 +25,34 @@ paths:
             type: string
           description: Nomor Rujukan
           example: "030107010217Y001465"
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+          example: "12345678901234567890123456789012"
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+          example: "20231215100000"
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+          example: "sha256=..."
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
+          example: "12345678901234567890123456789012"
       responses:
         '200':
           description: Data rujukan berhasil ditemukan
@@ -218,6 +246,34 @@ paths:
             type: string
           description: Nomor Rujukan
           example: "0304R0050217A000079"
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+          example: "12345678901234567890123456789012"
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+          example: "20231215100000"
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+          example: "sha256=..."
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
+          example: "12345678901234567890123456789012"
       responses:
         '200':
           description: Data rujukan berhasil ditemukan
@@ -412,6 +468,34 @@ paths:
             type: string
           description: Nomor Kartu Peserta
           example: "0000416382632"
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+          example: "12345678901234567890123456789012"
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+          example: "20231215100000"
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+          example: "sha256=..."
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
+          example: "12345678901234567890123456789012"
       responses:
         '200':
           description: Data rujukan berhasil ditemukan
@@ -605,6 +689,34 @@ paths:
             type: string
           description: Nomor Kartu Peserta
           example: "0105986780439"
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+          example: "12345678901234567890123456789012"
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+          example: "20231215100000"
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+          example: "sha256=..."
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
+          example: "12345678901234567890123456789012"
       responses:
         '200':
           description: Data rujukan berhasil ditemukan
@@ -799,6 +911,34 @@ paths:
             type: string
           description: Nomor Kartu Peserta
           example: "0000416382632"
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+          example: "12345678901234567890123456789012"
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+          example: "20231215100000"
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+          example: "sha256=..."
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
+          example: "12345678901234567890123456789012"
       responses:
         '200':
           description: Data rujukan berhasil ditemukan
@@ -994,6 +1134,34 @@ paths:
             type: string
           description: Nomor Kartu Peserta
           example: "0105986780439"
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+          example: "12345678901234567890123456789012"
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+          example: "20231215100000"
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+          example: "sha256=..."
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
+          example: "12345678901234567890123456789012"
       responses:
         '200':
           description: Data rujukan berhasil ditemukan

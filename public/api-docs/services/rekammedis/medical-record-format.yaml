@@ -1,0 +1,550 @@
+openapi: 3.0.0
+info:
+  title: Format Medical Record (MR)
+  version: 1.0.2
+  description: |
+    # Format Medical Record (MR)
+
+    ## Diagram Relasi Data
+    ![Diagram Data](./Diagram-Data.jpg)
+
+    Struktur data rekam medis elektronik (MR) mengikuti standar HL7 FHIR Bundle. Setiap Bundle berisi beberapa resource utama:
+    - Composition
+    - Patient
+    - Encounter
+    - MedicationRequest
+    - Practitioner
+    - Organization
+    - Condition
+    - DiagnosticReport
+    - Procedure
+    - Device
+
+    Relasi antar resource:
+    - MR Bundle memiliki entry berupa resource-resource di atas.
+    - Setiap resource saling terhubung melalui reference (misal: Composition.subject mengacu ke Patient, Composition.encounter ke Encounter, dsb).
+
+paths:
+  /bundle:
+    post:
+      tags:
+        - Medical Record Format
+      summary: Insert MR Bundle
+      parameters:
+        - name: X-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: X-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: X-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bundle'
+      responses:
+        '200':
+          description: Sukses
+  /composition:
+    post:
+      tags:
+        - Medical Record Format
+      summary: Insert Composition
+      parameters:
+        - name: X-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: X-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: X-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Composition'
+      responses:
+        '200':
+          description: Sukses
+  /patient:
+    post:
+      tags:
+        - Medical Record Format
+      summary: Insert Patient
+      parameters:
+        - name: X-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: X-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: X-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patient'
+      responses:
+        '200':
+          description: Sukses
+  /encounter:
+    post:
+      tags:
+        - Medical Record Format
+      summary: Insert Encounter
+      parameters:
+        - name: X-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: X-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: X-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Encounter'
+      responses:
+        '200':
+          description: Sukses
+  /medicationrequest:
+    post:
+      tags:
+        - Medical Record Format
+      summary: Insert MedicationRequest
+      parameters:
+        - name: X-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: X-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: X-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MedicationRequest'
+      responses:
+        '200':
+          description: Sukses
+  /practitioner:
+    post:
+      tags:
+        - Medical Record Format
+      summary: Insert Practitioner
+      parameters:
+        - name: X-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: X-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: X-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Practitioner'
+      responses:
+        '200':
+          description: Sukses
+  /organization:
+    post:
+      tags:
+        - Medical Record Format
+      summary: Insert Organization
+      parameters:
+        - name: X-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: X-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: X-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organization'
+      responses:
+        '200':
+          description: Sukses
+  /condition:
+    post:
+      tags:
+        - Medical Record Format
+      summary: Insert Condition
+      parameters:
+        - name: X-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: X-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: X-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Condition'
+      responses:
+        '200':
+          description: Sukses
+  /diagnosticreport:
+    post:
+      tags:
+        - Medical Record Format
+      summary: Insert DiagnosticReport
+      parameters:
+        - name: X-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: X-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: X-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiagnosticReport'
+      responses:
+        '200':
+          description: Sukses
+  /procedure:
+    post:
+      tags:
+        - Medical Record Format
+      summary: Insert Procedure
+      parameters:
+        - name: X-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: X-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: X-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Procedure'
+      responses:
+        '200':
+          description: Sukses
+  /device:
+    post:
+      tags:
+        - Medical Record Format
+      summary: Insert Device
+      parameters:
+        - name: X-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: X-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: X-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Device'
+      responses:
+        '200':
+          description: Sukses
+components:
+  schemas:
+    Bundle:
+      type: object
+      properties:
+        resourceType:
+          type: string
+          example: Bundle
+    Composition:
+      type: object
+      properties:
+        resourceType:
+          type: string
+          example: Composition
+    Patient:
+      type: object
+      properties:
+        resourceType:
+          type: string
+          example: Patient
+    Encounter:
+      type: object
+      properties:
+        resourceType:
+          type: string
+          example: Encounter
+    MedicationRequest:
+      type: object
+      properties:
+        resourceType:
+          type: string
+          example: MedicationRequest
+    Practitioner:
+      type: object
+      properties:
+        resourceType:
+          type: string
+          example: Practitioner
+    Organization:
+      type: object
+      properties:
+        resourceType:
+          type: string
+          example: Organization
+    Condition:
+      type: object
+      properties:
+        resourceType:
+          type: string
+          example: Condition
+    DiagnosticReport:
+      type: object
+      properties:
+        resourceType:
+          type: string
+          example: DiagnosticReport
+    Procedure:
+      type: object
+      properties:
+        resourceType:
+          type: string
+          example: Procedure
+    Device:
+      type: object
+      properties:
+        resourceType:
+          type: string
+          example: Device
+  securitySchemes:
+    rekamMedisAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    rekamMedisTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    rekamMedisSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    rekamMedisUserKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
+security:
+  - rekamMedisAuth: []
+  - rekamMedisTimestamp: []
+  - rekamMedisSignature: []
+  - rekamMedisUserKey: []

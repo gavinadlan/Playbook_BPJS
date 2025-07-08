@@ -1,0 +1,355 @@
+openapi: 3.0.0
+info:
+  title: Rekam Medis API - Help & Authentication Guide
+  version: 1.0.0
+  description: |
+    # Help
+    ## Overview
+
+    Secara umum, hampir setiap pemanggilan web-service, harus dicantumkan beberapa variabel yang dibutuhkan untuk menambahkan informasi ataupun untuk proses validasi yang dikirim pada HTTP Header, antara lain:
+
+    | No | Nama Header   | Nilai                                   | Keterangan                              |
+    |----|---------------|-----------------------------------------|-----------------------------------------|
+    | 1  | X-cons-id     | 743627386                               | consumer ID dari BPJS Kesehatan         |
+    | 2  | X-timestamp   | 234234234                               | generated unix-based timestamp          |
+    | 3  | X-signature   | DogC5UiQurNcigrBdQ3QN5oYvXeUF5E82I/LHUcI9v0= | generated signature dengan pola HMAC-256 |
+
+    1. **X-cons-id**: Merupakan kode consumer (pengakses web-service). Kode ini akan diberikan oleh BPJS Kesehatan.
+    2. **X-timestamp**: Merupakan waktu yang akan di-generate oleh client saat ingin memanggil setiap service. Format waktu ini ditulis dengan format unix-based-time (berisi angka, tidak dalam format tanggal sebagaimana mestinya). Format waktu menggunakan Coordinated Universal Time (UTC), dalam penggunaannya untuk mendapatkan timestamp, rumus yang digunakan adalah (local time in UTC timezone in seconds) - (1970-01-01 in seconds).
+    3. **X-signature**: Merupakan hasil dari pembuatan signature yang dibuat oleh client. Signature yang digunakan menggunakan pola HMAC-SHA256.
+
+    Untuk dapat mengakses web-service dari BPJS Kesehatan (service provider), pemanggil web service (service consumer) akan mendapatkan:
+    - Consumer ID
+    - Consumer Secret
+
+    Informasi Consumer Secret, hanya disimpan oleh service consumer. Tidak dikirim ke server web-service, hal ini untuk menjaga pengamanan yang lebih baik. Sedangkan kebutuhan Consumer Secret ini adalah untuk men-generate Signature (X-signature).
+
+    ### Contoh Perhitungan Signature
+
+        consumerID : 1234
+        consumerSecret : pwd
+        timestamp : 433223232
+        variabel1 : consumerID&timestamp
+        variabel1 : 1234&433223232
+        SIGNATURE
+
+    Metode signature yang digunakan adalah menggunakan HMAC-SHA256, dimana paramater saat generate signature dibutuhkan parameter message dan key.
+    Berikut contoh hasil generate HMAC-SHA256:
+
+        message : aaa
+        key : bbb
+        hasil generate HMAC-SHA256 : 20BKS3PWnD3XU4JbSSZvVlGi2WWnDa8Sv9uHJ+wsELA=
+
+    Signature : HMAC-256(value : key)
+    value : variabel1
+    key : consumerSecret
+    Signature : HMAC-256(variabel1 : consumerSecret)
+
+    ---
+    ## Contoh Pembuatan Signature
+
+    **Java**
+
+        import java.io.ByteArrayOutputStream;
+        import java.io.IOException;
+        import java.io.UnsupportedEncodingException;
+        import java.net.URLEncoder;
+        import java.security.GeneralSecurityException;
+        import javax.crypto.Mac;
+        import javax.crypto.spec.SecretKeySpec;
+        import org.springframework.security.crypto.codec.Base64;
+
+        public class BpjsApi {
+            public static void main(String[] args) throws GeneralSecurityException, IOException {
+                String secretKey = "secretKey";
+                String salt = "0123456789";
+                String generateHmacSHA256Signature = generateHmacSHA256Signature(salt, secretKey);
+                System.out.println("Signature: " + generateHmacSHA256Signature);
+                String urlEncodedSign = URLEncoder.encode(generateHmacSHA256Signature, "UTF-8");
+                System.out.println("Url encoded value: " + urlEncodedSign);
+            }
+            public static String generateHmacSHA256Signature(String data, String key) throws GeneralSecurityException {
+                byte[] hmacData = null;
+                try {
+                    SecretKeySpec secretKey = new SecretKeySpec(key.getBytes("UTF-8"), "HmacSHA256");
+                    Mac mac = Mac.getInstance("HmacSHA256");
+                    mac.init(secretKey);
+                    hmacData = mac.doFinal(data.getBytes("UTF-8"));
+                    return new Base64Encoder().encode(hmacData);
+                } catch (UnsupportedEncodingException e) {
+                    throw new GeneralSecurityException(e);
+                }
+            }
+        }
+
+    **PHP**
+
+        <?php 
+            $data = "testtesttest";
+            $secretKey = "secretkey";
+            date_default_timezone_set('UTC');
+            $tStamp = strval(time()-strtotime('1970-01-01 00:00:00'));
+            $signature = hash_hmac('sha256', $data."&".$tStamp, $secretKey, true);
+            $encodedSignature = base64_encode($signature);
+            // $encodedSignature = urlencode($encodedSignature);
+            echo "X-cons-id: " .$data ." ";
+            echo "X-timestamp:" .$tStamp ." ";
+            echo "X-signature: " .$encodedSignature;
+        ?>
+
+    **C#**
+
+        using System;
+        using System.Security.Cryptography;
+        using System.Text;
+
+        namespace BpjsIntegration {
+            class Program {
+                static void Main() {
+                    var data = "testtesttest";
+                    var secretKey = "secretkey";
+                    HMACSHA256 hashObject = new HMACSHA256(Encoding.UTF8.GetBytes(secretKey));
+                    var signature = hashObject.ComputeHash(Encoding.UTF8.GetBytes(data));
+                    var encodedSignature = Convert.ToBase64String(signature);
+                    // encodedSignature = System.Web.HttpUtility.UrlEncode(encodedSignature);
+                    Console.WriteLine("Voila! A signature: " + encodedSignature);
+                    Console.ReadKey();
+                }
+            }
+        }
+
+    **VB.Net**
+
+        Imports System.Security.Cryptography
+        Imports System.Text
+        Namespace BpjsIntegration
+            Class Program
+                Private Shared Sub Main()
+                    Dim data = "testtesttest"
+                    Dim secretKey = "secretkey"
+                    Dim hashObject As New HMACSHA256(Encoding.UTF8.GetBytes(secretKey))
+                    Dim signature = hashObject.ComputeHash(Encoding.UTF8.GetBytes(data))
+                    Dim encodedSignature = Convert.ToBase64String(signature)
+                    ' encodedSignature = System.Web.HttpUtility.UrlEncode(encodedSignature)
+                    Console.WriteLine("Voila! A signature: " & encodedSignature)
+                    Console.ReadKey()
+                End Sub
+            End Class
+        End Namespace
+
+    **Ruby**
+
+        require 'openssl'
+        require 'base64'
+        require 'URI'
+        data = "testtesttest"
+        secret_key = "secretkey"
+        def urlncode(string)
+            URI.escape(string, Regexp.new("[Generating an API Signature^#{URI::PATTERN::UNRESERVED}]"))
+        end
+        hash = OpenSSL::HMAC.digest('sha256', secret_key, data)
+        # signature = urlncode(Base64.encode64(hash));
+
+    **Python**
+
+        import hashlib
+        import base64
+        import hmac
+        data = "testtesttest"
+        secretkey = "secretkey"
+        signature = hmac.new(secretkey.encode(), msg=data.encode(), digestmod=hashlib.sha256).digest()
+        encodedSignature = base64.b64encode(signature).decode()
+        # encodedSignature = urllib.parse.quote(encodedSignature)
+        print("Voila! A signature: " + encodedSignature)
+
+    **Cocoa (iOS & Mac)**
+
+        -(NSUInteger)GenerateSalt {
+            NSUInteger r = arc4random() % 100000;
+            return r;
+        }
+        -(NSString *)GenerateSignatureUsingSalt:(NSUInteger)salt {
+            NSString *key = SECRET_KEY;
+            NSString *data = [NSString stringWithFormat:@"%u", salt];
+            const char *cKey  = [key cStringUsingEncoding:NSUTF8StringEncoding];
+            const char *cData = [data cStringUsingEncoding:NSUTF8StringEncoding];
+            unsigned char cHMAC[CC_SHA256_DIGEST_LENGTH];
+            CCHmac(kCCHmacAlgSHA256, cKey, strlen(cKey), cData, strlen(cData), cHMAC);
+            NSData *HMAC = [[NSData alloc] initWithBytes:cHMAC length:sizeof(cHMAC)];
+            NSString *hash = [HMAC base64Encoding];
+            return hash;
+        }
+
+    ---
+    ## Contoh Pembuatan Kompresi GZip
+
+    **Java**
+
+        import java.io.ByteArrayOutputStream;
+        import java.io.IOException;
+        import java.util.zip.GZIPOutputStream;
+        public class Main {
+            public static String compress(String str) throws IOException {
+                if (str == null || str.length() == 0) {
+                    return str;
+                }
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                GZIPOutputStream gzip = new GZIPOutputStream(out);
+                gzip.write(str.getBytes());
+                gzip.close();
+                return out.toString("ISO-8859-1");
+            }
+        }
+
+    **PHP**
+
+        <?php 
+            $compressed = gzcompress('Compress me', 9);
+            echo $compressed;
+        ?>
+
+    **C#**
+
+        using System;
+        using System.IO;
+        using System.IO.Compression;
+        using System.Text;
+        string inputStr = "Hello world!";
+        byte[] inputBytes = Encoding.UTF8.GetBytes(inputStr);
+        using (var outputStream = new MemoryStream()) {
+            using (var gZipStream = new GZipStream(outputStream, CompressionMode.Compress))
+                gZipStream.Write(inputBytes, 0, inputBytes.Length);
+            var outputBytes = outputStream.ToArray();
+            var outputbase64 = Convert.ToBase64String(outputBytes);
+            Console.WriteLine(outputbase64);
+            Console.ReadLine();
+        }
+
+    **VB.Net**
+
+        Public Function CompressGZip(input As String, Optional encoding As Encoding = Nothing) As Byte()
+            encoding = If(encoding, Encoding.Unicode)
+            Dim bytes As Byte() = encoding.GetBytes(input)
+            Using stream As New MemoryStream()
+                Using zipStream As New GZipStream(stream, CompressionMode.Compress)
+                    zipStream.Write(bytes, 0, bytes.Length)
+                    Return stream.ToArray()
+                End Using
+            End Using
+        End Function
+
+    **Python**
+
+        import gzip
+        s_in = b"Lots of content here"
+        s_out = gzip.compress(s_in)
+
+    ---
+    ## Contoh Pembuatan Enkripsi AES
+
+    **Java**
+
+        public string Encrypt(string consid, string conspwd, string kodefaskes, string data) {
+            String key = consid + secretkey + kodefaskes;
+            String encData = null;
+            byte[][] keys = GetHashKeys(key);
+            try {
+                encData = EncryptStringToBytes_Aes(data, keys[0], keys[1]);
+            } catch (CryptographicException) { }
+            catch (ArgumentNullException) { }
+            return encData;
+        }
+
+    **PHP**
+
+        <?php
+        $encrypt_method = 'AES-256-CBC';
+        $encrypt_key = 'considsecretkeykodefaskes'; // gabungan consid + secretkey + kodefaskes
+        $key_hash = hex2bin(hash('sha256', $encrypt_key));
+        $iv = substr(hex2bin(hash('sha256', $encrypt_key)), 0, 16);
+        $data = "Sample Text";
+        $encrypted_data = openssl_encrypt($data, $encrypt_method, $key_hash, 0, $iv);
+        echo "Encrypted Text: " . $encrypted_data;
+        ?>
+
+    **C#**
+
+        public string Encrypt(string consid, string conspwd, string kodefaskes, string data) {
+            string key = consid + secretkey + kodefaskes;
+            string encData = null;
+            byte[][] keys = GetHashKeys(key);
+            try {
+                encData = EncryptStringToBytes_Aes(data, keys[0], keys[1]);
+            } catch (CryptographicException) { }
+            catch (ArgumentNullException) { }
+            return encData;
+        }
+
+    **VB.Net**
+
+        Public Function Encrypt(consid As String, conspwd As String, kodefaskes As String, data As String) As String
+            Dim key As String = consid & secretkey & kodefaskes
+            Dim encData As String = Nothing
+            Dim keys As Byte()() = GetHashKeys(key)
+            Try
+                encData = EncryptStringToBytes_Aes(data, keys(0), keys(1))
+            Catch ex As CryptographicException
+            Catch ex As ArgumentNullException
+            End Try
+            Return encData
+        End Function
+
+    **Python**
+
+        import hashlib
+        from Crypto.Cipher import AES
+        from Crypto.Util.Padding import pad
+        import base64
+        text = "Sample Text"
+        key = "considsecretkeykodefaskes" # consid + secretkey + kodefaskes
+        mode = AES.MODE_CBC
+        key_hash = hashlib.sha256(key.encode('utf-8')).digest()
+        encryptor = AES.new(key_hash[0:32], mode, IV=key_hash[0:16])
+        ciphertext = encryptor.encrypt(pad(text.encode("utf-8"), AES.block_size))
+        print(base64.b64encode(ciphertext).decode('utf-8'))
+
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/ihs_dev
+    description: Rekam Medis Development Server
+
+components:
+  securitySchemes:
+    rekamMedisAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    rekamMedisTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    rekamMedisSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+
+paths:
+  /help:
+    get:
+      summary: Help Documentation
+      description: Dokumentasi teknis dan panduan penggunaan header, signature, kompresi, dan enkripsi untuk Rekam Medis API.
+      tags:
+        - Help
+      responses:
+        '200':
+          description: Help documentation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Help documentation"

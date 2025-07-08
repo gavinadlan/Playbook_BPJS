@@ -235,7 +235,7 @@ paths:
 
   /vclaim-rest/Rujukan/RS/{noRujukan}:
     get:
-      tags: [Cari Rujukan]
+      tags: [Rujukan]
       summary: Rujukan Berdasarkan Nomor Rujukan (Rumah Sakit)
       description: Pencarian data rujukan dari rumah sakit berdasarkan nomor rujukan
       parameters:
@@ -457,7 +457,7 @@ paths:
   # Endpoint pencarian rujukan berdasarkan nomor kartu
   /vclaim-rest/Rujukan/Peserta/{noKartu}:
     get:
-      tags: [Cari Rujukan]
+      tags: [Rujukan]
       summary: Rujukan Berdasarkan Nomor Kartu (1 Record - PCare)
       description: Pencarian data rujukan dari PCare berdasarkan nomor kartu
       parameters:
@@ -678,7 +678,7 @@ paths:
 
   /vclaim-rest/Rujukan/RS/Peserta/{noKartu}:
     get:
-      tags: [Cari Rujukan]
+      tags: [Rujukan]
       summary: Rujukan Berdasarkan Nomor Kartu (1 Record - Rumah Sakit)
       description: Pencarian data rujukan dari rumah sakit berdasarkan nomor kartu
       parameters:
@@ -900,7 +900,7 @@ paths:
   # Endpoint pencarian rujukan multi record
   /vclaim-rest/Rujukan/List/Peserta/{noKartu}:
     get:
-      tags: [Cari Rujukan]
+      tags: [Rujukan]
       summary: Rujukan Berdasarkan Nomor Kartu (Multi Record - PCare)
       description: Pencarian data rujukan dari PCare berdasarkan nomor kartu
       parameters:
@@ -1123,7 +1123,7 @@ paths:
 
   /vclaim-rest/Rujukan/RS/List/Peserta/{noKartu}:
     get:
-      tags: [Cari Rujukan]
+      tags: [Rujukan]
       summary: Rujukan Berdasarkan Nomor Kartu (Multi Record - Rumah Sakit)
       description: Pencarian data rujukan dari rumah sakit berdasarkan nomor kartu
       parameters:

@@ -24,6 +24,26 @@ paths:
       description: Endpoint untuk validasi dan mendapatkan data riwayat pelayanan FKRTL.
       operationId: validateFKRTL
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: serviceName
           in: path
           required: true
@@ -65,6 +85,31 @@ paths:
       description: Endpoint untuk validasi dan mendapatkan data riwayat pelayanan FKTP.
       operationId: validateFKTP
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
         - name: serviceName
           in: path
           required: true

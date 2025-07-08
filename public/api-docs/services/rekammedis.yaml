@@ -1,0 +1,46 @@
+openapi: 3.0.0
+info:
+  title: Medical Record API
+  version: 1.0.0
+  description: |
+    API untuk pengelolaan dan integrasi Rekam Medis Elektronik (RME) BPJS Kesehatan, termasuk insert rekam medis dan resource FHIR (Bundle, Patient, Encounter, dsb). Dokumentasi ini juga mencakup panduan header autentikasi, signature, kompresi, dan enkripsi data.
+
+    Untuk detail teknis dan contoh kode lengkap, silakan lihat file help.yaml.
+tags:
+  - name: Rekam Medis
+    description: Semua endpoint terkait rekam medis elektronik BPJS Kesehatan
+  - name: Medical Record Format
+    description: Endpoint FHIR resource (Bundle, Patient, dsb)
+
+servers:
+  - url: https://apijkn-dev.bpjs-kesehatan.go.id/erekammedis_dev
+    description: Server Development
+
+paths:
+  # ============================== INSERT REKAM MEDIS ==============================
+  /rekam-medis/insert:
+    $ref: 'rekammedis/insert-rekam-medis.yaml#/paths/~1rekam-medis~1insert'
+
+  # ============================== FORMAT MEDICAL RECORD ==============================
+  /bundle:
+    $ref: 'rekammedis/medical-record-format.yaml#/paths/~1bundle'
+  /composition:
+    $ref: 'rekammedis/medical-record-format.yaml#/paths/~1composition'
+  /patient:
+    $ref: 'rekammedis/medical-record-format.yaml#/paths/~1patient'
+  /encounter:
+    $ref: 'rekammedis/medical-record-format.yaml#/paths/~1encounter'
+  /medicationrequest:
+    $ref: 'rekammedis/medical-record-format.yaml#/paths/~1medicationrequest'
+  /practitioner:
+    $ref: 'rekammedis/medical-record-format.yaml#/paths/~1practitioner'
+  /organization:
+    $ref: 'rekammedis/medical-record-format.yaml#/paths/~1organization'
+  /condition:
+    $ref: 'rekammedis/medical-record-format.yaml#/paths/~1condition'
+  /diagnosticreport:
+    $ref: 'rekammedis/medical-record-format.yaml#/paths/~1diagnosticreport'
+  /procedure:
+    $ref: 'rekammedis/medical-record-format.yaml#/paths/~1procedure'
+  /device:
+    $ref: 'rekammedis/medical-record-format.yaml#/paths/~1device'

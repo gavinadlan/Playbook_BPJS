@@ -28,17 +28,7 @@ info:
     - Key: SHA256 hash dari (consId + consSecret + timestamp)
     - IV: 16 byte pertama dari SHA256 hash
     - Decompression: LZString (decompressFromEncodedURIComponent)
-    
-    ## File Structure
-    Dokumentasi ini terbagi menjadi beberapa file:
-    - `create-signature.yaml`: Header authentication dan signature generation
-    - `decrypt.yaml`: Panduan decrypt response
-    - `peserta.yaml`: Data peserta PCare
-    - `kunjungan.yaml`: Data kunjungan peserta
-    - `obat.yaml`: Data obat dan resep
-    - `tindakan.yaml`: Data tindakan medis
-    - `referensi.yaml`: Data referensi (poli, dokter, dll)
-
+  
 servers:
   - url: https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev
     description: Server Development
@@ -76,34 +66,6 @@ tags:
     description: Data referensi alergi
   - name: Prognosa
     description: Data referensi prognosa
-
-components:
-  securitySchemes:
-    pcareAuth:
-      type: apiKey
-      in: header
-      name: X-cons-id
-      description: Consumer ID dari BPJS Kesehatan
-    pcareTimestamp:
-      type: apiKey
-      in: header
-      name: X-timestamp
-      description: Generated unix-based timestamp
-    pcareSignature:
-      type: apiKey
-      in: header
-      name: X-signature
-      description: Generated signature dengan pola HMAC-256
-    pcareAuthorization:
-      type: apiKey
-      in: header
-      name: X-authorization
-      description: Generated signature dengan pola Base64
-    userKey:
-      type: apiKey
-      in: header
-      name: user_key
-      description: User key untuk akses webservice
 
 paths:
   # Create Signature

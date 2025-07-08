@@ -1,45 +1,66 @@
 openapi: 3.0.0
+
 info:
-  title: API BPJS Kesehatan
+  title: BPJS Kesehatan API - Complete Documentation
   version: 1.0.0
-  description: Dokumentasi Resmi Web Service BPJS Kesehatan
+  description: |
+    Dokumentasi lengkap semua layanan API BPJS Kesehatan
+    
+    AUTHENTICATION
+    ===============
+    Semua endpoint memerlukan header authentication:
+    - X-cons-id: Consumer ID dari BPJS Kesehatan
+    - X-timestamp: Generated unix-based timestamp
+    - X-signature: Generated signature dengan pola HMAC-256
+    - user_key: User key untuk akses webservice
+    
+    SIGNATURE GENERATION
+    ====================
+    signature = HMAC-SHA256(consId + "&" + timestamp, secretKey)
+    
+    DECRYPTION
+    ===========
+    Response yang dienkripsi menggunakan AES-256-CBC dengan:
+    - Key: 16 karakter pertama dari secretKey
+    - IV: 16 karakter terakhir dari secretKey
+    
+    AVAILABLE SERVICES
+    ==================
+    - Aplicares: Layanan untuk manajemen aplikasi
+    - VClaim: Layanan untuk klaim asuransi
+    - AntreanRS: Layanan antrean rumah sakit
+    - Apotek: Layanan apotek
+    - PCare: Layanan PCare
+    - AntreanFKTP: Layanan antrean FKTP
+    - i-Care: Layanan i-Care JKN
+    - RekamMedis: Layanan eRekam Medis
+    
+    BASE URL WEB SERVICE DEVELOPMENT
+    ===============================
+    
+    VClaim:
+    https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev
+    
+    Antrean RS:
+    https://apijkn-dev.bpjs-kesehatan.go.id/antreanrs_dev
+    
+    Antrean FKTP:
+    https://apijkn-dev.bpjs-kesehatan.go.id/antreanfktp_dev
+    
+    Apotek:
+    https://apijkn-dev.bpjs-kesehatan.go.id/apotek-rest-dev
+    
+    Pcare:
+    https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev
+    
+    iCare JKN:
+    https://apijkn-dev.bpjs-kesehatan.go.id/ihs_dev
+    
+    eRekamMedis:
+    https://apijkn-dev.bpjs-kesehatan.go.id/erekammedis_dev
 
 servers:
   - url: https://apijkn-dev.bpjs-kesehatan.go.id
     description: Server Development
 
-tags:
-  - name: Aplicares
-    description: Layanan Aplicares
-  - name: VClaim
-    description: Layanan VClaim
-  - name: AntreanRS
-    description: Layanan Antrean Rumah Sakit
-  - name: Apotek
-    description: Layanan Apotek
-  - name: PCare
-    description: Layanan PCare
-  - name: AntreanFKTP
-    description: Layanan Antrean FKTP
-  - name: i-Care
-    description: Layanan i-Care JKN
-  - name: RekamMedis
-    description: Layanan eRekam Medis
 
-paths:
-  # Menggabungkan semua paths dari berbagai service
-  <<:
-    - $ref: "./services/aplicares.yaml#/paths"
-    - $ref: "./services/vclaim.yaml#/paths"
-    - $ref: "./services/antreanrs.yaml#/paths"
-    - $ref: "./services/apotek.yaml#/paths"
-    - $ref: "./services/pcare.yaml#/paths"
-    - $ref: "./services/antreanfktp.yaml#/paths"
-    - $ref: "./services/icare.yaml#/paths"
-    - $ref: "./services/rekammedis.yaml#/paths"
-
-components:
-  schemas:
-    $ref: "./components/schemas.yaml#/components/schemas"
-  parameters:
-    $ref: "./components/parameters.yaml#/parameters"

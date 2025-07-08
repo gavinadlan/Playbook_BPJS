@@ -76,9 +76,9 @@ const apiServices: ApiService[] = [
   },
   {
     name: 'RekamMedis',
-    file: '/api-docs/services/rekammedis.yaml',
+    file: '/api-docs/services/rekammedis/merged.yaml',
     description: 'Layanan eRekam Medis',
-    status: 'inactive'
+    status: 'active'
   }
 ];
 

@@ -24,15 +24,15 @@ info:
     
     ## File Structure
     Dokumentasi ini terbagi menjadi beberapa file:
-    - `authentication.yaml`: Header authentication dan signature
-    - `lpk.yaml`: Lembar Pengajuan Klaim
-    - `monitoring.yaml`: Monitoring data klaim dan kunjungan
-    - `peserta.yaml`: Data peserta BPJS Kesehatan
-    - `prb.yaml`: Pembuatan Rujuk Balik
-    - `rencana-kontrol.yaml`: Pembuatan Rencana Kontrol/SPRI
-    - `referensi.yaml`: Data referensi (diagnosa, poli, faskes, dll)
-    - `rujukan.yaml`: Pengelolaan rujukan
-    - `sep.yaml`: Pengelolaan SEP (Surat Eligibilitas Peserta)
+    - `authentication`: Header authentication dan signature
+    - `lpk`: Lembar Pengajuan Klaim
+    - `monitoring`: Monitoring data klaim dan kunjungan
+    - `peserta`: Data peserta BPJS Kesehatan
+    - `prb`: Pembuatan Rujuk Balik
+    - `rencana-kontrol`: Pembuatan Rencana Kontrol/SPRI
+    - `referensi`: Data referensi (diagnosa, poli, faskes, dll)
+    - `rujukan`: Pengelolaan rujukan
+    - `sep`: Pengelolaan SEP (Surat Eligibilitas Peserta)
 
 servers:
   - url: https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev

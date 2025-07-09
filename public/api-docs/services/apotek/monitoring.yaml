@@ -63,6 +63,36 @@ paths:
           description: |
             1. Belum diverifikasi
             2. Sudah Verifikasi
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola Base64
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
       responses:
         '200':
           description: Berhasil mendapatkan data klaim
@@ -111,6 +141,32 @@ paths:
           description: Internal Server Error
 
 components:
+  securitySchemes:
+    apotekAuth:
+      type: apiKey
+      in: header
+      name: X-cons-id
+      description: Consumer ID dari BPJS Kesehatan
+    apotekTimestamp:
+      type: apiKey
+      in: header
+      name: X-timestamp
+      description: Generated unix-based timestamp
+    apotekSignature:
+      type: apiKey
+      in: header
+      name: X-signature
+      description: Generated signature dengan pola HMAC-256
+    apotekAuthorization:
+      type: apiKey
+      in: header
+      name: X-authorization
+      description: Generated signature dengan pola Base64
+    userKey:
+      type: apiKey
+      in: header
+      name: user_key
+      description: User key untuk akses webservice
   schemas:
     # Response untuk data klaim
     KlaimResponse:

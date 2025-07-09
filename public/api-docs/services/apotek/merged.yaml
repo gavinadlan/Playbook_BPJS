@@ -22,6 +22,36 @@ paths:
           schema:
             type: string
           description: Nama service
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola Base64
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
       responses:
         '200':
           description: OK
@@ -110,6 +140,36 @@ paths:
           schema:
             type: string
           description: Kode atau Nama Poli
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola Base64
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
       responses:
         '200':
           description: OK
@@ -173,6 +233,36 @@ paths:
           schema:
             type: string
           description: Nama fasilitas kesehatan
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola Base64
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
       responses:
         '200':
           description: OK
@@ -227,6 +317,36 @@ paths:
           schema:
             type: string
           description: Kode Apotek
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola Base64
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
       responses:
         '200':
           description: OK
@@ -311,6 +431,36 @@ paths:
           schema:
             type: string
           description: Nama service
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola Base64
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
       responses:
         '200':
           description: OK
@@ -378,6 +528,36 @@ paths:
           schema:
             type: string
           description: Filter Pencarian
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola Base64
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
       responses:
         '200':
           description: OK
@@ -431,6 +611,36 @@ paths:
           schema:
             type: string
           description: Nama service
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola Base64
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
       requestBody:
         required: true
         content:
@@ -530,6 +740,36 @@ paths:
           schema:
             type: string
           description: Nama service
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola Base64
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
       requestBody:
         required: true
         content:
@@ -675,6 +915,36 @@ paths:
               - 'N'
               - R
           example: 'N'
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola Base64
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
       responses:
         '200':
           description: Berhasil menghapus obat
@@ -719,6 +989,36 @@ paths:
           schema:
             type: string
           description: Nomor Kunjungan/SEP
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola Base64
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
       responses:
         '200':
           description: Berhasil mendapatkan data obat
@@ -831,6 +1131,36 @@ paths:
           schema:
             type: string
           description: Nomor kartu peserta
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola Base64
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
       responses:
         '200':
           description: Berhasil mendapatkan riwayat obat
@@ -899,6 +1229,36 @@ paths:
           schema:
             type: string
           description: Nama service
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola Base64
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
       requestBody:
         required: true
         content:
@@ -1062,6 +1422,36 @@ paths:
           schema:
             type: string
           example: 0SI44
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola Base64
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
       responses:
         '200':
           description: Berhasil menghapus resep
@@ -1098,6 +1488,36 @@ paths:
           schema:
             type: string
           description: Nama service
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola Base64
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
       requestBody:
         required: true
         content:
@@ -1230,6 +1650,36 @@ paths:
             type: string
             pattern: '^\d{19}$'
           description: Nomor Kunjungan/SEP (19 digit)
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola Base64
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
       responses:
         '200':
           description: Berhasil mendapatkan data SEP
@@ -1408,6 +1858,36 @@ paths:
           description: |
             1. Belum diverifikasi
             2. Sudah Verifikasi
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Consumer ID dari BPJS Kesehatan
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated unix-based timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola HMAC-256
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Generated signature dengan pola Base64
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User key untuk akses webservice
       responses:
         '200':
           description: Berhasil mendapatkan data klaim

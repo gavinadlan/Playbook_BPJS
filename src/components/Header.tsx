@@ -164,23 +164,6 @@ const Header = () => {
                   </DropdownMenuItem>
 
                   <DropdownMenuItem
-                    onClick={() => router.push("/docs")}
-                    className="cursor-pointer px-4 py-3 flex items-center gap-3 text-gray-700 hover:bg-purple-50 transition-colors duration-200 focus:bg-purple-50"
-                  >
-                    <div className="p-2 bg-purple-100 rounded-lg">
-                      <FileCode2 className="h-5 w-5 text-purple-600" />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-sm font-medium">
-                        Dokumentasi API
-                      </span>
-                      <span className="text-xs text-gray-500">
-                        Panduan integrasi sistem
-                      </span>
-                    </div>
-                  </DropdownMenuItem>
-
-                  <DropdownMenuItem
                     onClick={() => router.push("/test-api")}
                     className="cursor-pointer px-4 py-3 flex items-center gap-3 text-gray-700 hover:bg-orange-50 transition-colors duration-200 focus:bg-orange-50"
                   >

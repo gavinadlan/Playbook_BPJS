@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import "@/app/globals.css";
 import { Inter } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
@@ -5,6 +6,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { AuthProvider } from "@/context/AuthContext";
 import ClientLayoutWrapper from "@/components/ClientLayoutWrapper";
+import GlobalLoader from "@/components/GlobalLoader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <GlobalLoader />
         <AuthProvider>
           <ClientLayoutWrapper>
             <>

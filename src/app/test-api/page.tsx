@@ -9,7 +9,7 @@ import ProtectedTestApi from './components/ProtectedTestApi';
 import SwaggerUIWrapper from './components/SwaggerUIWrapper';
 // import ApiInfoCard from './components/ApiInfoCard';
 // import ApiStats from './components/ApiStats';
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 // Import CSS untuk Swagger UI
 import 'swagger-ui-react/swagger-ui.css';
@@ -87,6 +87,8 @@ export default function TestApiPage() {
   const apiParam = searchParams.get("api");
   const pathParam = searchParams.get("path");
   const methodParam = searchParams.get("method");
+  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (apiParam) {
@@ -110,6 +112,10 @@ export default function TestApiPage() {
     if (service) {
       setSelectedService(serviceName);
       setSwaggerUrl(service.file);
+      // Update URL query param 'api' agar pilihan tetap saat refresh
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("api", serviceName);
+      router.replace(`${pathname}?${params.toString()}`);
     }
   };
 

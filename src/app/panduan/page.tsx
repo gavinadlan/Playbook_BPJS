@@ -169,7 +169,7 @@ export default function PanduanPage() {
 
           <div className="mt-16 text-center">
             <Link
-              href="/docs"
+              href="/test-api"
               className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#27447C] to-[#3A5D9C] text-white rounded-xl hover:opacity-90 transition gap-3 shadow-lg font-medium"
             >
               Mulai Integrasi API

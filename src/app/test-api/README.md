@@ -93,7 +93,6 @@ Halaman `/test-api` telah ditambahkan ke dalam middleware Next.js untuk memastik
 **File**: `frontend/middleware.ts`
 ```typescript
 const protectedRoutes = [
-  "/docs",
   "/pengajuan-saya", 
   "/pengajuan-pks",
   "/admin",

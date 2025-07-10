@@ -70,14 +70,14 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
-                href="/docs"
+                href="/test-api"
                 className="inline-flex items-center px-6 py-3 bg-[#27447C] text-white rounded-lg hover:bg-[#1A335F] gap-2"
               >
                 <Terminal className="w-5 h-5" />
                 Mulai Integrasi
               </Link>
               <Link
-                href="/auth"
+                href="/pengajuan-pks"
                 className="inline-flex items-center px-6 py-3 border border-[#27447C] text-[#27447C] rounded-lg hover:bg-[#27447C]/10 gap-2"
               >
                 <Key className="w-5 h-5" />
@@ -156,7 +156,7 @@ export default function Home() {
               kami.
             </p>
             <Link
-              href="/docs/authentication"
+              href="/test-api"
               className="inline-flex items-center text-[#27447C] font-semibold hover:text-[#1A335F]"
             >
               Pelajari Lebih Lanjut

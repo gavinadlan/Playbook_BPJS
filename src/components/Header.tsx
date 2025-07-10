@@ -316,12 +316,6 @@ const Header = () => {
                     onClick={handleMobileNavClick}
                   />
                   <MobileNavLink
-                    href="/docs"
-                    label="Dokumentasi API"
-                    currentPath={pathname}
-                    onClick={handleMobileNavClick}
-                  />
-                  <MobileNavLink
                     href="/test-api"
                     label="Test API"
                     currentPath={pathname}

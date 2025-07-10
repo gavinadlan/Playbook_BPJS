@@ -9,6 +9,7 @@ export function middleware(request: NextRequest) {
     "/pengajuan-saya",
     "/pengajuan-pks",
     "/admin", // Pastikan ini ada
+    "/test-api", // Tambahkan test-api ke protected routes
   ];
 
   const isProtected = protectedRoutes.some((route) => path.startsWith(route));
@@ -26,5 +27,6 @@ export const config = {
     "/pengajuan-saya/:path*",
     "/pengajuan-pks/:path*",
     "/admin/:path*", // Pastikan ini ada
+    "/test-api/:path*", // Tambahkan test-api ke matcher
   ],
 };

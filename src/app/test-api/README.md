@@ -1,114 +1,140 @@
-# Test API Page
+# Test API - PKS Middleware
 
-Halaman ini menyediakan interface untuk testing API BPJS Kesehatan secara langsung menggunakan Swagger UI.
+## Overview
 
-## Fitur
+Halaman Test API dilindungi dengan middleware PKS (Perjanjian Kerja Sama) yang memastikan hanya pengguna dengan PKS yang disetujui yang dapat mengakses fitur testing API.
 
-### 1. Swagger UI Integration
-- Menampilkan dokumentasi API dari file YAML yang ada di `public/api-docs/`
-- Mendukung testing langsung endpoint API
-- Interface yang interaktif dan user-friendly
+## Sistem Middleware PKS
 
-### 2. API Service Selection
-- Sidebar untuk memilih layanan API yang berbeda
-- Status indicator untuk setiap layanan (Active/Inactive)
-- Deskripsi singkat untuk setiap layanan
+### Status PKS yang Didukung
 
-### 3. API Information
-- Informasi detail tentang API yang dipilih
-- Base URL yang dapat di-copy
-- Statistik endpoint dan versi
+1. **Belum Diajukan** (`no_submission`)
+   - User belum pernah mengajukan PKS
+   - Akan diarahkan ke halaman pengajuan PKS
+   - Tidak dapat mengakses Test API
 
-### 4. API Statistics
-- Dashboard statistik API
-- Informasi uptime dan response time
-- Status layanan secara real-time
+2. **Sedang Diproses** (`PENDING`)
+   - PKS telah diajukan dan sedang dalam review admin
+   - Akan diarahkan ke halaman status pengajuan
+   - Tidak dapat mengakses Test API
 
-## Struktur File
+3. **Ditolak** (`REJECTED`)
+   - PKS telah ditolak oleh admin
+   - Akan diarahkan ke halaman pengajuan ulang PKS
+   - Tidak dapat mengakses Test API
 
-```
-src/app/test-api/
-├── page.tsx                 # Halaman utama test API
-├── swagger-custom.css       # Custom styling untuk Swagger UI
-├── README.md               # Dokumentasi ini
-└── components/
-    ├── ApiInfoCard.tsx     # Komponen untuk menampilkan info API
-    └── ApiStats.tsx        # Komponen untuk menampilkan statistik
-```
+4. **Disetujui** (`APPROVED`)
+   - PKS telah disetujui oleh admin
+   - Dapat mengakses Test API secara penuh
 
-## Penggunaan
+### Komponen yang Terlibat
 
-### Menambahkan Layanan API Baru
+#### 1. `ProtectedTestApi` Component
+- **Lokasi**: `frontend/src/app/test-api/components/ProtectedTestApi.tsx`
+- **Fungsi**: Middleware utama yang mengecek status PKS user
+- **Logika**: 
+  - Fetch data PKS user dari backend
+  - Cek status PKS terbaru
+  - Tampilkan UI sesuai status
+  - Redirect ke halaman yang sesuai
 
-1. Tambahkan file YAML di `public/api-docs/services/`
-2. Update array `apiServices` di `page.tsx`:
-
-```typescript
-const apiServices: ApiService[] = [
+#### 2. `usePKSStatus` Hook
+- **Lokasi**: `frontend/src/hooks/usePKSStatus.ts`
+- **Fungsi**: Hook untuk mengecek status PKS user
+- **Return Value**:
+  ```typescript
   {
-    name: 'NamaLayanan',
-    file: '/api-docs/services/namalayanan.yaml',
-    description: 'Deskripsi layanan',
-    status: 'active' // atau 'inactive'
+    pksData: PKS[],
+    loading: boolean,
+    error: string | null,
+    status: PKSStatus,
+    latestPKS: PKS | null,
+    refetch: () => void
   }
+  ```
+
+#### 3. `PKSStatusBadge` Component
+- **Lokasi**: `frontend/src/components/shared/PKSStatusBadge.tsx`
+- **Fungsi**: Menampilkan badge status PKS di UI
+- **Penggunaan**: Header dropdown menu
+
+### Flow Akses Test API
+
+```
+User Login → Cek PKS Status → Decision
+    ↓
+┌─────────────────────────────────────┐
+│ Status PKS                         │
+├─────────────────────────────────────┤
+│ no_submission → Redirect ke        │
+│                /pengajuan-pks      │
+├─────────────────────────────────────┤
+│ PENDING → Redirect ke              │
+│          /pengajuan-saya           │
+├─────────────────────────────────────┤
+│ REJECTED → Redirect ke             │
+│           /pengajuan-pks           │
+├─────────────────────────────────────┤
+│ APPROVED → Akses Test API          │
+└─────────────────────────────────────┘
+```
+
+### API Endpoint yang Digunakan
+
+- **GET** `/api/pks?userId={userId}`
+  - Mengambil data PKS user
+  - Requires authentication token
+  - Returns array of PKS objects
+
+### Middleware Next.js
+
+Halaman `/test-api` telah ditambahkan ke dalam middleware Next.js untuk memastikan hanya user yang terautentikasi yang dapat mengakses halaman ini.
+
+**File**: `frontend/middleware.ts`
+```typescript
+const protectedRoutes = [
+  "/docs",
+  "/pengajuan-saya", 
+  "/pengajuan-pks",
+  "/admin",
+  "/test-api", // ← Ditambahkan
 ];
 ```
 
-### Customizing Swagger UI
+### Error Handling
 
-Untuk mengubah tampilan Swagger UI, edit file `swagger-custom.css`. File ini berisi:
-- Custom styling untuk operation blocks
-- Warna dan typography yang sesuai dengan tema aplikasi
-- Responsive design untuk mobile
+1. **Network Error**: Menampilkan pesan error dan tombol retry
+2. **Unauthorized**: Redirect ke halaman login
+3. **Token Expired**: Logout dan redirect ke login
+4. **Server Error**: Tampilkan pesan error generik
 
-### Menambahkan Komponen Baru
+### UI/UX Features
 
-1. Buat komponen baru di folder `components/`
-2. Import dan gunakan di `page.tsx`
-3. Pastikan komponen mengikuti design system yang ada
+1. **Loading State**: Skeleton loading saat fetch data
+2. **Status Badge**: Visual indicator di header
+3. **Clear Messaging**: Pesan yang jelas untuk setiap status
+4. **Action Buttons**: Tombol yang relevan untuk setiap status
+5. **Responsive Design**: Works on mobile dan desktop
 
-## Dependencies
+### Testing
 
-- `swagger-ui-react`: Untuk menampilkan Swagger UI
-- `swagger-ui-dist`: CSS dan assets untuk Swagger UI
-- `@/components/ui/*`: Komponen UI dari design system
+Untuk testing sistem ini, Anda dapat:
 
-## API Endpoints
+1. **Test sebagai user baru**: Pastikan diarahkan ke pengajuan PKS
+2. **Test dengan PKS pending**: Pastikan tidak bisa akses Test API
+3. **Test dengan PKS rejected**: Pastikan diarahkan untuk ajukan ulang
+4. **Test dengan PKS approved**: Pastikan bisa akses Test API
 
-Halaman ini membaca file YAML dari:
-- `public/api-docs/bpjs-kesehatan.yaml` (file utama)
-- `public/api-docs/services/*.yaml` (layanan individual)
-- `public/api-docs/components/*.yaml` (komponen shared)
+### Security Considerations
 
-## Development
+1. **Authentication Required**: Semua request memerlukan valid token
+2. **Authorization Check**: Hanya user dengan PKS approved yang dapat akses
+3. **Token Validation**: Automatic logout jika token expired
+4. **Server-side Validation**: Backend juga memvalidasi status PKS
 
-### Menjalankan Development Server
+### Future Enhancements
 
-```bash
-npm run dev
-```
-
-Kemudian buka `http://localhost:3000/test-api`
-
-### Build untuk Production
-
-```bash
-npm run build
-```
-
-## Troubleshooting
-
-### Swagger UI Tidak Muncul
-1. Pastikan file YAML ada di folder `public/api-docs/`
-2. Periksa console browser untuk error
-3. Pastikan URL file YAML benar
-
-### Styling Tidak Sesuai
-1. Periksa file `swagger-custom.css`
-2. Pastikan CSS di-import dengan benar
-3. Clear browser cache
-
-### Error Loading YAML
-1. Periksa format YAML file
-2. Pastikan file dapat diakses via HTTP
-3. Periksa CORS settings jika diperlukan 
+1. **Real-time Updates**: WebSocket untuk update status PKS real-time
+2. **Email Notifications**: Notifikasi email saat status PKS berubah
+3. **Audit Log**: Log semua akses ke Test API
+4. **Rate Limiting**: Batasi request API berdasarkan status PKS 

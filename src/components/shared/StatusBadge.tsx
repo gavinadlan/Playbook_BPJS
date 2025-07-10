@@ -8,6 +8,7 @@ import {
   UserX,
   Shield,
   User,
+  FileText,
 } from "lucide-react";
 
 type StatusType =
@@ -117,6 +118,13 @@ const statusConfig: Record<
     label: "Belum Verifikasi",
     className: "bg-gray-100 text-gray-800",
     icon: <UserX className="h-4 w-4 mr-1" />,
+  },
+
+  // Tambahan untuk status PKS belum diajukan
+  no_submission: {
+    label: "Belum Diajukan",
+    className: "bg-gray-100 text-gray-800",
+    icon: <FileText className="h-4 w-4 mr-1" />,
   },
 };
 

@@ -25,12 +25,15 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
+import { StatusBadge } from "@/components/shared/StatusBadge";
+import { usePKSStatus } from "@/hooks/usePKSStatus";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout, isAdmin, isLoading } = useAuth(); // Gunakan isLoading dari context
+  const { status: pksStatus, loading: pksLoading } = usePKSStatus();
 
   const handleLogout = () => {
     logout();

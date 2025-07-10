@@ -1,18 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert-dialog';
-import { Info, Play, FileText, Settings } from 'lucide-react';
+import { Info, Play, FileText } from 'lucide-react';
 import ProtectedTestApi from './components/ProtectedTestApi';
 import SwaggerUIWrapper from './components/SwaggerUIWrapper';
 // import ApiInfoCard from './components/ApiInfoCard';
 // import ApiStats from './components/ApiStats';
+import { useSearchParams } from "next/navigation";
 
 // Import CSS untuk Swagger UI
 import 'swagger-ui-react/swagger-ui.css';
@@ -86,6 +83,28 @@ export default function TestApiPage() {
   const [selectedService, setSelectedService] = useState<string>('bpjs kesehatan api');
   const [swaggerUrl, setSwaggerUrl] = useState<string>('/api-docs/bpjs-kesehatan.yaml');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const searchParams = useSearchParams();
+  const apiParam = searchParams.get("api");
+  const pathParam = searchParams.get("path");
+  const methodParam = searchParams.get("method");
+
+  useEffect(() => {
+    if (apiParam) {
+      // Cari nama service yang cocok (case-insensitive, bisa mapping jika perlu)
+      const match = apiServices.find(s => s.name.toLowerCase().includes(apiParam.toLowerCase()));
+      if (match) {
+        setSelectedService(match.name.toLowerCase());
+        setSwaggerUrl(match.file);
+      }
+    }
+  }, [apiParam]);
+
+  useEffect(() => {
+    if (pathParam && methodParam) {
+      // Scroll functionality is now handled in SwaggerUIWrapper component
+    }
+  }, [swaggerUrl, pathParam, methodParam]);
 
   const handleServiceChange = (serviceName: string) => {
     setIsLoading(true);
@@ -248,6 +267,8 @@ export default function TestApiPage() {
                     defaultModelsExpandDepth={1}
                     defaultModelExpandDepth={1}
                     tryItOutEnabled={true}
+                    targetPath={pathParam || undefined}
+                    targetMethod={methodParam || undefined}
                     requestInterceptor={(request: any) => {
                       // Add any custom request headers here
                       return request;

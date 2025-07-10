@@ -10,11 +10,13 @@ import {
   Lock,
   ArrowRight,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface Endpoint {
   path: string;
   method: string;
   description: string;
+  api: string; // add api property
 }
 
 interface ApiCategoryCardProps {
@@ -29,6 +31,10 @@ const methodColors: { [key: string]: string } = {
 };
 
 export default function ApiCategoryCard({ endpoint }: ApiCategoryCardProps) {
+  const router = useRouter();
+  const handleViewDetails = () => {
+    router.push(`/test-api?api=${encodeURIComponent(endpoint.api)}&path=${encodeURIComponent(endpoint.path)}&method=${encodeURIComponent(endpoint.method)}`);
+  };
   return (
     <Card
       className="hover:shadow-lg transition-all duration-300 bg-white border border-gray-200 group relative overflow-hidden"
@@ -69,6 +75,7 @@ export default function ApiCategoryCard({ endpoint }: ApiCategoryCardProps) {
             variant="outline"
             className="text-[#27447C] border-[#27447C] hover:bg-[#27447C]/10"
             size="sm"
+            onClick={handleViewDetails}
           >
             View Details
             <ArrowRight className="w-4 h-4 ml-2" />

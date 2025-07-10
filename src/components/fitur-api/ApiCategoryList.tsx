@@ -8,11 +8,13 @@ interface Endpoint {
   path: string;
   method: string;
   description: string;
+  api: string; // add api property
 }
 
 interface Category {
   name: string;
   endpoints: Endpoint[];
+  api: string; // add api property
 }
 
 interface ApiCategoryListProps {
@@ -87,7 +89,7 @@ export default function ApiCategoryList({
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {category.endpoints.map((endpoint) => (
-                    <ApiCategoryCard key={endpoint.path} endpoint={endpoint} />
+                    <ApiCategoryCard key={endpoint.path + endpoint.method} endpoint={{ ...endpoint, api: category.api }} />
                   ))}
                 </div>
               </motion.div>

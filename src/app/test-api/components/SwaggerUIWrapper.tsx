@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
+import Loader from '@/components/ui/loading';
 
 // Dynamic import untuk Swagger UI
 const SwaggerUI = dynamic(() => import('swagger-ui-react'), { ssr: false });
@@ -18,65 +19,18 @@ interface SwaggerUIWrapperProps {
   targetMethod?: string;
 }
 
-export default function SwaggerUIWrapper(props: SwaggerUIWrapperProps) {
+function SwaggerUIWrapper(props: SwaggerUIWrapperProps) {
   const { targetPath, targetMethod, ...swaggerProps } = props;
+  const [isLoading, setIsLoading] = useState(true);
 
+  // Reset loading state when URL changes
   useEffect(() => {
-    // Suppress console errors untuk Swagger UI warnings
-    const originalError = console.error;
-    console.error = (...args) => {
-      // Filter out Swagger UI specific warnings
-      const message = args[0];
-      if (typeof message === 'string' && 
-          (message.includes('UNSAFE_componentWillReceiveProps') || 
-           message.includes('ModelCollapse') ||
-           message.includes('OperationContainer') ||
-           message.includes('ContentType') ||
-           message.includes('ParameterRow') ||
-           message.includes('RequestBodyEditor'))) {
-        return; // Suppress these warnings
-      }
-      originalError.apply(console, args);
-    };
-
-    // Hide only the element that is exactly the YAML path (not other info)
-    const interval = setInterval(() => {
-      const infoContainer = document.querySelector('.swagger-ui .information-container');
-      if (infoContainer) {
-        const walker = document.createTreeWalker(infoContainer, NodeFilter.SHOW_ELEMENT, null);
-        let found = false;
-        let node = walker.currentNode as HTMLElement | null;
-        while (node) {
-          // Sembunyikan hanya jika text-nya persis path yaml (diawali /api-docs/ dan diakhiri .yaml, dan tidak ada spasi lain)
-          const text = node.textContent?.trim() || '';
-          if (
-            text.startsWith('/api-docs/') &&
-            text.endsWith('.yaml') &&
-            text.length < 100 // path yaml biasanya pendek, deskripsi panjang
-          ) {
-            node.style.display = 'none';
-            found = true;
-          }
-          node = walker.nextNode() as HTMLElement | null;
-        }
-        // Jika sudah tidak ada yang persis path yaml, clear interval
-        const stillExists = Array.from(infoContainer.querySelectorAll('*')).some(
-          el => {
-            const t = el.textContent?.trim() || '';
-            return t.startsWith('/api-docs/') && t.endsWith('.yaml') && t.length < 100;
-          }
-        );
-        if (!stillExists) {
-          clearInterval(interval);
-        }
-      }
-    }, 200);
-
-    return () => {
-      console.error = originalError;
-      clearInterval(interval);
-    };
-  }, []);
+    setIsLoading(true);
+    const timeout = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500); // 1.5 detik, adjust jika perlu
+    return () => clearTimeout(timeout);
+  }, [props.url]);
 
   // Function to scroll to specific endpoint
   useEffect(() => {
@@ -147,8 +101,35 @@ export default function SwaggerUIWrapper(props: SwaggerUIWrapperProps) {
   }, [targetPath, targetMethod]);
 
   return (
-    <div className="swagger-container">
+    <div className="swagger-container relative" style={{ minHeight: '60vh' }}>
+      <style>{`
+        .swagger-ui .loading-container,
+        .swagger-ui .loading-container .loading {
+          display: none !important;
+          opacity: 0 !important;
+          visibility: hidden !important;
+          pointer-events: none !important;
+          position: absolute !important;
+          z-index: -1 !important;
+        }
+      `}</style>
+      {/* Overlay hanya di area Swagger UI */}
+      {isLoading && (
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'white',
+          zIndex: 99,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          <Loader />
+        </div>
+      )}
       <SwaggerUI {...swaggerProps} />
     </div>
   );
-} 
+}
+
+export default React.memo(SwaggerUIWrapper, (prev, next) => prev.url === next.url); 

@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* HIDE SWAGGER UI LOADER GLOBALLY */
+.swagger-ui .loading-container,
+.swagger-ui .loading-container .loading {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  z-index: -1 !important;
+}
+
 /* Tambahkan animasi spin-reverse */
 @keyframes spin-reverse {
   from {

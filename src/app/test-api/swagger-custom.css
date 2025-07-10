@@ -231,26 +231,15 @@
   line-height: 1.5;
 }
 
-/* Loading spinner */
-.swagger-container .swagger-ui .loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-}
-
+/* Loading spinner - Hide default Swagger UI loading completely */
+.swagger-container .swagger-ui .loading-container,
 .swagger-container .swagger-ui .loading-container .loading {
-  border: 2px solid #e5e7eb;
-  border-top: 2px solid #3b82f6;
-  border-radius: 50%;
-  width: 2rem;
-  height: 2rem;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  z-index: -1 !important;
 }
 
 /* Responsive adjustments */

@@ -82,7 +82,6 @@ const apiServices: ApiService[] = [
 export default function TestApiPage() {
   const [selectedService, setSelectedService] = useState<string>('bpjs kesehatan api');
   const [swaggerUrl, setSwaggerUrl] = useState<string>('/api-docs/bpjs-kesehatan.yaml');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const searchParams = useSearchParams();
   const apiParam = searchParams.get("api");
@@ -107,14 +106,11 @@ export default function TestApiPage() {
   }, [swaggerUrl, pathParam, methodParam]);
 
   const handleServiceChange = (serviceName: string) => {
-    setIsLoading(true);
     const service = apiServices.find(s => s.name.toLowerCase() === serviceName);
     if (service) {
       setSelectedService(serviceName);
       setSwaggerUrl(service.file);
     }
-    // Simulate loading delay
-    setTimeout(() => setIsLoading(false), 500);
   };
 
   const getCurrentService = () => {
@@ -256,12 +252,8 @@ export default function TestApiPage() {
                 </Alert>
               ) : (
                 <div className="relative">
-                  {isLoading && (
-                    <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-10">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                    </div>
-                  )}
                   <SwaggerUIWrapper
+                    key={swaggerUrl}
                     url={swaggerUrl}
                     docExpansion="list"
                     defaultModelsExpandDepth={1}

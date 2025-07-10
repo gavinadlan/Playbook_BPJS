@@ -1,6 +1,3 @@
-"use client";
-
-import { motion } from "framer-motion";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -42,11 +39,7 @@ export default function PanduanPage() {
     <div className="min-h-screen bg-gradient-to-b from-[#F8FAFC] to-[#EFF4FB] px-4 md:px-8 py-16 text-gray-800">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-16"
-        >
+        <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-[#27447C] mb-4">
             Panduan Integrasi API
           </h1>
@@ -54,7 +47,7 @@ export default function PanduanPage() {
             Mulai integrasi sistem Anda dengan API kami setelah menyelesaikan
             proses Perjanjian Kerja Sama (PKS)
           </p>
-        </motion.div>
+        </div>
 
         {/* PKS Requirement Section */}
         <div className="bg-white rounded-2xl p-8 mb-16 shadow-lg border border-[#E5E7EB]">
@@ -142,11 +135,8 @@ export default function PanduanPage() {
 
             <div className="space-y-12">
               {steps.map((step, index) => (
-                <motion.div
+                <div
                   key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
                   className="flex items-start gap-6 group"
                 >
                   {/* Icon Number */}
@@ -162,7 +152,7 @@ export default function PanduanPage() {
                     </h3>
                     <p className="text-gray-600">{step.desc}</p>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>

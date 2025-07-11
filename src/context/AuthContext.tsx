@@ -35,28 +35,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Hitung isAdmin berdasarkan role
   const isAdmin = user?.role === "ADMIN";
 
-  const logout = () => {
+  const logout = async () => {
     setUser(null);
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    localStorage.removeItem("tokenExpiry");
+    // Hapus session di backend
+    await fetch("http://localhost:3001/api/users/logout", {
+      method: "POST",
+      credentials: "include",
+    });
     document.cookie =
       "isAuthenticated=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   };
 
   const handleApiCall = async (url: string, options: RequestInit = {}) => {
     try {
-      const token = localStorage.getItem("token");
-
       const headers = {
         "Content-Type": "application/json",
-        ...(token && { Authorization: `Bearer ${token}` }),
         ...options.headers,
       };
 
       const response = await fetch(url, {
         ...options,
         headers,
+        credentials: "include",
       });
 
       const data = await response.json();
@@ -78,36 +78,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    const initializeAuth = async () => {
+    // Saat mount, cek session user dari backend
+    const fetchUser = async () => {
       try {
-        const storedUser = localStorage.getItem("user");
-        const storedToken = localStorage.getItem("token");
-
-        if (storedUser && storedToken) {
-          const parsedUser = JSON.parse(storedUser);
-
-          // Tambahkan properti isAdmin
-          const userWithAdmin = {
-            ...parsedUser,
-            isAdmin: parsedUser.role === "ADMIN",
-          };
-
-          const tokenExpiry = localStorage.getItem("tokenExpiry");
-          if (tokenExpiry && new Date() > new Date(tokenExpiry)) {
-            throw new Error("Token expired locally");
-          }
-
-          setUser(userWithAdmin);
+        const res = await fetch("http://localhost:3001/api/users/me", {
+          credentials: "include",
+        });
+        const data = await res.json();
+        if (res.ok && data.data?.user) {
+          setUser(data.data.user);
+        } else {
+          setUser(null);
         }
-      } catch (error) {
-        console.error("Error initializing auth:", error);
-        logout();
+      } catch (err) {
+        setUser(null);
       } finally {
         setIsLoading(false);
       }
     };
-
-    initializeAuth();
+    fetchUser();
   }, []);
 
   return (

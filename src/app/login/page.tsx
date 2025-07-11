@@ -65,6 +65,7 @@ export default function LoginPage() {
           email: formData.email,
           password: formData.password,
         }),
+        credentials: "include",
       });
 
       const data = await res.json();
@@ -73,27 +74,30 @@ export default function LoginPage() {
         throw new Error(data.message || "Login gagal.");
       }
 
+      // Ambil user dari data.data.user (karena ResponseUtil.success membungkus di data)
+      const user = data.data?.user;
+      if (!user) {
+        throw new Error("User tidak ditemukan di response backend.");
+      }
+
       // PERBAIKAN: Pindahkan pengecekan role SETELAH berhasil login
-      if (data.user.role !== formData.role) {
+      if (user.role !== formData.role) {
         // Simpan user data sementara untuk penanganan khusus
         const tempUser = {
-          id: data.user.id,
-          name: data.user.name,
-          email: data.user.email,
-          role: data.user.role,
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
         };
 
-        // Clear token karena role tidak sesuai
-        localStorage.removeItem("token");
-        document.cookie =
-          "isAuthenticated=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        // Tidak perlu hapus token, cukup reset user
 
         // Reset form role
-        reset({ ...formData, role: data.user.role });
+        reset({ ...formData, role: user.role });
 
         throw new Error(
           `Akun Anda adalah ${
-            data.user.role === "ADMIN" ? "Admin" : "User"
+            user.role === "ADMIN" ? "Admin" : "User"
           }, ` +
             `tetapi Anda mencoba login sebagai ${
               formData.role === "ADMIN" ? "Admin" : "User"
@@ -103,17 +107,7 @@ export default function LoginPage() {
       }
 
       // Lanjutkan jika role sesuai
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-        document.cookie = "isAuthenticated=true; path=/;";
-
-        // Set token expiry reminder
-        const expiryTime = new Date(Date.now() + 12 * 60 * 60 * 1000); // 12 hours
-        localStorage.setItem("tokenExpiry", expiryTime.toISOString());
-      }
-
-      localStorage.setItem("user", JSON.stringify(data.user));
-      setUser(data.user);
+      setUser(user);
 
       toast.success("Login berhasil!");
 
@@ -128,7 +122,7 @@ export default function LoginPage() {
 
       // Redirect berdasarkan role
       setTimeout(() => {
-        if (data.user.role === "ADMIN") {
+        if (user.role === "ADMIN") {
           router.push("/admin");
         } else {
           router.push("/");

@@ -6,12 +6,7 @@ export const authFetch = async (
   url: string,
   options: RequestInit = {}
 ): Promise<Response> => {
-  const token = localStorage.getItem("token");
   const headers = new Headers(options.headers);
-
-  if (token) {
-    headers.append("Authorization", `Bearer ${token}`);
-  }
 
   const isBackendAPI =
     url.startsWith("/api/pks") ||
@@ -37,7 +32,10 @@ export const fetchPKSData = async (): Promise<PKS[]> => {
     }
 
     const data = await response.json();
-    return data;
+    // Ambil array dari data.data jika ada, fallback ke data jika array
+    if (Array.isArray(data.data)) return data.data;
+    if (Array.isArray(data)) return data;
+    return [];
   } catch (error) {
     console.error("Error fetching PKS data:", error);
     throw error;
@@ -79,7 +77,21 @@ export const fetchDashboardData = async (): Promise<DashboardData> => {
     }
 
     const data = await response.json();
-    return data;
+    // Ambil object dari data.data jika ada, fallback ke data jika object
+    if (data && typeof data.data === "object" && data.data !== null) return data.data;
+    if (data && typeof data === "object" && data !== null) return data;
+    // Default kosong jika tidak object
+    return {
+      stats: [],
+      activities: [],
+      summary: {
+        totalUsers: 0,
+        totalPks: 0,
+        pendingPks: 0,
+        approvedPks: 0,
+        rejectedPks: 0,
+      },
+    };
   } catch (error) {
     console.error("Error fetching dashboard data:", error);
     throw error;
@@ -145,22 +157,6 @@ export const updateUser = async (
     return result.data || result;
   } catch (error) {
     console.error("Error updating user:", error);
-    throw error;
-  }
-};
-
-export const deleteUser = async (id: number): Promise<void> => {
-  try {
-    const response = await authFetch(`/api/admin/users/${id}`, {
-      method: "DELETE",
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Gagal menghapus user");
-    }
-  } catch (error) {
-    console.error("Error deleting user:", error);
     throw error;
   }
 };

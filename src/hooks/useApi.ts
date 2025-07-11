@@ -6,17 +6,15 @@ export const useApi = () => {
 
   const apiCall = async (url: string, options: RequestInit = {}) => {
     try {
-      const token = localStorage.getItem("token");
-
       const headers = {
         "Content-Type": "application/json",
-        ...(token && { Authorization: `Bearer ${token}` }),
         ...options.headers,
       };
 
       const response = await fetch(url, {
         ...options,
         headers,
+        credentials: "include",
       });
 
       const data = await response.json();

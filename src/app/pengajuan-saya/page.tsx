@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { authFetch } from "@/utils/api";
-import { Download } from "lucide-react";
+import { Download, Eye } from "lucide-react";
 
 interface PksSubmission {
   id: number;
@@ -34,12 +34,13 @@ export default function PengajuanSayaPage() {
           return res.json();
         })
         .then((data: PksSubmission[]) => {
-          setSubmissions(data);
+          // Ambil array dari data.data jika ada, fallback ke data
+          const arr = Array.isArray((data as any).data) ? (data as any).data : Array.isArray(data) ? data : [];
+          setSubmissions(arr);
           setLoading(false);
         })
         .catch((error: Error) => {
           if (error.message === "Unauthorized") {
-            localStorage.removeItem("token");
             window.location.href = "/login";
           }
           setLoading(false);
@@ -69,7 +70,7 @@ export default function PengajuanSayaPage() {
           Daftar Pengajuan PKS
         </h1>
 
-        {submissions.length === 0 ? (
+        {!Array.isArray(submissions) || submissions.length === 0 ? (
           <div className="text-center py-12 text-gray-500">
             Belum ada pengajuan PKS
           </div>
@@ -108,7 +109,7 @@ export default function PengajuanSayaPage() {
                       window.open(url, "_blank");
                     }}
                   >
-                    <Download className="w-4 h-4 mr-2" />
+                    <Eye className="w-4 h-4 mr-2" />
                     Dokumen
                   </Button>
                 </div>

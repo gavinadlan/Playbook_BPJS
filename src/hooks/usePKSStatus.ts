@@ -18,16 +18,15 @@ export const usePKSStatus = () => {
       }
       
       try {
-        const token = localStorage.getItem('token');
         const response = await fetch(`http://localhost:3001/api/pks?userId=${user.id}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
+          credentials: 'include',
         });
 
         if (response.ok) {
           const data = await response.json();
-          setPksData(data);
+          // Ambil array dari data.data jika ada, fallback ke data
+          const arr = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
+          setPksData(arr);
         } else {
           setError('Gagal mengambil data PKS');
         }
@@ -48,7 +47,7 @@ export const usePKSStatus = () => {
 
   const getPKSStatus = (): PKSStatus => {
     if (loading) return 'loading';
-    if (pksData.length === 0) return 'no_submission';
+    if (!Array.isArray(pksData) || pksData.length === 0) return 'no_submission';
     
     // Ambil PKS terbaru (yang terakhir diajukan)
     const latestPKS = pksData.sort((a, b) => 
@@ -58,7 +57,7 @@ export const usePKSStatus = () => {
     return latestPKS.status;
   };
 
-  const latestPKS = pksData.length > 0 
+  const latestPKS = Array.isArray(pksData) && pksData.length > 0 
     ? pksData.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime())[0]
     : null;
 

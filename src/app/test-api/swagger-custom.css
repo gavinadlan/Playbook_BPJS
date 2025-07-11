@@ -3,6 +3,21 @@
   font-family: inherit;
 }
 
+/* Hide all YAML links in Swagger UI */
+.swagger-container .swagger-ui .info .title a,
+.swagger-container .swagger-ui .info a[href*=".yaml"],
+.swagger-container .swagger-ui a[href*=".yaml"],
+.swagger-container a[href*=".yaml"],
+/* More specific selectors for all YAML files */
+.swagger-container .swagger-ui .info .title a[href*="/api-docs/"],
+.swagger-container .swagger-ui .info a[href*="/api-docs/"],
+.swagger-container .swagger-ui a[href*="/api-docs/"],
+.swagger-container a[href*="/api-docs/"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
 .swagger-container .swagger-ui {
   font-family: inherit;
 }

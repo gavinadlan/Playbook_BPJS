@@ -19,16 +19,33 @@ export interface Parameter {
 }
 
 export interface ApiEndpoint {
-  id: string;
-  name: string;
-  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+  service: string;
+  serviceFile: string;
   path: string;
+  method: string;
+  summary: string;
+}
+
+export interface ApiService {
+  name: string;
+  file: string;
   description: string;
-  parameters: Parameter[];
-  requestExample: Record<string, any>;
-  responseExample: Record<string, any>;
-  categoryId?: string;
-  categoryName?: string;
+  status: 'active' | 'inactive';
+}
+
+export interface SearchResult {
+  service: string;
+  endpoints: ApiEndpoint[];
+}
+
+export interface TestApiState {
+  selectedService: string;
+  swaggerUrl: string;
+  searchEndpoint: string;
+  allEndpoints: ApiEndpoint[];
+  searchResults: ApiEndpoint[];
+  loadingEndpoints: boolean;
+  sidebarOpen: boolean;
 }
 
 export interface ApiCategory {

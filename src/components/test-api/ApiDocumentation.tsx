@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert-dialog';
 import { Play, Info } from 'lucide-react';
-import SwaggerUIWrapper from './SwaggerUIWrapper';
+import SwaggerUIWrapper from '@/components/test-api/SwaggerUIWrapper';
 import { ApiService } from '@/types/api';
 
 interface ApiDocumentationProps {

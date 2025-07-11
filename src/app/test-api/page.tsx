@@ -1,8 +1,8 @@
 'use client';
 
-import ProtectedTestApi from './components/ProtectedTestApi';
-import SearchSidebar from './components/SearchSidebar';
-import ApiDocumentation from './components/ApiDocumentation';
+import ProtectedTestApi from '@/components/test-api/ProtectedTestApi';
+import SearchSidebar from '@/components/test-api/SearchSidebar';
+import ApiDocumentation from '@/components/test-api/ApiDocumentation';
 import { useTestApi } from '@/hooks/useTestApi';
 
 // Import CSS untuk Swagger UI
@@ -65,14 +65,14 @@ export default function TestApiPage() {
 
           {/* Main Content */}
           <main className="lg:col-span-3 space-y-6">
-                         <ApiDocumentation
-               swaggerUrl={swaggerUrl}
-               currentService={currentService}
-               searchEndpoint={searchEndpoint}
-               searchResults={searchResults}
-               pathParam={pathParam || undefined}
-               methodParam={methodParam || undefined}
-             />
+            <ApiDocumentation
+              swaggerUrl={swaggerUrl}
+              currentService={currentService}
+              searchEndpoint={searchEndpoint}
+              searchResults={searchResults}
+              pathParam={pathParam || undefined}
+              methodParam={methodParam || undefined}
+            />
           </main>
         </div>
       </div>

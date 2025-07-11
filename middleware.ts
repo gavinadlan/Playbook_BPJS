@@ -5,11 +5,10 @@ export function middleware(request: NextRequest) {
   const isAuthenticated = request.cookies.get("isAuthenticated")?.value;
 
   const protectedRoutes = [
-    "/docs",
     "/pengajuan-saya",
     "/pengajuan-pks",
-    "/admin", // Pastikan ini ada
-    "/test-api", // Tambahkan test-api ke protected routes
+    "/admin", 
+    "/test-api", 
   ];
 
   const isProtected = protectedRoutes.some((route) => path.startsWith(route));
@@ -23,10 +22,9 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/docs/:path*",
     "/pengajuan-saya/:path*",
     "/pengajuan-pks/:path*",
-    "/admin/:path*", // Pastikan ini ada
-    "/test-api/:path*", // Tambahkan test-api ke matcher
+    "/admin/:path*", 
+    "/test-api/:path*", 
   ],
 };

@@ -18,7 +18,7 @@ import { ConfirmationDialog } from "@/components/shared/ConfirmationDialog";
 
 interface PKSTableProps {
   data: PKS[];
-  onStatusUpdate: (updatedPKS: PKS) => void;
+  onStatusUpdate: () => void | Promise<void>;
 }
 
 export const PKSTable = ({ data, onStatusUpdate }: PKSTableProps) => {
@@ -54,8 +54,8 @@ export const PKSTable = ({ data, onStatusUpdate }: PKSTableProps) => {
     if (!currentPksId) return;
 
     try {
-      const updated = await updatePKSStatus(currentPksId, "APPROVED");
-      onStatusUpdate(updated);
+      await updatePKSStatus(currentPksId, "APPROVED");
+      await onStatusUpdate();
       toast.success("PKS berhasil disetujui");
       setShowApproveDialog(false);
     } catch (error) {
@@ -70,12 +70,12 @@ export const PKSTable = ({ data, onStatusUpdate }: PKSTableProps) => {
     if (!currentPksId) return;
 
     try {
-      const updated = await updatePKSStatus(
+      await updatePKSStatus(
         currentPksId,
         "REJECTED",
         rejectReason
       );
-      onStatusUpdate(updated);
+      await onStatusUpdate();
       toast.success("PKS berhasil ditolak");
       setShowRejectDialog(false);
     } catch (error) {

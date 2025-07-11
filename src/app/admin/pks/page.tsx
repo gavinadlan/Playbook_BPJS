@@ -40,10 +40,19 @@ export default function PKSPage() {
   }, []);
 
   // Handle update status dari komponen anak
-  const handleStatusUpdate = (updatedPKS: PKS) => {
-    setPksData((prev) =>
-      prev.map((pks) => (pks.id === updatedPKS.id ? updatedPKS : pks))
-    );
+  const handleStatusUpdate = async () => {
+    try {
+      setLoading(true);
+      const data = await fetchPKSData();
+      setPksData(data);
+      setLoading(false);
+    } catch (err) {
+      setError("Gagal memuat data PKS");
+      setLoading(false);
+      toast.error("Gagal memuat data PKS", {
+        description: "Silakan coba lagi nanti",
+      });
+    }
   };
 
   // Filter data

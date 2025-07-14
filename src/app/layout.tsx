@@ -11,8 +11,8 @@ import GlobalLoader from "@/components/GlobalLoader";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "BPJS Kesehatan API Documentation",
-  description: "API documentation platform for BPJS Kesehatan",
+  title: "BPJS Kesehatan Dokumentasi API",
+  description: "Platform dokumentasi API BPJS Kesehatan yang menyediakan referensi, panduan integrasi, dan contoh penggunaan untuk berbagai layanan digital BPJS Kesehatan.",
 };
 
 export default function RootLayout({

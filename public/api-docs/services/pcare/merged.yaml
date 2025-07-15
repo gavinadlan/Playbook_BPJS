@@ -578,32 +578,25 @@ paths:
           required: true
           schema:
             type: string
+          description: Cons ID
         - name: x-timestamp
           in: header
           required: true
           schema:
             type: string
+          description: Timestamp
         - name: x-signature
           in: header
           required: true
           schema:
             type: string
-        - name: x-authorization
-          in: header
-          required: true
-          schema:
-            type: string
+          description: Signature
         - name: user_key
           in: header
           required: true
           schema:
             type: string
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
+          description: User Key
       responses:
         '200':
           description: Data Club Prolanis berhasil ditemukan
@@ -719,32 +712,25 @@ paths:
           required: true
           schema:
             type: string
+          description: Cons ID
         - name: x-timestamp
           in: header
           required: true
           schema:
             type: string
+          description: Timestamp
         - name: x-signature
           in: header
           required: true
           schema:
             type: string
-        - name: x-authorization
-          in: header
-          required: true
-          schema:
-            type: string
+          description: Signature
         - name: user_key
           in: header
           required: true
           schema:
             type: string
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
+          description: User Key
       responses:
         '200':
           description: Data Kegiatan Kelompok berhasil ditemukan
@@ -940,32 +926,25 @@ paths:
           required: true
           schema:
             type: string
+          description: Cons ID
         - name: x-timestamp
           in: header
           required: true
           schema:
             type: string
+          description: Timestamp
         - name: x-signature
           in: header
           required: true
           schema:
             type: string
-        - name: x-authorization
-          in: header
-          required: true
-          schema:
-            type: string
+          description: Signature
         - name: user_key
           in: header
           required: true
           schema:
             type: string
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
+          description: User Key
       responses:
         '200':
           description: Data Peserta Kegiatan Kelompok berhasil ditemukan
@@ -1194,12 +1173,31 @@ paths:
         - `01`: Senam
         - `10`: Penyuluhan
         - `11`: Penyuluhan dan Senam
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -1310,12 +1308,31 @@ paths:
         - Kelompok
       summary: Add Peserta Kegiatan Kelompok
       description: Add Data Peserta Kegiatan Kelompok
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -1386,32 +1403,25 @@ paths:
           required: true
           schema:
             type: string
+          description: Cons ID
         - name: x-timestamp
           in: header
           required: true
           schema:
             type: string
+          description: Timestamp
         - name: x-signature
           in: header
           required: true
           schema:
             type: string
-        - name: x-authorization
-          in: header
-          required: true
-          schema:
-            type: string
+          description: Signature
         - name: user_key
           in: header
           required: true
           schema:
             type: string
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
+          description: User Key
       responses:
         '200':
           description: Kegiatan Kelompok berhasil dihapus
@@ -1469,32 +1479,25 @@ paths:
           required: true
           schema:
             type: string
+          description: Cons ID
         - name: x-timestamp
           in: header
           required: true
           schema:
             type: string
+          description: Timestamp
         - name: x-signature
           in: header
           required: true
           schema:
             type: string
-        - name: x-authorization
-          in: header
-          required: true
-          schema:
-            type: string
+          description: Signature
         - name: user_key
           in: header
           required: true
           schema:
             type: string
-      security:
-        - pcareAuth: []
-        - pcareTimestamp: []
-        - pcareSignature: []
-        - pcareAuthorization: []
-        - userKey: []
+          description: User Key
       responses:
         '200':
           description: Peserta Kegiatan Kelompok berhasil dihapus
@@ -1549,26 +1552,25 @@ paths:
           required: true
           schema:
             type: string
+          description: Cons ID
         - name: x-timestamp
           in: header
           required: true
           schema:
             type: string
+          description: Timestamp
         - name: x-signature
           in: header
           required: true
           schema:
             type: string
-        - name: x-authorization
-          in: header
-          required: true
-          schema:
-            type: string
+          description: Signature
         - name: user_key
           in: header
           required: true
           schema:
             type: string
+          description: User Key
       responses:
         '200':
           description: Data kesadaran berhasil ditemukan
@@ -6129,6 +6131,30 @@ paths:
               - 01: Makanan
               - 02: Udara
               - 03: Obat
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       security:
         - bpjsSecurity: []
       responses:

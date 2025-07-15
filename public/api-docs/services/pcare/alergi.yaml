@@ -32,6 +32,30 @@ paths:
               - 01: Makanan
               - 02: Udara
               - 03: Obat
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       security:
         - bpjsSecurity: []
       responses:

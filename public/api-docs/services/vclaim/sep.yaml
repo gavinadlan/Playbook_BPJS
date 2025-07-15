@@ -263,6 +263,31 @@ paths:
       tags: [SEP]
       summary: Update SEP
       description: Update SEP versi 1.1
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -407,6 +432,30 @@ paths:
       summary: Hapus SEP
       description: Hapus Data SEP
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
         - name: noSep
           in: query
           required: true
@@ -448,6 +497,30 @@ paths:
       summary: Cari SEP
       description: Melihat data detail SEP Peserta
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
         - name: noSep
           in: path
           required: true
@@ -647,6 +720,30 @@ paths:
       summary: Cari SEP Terakhir berdasarkan Nomor Rujukan
       description: Melihat data detail SEP Terakhir Peserta Berdasarkan Nomor Rujukan
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
         - name: noRujukan
           in: path
           required: true
@@ -845,6 +942,31 @@ paths:
       tags: [SEP]
       summary: Insert SEP 2.0 New
       description: Insert SEP versi 2.0
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -1117,6 +1239,31 @@ paths:
       tags: [SEP]
       summary: Update SEP 2.0 New
       description: Update SEP versi 2.0
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -1250,6 +1397,30 @@ paths:
       summary: Delete SEP 2.0 New
       description: Hapus SEP versi 2.0
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
         - name: noSep
           in: query
           required: true
@@ -1466,6 +1637,31 @@ paths:
       tags: [SEP]
       summary: Pengajuan
       description: Pengajuan SEP
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -1524,6 +1720,31 @@ paths:
       tags: [SEP]
       summary: Aproval Pengajuan SEP
       description: Pengajuan SEP
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -1670,6 +1891,31 @@ paths:
       tags: [SEP]
       summary: Update Tanggal Pulang
       description: Update tanggal pulang SEP
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -1716,6 +1962,31 @@ paths:
       tags: [SEP]
       summary: Update Tanggal Pulang 2.0 New
       description: Update tanggal pulang SEP 2.0
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -2414,6 +2685,31 @@ paths:
       tags: [SEP]
       summary: Post Random Answer
       description: POST Random Answer
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:

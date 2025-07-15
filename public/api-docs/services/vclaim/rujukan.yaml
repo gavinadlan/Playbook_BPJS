@@ -1353,48 +1353,38 @@ paths:
     post:
       tags: [Rujukan]
       summary: Insert Rujukan
-      description: Membuat data rujukan baru
+      description: Membuat rujukan baru
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
               type: object
-              properties:
-                request:
-                  type: object
-                  properties:
-                    t_rujukan:
-                      type: object
-                      properties:
-                        noSep:
-                          type: string
-                          example: "0301R0011017V000014"
-                        tglRujukan:
-                          type: string
-                          format: date
-                          example: "2017-11-08"
-                        ppkDirujuk:
-                          type: string
-                          example: "0301R002"
-                        jnsPelayanan:
-                          type: string
-                          example: "1"
-                        catatan:
-                          type: string
-                          example: "test"
-                        diagRujukan:
-                          type: string
-                          example: "A00.1"
-                        tipeRujukan:
-                          type: string
-                          example: "1"
-                        poliRujukan:
-                          type: string
-                          example: "INT"
-                        user:
-                          type: string
-                          example: "Coba Ws"
       responses:
         '200':
           description: Rujukan berhasil dibuat
@@ -1493,6 +1483,31 @@ paths:
       tags: [Rujukan]
       summary: Update Rujukan
       description: Memperbarui data rujukan
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -1560,6 +1575,30 @@ paths:
       summary: Delete Rujukan
       description: Menghapus data rujukan
       parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
         - name: noRujukan
           in: query
           required: true
@@ -1599,6 +1638,31 @@ paths:
       tags: [Rujukan]
       summary: Insert Rujukan Khusus New
       description: Membuat data rujukan khusus baru
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -1675,6 +1739,31 @@ paths:
       tags: [Rujukan]
       summary: Delete Rujukan Khusus New
       description: Menghapus data rujukan khusus
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -1738,6 +1827,30 @@ paths:
             type: string
           description: Tahun (4 digit)
           example: "2023"
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       responses:
         '200':
           description: Data rujukan khusus berhasil ditemukan
@@ -1791,6 +1904,31 @@ paths:
       tags: [Rujukan]
       summary: Insert Rujukan 2.0 New
       description: Membuat data rujukan versi 2.0
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -1940,6 +2078,31 @@ paths:
       tags: [Rujukan]
       summary: Update Rujukan 2.0 New
       description: Memperbarui data rujukan versi 2.0
+      parameters:
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -2028,6 +2191,30 @@ paths:
             format: date
           description: Tanggal rujukan (yyyy-MM-dd)
           example: "2023-12-15"
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       responses:
         '200':
           description: Data spesialistik berhasil ditemukan
@@ -2082,6 +2269,30 @@ paths:
             type: string
           description: Kode PPK Rujukan (8 digit)
           example: "03010402"
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       responses:
         '200':
           description: Data sarana berhasil ditemukan
@@ -2137,6 +2348,30 @@ paths:
             format: date
           description: Tanggal akhir (yyyy-MM-dd)
           example: "2023-12-31"
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       responses:
         '200':
           description: Data rujukan keluar berhasil ditemukan
@@ -2200,6 +2435,30 @@ paths:
             type: string
           description: Nomor Rujukan
           example: "1828R0011221B000001"
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       responses:
         '200':
           description: Data rujukan keluar berhasil ditemukan
@@ -2304,6 +2563,30 @@ paths:
             type: string
           description: Nomor Rujukan
           example: "030107010217Y001465"
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       responses:
         '200':
           description: Jumlah SEP berhasil ditemukan

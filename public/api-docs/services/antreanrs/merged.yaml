@@ -1268,59 +1268,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  response:
-                    type: object
-                    properties:
-                      list:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            kodebooking:
-                              type: string
-                            tanggal:
-                              type: string
-                            kodepoli:
-                              type: string
-                            kodedokter:
-                              type: integer
-                            jampraktek:
-                              type: string
-                            nik:
-                              type: string
-                            nokapst:
-                              type: string
-                            nohp:
-                              type: string
-                            norekammedis:
-                              type: string
-                            jeniskunjungan:
-                              type: integer
-                            nomorreferensi:
-                              type: string
-                            sumberdata:
-                              type: string
-                            ispeserta:
-                              type: integer
-                            noantrean:
-                              type: string
-                            estimasidilayani:
-                              type: integer
-                              format: int64
-                            createdtime:
-                              type: integer
-                              format: int64
-                            status:
-                              type: string
-                  metadata:
-                    type: object
-                    properties:
-                      code:
-                        type: integer
-                      message:
-                        type: string
+                $ref: '#/paths/~1antrean~1pendaftaran~1aktif/get/responses/200/content/application~1json/schema'
   /antrean/pendaftaran/aktif:
     get:
       tags:
@@ -1464,59 +1412,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  response:
-                    type: object
-                    properties:
-                      list:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            kodebooking:
-                              type: string
-                            tanggal:
-                              type: string
-                            kodepoli:
-                              type: string
-                            kodedokter:
-                              type: integer
-                            jampraktek:
-                              type: string
-                            nik:
-                              type: string
-                            nokapst:
-                              type: string
-                            nohp:
-                              type: string
-                            norekammedis:
-                              type: string
-                            jeniskunjungan:
-                              type: integer
-                            nomorreferensi:
-                              type: string
-                            sumberdata:
-                              type: string
-                            ispeserta:
-                              type: integer
-                            noantrean:
-                              type: string
-                            estimasidilayani:
-                              type: integer
-                              format: int64
-                            createdtime:
-                              type: integer
-                              format: int64
-                            status:
-                              type: string
-                  metadata:
-                    type: object
-                    properties:
-                      code:
-                        type: integer
-                      message:
-                        type: string
+                $ref: '#/paths/~1antrean~1pendaftaran~1aktif/get/responses/200/content/application~1json/schema'
   /token:
     get:
       tags:
@@ -1537,6 +1433,30 @@ paths:
           description: Password akses
           schema:
             type: string
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       responses:
         '200':
           description: OK
@@ -1580,6 +1500,30 @@ paths:
           description: User akses
           schema:
             type: string
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -1690,6 +1634,30 @@ paths:
           description: User akses
           schema:
             type: string
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -1846,6 +1814,30 @@ paths:
           description: User akses
           schema:
             type: string
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -1935,6 +1927,30 @@ paths:
           description: User akses
           schema:
             type: string
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -2003,6 +2019,30 @@ paths:
           description: User akses
           schema:
             type: string
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -2072,6 +2112,30 @@ paths:
           description: User akses
           schema:
             type: string
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -2211,6 +2275,30 @@ paths:
           description: User akses
           schema:
             type: string
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -2317,6 +2405,30 @@ paths:
           description: User akses
           schema:
             type: string
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -2410,6 +2522,30 @@ paths:
           description: User akses
           schema:
             type: string
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:
@@ -2469,6 +2605,30 @@ paths:
           description: User akses
           schema:
             type: string
+        - name: x-cons-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cons ID
+        - name: x-timestamp
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Timestamp
+        - name: x-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Signature
+        - name: user_key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: User Key
       requestBody:
         required: true
         content:

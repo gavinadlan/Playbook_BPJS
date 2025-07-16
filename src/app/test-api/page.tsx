@@ -40,15 +40,15 @@ export default function TestApiPage() {
 
   return (
     <ProtectedTestApi>
-      <div className="container mx-auto px-2 md:px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Test API BPJS Kesehatan</h1>
-          <p className="text-gray-600">
+      <div className="container mx-auto px-2 md:px-4 py-8 pb-20">
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Test API BPJS Kesehatan</h1>
+          <p className="text-gray-600 text-sm md:text-base">
             Test dan eksplorasi API BPJS Kesehatan secara langsung menggunakan Swagger UI
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-8">
           {/* Sidebar */}
           <SearchSidebar
             searchEndpoint={searchEndpoint}
@@ -64,7 +64,7 @@ export default function TestApiPage() {
           />
 
           {/* Main Content */}
-          <main className="lg:col-span-3 space-y-6">
+          <main className="lg:col-span-3 space-y-4 md:space-y-6">
             <ApiDocumentation
               swaggerUrl={swaggerUrl}
               currentService={currentService}

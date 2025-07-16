@@ -9,8 +9,9 @@ import { PKSFilterTabs } from "@/components/admin/pks/PKSFilterTabs";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { fetchPKSData } from "@/utils/api";
 import { PKS } from "@/types/api";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton"; // Import skeleton
+import { useSocket } from "@/hooks/useSocket";
 
 export default function PKSPage() {
   useAdminAuth();
@@ -30,14 +31,29 @@ export default function PKSPage() {
       } catch (err) {
         setError("Gagal memuat data PKS");
         setLoading(false);
-        toast.error("Gagal memuat data PKS", {
-          description: "Silakan coba lagi nanti",
-        });
+        toast({ title: "Error", description: "Gagal memuat data PKS", variant: "destructive" });
       }
     };
 
     loadPKSData();
   }, []);
+
+  // Listen real-time update PKS (untuk admin, bisa gunakan userId admin jika ingin notifikasi personal)
+  useSocket(
+    null, // admin tidak perlu join room user, kecuali ingin notifikasi personal
+    (data) => {
+      // Refetch data PKS saat status update
+      setLoading(true);
+      fetchPKSData().then((data) => {
+        setPksData(data);
+        setLoading(false);
+      });
+      toast({ title: "Status PKS Update", description: `Status: ${data.status}` });
+    },
+    (notif) => {
+      toast({ title: "Notifikasi", description: notif.message });
+    }
+  );
 
   // Handle update status dari komponen anak
   const handleStatusUpdate = async () => {
@@ -49,9 +65,7 @@ export default function PKSPage() {
     } catch (err) {
       setError("Gagal memuat data PKS");
       setLoading(false);
-      toast.error("Gagal memuat data PKS", {
-        description: "Silakan coba lagi nanti",
-      });
+      toast({ title: "Error", description: "Gagal memuat data PKS", variant: "destructive" });
     }
   };
 

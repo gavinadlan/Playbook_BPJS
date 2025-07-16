@@ -8,6 +8,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { authFetch } from "@/utils/api";
 import { Download, Eye } from "lucide-react";
+import { useSocket } from "@/hooks/useSocket";
+import { toast } from "@/hooks/use-toast";
 
 interface PksSubmission {
   id: number;
@@ -47,6 +49,25 @@ export default function PengajuanSayaPage() {
         });
     }
   }, [user?.id]);
+
+  useSocket(
+    user?.id ?? null,
+    (data) => {
+      // Refetch data PKS saat status update
+      if (user?.id) {
+        authFetch(`http://localhost:3001/api/pks?userId=${user.id}`)
+          .then((res: Response) => res.json())
+          .then((data: PksSubmission[]) => {
+            const arr = Array.isArray((data as any).data) ? (data as any).data : Array.isArray(data) ? data : [];
+            setSubmissions(arr);
+          });
+      }
+      toast({ title: "Status PKS Update", description: `Status: ${data.status}` });
+    },
+    (notif) => {
+      toast({ title: "Notifikasi", description: notif.message });
+    }
+  );
 
   if (loading) {
     return (

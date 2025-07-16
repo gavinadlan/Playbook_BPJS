@@ -1,39 +1,78 @@
+"use client";
 import Link from "next/link";
 import {
   ArrowRight,
   FileText,
   Lock,
   ShieldCheck,
-  ClipboardList,
+  UserPlus,
+  MailCheck,
+  LogIn,
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function PanduanPage() {
   const steps = [
     {
       number: "1",
-      title: "Pengajuan PKS",
-      desc: "Ajukan Perjanjian Kerja Sama (PKS) melalui mitra resmi kami",
-      icon: <FileText className="w-6 h-6" />,
+      title: "Registrasi Akun",
+      desc: "Buat akun baru jika Anda belum memiliki akun.",
+      icon: <UserPlus className="w-8 h-8 text-[#27447C]" />,
     },
     {
       number: "2",
-      title: "Verifikasi PKS",
-      desc: "Tim kami akan memverifikasi dokumen dalam 1-3 hari kerja",
-      icon: <ShieldCheck className="w-6 h-6" />,
+      title: "Verifikasi Email",
+      desc: "Cek email Anda dan lakukan verifikasi untuk mengaktifkan akun.",
+      icon: <MailCheck className="w-8 h-8 text-[#27447C]" />,
     },
     {
       number: "3",
-      title: "Buat Aplikasi",
-      desc: "Buat aplikasi baru di dashboard developer setelah PKS aktif",
-      icon: <ClipboardList className="w-6 h-6" />,
+      title: "Login ke Aplikasi",
+      desc: "Masuk ke aplikasi menggunakan email dan password yang sudah diverifikasi.",
+      icon: <LogIn className="w-8 h-8 text-[#27447C]" />,
     },
     {
       number: "4",
-      title: "Dapatkan Kredensial",
-      desc: "Generate API Key dan Security Key di dashboard aplikasi",
-      icon: <Lock className="w-6 h-6" />,
+      title: "Ajukan PKS",
+      desc: "Ajukan Perjanjian Kerja Sama (PKS) melalui menu pengajuan PKS.",
+      icon: <FileText className="w-8 h-8 text-[#27447C]" />,
+    },
+    {
+      number: "5",
+      title: "Tunggu Persetujuan PKS",
+      desc: "Admin akan memverifikasi dan menyetujui PKS Anda dalam 1-3 hari kerja.",
+      icon: <ShieldCheck className="w-8 h-8 text-[#27447C]" />,
+    },
+    {
+      number: "6",
+      title: "Akses API",
+      desc: "Setelah PKS disetujui, Anda dapat mengakses API di menu Test API.",
+      icon: <Lock className="w-8 h-8 text-[#27447C]" />,
     },
   ];
+
+  // Animation variants for container and items
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3
+      }
+    }
+  };
+
+  // Use string for 'ease' to fix framer-motion type error
+  const itemVariants = {
+    hidden: { y: 30, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.6
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F8FAFC] to-[#EFF4FB] px-4 md:px-8 py-16 text-gray-800">
@@ -41,18 +80,17 @@ export default function PanduanPage() {
         {/* Header Section */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-[#27447C] mb-4">
-            Panduan Integrasi API
+            Panduan Penggunaan Aplikasi & Integrasi API
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Mulai integrasi sistem Anda dengan API kami setelah menyelesaikan
-            proses Perjanjian Kerja Sama (PKS)
+            Ikuti langkah-langkah berikut untuk mulai menggunakan aplikasi dan mengintegrasikan sistem Anda dengan API kami.
           </p>
         </div>
 
-        {/* PKS Requirement Section */}
+        {/* Persyaratan Akses API Section */}
         <div className="bg-white rounded-2xl p-8 mb-16 shadow-lg border border-[#E5E7EB]">
           <div className="flex items-center gap-4 mb-6">
-            <div className="p-3 bg-red-100 rounded-lg text-red-600">
+            <div className="p-3 bg-blue-50 rounded-lg text-[#27447C] border border-blue-100">
               <ShieldCheck className="w-8 h-8" />
             </div>
             <h2 className="text-2xl font-bold text-gray-900">
@@ -61,33 +99,23 @@ export default function PanduanPage() {
           </div>
 
           <p className="text-gray-600 mb-8">
-            Untuk mengakses API kami, Anda wajib memiliki Perjanjian Kerja Sama
-            (PKS) yang aktif. Proses verifikasi membutuhkan waktu 1-3 hari kerja
-            setelah dokumen lengkap diterima.
+            Untuk dapat mengakses API, Anda wajib memiliki Perjanjian Kerja Sama (PKS) yang aktif. Proses verifikasi PKS membutuhkan waktu 1-3 hari kerja setelah dokumen PKS diajukan dan diterima oleh admin.
           </p>
 
           <div className="grid md:grid-cols-2 gap-8 mb-12">
-            <div className="bg-[#F8FAFC] p-6 rounded-xl">
+            <div className="bg-[#F8FAFC] p-6 rounded-xl border border-blue-50">
               <h3 className="font-semibold text-lg mb-4 text-[#27447C]">
                 Dokumen yang Dibutuhkan
               </h3>
               <ul className="space-y-3 text-gray-600">
                 <li className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-blue-500 rounded-full" />
-                  Surat Permohonan Kerja Sama
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full" />
-                  Proposal Teknis Integrasi
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full" />
-                  Dokumen Legal Perusahaan
+                  Perjanjian Kerja Sama (PKS)
                 </li>
               </ul>
             </div>
 
-            <div className="bg-[#F8FAFC] p-6 rounded-xl">
+            <div className="bg-[#F8FAFC] p-6 rounded-xl border border-blue-50">
               <h3 className="font-semibold text-lg mb-4 text-[#27447C]">
                 Alur Pengajuan PKS
               </h3>
@@ -96,19 +124,13 @@ export default function PanduanPage() {
                   <span className="text-sm font-medium bg-blue-100 text-blue-800 px-2 py-1 rounded">
                     1
                   </span>
-                  Unduh template PKS
+                  Upload dokumen PKS melalui menu pengajuan PKS
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-sm font-medium bg-blue-100 text-blue-800 px-2 py-1 rounded">
                     2
                   </span>
-                  Upload dokumen lengkap
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-sm font-medium bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                    3
-                  </span>
-                  Verifikasi oleh tim kami
+                  Tunggu proses verifikasi dan persetujuan dari admin
                 </li>
               </ol>
             </div>
@@ -123,39 +145,65 @@ export default function PanduanPage() {
           </Link>
         </div>
 
-        {/* Integration Steps */}
+        {/* Creative Timeline Section */}
         <div className="bg-white rounded-2xl p-8 shadow-lg border border-[#E5E7EB]">
           <h2 className="text-2xl font-bold text-gray-900 mb-12 text-center">
-            Alur Integrasi Setelah PKS Aktif
+            Langkah-langkah Penggunaan Aplikasi & Integrasi API
           </h2>
 
-          <div className="relative">
-            {/* Timeline */}
-            <div className="hidden md:block absolute left-8 top-0 h-full w-0.5 bg-gray-200" />
-
-            <div className="space-y-12">
+          {/* Timeline Desktop */}
+          <motion.div 
+            className="relative"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {/* Central Timeline Line */}
+            <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-[#27447C] to-[#3A5D9C] -translate-x-1/2 hidden md:block z-0" />
+            {/* Steps Container */}
+            <div className="space-y-16 md:space-y-24">
               {steps.map((step, index) => (
-                <div
+                <motion.div 
                   key={index}
-                  className="flex items-start gap-6 group"
+                  className={`relative flex flex-col md:flex-row items-center ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"}`}
+                  variants={itemVariants}
                 >
-                  {/* Icon Number */}
-                  <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-[#27447C] text-white flex items-center justify-center font-semibold text-lg relative">
-                    <div className="absolute -left-[18px] top-5 w-4 h-4 bg-white border-4 border-[#27447C] rounded-full hidden md:block" />
-                    {step.icon}
+                  {/* Step Content */}
+                  <div className={`w-full md:w-2/5 ${index % 2 === 0 ? "md:pr-8" : "md:pl-8"}`}>
+                    <div className="bg-white border-2 border-[#27447C] rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                      <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0">
+                          <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center border-2 border-[#27447C]">
+                            {step.icon}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-sm font-bold text-[#27447C] mb-1">LANGKAH {step.number}</div>
+                          <h3 className="text-xl font-bold text-[#27447C] mb-2">{step.title}</h3>
+                          <p className="text-gray-700">{step.desc}</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-
-                  {/* Content */}
-                  <div className="flex-1">
-                    <h3 className="text-xl font-semibold text-[#27447C] mb-2">
-                      {step.title}
-                    </h3>
-                    <p className="text-gray-600">{step.desc}</p>
+                  {/* Timeline Point - perfectly center on the line */}
+                  <div className="hidden md:block w-1/5 relative z-10">
+                    <div className="absolute left-1/2 top-0 -translate-x-1/2">
+                      <div className="w-8 h-8 rounded-full bg-white border-4 border-[#27447C] flex items-center justify-center">
+                        <div className="w-3 h-3 rounded-full bg-[#27447C]" />
+                      </div>
+                      {index < steps.length - 1 && (
+                        <div className="w-1 h-16 bg-gradient-to-b from-[#27447C] to-[#3A5D9C] mx-auto" />
+                      )}
+                    </div>
                   </div>
-                </div>
+                  {/* Empty Space for Zigzag */}
+                  <div className="hidden md:block w-2/5" />
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
+
+          
 
           <div className="mt-16 text-center">
             <Link

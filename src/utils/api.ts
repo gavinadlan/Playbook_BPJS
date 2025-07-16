@@ -160,3 +160,21 @@ export const updateUser = async (
     throw error;
   }
 };
+
+export const deleteUser = async (id: number): Promise<void> => {
+  try {
+    const response = await authFetch(`/api/admin/users/${id}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Gagal menghapus user');
+    }
+    
+    // DELETE request biasanya tidak mengembalikan body, cukup cek status OK
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    throw error;
+  }
+};

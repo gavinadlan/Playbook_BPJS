@@ -12,6 +12,7 @@ import { PKS } from "@/types/api";
 import { toast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton"; // Import skeleton
 import { useSocket } from "@/hooks/useSocket";
+import { io as socketIOClient } from "socket.io-client";
 
 export default function PKSPage() {
   useAdminAuth();
@@ -54,6 +55,22 @@ export default function PKSPage() {
       toast({ title: "Notifikasi", description: notif.message });
     }
   );
+
+  // Listen event new_pks_submission agar admin dapat data PKS baru secara real-time
+  useEffect(() => {
+    const socket = socketIOClient("http://localhost:3001", { withCredentials: true });
+    socket.on("new_pks_submission", (data) => {
+      setLoading(true);
+      fetchPKSData().then((data) => {
+        setPksData(data);
+        setLoading(false);
+      });
+      toast({ title: "New PKS Submission", description: "A new PKS has been submitted." });
+    });
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   // Handle update status dari komponen anak
   const handleStatusUpdate = async () => {

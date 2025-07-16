@@ -203,8 +203,6 @@ export default function PanduanPage() {
             </div>
           </motion.div>
 
-          
-
           <div className="mt-16 text-center">
             <Link
               href="/test-api"

@@ -6,6 +6,7 @@ import {
   FileCheck,
   Settings,
   Home,
+  X,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/components/ui/sonner";
@@ -46,15 +47,32 @@ const AdminSidebar = ({
             } bg-gradient-to-b from-[rgb(39,68,124)] to-[rgb(73,163,90)]`}
             onClick={isMobile ? (e) => e.stopPropagation() : undefined}
           >
-            <div className="flex flex-col h-full p-4 overflow-y-auto">
-              {/* Logo Section */}
-              <div className="mb-6 px-2 py-4">
-                <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                  <Settings className="w-5 h-5" />
-                  <span>Admin Portal</span>
-                </h2>
-                <p className="text-xs text-white/80 mt-1">BPJS Kesehatan</p>
-              </div>
+            <div className="flex flex-col h-full p-4 overflow-y-auto relative">
+              {/* Tombol Close di Mobile */}
+              {isMobile && (
+                <div className="w-full flex justify-start mb-2">
+                  <button
+                    onClick={onClose}
+                    className="ml-1 mt-1 p-2 rounded-full bg-white border border-gray-200 shadow text-gray-700 hover:bg-gray-100 focus:outline-none"
+                    aria-label="Tutup menu"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+              )}
+              {/* Logo Section (hide on mobile) */}
+              {!isMobile && (
+                <div className="mb-2 px-2 py-4 flex flex-col items-center">
+                  <div className="bg-white rounded-xl shadow p-3 flex flex-col items-center w-full mb-2">
+                    <img
+                      src="/images/logo.svg"
+                      alt="BPJS Kesehatan Logo"
+                      className="h-10 mx-auto"
+                    />
+                  </div>
+                </div>
+              )}
+              <div className="border-b border-white/20 mb-4 w-full" />
 
               {/* Navigation */}
               <nav className="flex-1 space-y-2">

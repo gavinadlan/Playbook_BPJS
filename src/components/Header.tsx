@@ -46,7 +46,7 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 left-0 w-full z-50 bg-white border-b border-gray-200 h-20 shadow-sm">
+    <header className="fixed top-0 left-0 w-full z-50 bg-white border-b border-gray-200 h-20 shadow-sm">
       <div className="flex h-full items-stretch justify-between px-4 md:px-6 max-w-7xl mx-auto">
         <div className="flex items-stretch gap-6">
           {/* Logo */}

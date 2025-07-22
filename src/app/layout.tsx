@@ -28,7 +28,8 @@ export default function RootLayout({
           <ClientLayoutWrapper>
             <>
               <ConditionalHeader />
-              <main className="flex-grow">{children}</main>
+              {/* Tambahkan padding top sebesar tinggi header */}
+              <main className="flex-grow pt-20">{children}</main>
               <ConditionalFooter />
               <Toaster
                 position="top-center"

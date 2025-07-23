@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import Image from "next/image";
 
 export default function Home() {
   const features = [
@@ -89,23 +90,17 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
-            className="relative rounded-xl overflow-hidden shadow-xl"
           >
-            <div className="bg-[#27447C] p-4 flex items-center justify-between">
-              <div className="flex gap-2">
-                <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                <div className="w-3 h-3 rounded-full bg-green-500"></div>
-              </div>
-              <span className="text-white text-sm">Contoh Request</span>
+            <div className="flex items-center justify-center">
+              <Image
+                src="/images/api.png"
+                alt="API Example"
+                width={600}
+                height={400}
+                className="w-full h-auto object-contain max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto block mb-8"
+                priority
+              />
             </div>
-            <SyntaxHighlighter
-              language="bash"
-              style={atomOneDark}
-              customStyle={{ padding: "1.5rem", fontSize: "0.9rem" }}
-            >
-              {codeExample}
-            </SyntaxHighlighter>
           </motion.div>
         </div>
       </section>
@@ -163,28 +158,17 @@ export default function Home() {
               <ChevronRight className="w-4 h-4 ml-2" />
             </Link>
           </div>
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-            <SyntaxHighlighter
-              language="javascript"
-              style={atomOneDark}
-              customStyle={{ padding: "1.5rem", fontSize: "0.9rem" }}
-            >
-              {`// Contoh Autentikasi dengan Node.js
-const getToken = async () => {
-  const response = await fetch('https://api.bpjs-kesehatan.go.id/oauth/token', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      client_id: 'CLIENT_ID',
-      client_secret: 'CLIENT_SECRET',
-      grant_type: 'client_credentials'
-    })
-  });
-  return await response.json();
-};`}
-            </SyntaxHighlighter>
+          <div>
+            <div className="flex items-center justify-center">
+              <Image
+                src="/images/api.png"
+                alt="API Example"
+                width={600}
+                height={400}
+                className="w-full h-auto object-contain max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto block"
+                priority
+              />
+            </div>
           </div>
         </div>
       </section>

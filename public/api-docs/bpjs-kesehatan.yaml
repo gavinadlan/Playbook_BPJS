@@ -60,7 +60,7 @@ info:
     https://apijkn-dev.bpjs-kesehatan.go.id/erekammedis_dev
 
 servers:
-  - url: https://apijkn-dev.bpjs-kesehatan.go.id
-    description: Server Development
+  - url: http://localhost:3001/api/bpjs
+    description: Proxy Backend Local
 
 

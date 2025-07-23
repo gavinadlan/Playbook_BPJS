@@ -32,8 +32,8 @@ info:
     - `rencana-kontrol.yaml`: Pembuatan Rencana Kontrol/SPRI
 
 servers:
-  - url: https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev
-    description: Server Development
+  - url: http://localhost:3001/api/bpjs/vclaim-rest-dev
+    description: Proxy Backend Local
 
 tags:
   - name: Authentication

@@ -4,8 +4,8 @@ info:
   version: 1.0.0
   description: Endpoint referensi VClaim BPJS Kesehatan, sudah disesuaikan dengan kebutuhan dan contoh response user.
 servers:
-  - url: https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev
-    description: Server Development
+  - url: http://localhost:3001/api/bpjs/vclaim-rest-dev
+    description: Proxy Backend Local
 tags:
   - name: Referensi
     description: Endpoint referensi data VClaim

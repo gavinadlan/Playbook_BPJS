@@ -4,8 +4,8 @@ info:
   version: 1.0.0
   description: Layanan untuk pencarian dan pembuatan rujukan
 servers:
-  - url: https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev
-    description: Server Development
+  - url: http://localhost:3001/api/bpjs/vclaim-rest-dev
+    description: Proxy Backend Local
 tags:
   - name: Rujukan
     description: Pengelolaan rujukan (pencarian, pembuatan, update, delete)

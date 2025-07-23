@@ -5,8 +5,8 @@ info:
   description: Data peserta BPJS Kesehatan
 
 servers:
-  - url: https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev
-    description: Server Development
+  - url: http://localhost:3001/api/bpjs/vclaim-rest-dev
+    description: Proxy Backend Local
 
 tags:
   - name: Peserta

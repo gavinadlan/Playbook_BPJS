@@ -3,7 +3,8 @@ info:
   title: Web Service Antrean FKTP
   version: 1.0.0
 servers:
-  - url: https://apijkn-dev.bpjs-kesehatan.go.id/antreanfktp_dev
+  - url: http://localhost:3001/api/bpjs/antreanfktp_dev
+    description: Proxy Backend Local
 tags:
   - name: Web Service Antrean - FKTP
     description: Layanan antrean untuk FKTP (Diaakses oleh Mobile JKN)

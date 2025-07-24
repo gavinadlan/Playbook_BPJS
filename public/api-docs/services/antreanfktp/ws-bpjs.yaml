@@ -3,8 +3,8 @@ info:
   title: Web Service Antrean BPJS
   version: 1.0.0
 servers:
-  - url:  https://apijkn-dev.bpjs-kesehatan.go.id/antreanfktp_dev
-    description: Server utama BPJS Kesehatan
+  - url: http://localhost:3001/api/bpjs/antreanfktp_dev
+    description: Proxy Backend Local
 tags:
   - name: Web Service Antrean - BPJS
     description: Diakses oleh sistem FKTP

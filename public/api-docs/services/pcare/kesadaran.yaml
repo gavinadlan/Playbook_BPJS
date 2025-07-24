@@ -51,6 +51,12 @@ paths:
           schema:
             type: string
           description: Signature
+        - name: x-authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Authorization signature (Base64)
         - name: user_key
           in: header
           required: true

@@ -29,8 +29,8 @@ info:
     - IV: 16 byte pertama dari SHA256 hash
     - Decompression: LZString (decompressFromEncodedURIComponent)
 servers:
-  - url: 'https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev'
-    description: Server Development
+  - url: 'http://localhost:3001/api/bpjs/pcare-rest-dev'
+    description: Proxy Backend Local
 tags:
   - name: Diagnosa
     description: Data diagnosa PCare

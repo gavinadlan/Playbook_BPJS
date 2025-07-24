@@ -4,8 +4,8 @@ info:
   version: 1.0.0
   description: Layanan untuk data provider rayonisasi PCare
 servers:
-  - url: https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev
-    description: PCare Development Server
+  - url: http://localhost:3001/api/bpjs/pcare-rest-dev
+    description: Proxy Backend Local
 tags:
   - name: Provider
     description: Data provider rayonisasi

@@ -4,8 +4,8 @@ info:
   version: 1.0.0
   description: Layanan untuk pengelolaan Club Prolanis PCare
 servers:
-  - url: https://apijkn-dev.bpjs-kesehatan.go.id/pcare-rest-dev
-    description: PCare Development Server
+  - url: http://localhost:3001/api/bpjs/pcare-rest-dev
+    description: Proxy Backend Local
 tags:
   - name: Kelompok
     description: Pengelolaan Club Prolanis (Diabetes Melitus, Hipertensi, Asthma)

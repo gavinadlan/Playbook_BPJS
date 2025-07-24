@@ -285,8 +285,8 @@ info:
     ```
 
 servers:
-  - url: https://apijkn-dev.bpjs-kesehatan.go.id/ihs_dev
-    description: iCare FKRTL Development Server
+  - url: http://localhost:3001/api/bpjs/ihs_dev
+    description: Proxy Backend Local
 
 components:
   securitySchemes:

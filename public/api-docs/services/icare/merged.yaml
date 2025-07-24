@@ -5,8 +5,8 @@ info:
   description: |
     API PCare untuk pengelolaan layanan primer BPJS Kesehatan
 servers:
-  - url: 'https://apijkn-dev.bpjs-kesehatan.go.id/ihs_dev'
-    description: Server Development
+  - url: 'http://localhost:3001/api/bpjs/ihs_dev'
+    description: Proxy Backend Local
 paths:
   /auth/signature:
     get:

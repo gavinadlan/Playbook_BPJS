@@ -6,8 +6,8 @@ info:
     Katalog layanan API Data Riwayat Pelayanan iCare JKN untuk FKRTL dan FKTP.
 
 servers:
-  - url: https://apijkn-dev.bpjs-kesehatan.go.id/ihs_dev
-    description: iCare Development Server
+  - url: http://localhost:3001/api/bpjs/ihs_dev
+    description: Proxy Backend Local
 
 tags:
   - name: FKRTL

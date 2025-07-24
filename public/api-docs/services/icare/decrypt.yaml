@@ -151,8 +151,8 @@ info:
     ```
 
 servers:
-  - url: https://apijkn-dev.bpjs-kesehatan.go.id/icare-rest-dev
-    description: iCare Development Server
+  - url: http://localhost:3001/api/bpjs/ihs_dev
+    description: Proxy Backend Local
 
 paths:
   /decrypt:

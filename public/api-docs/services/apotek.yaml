@@ -6,8 +6,8 @@ info:
     Entry point dokumentasi Apotek BPJS Kesehatan. Semua endpoint dipecah ke file terpisah berdasarkan domain.
 
 servers:
-  - url: https://apijkn-dev.bpjs-kesehatan.go.id/apotek-rest-dev
-    description: Server Development
+  - url: http://localhost:3001/api/bpjs/apotek-rest-dev
+    description: Proxy Backend Local
 
 paths:
   # ============================== REFERENSI ==============================

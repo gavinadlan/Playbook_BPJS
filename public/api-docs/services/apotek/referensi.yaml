@@ -5,8 +5,8 @@ info:
   description: Layanan referensi untuk manajemen data obat, poli, fasilitas kesehatan, dan spesialistik
 
 servers:
-  - url: https://apijkn-dev.bpjs-kesehatan.go.id/apotek-rest-dev
-    description: Server Development
+  - url: http://localhost:3001/api/bpjs/apotek-rest-dev
+    description: Proxy Backend Local
 
 tags:
   - name: Referensi

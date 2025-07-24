@@ -7,8 +7,8 @@ info:
     Semua endpoint memerlukan header autentikasi khusus BPJS.
 
 servers:
-  - url: https://apijkn-dev.bpjs-kesehatan.go.id/antreanrs_dev
-    description: Server Development
+  - url: http://localhost:3001/api/bpjs/antreanrs_dev
+    description: Proxy Backend Local
 
 tags:
   - name: Web Service Antrean - BPJS (Diakses oleh sistem RS)

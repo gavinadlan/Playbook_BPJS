@@ -70,12 +70,6 @@ paths:
           schema:
             type: string
           description: Generated signature dengan pola HMAC-256
-        - name: x-authorization
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Generated signature dengan pola Base64
         - name: user_key
           in: header
           required: true
@@ -132,12 +126,6 @@ paths:
           schema:
             type: string
           description: Generated signature dengan pola HMAC-256
-        - name: x-authorization
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Generated signature dengan pola Base64
         - name: user_key
           in: header
           required: true
@@ -208,12 +196,6 @@ paths:
           schema:
             type: string
           description: Generated signature dengan pola HMAC-256
-        - name: x-authorization
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Generated signature dengan pola Base64
         - name: user_key
           in: header
           required: true
@@ -249,11 +231,6 @@ components:
       in: header
       name: X-signature
       description: Generated signature dengan pola HMAC-256
-    apotekAuthorization:
-      type: apiKey
-      in: header
-      name: X-authorization
-      description: Generated signature dengan pola Base64
     userKey:
       type: apiKey
       in: header

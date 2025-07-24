@@ -5,8 +5,8 @@ info:
   description: Layanan Aplicares untuk manajemen aplikasi dan ketersediaan kamar
 
 servers:
-  - url: https://apijkn-dev.bpjs-kesehatan.go.id
-    description: Server Development
+  - url: http://localhost:3001/api/bpjs/aplicares
+    description: Proxy Backend Local
 
 tags:
   - name: Ketersediaan Kamar
@@ -39,12 +39,6 @@ paths:
           schema:
             type: string
           description: Generated signature dengan pola HMAC-256
-        - name: x-authorization
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Generated signature dengan pola Base64
         - name: user_key
           in: header
           required: true
@@ -129,12 +123,6 @@ paths:
           schema:
             type: string
           description: Generated signature dengan pola HMAC-256
-        - name: x-authorization
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Generated signature dengan pola Base64
         - name: user_key
           in: header
           required: true
@@ -235,12 +223,6 @@ paths:
           schema:
             type: string
           description: Generated signature dengan pola HMAC-256
-        - name: x-authorization
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Generated signature dengan pola Base64
         - name: user_key
           in: header
           required: true
@@ -357,12 +339,6 @@ paths:
           schema:
             type: string
           description: Generated signature dengan pola HMAC-256
-        - name: x-authorization
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Generated signature dengan pola Base64
         - name: user_key
           in: header
           required: true
@@ -447,12 +423,6 @@ paths:
           schema:
             type: string
           description: Generated signature dengan pola HMAC-256
-        - name: x-authorization
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Generated signature dengan pola Base64
         - name: user_key
           in: header
           required: true

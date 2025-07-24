@@ -12,8 +12,8 @@ tags:
   - name: Medical Record Format
     description: 'Endpoint FHIR resource (Bundle, Patient, dsb)'
 servers:
-  - url: 'https://apijkn-dev.bpjs-kesehatan.go.id/erekammedis_dev'
-    description: Server Development
+  - url: 'http://localhost:3001/api/bpjs/erekammedis_dev'
+    description: Proxy Backend Local
 paths:
   /rekam-medis/insert:
     post:

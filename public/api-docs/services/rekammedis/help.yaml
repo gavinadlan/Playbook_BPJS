@@ -314,8 +314,8 @@ info:
         print(base64.b64encode(ciphertext).decode('utf-8'))
 
 servers:
-  - url: https://apijkn-dev.bpjs-kesehatan.go.id/ihs_dev
-    description: Rekam Medis Development Server
+  - url: http://localhost:3001/api/bpjs/erekammedis_dev
+    description: Proxy Backend Local
 
 components:
   securitySchemes:

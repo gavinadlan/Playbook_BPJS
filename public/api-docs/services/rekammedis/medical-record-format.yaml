@@ -548,3 +548,6 @@ security:
   - rekamMedisTimestamp: []
   - rekamMedisSignature: []
   - rekamMedisUserKey: []
+servers:
+  - url: http://localhost:3001/api/bpjs/erekammedis_dev
+    description: Proxy Backend Local

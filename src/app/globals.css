@@ -75,7 +75,7 @@
   .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
+    --card: 0 0% 100%;
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
@@ -112,4 +112,35 @@
 .admin-layout .non-admin-header,
 .admin-layout .non-admin-footer {
   display: none;
+}
+
+/* Padding top hanya untuk halaman non-admin */
+.main-layout .main-layout-content {
+  padding-top: 5rem; /* h-20 = 80px */
+}
+
+.admin-layout .main-layout-content {
+  padding-top: 0;
+}
+
+/* Khusus untuk halaman utama yang menggunakan min-h-screen */
+.main-layout .main-layout-content > div:first-child {
+  min-height: calc(100vh - 5rem); /* 100vh - header height */
+}
+
+/* Pastikan section pertama di halaman utama tidak terpotong */
+.main-layout .main-layout-content > div:first-child > section:first-child {
+  padding-top: 0;
+  margin-top: 0;
+}
+
+/* Khusus untuk halaman yang menggunakan Banner component */
+.main-layout .main-layout-content > div:first-child > div:first-child {
+  margin-top: -5rem; /* Kompensasi padding top */
+  padding-top: 5rem; /* Tambahkan padding top untuk kompensasi */
+}
+
+/* Khusus untuk halaman yang menggunakan min-h-screen tanpa Banner */
+.main-layout .main-layout-content > div:first-child.min-h-screen {
+  min-height: calc(100vh - 5rem); /* 100vh - header height */
 }

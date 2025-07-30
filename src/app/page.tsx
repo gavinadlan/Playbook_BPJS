@@ -161,7 +161,7 @@ export default function Home() {
           <div>
             <div className="flex items-center justify-center">
               <Image
-                src="/images/api.png"
+                src="/images/auth-img.svg"
                 alt="API Example"
                 width={600}
                 height={400}

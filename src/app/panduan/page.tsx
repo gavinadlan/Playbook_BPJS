@@ -45,6 +45,12 @@ export default function PanduanPage() {
     },
     {
       number: "6",
+      title: "Pelajari Dokumentasi Teknis",
+      desc: "Pelajari panduan teknis untuk signature, authorization, dan decrypt response.",
+      icon: <FileText className="w-8 h-8 text-[#27447C]" />,
+    },
+    {
+      number: "7",
       title: "Akses API",
       desc: "Setelah PKS disetujui, Anda dapat mengakses API di menu Test API.",
       icon: <Lock className="w-8 h-8 text-[#27447C]" />,
@@ -145,6 +151,59 @@ export default function PanduanPage() {
           </Link>
         </div>
 
+        {/* Dokumentasi Teknis Section */}
+        <div className="bg-white rounded-2xl p-8 mb-16 shadow-lg border border-[#E5E7EB]">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="p-3 bg-green-50 rounded-lg text-[#49A35A] border border-green-100">
+              <FileText className="w-8 h-8" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900">
+              Dokumentasi Teknis
+            </h2>
+          </div>
+
+          <p className="text-gray-600 mb-8">
+            Setelah PKS disetujui, Anda akan membutuhkan dokumentasi teknis untuk mengintegrasikan API dengan sistem Anda. Dokumentasi ini mencakup panduan lengkap untuk signature, authorization, dan decrypt response.
+          </p>
+
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-[#F8FAFC] p-6 rounded-xl border border-green-50">
+              <h3 className="font-semibold text-lg mb-3 text-[#49A35A]">
+                Signature Generation
+              </h3>
+              <p className="text-gray-600 text-sm">
+                Panduan lengkap untuk membuat signature yang diperlukan untuk autentikasi API request.
+              </p>
+            </div>
+
+            <div className="bg-[#F8FAFC] p-6 rounded-xl border border-green-50">
+              <h3 className="font-semibold text-lg mb-3 text-[#49A35A]">
+                Authorization Header
+              </h3>
+              <p className="text-gray-600 text-sm">
+                Cara membuat header authorization yang valid untuk mengakses endpoint API.
+              </p>
+            </div>
+
+            <div className="bg-[#F8FAFC] p-6 rounded-xl border border-green-50">
+              <h3 className="font-semibold text-lg mb-3 text-[#49A35A]">
+                Response Decrypt
+              </h3>
+              <p className="text-gray-600 text-sm">
+                Panduan untuk mendecrypt response yang terenkripsi dari API BPJS Kesehatan.
+              </p>
+            </div>
+          </div>
+
+          <Link
+            href="/panduan/dokumentasi"
+            className="inline-flex items-center px-6 py-3 bg-[#49A35A] text-white rounded-lg hover:bg-[#3A7A4D] transition gap-2 shadow-md font-medium"
+          >
+            Lihat Dokumentasi Teknis
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+
         {/* Creative Timeline Section */}
         <div className="bg-white rounded-2xl p-8 shadow-lg border border-[#E5E7EB]">
           <h2 className="text-2xl font-bold text-gray-900 mb-12 text-center">
@@ -203,14 +262,26 @@ export default function PanduanPage() {
             </div>
           </motion.div>
 
-          <div className="mt-16 text-center">
-            <Link
-              href="/test-api"
-              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#27447C] to-[#3A5D9C] text-white rounded-xl hover:opacity-90 transition gap-3 shadow-lg font-medium"
-            >
-              Mulai Integrasi API
-              <ArrowRight className="w-5 h-5" />
-            </Link>
+          <div className="mt-16 text-center space-y-4">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/test-api"
+                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#27447C] to-[#3A5D9C] text-white rounded-xl hover:opacity-90 transition gap-3 shadow-lg font-medium"
+              >
+                Mulai Integrasi API
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+              <Link
+                href="/panduan/dokumentasi"
+                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#49A35A] to-[#3A7A4D] text-white rounded-xl hover:opacity-90 transition gap-3 shadow-lg font-medium"
+              >
+                Dokumentasi Teknis
+                <FileText className="w-5 h-5" />
+              </Link>
+            </div>
+            <p className="text-sm text-gray-600 max-w-md mx-auto">
+              Lihat panduan teknis untuk signature, authorization, dan decrypt response
+            </p>
           </div>
         </div>
       </div>

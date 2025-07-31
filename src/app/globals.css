@@ -109,38 +109,129 @@
   }
 }
 
+/* ===== LAYOUT SYSTEM ===== */
+
+/* Hide admin header/footer on admin pages */
 .admin-layout .non-admin-header,
 .admin-layout .non-admin-footer {
   display: none;
 }
 
-/* Padding top hanya untuk halaman non-admin */
+/* ===== MAIN LAYOUT (Non-Admin Pages) ===== */
+
+/* Base padding for main layout content */
 .main-layout .main-layout-content {
-  padding-top: 5rem; /* h-20 = 80px */
+  padding-top: 5rem; /* 80px - header height */
 }
 
+/* ===== ADMIN LAYOUT ===== */
+
+/* No padding for admin pages */
 .admin-layout .main-layout-content {
   padding-top: 0;
 }
 
-/* Khusus untuk halaman utama yang menggunakan min-h-screen */
+/* ===== PAGE-SPECIFIC LAYOUTS ===== */
+
+/* Home page with min-h-screen */
 .main-layout .main-layout-content > div:first-child {
-  min-height: calc(100vh - 5rem); /* 100vh - header height */
+  min-height: calc(100vh - 5rem);
 }
 
-/* Pastikan section pertama di halaman utama tidak terpotong */
-.main-layout .main-layout-content > div:first-child > section:first-child {
-  padding-top: 0;
-  margin-top: 0;
-}
-
-/* Khusus untuk halaman yang menggunakan Banner component */
+/* Pages with Banner component (fitur-api, faq) */
 .main-layout .main-layout-content > div:first-child > div:first-child {
-  margin-top: -5rem; /* Kompensasi padding top */
-  padding-top: 5rem; /* Tambahkan padding top untuk kompensasi */
+  margin-top: -5rem;
+  padding-top: 5rem;
 }
 
-/* Khusus untuk halaman yang menggunakan min-h-screen tanpa Banner */
+/* Pages with min-h-screen but no Banner (pengajuan-pks, pengajuan-saya, test-api) */
 .main-layout .main-layout-content > div:first-child.min-h-screen {
-  min-height: calc(100vh - 5rem); /* 100vh - header height */
+  min-height: calc(100vh - 5rem);
+  padding-top: 2rem; /* Additional spacing from header */
+}
+
+/* Auth pages (login, register) - full height without extra padding */
+.main-layout .main-layout-content > div:first-child.min-h-screen.flex {
+  padding-top: 0;
+  min-height: 100vh;
+}
+
+/* ===== MOBILE RESPONSIVE ===== */
+
+/* Mobile adjustments for better spacing */
+@media (max-width: 768px) {
+  /* Reduce padding on mobile for better space utilization */
+  .main-layout .main-layout-content {
+    padding-top: 4.5rem; /* Slightly less padding on mobile */
+  }
+  
+  /* Adjust min-height for mobile */
+  .main-layout .main-layout-content > div:first-child {
+    min-height: calc(100vh - 4.5rem);
+  }
+  
+  .main-layout .main-layout-content > div:first-child.min-h-screen {
+    min-height: calc(100vh - 4.5rem);
+    padding-top: 1.5rem; /* Less padding on mobile */
+  }
+  
+  /* Banner pages on mobile */
+  .main-layout .main-layout-content > div:first-child > div:first-child {
+    margin-top: -4.5rem;
+    padding-top: 4.5rem;
+  }
+}
+
+/* ===== UTILITY CLASSES ===== */
+
+/* Ensure content doesn't get cut off */
+.content-safe-area {
+  padding-top: 5rem;
+}
+
+.content-safe-area-mobile {
+  padding-top: 4.5rem;
+}
+
+/* Full height without header interference */
+.full-height-content {
+  min-height: calc(100vh - 5rem);
+}
+
+.full-height-content-mobile {
+  min-height: calc(100vh - 4.5rem);
+}
+
+/* ===== SPECIFIC PAGE FIXES ===== */
+
+/* Fix for pengajuan-saya page - ensure proper spacing */
+.main-layout .main-layout-content > div:first-child.min-h-screen.p-8 {
+  padding-top: 6rem !important; /* Extra padding for pages with p-8 */
+}
+
+/* Fix for test-api page - ensure proper spacing */
+.main-layout .main-layout-content > div:first-child.container {
+  padding-top: 6rem !important; /* Extra padding for container pages */
+}
+
+/* Fix for fitur-api and faq pages - ensure banner covers header properly */
+.main-layout .main-layout-content > div:first-child > div:first-child {
+  margin-top: -5rem !important;
+  padding-top: 5rem !important;
+}
+
+/* Mobile fixes for specific pages */
+@media (max-width: 768px) {
+  .main-layout .main-layout-content > div:first-child.min-h-screen.p-8 {
+    padding-top: 5.5rem !important;
+  }
+  
+  .main-layout .main-layout-content > div:first-child.container {
+    padding-top: 5.5rem !important;
+  }
+  
+  .main-layout .main-layout-content > div:first-child > div:first-child {
+    margin-top: -4.5rem !important;
+    padding-top: 4.5rem !important;
+  }
 }

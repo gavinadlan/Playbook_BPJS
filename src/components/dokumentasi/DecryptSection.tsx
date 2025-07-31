@@ -34,11 +34,11 @@ export default function DecryptSection({ doc }: DecryptSectionProps) {
         </div>
       )}
 
-      {doc.decryptExamples && doc.decryptExamples.length > 0 && (
+      {doc.codeExamples && doc.codeExamples.length > 0 && (
         <CodeBlock
           title="Contoh Kode Decrypt"
           stepNumber={2}
-          examples={doc.decryptExamples}
+          examples={doc.codeExamples}
         />
       )}
     </div>

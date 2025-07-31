@@ -13,6 +13,15 @@ export type BpjsDocSection = {
   compressExamples?: { language: string; code: string }[];
   encryptExamples?: { language: string; code: string }[];
   description?: string;
+  headerTable?: { name: string; value: string; description: string }[];
+  headerExplanations?: { [key: string]: string };
+  signatureInfo?: string;
+  authorizationInfo?: {
+    username: string;
+    password: string;
+    kdAplikasi: string;
+    serviceType: string;
+  };
 };
 
 export const bpjsDocs: BpjsDocSection[] = [
@@ -57,7 +66,44 @@ export const bpjsDocs: BpjsDocSection[] = [
       }
     ],
     description:
-      `Secara umum, hampir setiap pemanggilan web-service VClaim, harus mencantumkan beberapa variabel pada HTTP Header:\n\n1. X-cons-id: Kode consumer (pengakses web-service) dari BPJS Kesehatan.\n2. X-timestamp: Waktu unix-based (UTC) yang digenerate client.\n3. X-signature: Signature HMAC-SHA256 dari consId & timestamp, menggunakan consumerSecret.\n4. user_key: Key akses webservice.\n\nSignature: HMAC-SHA256(consId + "&" + timestamp, secretKey)\n\nUntuk proses decrypt response, lihat panduan umum di bagian bawah halaman ini.`
+      `Secara umum, hampir setiap pemanggilan web-service, harus dicantumkan beberapa variabel yang dibutuhkan untuk menambahkan informasi ataupun untuk proses validasi yang dikirim pada HTTP Header, antara lain:`,
+    headerTable: [
+      { name: "X-cons-id", value: "743627386", description: "consumer ID dari BPJS Kesehatan" },
+      { name: "X-timestamp", value: "234234234", description: "generated unix-based timestamp" },
+      { name: "X-signature", value: "DogC5UiQurNcigrBdQ3QN5oYvXeUF5E82I/LHUcI9v0=", description: "generated signature dengan pola HMAC-256" },
+      { name: "user_key", value: "d795b04f4a72d74fae727be9da0xxxxx", description: "user_key untuk akses webservice" }
+    ],
+    headerExplanations: {
+      "X-cons-id": "Merupakan kode consumer (pengakses web-service). Kode ini akan diberikan oleh BPJS Kesehatan.",
+      "X-timestamp": "Merupakan waktu yang akan di-generate oleh client saat ingin memanggil setiap service. Format waktu ini ditulis dengan format unix-based-time (berisi angka, tidak dalam format tanggal sebagaimana mestinya). Format waktu menggunakan Coordinated Universal Time (UTC), dalam penggunaannya untuk mendapatkan timestamp, rumus yang digunakan adalah (local time in UTC timezone in seconds) - (1970-01-01 in seconds).",
+      "X-signature": "Merupakan hasil dari pembuatan signature yang dibuat oleh client. Signature yang digunakan menggunakan pola HMAC-SHA256.",
+      "user_key": "Merupakan key untuk mengakses webservice. Setiap service consumer memiliki user_key masing-masing."
+    },
+    signatureInfo: `Untuk dapat mengakses web-service dari BPJS Kesehatan (service provider), pemanggil web service (service consumer) akan mendapatkan:
+• Consumer ID
+• Consumer Secret
+
+Informasi Consumer Secret, hanya disimpan oleh service consumer. Tidak dikirim ke server web-service, hal ini untuk menjaga pengamanan yang lebih baik. Sedangkan kebutuhan Consumer Secret ini adalah untuk men-generate Signature (X-signature).
+
+Contoh:
+consumerID : 1234
+consumerSecret : pwd
+timestamp : 433223232
+variabel1 : consumerID&timestamp
+variabel1 : 1234&433223232
+SIGNATURE
+
+Metode signature yang digunakan adalah menggunakan HMAC-SHA256, dimana paramater saat generate signature dibutuhkan parameter message dan key.
+Berikut contoh hasil generate HMAC-SHA256
+message : aaa
+key : bbb
+hasil generate HMAC-SHA256 : 20BKS3PWnD3XU4JbSSZvVlGi2WWnDa8Sv9uHJ+wsELA=
+Diatas adalah hasil generate dari server BPJS Kesehatan
+
+Signature : HMAC-256(value : key)
+value : variabel1
+key : consumerSecret
+Signature : HMAC-256(variabel1 : consumerSecret)`
   },
   {
     id: "pcare",
@@ -101,12 +147,55 @@ export const bpjsDocs: BpjsDocSection[] = [
         code: `-(NSUInteger)GenerateSalt\n{\n    // random number (change the modulus to the length you'd like)\n    NSUInteger r = arc4random() % 100000;\n    return r;\n}\n\n-(NSString *)GenerateSignatureUsingSalt:(NSUInteger)salt\n{\n    /*\n     Make sure you import:\n     */\n    NSString *key = SECRET_KEY;                                            // define your Secret Key string\n    NSString *data = [NSString stringWithFormat:"%u", salt];            // convert your random number\n    const char *cKey  = [key cStringUsingEncoding:NSUTF8StringEncoding];\n    const char *cData = [data cStringUsingEncoding:NSUTF8StringEncoding];\n    unsigned char cHMAC[CC_SHA256_DIGEST_LENGTH];\n    // Hash the salt with the secret key\n    CCHmac(kCCHmacAlgSHA256, cKey, strlen(cKey), cData, strlen(cData), cHMAC);\n    // Create a data structure\n    NSData *HMAC = [[NSData alloc] initWithBytes:cHMAC\n                                          length:sizeof(cHMAC)];\n    // Base64-encode the signature\n    NSString *hash = [HMAC base64Encoding];\n    return signatureURL;\n}`
       }
     ],
-    description:
-      `Setiap pemanggilan web-service PCare harus mencantumkan header berikut:\n\n1. X-cons-id: Kode consumer (pengakses web-service) dari BPJS Kesehatan.\n2. X-timestamp: Waktu unix-based (UTC) yang digenerate client.\n3. X-signature: Signature HMAC-SHA256 dari consId & timestamp, menggunakan consumerSecret.\n4. X-authorization: Base64(username:password:kdAplikasi)\n5. user_key: Key akses webservice.\n\nSignature: HMAC-SHA256(consId + "&" + timestamp, secretKey)\nX-authorization: Base64(username:password:kdAplikasi)\n\nUntuk proses decrypt response, lihat panduan umum di bagian bawah halaman ini.`
+    description: `Secara umum, hampir setiap pemanggilan web-service, harus dicantumkan beberapa variabel yang dibutuhkan untuk menambahkan informasi ataupun untuk proses validasi yang dikirim pada HTTP Header, antara lain:`,
+    headerTable: [
+      { name: "X-cons-id", value: "743627386", description: "consumer ID dari BPJS Kesehatan" },
+      { name: "X-timestamp", value: "234234234", description: "generated unix-based timestamp" },
+      { name: "X-signature", value: "DogC5UiQurNcigrBdQ3QN5oYvXeUF5E82I/LHUcI9v0=", description: "generated signature dengan pola HMAC-256" },
+      { name: "X-authorization", value: "MDkwMzA0MDI6UXdlcnR5MSE6MDk1", description: "generated signature dengan pola Base64" },
+      { name: "user_key", value: "d795b04f4a72d74fae727be9da0xxxxx", description: "user_key untuk akses webservice" }
+    ],
+    headerExplanations: {
+      "X-cons-id": "Merupakan kode consumer (pengakses web-service). Kode ini akan diberikan oleh BPJS Kesehatan.",
+      "X-timestamp": "Merupakan waktu yang akan di-generate oleh client saat ingin memanggil setiap service. Format waktu ini ditulis dengan format unix-based-time (berisi angka, tidak dalam format tanggal sebagaimana mestinya). Format waktu menggunakan Coordinated Universal Time (UTC), dalam penggunaannya untuk mendapatkan timestamp, rumus yang digunakan adalah (local time in UTC timezone in seconds) - (1970-01-01 in seconds).",
+      "X-signature": "Merupakan hasil dari pembuatan signature yang dibuat oleh client. Signature yang digunakan menggunakan pola HMAC-SHA256.",
+      "X-authorization": "Merupakan kombinasi dari username dan password dari aplikasi yang akan di bridging (PCare), dan untuk menghasilkan enkripsi dari authorization dapat menggunakan pola Base64 Basic.\n\nusername : usernamePcare\npassword : passwordPcare\nkdAplikasi : 095\nAuthorization : Base64(username:password:kdAplikasi)",
+      "user_key": "Merupakan key untuk mengakses webservice. Setiap service consumer memiliki user_key masing-masing."
+    },
+    signatureInfo: `Untuk dapat mengakses web-service dari BPJS Kesehatan (service provider), pemanggil web service (service consumer) akan mendapatkan:
+• Consumer ID
+• Consumer Secret
+
+Informasi Consumer Secret, hanya disimpan oleh service consumer. Tidak dikirim ke server web-service, hal ini untuk menjaga pengamanan yang lebih baik. Sedangkan kebutuhan Consumer Secret ini adalah untuk men-generate Signature (X-signature).
+
+Contoh:
+consumerID : 1234
+consumerSecret : pwd
+timestamp : 433223232
+variabel1 : consumerID & timestamp
+variabel1 : 1234&433223232
+
+Signature : HMAC-256(value:key)
+value : variabel1
+key : consumerSecret
+Signature : HMAC-256(variabel1:consumerSecret)
+SIGNATURE
+
+Metode signature yang digunakan adalah menggunakan HMAC-SHA256, dimana paramater saat generate signature dibutuhkan parameter message dan key.
+Berikut contoh hasil generate HMAC-SHA256
+message : aaa
+key : bbb
+hasil generate HMAC-SHA256 : 20BKS3PWnD3XU4JbSSZvVlGi2WWnDa8Sv9uHJ+wsELA=
+Diatas adalah hasil generate dari server BPJS Kesehatan
+
+Signature : HMAC-256(value : key)
+value : variabel1
+key : consumerSecret
+Signature : HMAC-256(variabel1 : consumerSecret)`
   },
   {
     id: "icare-fkrtl",
-    title: "iCare FKRTL",
+    title: "iCare FKTRL",
     headers: [
       "X-cons-id",
       "X-timestamp",
@@ -144,8 +233,44 @@ export const bpjsDocs: BpjsDocSection[] = [
         code: `-(NSUInteger)GenerateSalt\n{\n    // random number (change the modulus to the length you'd like)\n    NSUInteger r = arc4random() % 100000;\n    return r;\n}\n\n-(NSString *)GenerateSignatureUsingSalt:(NSUInteger)salt\n{\n    /*\n     Make sure you import:\n     */\n    NSString *key = SECRET_KEY;                                            // define your Secret Key string\n    NSString *data = [NSString stringWithFormat:"%u", salt];            // convert your random number\n    const char *cKey  = [key cStringUsingEncoding:NSUTF8StringEncoding];\n    const char *cData = [data cStringUsingEncoding:NSUTF8StringEncoding];\n    unsigned char cHMAC[CC_SHA256_DIGEST_LENGTH];\n    // Hash the salt with the secret key\n    CCHmac(kCCHmacAlgSHA256, cKey, strlen(cKey), cData, strlen(cData), cHMAC);\n    // Create a data structure\n    NSData *HMAC = [[NSData alloc] initWithBytes:cHMAC\n                                          length:sizeof(cHMAC)];\n    // Base64-encode the signature\n    NSString *hash = [HMAC base64Encoding];\n    return signatureURL;\n}`
       }
     ],
-    description:
-      `Setiap pemanggilan web-service iCare FKRTL harus mencantumkan header berikut:\n\n1. X-cons-id: Kode consumer (pengakses web-service) dari BPJS Kesehatan.\n2. X-timestamp: Waktu unix-based (UTC) yang digenerate client.\n3. X-signature: Signature HMAC-SHA256 dari consId & timestamp, menggunakan consumerSecret.\n4. user_key: Key akses webservice.\n\nSignature: HMAC-SHA256(consId + "&" + timestamp, secretKey)\n\nUntuk proses decrypt response, lihat panduan umum di bagian bawah halaman ini.`
+    description: `Secara umum, hampir setiap pemanggilan web-service, harus dicantumkan beberapa variabel yang dibutuhkan untuk menambahkan informasi ataupun untuk proses validasi yang dikirim pada HTTP Header, antara lain:`,
+    headerTable: [
+      { name: "X-cons-id", value: "743627386", description: "consumer ID dari BPJS Kesehatan" },
+      { name: "X-timestamp", value: "234234234", description: "generated unix-based timestamp" },
+      { name: "X-signature", value: "DogC5UiQurNcigrBdQ3QN5oYvXeUF5E82I/LHUcI9v0=", description: "generated signature dengan pola HMAC-256" },
+      { name: "user_key", value: "d795b04f4a72d74fae727be9da0xxxxx", description: "user_key untuk akses webservice" }
+    ],
+    headerExplanations: {
+      "X-cons-id": "Merupakan kode consumer (pengakses web-service). Kode ini akan diberikan oleh BPJS Kesehatan.",
+      "X-timestamp": "Merupakan waktu yang akan di-generate oleh client saat ingin memanggil setiap service. Format waktu ini ditulis dengan format unix-based-time (berisi angka, tidak dalam format tanggal sebagaimana mestinya). Format waktu menggunakan Coordinated Universal Time (UTC), dalam penggunaannya untuk mendapatkan timestamp, rumus yang digunakan adalah (local time in UTC timezone in seconds) - (1970-01-01 in seconds).",
+      "X-signature": "Merupakan hasil dari pembuatan signature yang dibuat oleh client. Signature yang digunakan menggunakan pola HMAC-SHA256.",
+      "user_key": "Merupakan key untuk mengakses webservice. Setiap service consumer memiliki user_key masing-masing."
+    },
+    signatureInfo: `Untuk dapat mengakses web-service dari BPJS Kesehatan (service provider), pemanggil web service (service consumer) akan mendapatkan:
+• Consumer ID
+• Consumer Secret
+
+Informasi Consumer Secret, hanya disimpan oleh service consumer. Tidak dikirim ke server web-service, hal ini untuk menjaga pengamanan yang lebih baik. Sedangkan kebutuhan Consumer Secret ini adalah untuk men-generate Signature (X-signature).
+
+Contoh:
+consumerID : 1234
+consumerSecret : pwd
+timestamp : 433223232
+variabel1 : consumerID&timestamp
+variabel1 : 1234&433223232
+SIGNATURE
+
+Metode signature yang digunakan adalah menggunakan HMAC-SHA256, dimana paramater saat generate signature dibutuhkan parameter message dan key.
+Berikut contoh hasil generate HMAC-SHA256
+message : aaa
+key : bbb
+hasil generate HMAC-SHA256 : 20BKS3PWnD3XU4JbSSZvVlGi2WWnDa8Sv9uHJ+wsELA=
+Diatas adalah hasil generate dari server BPJS Kesehatan
+
+Signature : HMAC-256(value : key)
+value : variabel1
+key : consumerSecret
+Signature : HMAC-256(variabel1 : consumerSecret)`
   },
   {
     id: "icare-fktp",
@@ -189,8 +314,42 @@ export const bpjsDocs: BpjsDocSection[] = [
         code: `-(NSUInteger)GenerateSalt\n{\n    // random number (change the modulus to the length you'd like)\n    NSUInteger r = arc4random() % 100000;\n    return r;\n}\n\n-(NSString *)GenerateSignatureUsingSalt:(NSUInteger)salt\n{\n    /*\n     Make sure you import:\n     */\n    NSString *key = SECRET_KEY;                                            // define your Secret Key string\n    NSString *data = [NSString stringWithFormat:"%u", salt];            // convert your random number\n    const char *cKey  = [key cStringUsingEncoding:NSUTF8StringEncoding];\n    const char *cData = [data cStringUsingEncoding:NSUTF8StringEncoding];\n    unsigned char cHMAC[CC_SHA256_DIGEST_LENGTH];\n    // Hash the salt with the secret key\n    CCHmac(kCCHmacAlgSHA256, cKey, strlen(cKey), cData, strlen(cData), cHMAC);\n    // Create a data structure\n    NSData *HMAC = [[NSData alloc] initWithBytes:cHMAC\n                                          length:sizeof(cHMAC)];\n    // Base64-encode the signature\n    NSString *hash = [HMAC base64Encoding];\n    return signatureURL;\n}`
       }
     ],
-    description:
-      `Setiap pemanggilan web-service iCare FKTP harus mencantumkan header berikut:\n\n1. X-cons-id: Kode consumer (pengakses web-service) dari BPJS Kesehatan.\n2. X-timestamp: Waktu unix-based (UTC) yang digenerate client.\n3. X-signature: Signature HMAC-SHA256 dari consId & timestamp, menggunakan consumerSecret.\n4. X-authorization: Base64(username:password:kdAplikasi)\n5. user_key: Key akses webservice.\n\nSignature: HMAC-SHA256(consId + "&" + timestamp, secretKey)\nX-authorization: Base64(username:password:kdAplikasi)\n\nUntuk proses decrypt response, lihat panduan umum di bagian bawah halaman ini.`
+    description: `Secara umum, hampir setiap pemanggilan web-service, harus dicantumkan beberapa variabel yang dibutuhkan untuk menambahkan informasi ataupun untuk proses validasi yang dikirim pada HTTP Header, antara lain:`,
+    headerTable: [
+      { name: "X-cons-id", value: "743627386", description: "consumer ID dari BPJS Kesehatan" },
+      { name: "X-timestamp", value: "234234234", description: "generated unix-based timestamp" },
+      { name: "X-signature", value: "DogC5UiQurNcigrBdQ3QN5oYvXeUF5E82I/LHUcI9v0=", description: "generated signature dengan pola HMAC-256" }
+    ],
+    headerExplanations: {
+      "X-cons-id": "Merupakan kode consumer (pengakses web-service). Kode ini akan diberikan oleh BPJS Kesehatan.",
+      "X-timestamp": "Merupakan waktu yang akan di-generate oleh client saat ingin memanggil setiap service. Format waktu ini ditulis dengan format unix-based-time (berisi angka, tidak dalam format tanggal sebagaimana mestinya). Format waktu menggunakan Coordinated Universal Time (UTC), dalam penggunaannya untuk mendapatkan timestamp, rumus yang digunakan adalah (local time in UTC timezone in seconds) - (1970-01-01 in seconds).",
+      "X-signature": "Merupakan hasil dari pembuatan signature yang dibuat oleh client. Signature yang digunakan menggunakan pola HMAC-SHA256."
+    },
+    signatureInfo: `Untuk dapat mengakses web-service dari BPJS Kesehatan (service provider), pemanggil web service (service consumer) akan mendapatkan:
+• Consumer ID
+• Consumer Secret
+
+Informasi Consumer Secret, hanya disimpan oleh service consumer. Tidak dikirim ke server web-service, hal ini untuk menjaga pengamanan yang lebih baik. Sedangkan kebutuhan Consumer Secret ini adalah untuk men-generate Signature (X-signature).
+
+Contoh:
+consumerID : 1234
+consumerSecret : pwd
+timestamp : 433223232
+variabel1 : consumerID&timestamp
+variabel1 : 1234&433223232
+SIGNATURE
+
+Metode signature yang digunakan adalah menggunakan HMAC-SHA256, dimana paramater saat generate signature dibutuhkan parameter message dan key.
+Berikut contoh hasil generate HMAC-SHA256
+message : aaa
+key : bbb
+hasil generate HMAC-SHA256 : 20BKS3PWnD3XU4JbSSZvVlGi2WWnDa8Sv9uHJ+wsELA=
+Diatas adalah hasil generate dari server BPJS Kesehatan
+
+Signature : HMAC-256(value : key)
+value : variabel1
+key : consumerSecret
+Signature : HMAC-256(variabel1 : consumerSecret)`
   },
   {
     id: "rekammedis-help",
@@ -275,14 +434,48 @@ export const bpjsDocs: BpjsDocSection[] = [
         code: `import hashlib\nfrom Crypto.Cipher import AES\nfrom Crypto.Util.Padding import pad, unpad\nimport base64\ntext = "Sample Text"\nkey = "considsecretkeykodefaskes" # consid + secretkey + kodefaskes\nmode = AES.MODE_CBC\nkey_hash = hashlib.sha256(key.encode('utf-8')).digest()\n# encrypt\nencryptor = AES.new(key_hash[0:32], mode, IV=key_hash[0:16])\nciphertext = encryptor.encrypt(pad(text.encode("utf-8"), AES.block_size))\nprint(base64.b64encode(ciphertext).decode('utf-8'))`
       }
     ],
-    description:
-      `Setiap pemanggilan web-service Rekam Medis harus mencantumkan header berikut:\n\n1. X-cons-id: Kode consumer (pengakses web-service) dari BPJS Kesehatan.\n2. X-timestamp: Waktu unix-based (UTC) yang digenerate client.\n3. X-signature: Signature HMAC-SHA256 dari consId & timestamp, menggunakan consumerSecret.\n\nSignature: HMAC-SHA256(consId + "&" + timestamp, secretKey)\n\nTerdapat juga contoh kompresi GZip dan enkripsi AES untuk kebutuhan utility.\n\nUntuk proses decrypt response, lihat panduan umum di bagian bawah halaman ini.`
+    description: `Secara umum, hampir setiap pemanggilan web-service, harus dicantumkan beberapa variabel yang dibutuhkan untuk menambahkan informasi ataupun untuk proses validasi yang dikirim pada HTTP Header, antara lain:`,
+    headerTable: [
+      { name: "X-cons-id", value: "743627386", description: "consumer ID dari BPJS Kesehatan" },
+      { name: "X-timestamp", value: "234234234", description: "generated unix-based timestamp" },
+      { name: "X-signature", value: "DogC5UiQurNcigrBdQ3QN5oYvXeUF5E82I/LHUcI9v0=", description: "generated signature dengan pola HMAC-256" }
+    ],
+    headerExplanations: {
+      "X-cons-id": "Merupakan kode consumer (pengakses web-service). Kode ini akan diberikan oleh BPJS Kesehatan.",
+      "X-timestamp": "Merupakan waktu yang akan di-generate oleh client saat ingin memanggil setiap service. Format waktu ini ditulis dengan format unix-based-time (berisi angka, tidak dalam format tanggal sebagaimana mestinya). Format waktu menggunakan Coordinated Universal Time (UTC), dalam penggunaannya untuk mendapatkan timestamp, rumus yang digunakan adalah (local time in UTC timezone in seconds) - (1970-01-01 in seconds).",
+      "X-signature": "Merupakan hasil dari pembuatan signature yang dibuat oleh client. Signature yang digunakan menggunakan pola HMAC-SHA256."
+    },
+    signatureInfo: `Untuk dapat mengakses web-service dari BPJS Kesehatan (service provider), pemanggil web service (service consumer) akan mendapatkan:
+• Consumer ID
+• Consumer Secret
+
+Informasi Consumer Secret, hanya disimpan oleh service consumer. Tidak dikirim ke server web-service, hal ini untuk menjaga pengamanan yang lebih baik. Sedangkan kebutuhan Consumer Secret ini adalah untuk men-generate Signature (X-signature).
+
+Contoh:
+consumerID : 1234
+consumerSecret : pwd
+timestamp : 433223232
+variabel1 : consumerID&timestamp
+variabel1 : 1234&433223232
+SIGNATURE
+
+Metode signature yang digunakan adalah menggunakan HMAC-SHA256, dimana paramater saat generate signature dibutuhkan parameter message dan key.
+Berikut contoh hasil generate HMAC-SHA256
+message : aaa
+key : bbb
+hasil generate HMAC-SHA256 : 20BKS3PWnD3XU4JbSSZvVlGi2WWnDa8Sv9uHJ+wsELA=
+Diatas adalah hasil generate dari server BPJS Kesehatan
+
+Signature : HMAC-256(value : key)
+value : variabel1
+key : consumerSecret
+Signature : HMAC-256(variabel1 : consumerSecret)`
   },
   {
     id: "decrypt",
     title: "Panduan Decrypt Response (Semua Layanan)",
-    headers: ["Key: consId + consSecret + timestamp"],
-    decryptFormula: "1. Dekripsi: AES 256 (mode CBC) - SHA256\n2. Dekompresi: Lz-string (decompressFromEncodedURIComponent)\nKey: consId + consSecret + timestamp request (concatenate string)",
+    headers: ["Key: consid + conspwd + timestamp"],
+    decryptFormula: "Langkah proses dalam melakukan decrypt data response sebagai berikut :\n1. Dekripsi : AES 256 (mode CBC) - SHA256\n2. Dekompresi : Lz-string (decompressFromEncodedURIComponent)\n\nkey : consid + conspwd + timestamp request (concatenate string)",
     codeExamples: [
       {
         language: "Java",
@@ -301,6 +494,6 @@ export const bpjsDocs: BpjsDocSection[] = [
         code: `import hashlib\nfrom Crypto.Cipher import AES\nfrom Crypto.Util.Padding import pad, unpad\nimport base64\nimport lzstring\n\ndef decrypt(key, txt_enc):\n    x = lzstring.LZString()\n    key_hash = hashlib.sha256(key.encode('utf-8')).digest()\n    mode = AES.MODE_CBC\n    # decrypt\n    decryptor = AES.new(key_hash[0:32], mode, IV=key_hash[0:16])\n    plain = decryptor.decrypt(base64.b64decode(txt_enc))\n    decompress = x.decompressFromEncodedURIComponent(plain.decode('utf-8'))\n    return decompress`
       }
     ],
-    description: `Response kembalian dari web service BPJS (VClaim, PCare, iCare, dsb) sudah dalam bentuk compress dan terenkripsi.\n\nKompresi service menggunakan metode: Lz-string\nEnkripsi menggunakan metode: AES 256 (mode CBC) - SHA256 dan key enkripsi: consId + consSecret + timestamp request (concatenate string)\n\nLangkah proses dalam melakukan decrypt data response sebagai berikut:\n1. Dekripsi: AES 256 (mode CBC) - SHA256\n2. Dekompresi: Lz-string (decompressFromEncodedURIComponent)\n\nKey: consId + consSecret + timestamp request (concatenate string)\n\nContoh kode tersedia untuk Java, PHP, C#, dan Python.`
+    description: `Response kembalian dari web service BPJS (VClaim, PCare, iCare, dsb) sudah dalam bentuk compress dan terenkripsi.\nKompresi service menggunakan metode : Lz-string\nEnkripsi menggunakan metode : AES 256 (mode CBC) - SHA256 dan key enkripsi: consid + conspwd + timestamp request (concatenate string)`
   }
 ]; 

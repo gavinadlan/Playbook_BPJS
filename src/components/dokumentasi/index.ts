@@ -5,4 +5,5 @@ export { default as CodeBlock } from './CodeBlock';
 export { default as CopyButton } from './CopyButton';
 export { default as HeaderTable } from './HeaderTable';
 export { default as SignatureInfo } from './SignatureInfo';
-export { default as AuthorizationInfo } from './AuthorizationInfo'; 
+
+export { default as HeaderDetails } from './HeaderDetails'; 

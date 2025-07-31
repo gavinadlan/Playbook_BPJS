@@ -3,7 +3,8 @@ import { Lock, Info } from "lucide-react";
 import CodeBlock from "./CodeBlock";
 import HeaderTable from "./HeaderTable";
 import SignatureInfo from "./SignatureInfo";
-import AuthorizationInfo from "./AuthorizationInfo";
+import HeaderDetails from "./HeaderDetails";
+
 import { BpjsDocSection } from "@/lib/bpjs-docs";
 
 interface DokumentasiSectionProps {
@@ -18,82 +19,28 @@ export default function DokumentasiSection({ doc }: DokumentasiSectionProps) {
       : "Untuk proses decrypt response, lihat panduan umum di bagian bawah halaman ini."
     : null;
 
-  // Create header information with proper values and descriptions based on service type
+
+
+  // Get general description
+  const getGeneralDescription = () => {
+    return doc.description;
+  };
+
+  // Get header information from doc.headerTable
   const getHeaderInfo = () => {
-    const headerMap: { [key: string]: { [key: string]: { value: string; description: string } } } = {
-      "vclaim": {
-        "X-cons-id": {
-          value: "743627386",
-          description: "Consumer ID dari BPJS Kesehatan"
-        },
-        "X-timestamp": {
-          value: "234234234",
-          description: "Generated unix-based timestamp"
-        },
-        "X-signature": {
-          value: "DogC5UiQurNcigrBdQ3QN5oYvXeUF5E82I/LHUcI9v0=",
-          description: "Generated signature dengan pola HMAC-256"
-        },
-        "user_key": {
-          value: "d795b04f4a72d74fae727be9da0xxxxx",
-          description: "User key untuk akses webservice"
-        }
-      },
-      "pcare": {
-        "X-cons-id": {
-          value: "743627386",
-          description: "Consumer ID dari BPJS Kesehatan"
-        },
-        "X-timestamp": {
-          value: "234234234",
-          description: "Generated unix-based timestamp"
-        },
-        "X-signature": {
-          value: "DogC5UiQurNcigrBdQ3QN5oYvXeUF5E82I/LHUcI9v0=",
-          description: "Generated signature dengan pola HMAC-256"
-        },
-        "X-authorization": {
-          value: "MDkwMzA0MDI6UXdlcnR5MSE6MDk1",
-          description: "Generated signature dengan pola Base64"
-        },
-        "user_key": {
-          value: "d795b04f4a72d74fae727be9da0xxxxx",
-          description: "User key untuk akses webservice"
-        }
-      },
-      "icare-fktp": {
-        "X-cons-id": {
-          value: "743627386",
-          description: "Consumer ID dari BPJS Kesehatan"
-        },
-        "X-timestamp": {
-          value: "234234234",
-          description: "Generated unix-based timestamp"
-        },
-        "X-signature": {
-          value: "DogC5UiQurNcigrBdQ3QN5oYvXeUF5E82I/LHUcI9v0=",
-          description: "Generated signature dengan pola HMAC-256"
-        },
-        "X-authorization": {
-          value: "MDkwMzA0MDI6UXdlcnR5MSE6MDk1",
-          description: "Generated signature dengan pola Base64"
-        },
-        "user_key": {
-          value: "d795b04f4a72d74fae727be9da0xxxxx",
-          description: "User key untuk akses webservice"
-        }
-      }
-    };
-
-    const serviceType = doc.id.toLowerCase();
-    const serviceHeaders = headerMap[serviceType] || headerMap["vclaim"];
-
+    if (doc.headerTable) {
+      return doc.headerTable;
+    }
+    // Fallback to headers array if headerTable is not available
     return doc.headers.map(header => ({
       name: header,
-      value: serviceHeaders[header]?.value || "nilai_header",
-      description: serviceHeaders[header]?.description || "Deskripsi header"
+      value: "nilai_header",
+      description: "Deskripsi header"
     }));
   };
+
+  const headerExplanations = doc.headerExplanations || null;
+  const generalDescription = getGeneralDescription();
 
   return (
     <div className="bg-white rounded-xl p-7 shadow-sm border border-[#E5E7EB] relative group hover:shadow-md transition-shadow">
@@ -113,22 +60,23 @@ export default function DokumentasiSection({ doc }: DokumentasiSectionProps) {
         </div>
       )}
       
-      {doc.description && (
-        <p className="text-gray-700 mb-5 leading-relaxed">
-          {doc.description.replace(decryptNote || "", "").trim()}
-        </p>
+      {generalDescription && (
+        <div className="text-gray-700 mb-5 leading-relaxed">
+          <p className="whitespace-pre-line">{generalDescription}</p>
+        </div>
       )}
 
       <div className="mb-6">
         <HeaderTable headers={getHeaderInfo()} />
       </div>
 
-      <SignatureInfo serviceName={doc.title} />
-
-      {/* Show AuthorizationInfo for PCare and iCare FKTP */}
-      {(doc.id.toLowerCase() === "pcare" || doc.id.toLowerCase() === "icare-fktp") && (
-        <AuthorizationInfo serviceName={doc.title} />
+      {headerExplanations && (
+        <HeaderDetails serviceName={doc.title} explanations={headerExplanations} />
       )}
+
+      
+
+      <SignatureInfo serviceName={doc.title} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         {doc.signatureFormula && (

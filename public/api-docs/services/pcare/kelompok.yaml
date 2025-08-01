@@ -115,7 +115,7 @@ paths:
         
         ## Example
         ```
-        GET /kelompok/kegiatan/01-2016
+        GET /kelompok/kegiatan/01-01-2016
         ```
       parameters:
         - name: bulan
@@ -123,9 +123,9 @@ paths:
           required: true
           schema:
             type: string
-            pattern: '^\\d{2}-\\d{4}$'
+            pattern: '^[0-9]{2}-[0-9]{2}-[0-9]{4}$'
           description: Bulan dalam format dd-mm-yyyy
-          example: "01-2016"
+          example: "01-01-2016"
         - name: x-cons-id
           in: header
           required: true

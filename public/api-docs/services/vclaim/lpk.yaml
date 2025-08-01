@@ -341,7 +341,7 @@ components:
           nullable: true
 
 paths:
-  /vclaim-rest/LPK/insert:
+  /LPK/insert:
     post:
       tags:
         - LPK
@@ -426,7 +426,7 @@ paths:
         '500':
           description: Internal Server Error
 
-  /vclaim-rest/LPK/update:
+  /LPK/update:
     put:
       tags:
         - LPK
@@ -511,7 +511,7 @@ paths:
         '500':
           description: Internal Server Error
 
-  /vclaim-rest/LPK/delete:
+  /LPK/delete:
     delete:
       tags:
         - LPK
@@ -579,7 +579,7 @@ paths:
         '500':
           description: Internal Server Error
 
-  /vclaim-rest/LPK/TglMasuk/{tglMasuk}/JnsPelayanan/{jnsPelayanan}:
+  /LPK/TglMasuk/{tglMasuk}/JnsPelayanan/{jnsPelayanan}:
     get:
       tags:
         - LPK

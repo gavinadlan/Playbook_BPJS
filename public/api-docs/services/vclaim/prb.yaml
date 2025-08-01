@@ -481,7 +481,7 @@ components:
                             example: "2018-01-08"
 
 paths:
-  /vclaim-rest/PRB/insert:
+  /PRB/insert:
     post:
       tags:
         - PRB
@@ -582,7 +582,7 @@ paths:
         '500':
           description: Internal Server Error
 
-  /vclaim-rest/PRB/Update:
+  /PRB/Update:
     put:
       tags:
         - PRB
@@ -655,7 +655,7 @@ paths:
         '500':
           description: Internal Server Error
 
-  /vclaim-rest/PRB/Delete:
+  /PRB/Delete:
     delete:
       tags:
         - PRB
@@ -714,7 +714,7 @@ paths:
         '500':
           description: Internal Server Error
 
-  /vclaim-rest/prb/{noSrb}/nosep/{noSep}:
+  /prb/{noSrb}/nosep/{noSep}:
     get:
       tags:
         - PRB
@@ -810,7 +810,7 @@ paths:
         '500':
           description: Internal Server Error
 
-  /vclaim-rest/prb/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
+  /prb/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
     get:
       tags:
         - PRB

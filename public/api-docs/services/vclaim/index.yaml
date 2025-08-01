@@ -74,7 +74,7 @@ components:
 
 paths:
   # Authentication endpoints
-  /vclaim-rest/auth/example:
+  /auth/example:
     get:
       tags:
         - Authentication
@@ -103,7 +103,7 @@ paths:
           description: Internal Server Error
 
   # LPK endpoints
-  /vclaim-rest/LPK/example:
+  /LPK/example:
     get:
       tags:
         - LPK
@@ -132,7 +132,7 @@ paths:
           description: Internal Server Error
 
   # Monitoring endpoints
-  /vclaim-rest/Monitoring/example:
+  /Monitoring/example:
     get:
       tags:
         - Monitoring
@@ -161,7 +161,7 @@ paths:
           description: Internal Server Error
 
   # Peserta endpoints
-  /vclaim-rest/Peserta/example:
+  /Peserta/example:
     get:
       tags:
         - Peserta
@@ -190,7 +190,7 @@ paths:
           description: Internal Server Error
 
   # PRB endpoints
-  /vclaim-rest/PRB/example:
+  /PRB/example:
     get:
       tags:
         - PRB
@@ -219,7 +219,7 @@ paths:
           description: Internal Server Error
 
   # Rencana Kontrol endpoints
-  /vclaim-rest/RencanaKontrol/example:
+  /RencanaKontrol/example:
     get:
       tags:
         - Rencana Kontrol

@@ -12,7 +12,7 @@ tags:
 
 paths:
   
-  /vclaim-rest/SEP/1.1/insert:
+  /SEP/1.1/insert:
     post:
       tags: [SEP]
       summary: Insert SEP
@@ -258,7 +258,7 @@ paths:
                             type: string
                             example: "2017-10-12"
 
-  /vclaim-rest/SEP/1.1/Update:
+  /SEP/1.1/Update:
     put:
       tags: [SEP]
       summary: Update SEP
@@ -426,7 +426,7 @@ paths:
                     type: string
                     example: "0301R0011117V000008"
 
-  /vclaim-rest/SEP/Delete:
+  /SEP/Delete:
     delete:
       tags: [SEP]
       summary: Hapus SEP
@@ -491,7 +491,7 @@ paths:
                     type: string
                     example: "0301R0011017V000007"
 
-  /vclaim-rest/SEP/{noSep}:
+  /SEP/{noSep}:
     get:
       tags: [SEP]
       summary: Cari SEP
@@ -714,7 +714,7 @@ paths:
                         type: string
                         example: "True"
 
-  /vclaim-rest/Rujukan/lastsep/norujukan/{noRujukan}:
+  /Rujukan/lastsep/norujukan/{noRujukan}:
     get:
       tags: [SEP]
       summary: Cari SEP Terakhir berdasarkan Nomor Rujukan
@@ -937,7 +937,7 @@ paths:
                         type: string
                         example: "True"
 
-  /vclaim-rest/SEP/2.0/insert:
+  /SEP/2.0/insert:
     post:
       tags: [SEP]
       summary: Insert SEP 2.0 New
@@ -1234,7 +1234,7 @@ paths:
                             type: string
                             example: "2"
 
-  /vclaim-rest/SEP/2.0/update:
+  /SEP/2.0/update:
     put:
       tags: [SEP]
       summary: Update SEP 2.0 New
@@ -1391,7 +1391,7 @@ paths:
                     type: string
                     example: "1101R0070420V000017"
 
-  /vclaim-rest/SEP/2.0/delete:
+  /SEP/2.0/delete:
     delete:
       tags: [SEP]
       summary: Delete SEP 2.0 New
@@ -1460,7 +1460,7 @@ paths:
   # POTENSI SUPLESI JASA RAHARJA
   # ==========================================
 
-  /vclaim-rest/sep/JasaRaharja/Suplesi/{noKartu}/tglPelayanan/{tglPelayanan}:
+  /sep/JasaRaharja/Suplesi/{noKartu}/tglPelayanan/{tglPelayanan}:
     get:
       tags: [SEP]
       summary: Suplesi Jasa Raharja
@@ -1545,7 +1545,7 @@ paths:
                               type: string
                               example: "2018-08-08"
 
-  /vclaim-rest/sep/KllInduk/List/{noKartu}:
+  /sep/KllInduk/List/{noKartu}:
     get:
       tags: [SEP]
       summary: Data Induk Kecelakaan New
@@ -1632,7 +1632,7 @@ paths:
   # APPROVAL PENJAMINAN SEP
   # ==========================================
 
-  /vclaim-rest/Sep/pengajuanSEP:
+  /Sep/pengajuanSEP:
     post:
       tags: [SEP]
       summary: Pengajuan
@@ -1715,7 +1715,7 @@ paths:
                     type: string
                     example: "0003814312013"
 
-  /vclaim-rest/Sep/aprovalSEP:
+  /Sep/aprovalSEP:
     post:
       tags: [SEP]
       summary: Aproval Pengajuan SEP
@@ -1798,7 +1798,7 @@ paths:
                     type: string
                     example: "0003814312013"
 
-  /vclaim-rest/Sep/persetujuanSEP/list/bulan/{bulan}/tahun/{tahun}:
+  /Sep/persetujuanSEP/list/bulan/{bulan}/tahun/{tahun}:
     get:
       tags: [SEP]
       summary: List Data Persetujuan SEP New
@@ -1886,7 +1886,7 @@ paths:
   # UPDATE TGL PULANG SEP
   # ==========================================
 
-  /vclaim-rest/Sep/updtglplg:
+  /Sep/updtglplg:
     put:
       tags: [SEP]
       summary: Update Tanggal Pulang
@@ -1957,7 +1957,7 @@ paths:
                         type: string
                         example: "OK"
 
-  /vclaim-rest/SEP/2.0/updtglplg:
+  /SEP/2.0/updtglplg:
     put:
       tags: [SEP]
       summary: Update Tanggal Pulang 2.0 New
@@ -2044,7 +2044,7 @@ paths:
                     type: string
                     nullable: true
 
-  /vclaim-rest/Sep/updtglplg/list/bulan/{bulan}/tahun/{tahun}/{filter}:
+  /Sep/updtglplg/list/bulan/{bulan}/tahun/{tahun}/{filter}:
     get:
       tags: [SEP]
       summary: List Data Update Tanggal Pulang New
@@ -2160,7 +2160,7 @@ paths:
   # INTEGRASI SEP DAN INACBG
   # ==========================================
 
-  /vclaim-rest/sep/cbg/{noSep}:
+  /sep/cbg/{noSep}:
     get:
       tags: [SEP]
       summary: Integrasi SEP dengan Inacbg
@@ -2248,7 +2248,7 @@ paths:
   # SEP INTERNAL
   # ==========================================
 
-  /vclaim-rest/SEP/Internal/{noSep}:
+  /SEP/Internal/{noSep}:
     get:
       tags: [SEP]
       summary: Data SEP Internal New
@@ -2382,7 +2382,7 @@ paths:
                               type: string
                               example: "Secondary hypertension"
 
-  /vclaim-rest/SEP/Internal/delete:
+  /SEP/Internal/delete:
     delete:
       tags: [SEP]
       summary: Hapus SEP Internal New
@@ -2469,7 +2469,7 @@ paths:
   # FINGER PRINT
   # ==========================================
 
-  /vclaim-rest/SEP/FingerPrint/Peserta/{noKartu}/TglPelayanan/{tglPelayanan}:
+  /SEP/FingerPrint/Peserta/{noKartu}/TglPelayanan/{tglPelayanan}:
     get:
       tags: [SEP]
       summary: Get Finger Print
@@ -2537,7 +2537,7 @@ paths:
                         type: string
                         example: "Peserta telah melakukan validasi finger print pada tanggal 2020-01-21"
 
-  /vclaim-rest/SEP/FingerPrint/List/Peserta/TglPelayanan/{tglPelayanan}:
+  /SEP/FingerPrint/List/Peserta/TglPelayanan/{tglPelayanan}:
     get:
       tags: [SEP]
       summary: Get List Finger Print
@@ -2607,7 +2607,7 @@ paths:
   # RANDOM QUESTION
   # ==========================================
 
-  /vclaim-rest/SEP/FingerPrint/randomquestion/faskesterdaftar/nokapst/{noKartu}/tglsep/{tglPelayanan}:
+  /SEP/FingerPrint/randomquestion/faskesterdaftar/nokapst/{noKartu}/tglsep/{tglPelayanan}:
     get:
       tags: [SEP]
       summary: Get Random Question
@@ -2680,7 +2680,7 @@ paths:
                               type: string
                               example: "Klinik Citra Madina"
 
-  /vclaim-rest/SEP/FingerPrint/randomanswer:
+  /SEP/FingerPrint/randomanswer:
     post:
       tags: [SEP]
       summary: Post Random Answer

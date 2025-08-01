@@ -11,7 +11,7 @@ tags:
     description: Pembuatan Rencana Kontrol/SPRI
 
 paths:
-  /vclaim-rest/RencanaKontrol/insert:
+  /RencanaKontrol/insert:
     post:
       tags: 
         - Rencana Kontrol
@@ -108,7 +108,7 @@ paths:
                         format: date
                         example: "1947-12-31"
 
-  /vclaim-rest/RencanaKontrol/Update:
+  /RencanaKontrol/Update:
     put:
       tags: 
         - Rencana Kontrol
@@ -208,7 +208,7 @@ paths:
                         format: date
                         example: "1947-12-31"
 
-  /vclaim-rest/RencanaKontrol/Delete:
+  /RencanaKontrol/Delete:
     delete:
       tags: 
         - Rencana Kontrol
@@ -271,7 +271,7 @@ paths:
                     nullable: true
                     example: null
 
-  /vclaim-rest/RencanaKontrol/InsertSPRI:
+  /RencanaKontrol/InsertSPRI:
     post:
       tags: 
         - Rencana Kontrol
@@ -372,7 +372,7 @@ paths:
                         nullable: true
                         example: null
 
-  /vclaim-rest/RencanaKontrol/UpdateSPRI:
+  /RencanaKontrol/UpdateSPRI:
     put:
       tags: 
         - Rencana Kontrol
@@ -473,7 +473,7 @@ paths:
                         nullable: true
                         example: null
 
-  /vclaim-rest/RencanaKontrol/nosep/{noSEP}:
+  /RencanaKontrol/nosep/{noSEP}:
     get:
       tags: 
         - Rencana Kontrol
@@ -591,7 +591,7 @@ paths:
                             format: date
                             example: "2019-10-17"
 
-  /vclaim-rest/RencanaKontrol/noSuratKontrol/{noSuratKontrol}:
+  /RencanaKontrol/noSuratKontrol/{noSuratKontrol}:
     get:
       tags: 
         - Rencana Kontrol
@@ -684,7 +684,7 @@ paths:
                         type: string
                         example: "Kontrol"
 
-  /vclaim-rest/RencanaKontrol/ListRencanaKontrol/Bulan/{bulan}/Tahun/{tahun}/Nokartu/{noKartu}/filter/{filter}:
+  /RencanaKontrol/ListRencanaKontrol/Bulan/{bulan}/Tahun/{tahun}/Nokartu/{noKartu}/filter/{filter}:
     get:
       tags: 
         - Rencana Kontrol
@@ -819,7 +819,7 @@ paths:
                               type: string
                               example: "Belum"
 
-  /vclaim-rest/RencanaKontrol/ListRencanaKontrol/tglAwal/{tglAwal}/tglAkhir/{tglAkhir}/filter/{filter}:
+  /RencanaKontrol/ListRencanaKontrol/tglAwal/{tglAwal}/tglAkhir/{tglAkhir}/filter/{filter}:
     get:
       tags: 
         - Rencana Kontrol
@@ -946,7 +946,7 @@ paths:
                               type: string
                               example: "mela handayani"
 
-  /vclaim-rest/RencanaKontrol/ListSpesialistik/JnsKontrol/{jnsKontrol}/nomor/{nomor}/TglRencanaKontrol/{tglRencanaKontrol}:
+  /RencanaKontrol/ListSpesialistik/JnsKontrol/{jnsKontrol}/nomor/{nomor}/TglRencanaKontrol/{tglRencanaKontrol}:
     get:
       tags: 
         - Rencana Kontrol
@@ -1036,7 +1036,7 @@ paths:
                               type: string
                               example: "0.00"
 
-  /vclaim-rest/RencanaKontrol/JadwalPraktekDokter/JnsKontrol/{jnsKontrol}/KdPoli/{kdPoli}/TglRencanaKontrol/{tglRencanaKontrol}:
+  /RencanaKontrol/JadwalPraktekDokter/JnsKontrol/{jnsKontrol}/KdPoli/{kdPoli}/TglRencanaKontrol/{tglRencanaKontrol}:
     get:
       tags: 
         - Rencana Kontrol

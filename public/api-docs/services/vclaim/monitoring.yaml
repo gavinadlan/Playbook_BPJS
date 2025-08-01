@@ -179,7 +179,7 @@ components:
                     example: "Proses Verifikasi"
 
 paths:
-  /vclaim-rest/Monitoring/Kunjungan/Tanggal/{tanggal}/JnsPelayanan/{jnsPelayanan}:
+  /Monitoring/Kunjungan/Tanggal/{tanggal}/JnsPelayanan/{jnsPelayanan}:
     get:
       tags:
         - Monitoring
@@ -262,7 +262,7 @@ paths:
         '500':
           description: Internal Server Error
 
-  /vclaim-rest/Monitoring/Klaim/Tanggal/{tanggal}/JnsPelayanan/{jnsPelayanan}/Status/{status}:
+  /Monitoring/Klaim/Tanggal/{tanggal}/JnsPelayanan/{jnsPelayanan}/Status/{status}:
     get:
       tags:
         - Monitoring
@@ -376,7 +376,7 @@ paths:
         '500':
           description: Internal Server Error
 
-  /vclaim-rest/monitoring/HistoriPelayanan/NoKartu/{noKartu}/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
+  /monitoring/HistoriPelayanan/NoKartu/{noKartu}/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
     get:
       tags:
         - Monitoring
@@ -522,7 +522,7 @@ paths:
         '500':
           description: Internal Server Error
 
-  /vclaim-rest/monitoring/JasaRaharja/JnsPelayanan/{jnsPelayanan}/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
+  /monitoring/JasaRaharja/JnsPelayanan/{jnsPelayanan}/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
     get:
       tags:
         - Monitoring

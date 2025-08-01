@@ -34,7 +34,7 @@ info:
     - `rujukan`: Pengelolaan rujukan
     - `sep`: Pengelolaan SEP (Surat Eligibilitas Peserta)
 servers:
-  - url: http://localhost:3001/api/bpjs/vclaim-rest-dev
+  - url: 'http://localhost:3001/api/bpjs/vclaim-rest-dev'
     description: Proxy Backend Local
 tags:
   - name: LPK
@@ -54,7 +54,7 @@ tags:
   - name: SEP
     description: 'Pengelolaan SEP (Surat Eligibilitas Peserta) - pembuatan, update, hapus, pencarian, approval, finger print, dan random question'
 paths:
-  /vclaim-rest/LPK/insert:
+  /LPK/insert:
     post:
       tags:
         - LPK
@@ -87,7 +87,7 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/paths/~1vclaim-rest~1LPK~1update/put/requestBody/content/application~1x-www-form-urlencoded/schema'
+              $ref: '#/paths/~1LPK~1update/put/requestBody/content/application~1x-www-form-urlencoded/schema'
             example:
               request:
                 t_lpk:
@@ -126,7 +126,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/paths/~1vclaim-rest~1LPK~1update/put/responses/200/content/application~1json/schema'
+                $ref: '#/paths/~1LPK~1update/put/responses/200/content/application~1json/schema'
               example:
                 metaData:
                   code: '200'
@@ -138,7 +138,7 @@ paths:
           description: Unauthorized
         '500':
           description: Internal Server Error
-  /vclaim-rest/LPK/update:
+  /LPK/update:
     put:
       tags:
         - LPK
@@ -514,7 +514,7 @@ paths:
           description: Unauthorized
         '500':
           description: Internal Server Error
-  /vclaim-rest/LPK/delete:
+  /LPK/delete:
     delete:
       tags:
         - LPK
@@ -569,7 +569,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/paths/~1vclaim-rest~1LPK~1update/put/responses/200/content/application~1json/schema'
+                $ref: '#/paths/~1LPK~1update/put/responses/200/content/application~1json/schema'
               example:
                 metaData:
                   code: '200'
@@ -581,7 +581,7 @@ paths:
           description: Unauthorized
         '500':
           description: Internal Server Error
-  '/vclaim-rest/LPK/TglMasuk/{tglMasuk}/JnsPelayanan/{jnsPelayanan}':
+  '/LPK/TglMasuk/{tglMasuk}/JnsPelayanan/{jnsPelayanan}':
     get:
       tags:
         - LPK
@@ -630,7 +630,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/paths/~1vclaim-rest~1LPK~1update/put/responses/200/content/application~1json/schema'
+                $ref: '#/paths/~1LPK~1update/put/responses/200/content/application~1json/schema'
               example:
                 metaData:
                   code: '200'
@@ -697,7 +697,7 @@ paths:
           description: Unauthorized
         '500':
           description: Internal Server Error
-  '/vclaim-rest/Peserta/nokartu/{noKartu}/tglSEP/{tglSEP}':
+  '/Peserta/nokartu/{noKartu}/tglSEP/{tglSEP}':
     get:
       tags:
         - Peserta
@@ -746,7 +746,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/paths/~1vclaim-rest~1Peserta~1nik~1%7Bnik%7D~1tglSEP~1%7BtglSEP%7D/get/responses/200/content/application~1json/schema'
+                $ref: '#/paths/~1Peserta~1nik~1%7Bnik%7D~1tglSEP~1%7BtglSEP%7D/get/responses/200/content/application~1json/schema'
               example:
                 metaData:
                   code: '200'
@@ -795,7 +795,7 @@ paths:
           description: Unauthorized
         '500':
           description: Internal Server Error
-  '/vclaim-rest/Peserta/nik/{nik}/tglSEP/{tglSEP}':
+  '/Peserta/nik/{nik}/tglSEP/{tglSEP}':
     get:
       tags:
         - Peserta
@@ -1023,7 +1023,7 @@ paths:
           description: Unauthorized
         '500':
           description: Internal Server Error
-  '/vclaim-rest/Monitoring/Kunjungan/Tanggal/{tanggal}/JnsPelayanan/{jnsPelayanan}':
+  '/Monitoring/Kunjungan/Tanggal/{tanggal}/JnsPelayanan/{jnsPelayanan}':
     get:
       tags:
         - Monitoring
@@ -1155,7 +1155,7 @@ paths:
           description: Unauthorized
         '500':
           description: Internal Server Error
-  '/vclaim-rest/Monitoring/Klaim/Tanggal/{tanggal}/JnsPelayanan/{jnsPelayanan}/Status/{status}':
+  '/Monitoring/Klaim/Tanggal/{tanggal}/JnsPelayanan/{jnsPelayanan}/Status/{status}':
     get:
       tags:
         - Monitoring
@@ -1354,7 +1354,7 @@ paths:
           description: Unauthorized
         '500':
           description: Internal Server Error
-  '/vclaim-rest/monitoring/HistoriPelayanan/NoKartu/{noKartu}/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}':
+  '/monitoring/HistoriPelayanan/NoKartu/{noKartu}/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}':
     get:
       tags:
         - Monitoring
@@ -1499,7 +1499,7 @@ paths:
           description: Unauthorized
         '500':
           description: Internal Server Error
-  '/vclaim-rest/monitoring/JasaRaharja/JnsPelayanan/{jnsPelayanan}/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}':
+  '/monitoring/JasaRaharja/JnsPelayanan/{jnsPelayanan}/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}':
     get:
       tags:
         - Monitoring
@@ -1695,7 +1695,7 @@ paths:
           description: Unauthorized
         '500':
           description: Internal Server Error
-  /vclaim-rest/PRB/insert:
+  /PRB/insert:
     post:
       tags:
         - PRB
@@ -1831,7 +1831,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/paths/~1vclaim-rest~1PRB~1Update/put/responses/200/content/application~1json/schema'
+                $ref: '#/paths/~1PRB~1Update/put/responses/200/content/application~1json/schema'
               example:
                 metaData:
                   code: '200'
@@ -1870,7 +1870,7 @@ paths:
           description: Unauthorized
         '500':
           description: Internal Server Error
-  /vclaim-rest/PRB/Update:
+  /PRB/Update:
     put:
       tags:
         - PRB
@@ -2104,7 +2104,7 @@ paths:
           description: Unauthorized
         '500':
           description: Internal Server Error
-  /vclaim-rest/PRB/Delete:
+  /PRB/Delete:
     delete:
       tags:
         - PRB
@@ -2169,7 +2169,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/paths/~1vclaim-rest~1PRB~1Update/put/responses/200/content/application~1json/schema'
+                $ref: '#/paths/~1PRB~1Update/put/responses/200/content/application~1json/schema'
               example:
                 metaData:
                   code: '200'
@@ -2181,7 +2181,7 @@ paths:
           description: Unauthorized
         '500':
           description: Internal Server Error
-  '/vclaim-rest/prb/{noSrb}/nosep/{noSep}':
+  '/prb/{noSrb}/nosep/{noSep}':
     get:
       tags:
         - PRB
@@ -2443,7 +2443,7 @@ paths:
           description: Unauthorized
         '500':
           description: Internal Server Error
-  '/vclaim-rest/prb/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}':
+  '/prb/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}':
     get:
       tags:
         - PRB
@@ -2493,7 +2493,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/paths/~1vclaim-rest~1prb~1%7BnoSrb%7D~1nosep~1%7BnoSep%7D/get/responses/200/content/application~1json/schema'
+                $ref: '#/paths/~1prb~1%7BnoSrb%7D~1nosep~1%7BnoSep%7D/get/responses/200/content/application~1json/schema'
               example:
                 metaData:
                   code: '200'
@@ -3661,7 +3661,7 @@ paths:
                       nama: Meninggal
                     - kode: '5'
                       nama: Lain-Lain
-  /vclaim-rest/RencanaKontrol/insert:
+  /RencanaKontrol/insert:
     post:
       tags:
         - Rencana Kontrol
@@ -3757,7 +3757,7 @@ paths:
                         type: string
                         format: date
                         example: '1947-12-31'
-  /vclaim-rest/RencanaKontrol/Update:
+  /RencanaKontrol/Update:
     put:
       tags:
         - Rencana Kontrol
@@ -3856,7 +3856,7 @@ paths:
                         type: string
                         format: date
                         example: '1947-12-31'
-  /vclaim-rest/RencanaKontrol/Delete:
+  /RencanaKontrol/Delete:
     delete:
       tags:
         - Rencana Kontrol
@@ -3918,7 +3918,7 @@ paths:
                     type: string
                     nullable: true
                     example: null
-  /vclaim-rest/RencanaKontrol/InsertSPRI:
+  /RencanaKontrol/InsertSPRI:
     post:
       tags:
         - Rencana Kontrol
@@ -4018,7 +4018,7 @@ paths:
                         type: string
                         nullable: true
                         example: null
-  /vclaim-rest/RencanaKontrol/UpdateSPRI:
+  /RencanaKontrol/UpdateSPRI:
     put:
       tags:
         - Rencana Kontrol
@@ -4118,7 +4118,7 @@ paths:
                         type: string
                         nullable: true
                         example: null
-  '/vclaim-rest/RencanaKontrol/nosep/{noSEP}':
+  '/RencanaKontrol/nosep/{noSEP}':
     get:
       tags:
         - Rencana Kontrol
@@ -4235,7 +4235,7 @@ paths:
                             type: string
                             format: date
                             example: '2019-10-17'
-  '/vclaim-rest/RencanaKontrol/noSuratKontrol/{noSuratKontrol}':
+  '/RencanaKontrol/noSuratKontrol/{noSuratKontrol}':
     get:
       tags:
         - Rencana Kontrol
@@ -4327,7 +4327,7 @@ paths:
                       namaJnsKontrol:
                         type: string
                         example: Kontrol
-  '/vclaim-rest/RencanaKontrol/ListRencanaKontrol/Bulan/{bulan}/Tahun/{tahun}/Nokartu/{noKartu}/filter/{filter}':
+  '/RencanaKontrol/ListRencanaKontrol/Bulan/{bulan}/Tahun/{tahun}/Nokartu/{noKartu}/filter/{filter}':
     get:
       tags:
         - Rencana Kontrol
@@ -4461,7 +4461,7 @@ paths:
                             terbitSEP:
                               type: string
                               example: Belum
-  '/vclaim-rest/RencanaKontrol/ListRencanaKontrol/tglAwal/{tglAwal}/tglAkhir/{tglAkhir}/filter/{filter}':
+  '/RencanaKontrol/ListRencanaKontrol/tglAwal/{tglAwal}/tglAkhir/{tglAkhir}/filter/{filter}':
     get:
       tags:
         - Rencana Kontrol
@@ -4587,7 +4587,7 @@ paths:
                             nama:
                               type: string
                               example: mela handayani
-  '/vclaim-rest/RencanaKontrol/ListSpesialistik/JnsKontrol/{jnsKontrol}/nomor/{nomor}/TglRencanaKontrol/{tglRencanaKontrol}':
+  '/RencanaKontrol/ListSpesialistik/JnsKontrol/{jnsKontrol}/nomor/{nomor}/TglRencanaKontrol/{tglRencanaKontrol}':
     get:
       tags:
         - Rencana Kontrol
@@ -4676,7 +4676,7 @@ paths:
                             persentase:
                               type: string
                               example: '0.00'
-  '/vclaim-rest/RencanaKontrol/JadwalPraktekDokter/JnsKontrol/{jnsKontrol}/KdPoli/{kdPoli}/TglRencanaKontrol/{tglRencanaKontrol}':
+  '/RencanaKontrol/JadwalPraktekDokter/JnsKontrol/{jnsKontrol}/KdPoli/{kdPoli}/TglRencanaKontrol/{tglRencanaKontrol}':
     get:
       tags:
         - Rencana Kontrol
@@ -4762,7 +4762,7 @@ paths:
                             kapasitas:
                               type: string
                               example: '12'
-  '/vclaim-rest/Rujukan/{noRujukan}':
+  '/Rujukan/{noRujukan}':
     get:
       tags:
         - Rujukan
@@ -4983,7 +4983,7 @@ paths:
                           tglKunjungan:
                             type: string
                             example: '2017-02-25'
-  '/vclaim-rest/Rujukan/RS/{noRujukan}':
+  '/Rujukan/RS/{noRujukan}':
     get:
       tags:
         - Rujukan
@@ -5204,7 +5204,7 @@ paths:
                           tglKunjungan:
                             type: string
                             example: '2017-02-24'
-  '/vclaim-rest/Rujukan/Peserta/{noKartu}':
+  '/Rujukan/Peserta/{noKartu}':
     get:
       tags:
         - Rujukan
@@ -5425,7 +5425,7 @@ paths:
                           tglKunjungan:
                             type: string
                             example: '2017-02-25'
-  '/vclaim-rest/Rujukan/RS/Peserta/{noKartu}':
+  '/Rujukan/RS/Peserta/{noKartu}':
     get:
       tags:
         - Rujukan
@@ -5646,7 +5646,7 @@ paths:
                           tglKunjungan:
                             type: string
                             example: '2017-02-24'
-  '/vclaim-rest/Rujukan/List/Peserta/{noKartu}':
+  '/Rujukan/List/Peserta/{noKartu}':
     get:
       tags:
         - Rujukan
@@ -5869,7 +5869,7 @@ paths:
                             tglKunjungan:
                               type: string
                               example: '2017-02-25'
-  '/vclaim-rest/Rujukan/RS/List/Peserta/{noKartu}':
+  '/Rujukan/RS/List/Peserta/{noKartu}':
     get:
       tags:
         - Rujukan
@@ -6092,7 +6092,7 @@ paths:
                             tglKunjungan:
                               type: string
                               example: '2017-02-24'
-  /vclaim-rest/Rujukan/insert:
+  /Rujukan/insert:
     post:
       tags:
         - Rujukan
@@ -6221,7 +6221,7 @@ paths:
                               nama:
                                 type: string
                                 example: RS JIWA ULU GADUT
-  /vclaim-rest/Rujukan/update:
+  /Rujukan/update:
     put:
       tags:
         - Rujukan
@@ -6312,7 +6312,7 @@ paths:
                   response:
                     type: string
                     example: 0301R0011117B000014
-  /vclaim-rest/Rujukan/delete:
+  /Rujukan/delete:
     delete:
       tags:
         - Rujukan
@@ -6375,7 +6375,7 @@ paths:
                   response:
                     type: string
                     example: 0301R0011117B000014
-  /vclaim-rest/Rujukan/Khusus/insert:
+  /Rujukan/Khusus/insert:
     post:
       tags:
         - Rujukan
@@ -6476,7 +6476,7 @@ paths:
                           tglrujukan_berakhir:
                             type: string
                             example: '2021-09-17'
-  /vclaim-rest/Rujukan/Khusus/delete:
+  /Rujukan/Khusus/delete:
     post:
       tags:
         - Rujukan
@@ -6549,7 +6549,7 @@ paths:
                   response:
                     type: string
                     example: '98865'
-  '/vclaim-rest/Rujukan/Khusus/List/Bulan/{bulan}/Tahun/{tahun}':
+  '/Rujukan/Khusus/List/Bulan/{bulan}/Tahun/{tahun}':
     get:
       tags:
         - Rujukan
@@ -6640,7 +6640,7 @@ paths:
                             tglrujukan_berakhir:
                               type: string
                               example: '2021-06-19'
-  /vclaim-rest/Rujukan/2.0/insert:
+  /Rujukan/2.0/insert:
     post:
       tags:
         - Rujukan
@@ -6814,7 +6814,7 @@ paths:
                               nama:
                                 type: string
                                 example: PEGAMBIRAN
-  /vclaim-rest/Rujukan/2.0/Update:
+  /Rujukan/2.0/Update:
     put:
       tags:
         - Rujukan
@@ -6910,7 +6910,7 @@ paths:
                   response:
                     type: string
                     example: 0301R0011117B000014
-  '/vclaim-rest/Rujukan/ListSpesialistik/PPKRujukan/{kodePPK}/TglRujukan/{tglRujukan}':
+  '/Rujukan/ListSpesialistik/PPKRujukan/{kodePPK}/TglRujukan/{tglRujukan}':
     get:
       tags:
         - Rujukan
@@ -6996,7 +6996,7 @@ paths:
                             persentase:
                               type: string
                               example: '0,00'
-  '/vclaim-rest/Rujukan/ListSarana/PPKRujukan/{kodePPK}':
+  '/Rujukan/ListSarana/PPKRujukan/{kodePPK}':
     get:
       tags:
         - Rujukan
@@ -7065,7 +7065,7 @@ paths:
                             namaSarana:
                               type: string
                               example: Rekam Medik
-  '/vclaim-rest/Rujukan/Keluar/List/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}':
+  '/Rujukan/Keluar/List/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}':
     get:
       tags:
         - Rujukan
@@ -7161,7 +7161,7 @@ paths:
                             namaPpkDirujuk:
                               type: string
                               example: RSUD SAWERIGADING PALOPO
-  '/vclaim-rest/Rujukan/Keluar/{noRujukan}':
+  '/Rujukan/Keluar/{noRujukan}':
     get:
       tags:
         - Rujukan
@@ -7282,7 +7282,7 @@ paths:
                           namaPoliRujukan:
                             type: string
                             example: OBGYN
-  '/vclaim-rest/Rujukan/JumlahSEP/{jenisRujukan}/{noRujukan}':
+  '/Rujukan/JumlahSEP/{jenisRujukan}/{noRujukan}':
     get:
       tags:
         - Rujukan
@@ -7350,7 +7350,7 @@ paths:
                       jumlahSEP:
                         type: string
                         example: '1'
-  /vclaim-rest/SEP/1.1/insert:
+  /SEP/1.1/insert:
     post:
       tags:
         - SEP
@@ -7596,7 +7596,7 @@ paths:
                           tglSep:
                             type: string
                             example: '2017-10-12'
-  /vclaim-rest/SEP/1.1/Update:
+  /SEP/1.1/Update:
     put:
       tags:
         - SEP
@@ -7764,7 +7764,7 @@ paths:
                   response:
                     type: string
                     example: 0301R0011117V000008
-  /vclaim-rest/SEP/Delete:
+  /SEP/Delete:
     delete:
       tags:
         - SEP
@@ -7829,7 +7829,7 @@ paths:
                   response:
                     type: string
                     example: 0301R0011017V000007
-  '/vclaim-rest/SEP/{noSep}':
+  '/SEP/{noSep}':
     get:
       tags:
         - SEP
@@ -8052,7 +8052,7 @@ paths:
                       eSEP:
                         type: string
                         example: 'True'
-  '/vclaim-rest/Rujukan/lastsep/norujukan/{noRujukan}':
+  '/Rujukan/lastsep/norujukan/{noRujukan}':
     get:
       tags:
         - SEP
@@ -8275,7 +8275,7 @@ paths:
                       eSEP:
                         type: string
                         example: 'True'
-  /vclaim-rest/SEP/2.0/insert:
+  /SEP/2.0/insert:
     post:
       tags:
         - SEP
@@ -8572,7 +8572,7 @@ paths:
                           tujuanKunj:
                             type: string
                             example: '2'
-  /vclaim-rest/SEP/2.0/update:
+  /SEP/2.0/update:
     put:
       tags:
         - SEP
@@ -8729,7 +8729,7 @@ paths:
                   response:
                     type: string
                     example: 1101R0070420V000017
-  /vclaim-rest/SEP/2.0/delete:
+  /SEP/2.0/delete:
     delete:
       tags:
         - SEP
@@ -8794,7 +8794,7 @@ paths:
                   response:
                     type: string
                     example: 0301R0011017V000007
-  '/vclaim-rest/sep/JasaRaharja/Suplesi/{noKartu}/tglPelayanan/{tglPelayanan}':
+  '/sep/JasaRaharja/Suplesi/{noKartu}/tglPelayanan/{tglPelayanan}':
     get:
       tags:
         - SEP
@@ -8879,7 +8879,7 @@ paths:
                             tglSep:
                               type: string
                               example: '2018-08-08'
-  '/vclaim-rest/sep/KllInduk/List/{noKartu}':
+  '/sep/KllInduk/List/{noKartu}':
     get:
       tags:
         - SEP
@@ -8962,7 +8962,7 @@ paths:
                             noSEPSuplesi:
                               type: string
                               example: '0301R0110421V000435, 0301R0110421V000436, 0301R0110421V000437, 0301R0110421V000438'
-  /vclaim-rest/Sep/pengajuanSEP:
+  /Sep/pengajuanSEP:
     post:
       tags:
         - SEP
@@ -9045,7 +9045,7 @@ paths:
                   response:
                     type: string
                     example: 0003814312013
-  /vclaim-rest/Sep/aprovalSEP:
+  /Sep/aprovalSEP:
     post:
       tags:
         - SEP
@@ -9128,7 +9128,7 @@ paths:
                   response:
                     type: string
                     example: 0003814312013
-  '/vclaim-rest/Sep/persetujuanSEP/list/bulan/{bulan}/tahun/{tahun}':
+  '/Sep/persetujuanSEP/list/bulan/{bulan}/tahun/{tahun}':
     get:
       tags:
         - SEP
@@ -9212,7 +9212,7 @@ paths:
                             status:
                               type: string
                               example: Tgl.SEP Backdate
-  /vclaim-rest/Sep/updtglplg:
+  /Sep/updtglplg:
     put:
       tags:
         - SEP
@@ -9283,7 +9283,7 @@ paths:
                       message:
                         type: string
                         example: OK
-  /vclaim-rest/SEP/2.0/updtglplg:
+  /SEP/2.0/updtglplg:
     put:
       tags:
         - SEP
@@ -9370,7 +9370,7 @@ paths:
                   response:
                     type: string
                     nullable: true
-  '/vclaim-rest/Sep/updtglplg/list/bulan/{bulan}/tahun/{tahun}/{filter}':
+  '/Sep/updtglplg/list/bulan/{bulan}/tahun/{tahun}/{filter}':
     get:
       tags:
         - SEP
@@ -9482,7 +9482,7 @@ paths:
                             user:
                               type: string
                               example: AdminUtam
-  '/vclaim-rest/sep/cbg/{noSep}':
+  '/sep/cbg/{noSep}':
     get:
       tags:
         - SEP
@@ -9566,7 +9566,7 @@ paths:
                           tktPelayanan:
                             type: string
                             example: '2'
-  '/vclaim-rest/SEP/Internal/{noSep}':
+  '/SEP/Internal/{noSep}':
     get:
       tags:
         - SEP
@@ -9700,7 +9700,7 @@ paths:
                             nmdiag:
                               type: string
                               example: Secondary hypertension
-  /vclaim-rest/SEP/Internal/delete:
+  /SEP/Internal/delete:
     delete:
       tags:
         - SEP
@@ -9783,7 +9783,7 @@ paths:
                   response:
                     type: string
                     example: 0301R0011017V000007
-  '/vclaim-rest/SEP/FingerPrint/Peserta/{noKartu}/TglPelayanan/{tglPelayanan}':
+  '/SEP/FingerPrint/Peserta/{noKartu}/TglPelayanan/{tglPelayanan}':
     get:
       tags:
         - SEP
@@ -9851,7 +9851,7 @@ paths:
                       status:
                         type: string
                         example: Peserta telah melakukan validasi finger print pada tanggal 2020-01-21
-  '/vclaim-rest/SEP/FingerPrint/List/Peserta/TglPelayanan/{tglPelayanan}':
+  '/SEP/FingerPrint/List/Peserta/TglPelayanan/{tglPelayanan}':
     get:
       tags:
         - SEP
@@ -9917,7 +9917,7 @@ paths:
                             noSEP:
                               type: string
                               example: 0301R0110120V009210
-  '/vclaim-rest/SEP/FingerPrint/randomquestion/faskesterdaftar/nokapst/{noKartu}/tglsep/{tglPelayanan}':
+  '/SEP/FingerPrint/randomquestion/faskesterdaftar/nokapst/{noKartu}/tglsep/{tglPelayanan}':
     get:
       tags:
         - SEP
@@ -9990,7 +9990,7 @@ paths:
                             nama:
                               type: string
                               example: Klinik Citra Madina
-  /vclaim-rest/SEP/FingerPrint/randomanswer:
+  /SEP/FingerPrint/randomanswer:
     post:
       tags:
         - SEP

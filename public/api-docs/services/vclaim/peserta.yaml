@@ -170,7 +170,7 @@ components:
                       example: "35 tahun ,2 bulan ,10 hari"
 
 paths:
-  /vclaim-rest/Peserta/nokartu/{noKartu}/tglSEP/{tglSEP}:
+  /Peserta/nokartu/{noKartu}/tglSEP/{tglSEP}:
     get:
       tags:
         - Peserta
@@ -269,7 +269,7 @@ paths:
         '500':
           description: Internal Server Error
 
-  /vclaim-rest/Peserta/nik/{nik}/tglSEP/{tglSEP}:
+  /Peserta/nik/{nik}/tglSEP/{tglSEP}:
     get:
       tags:
         - Peserta

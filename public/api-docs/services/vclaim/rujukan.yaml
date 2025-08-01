@@ -12,7 +12,7 @@ tags:
 
 paths:
   # Endpoint pencarian rujukan berdasarkan nomor rujukan
-  /vclaim-rest/Rujukan/{noRujukan}:
+  /Rujukan/{noRujukan}:
     get:
       tags: [Rujukan]
       summary: Rujukan Berdasarkan Nomor Rujukan (PCare)
@@ -233,7 +233,7 @@ paths:
                             type: string
                             example: "2017-02-25"
 
-  /vclaim-rest/Rujukan/RS/{noRujukan}:
+  /Rujukan/RS/{noRujukan}:
     get:
       tags: [Rujukan]
       summary: Rujukan Berdasarkan Nomor Rujukan (Rumah Sakit)
@@ -455,7 +455,7 @@ paths:
                             example: "2017-02-24"
 
   # Endpoint pencarian rujukan berdasarkan nomor kartu
-  /vclaim-rest/Rujukan/Peserta/{noKartu}:
+  /Rujukan/Peserta/{noKartu}:
     get:
       tags: [Rujukan]
       summary: Rujukan Berdasarkan Nomor Kartu (1 Record - PCare)
@@ -676,7 +676,7 @@ paths:
                             type: string
                             example: "2017-02-25"
 
-  /vclaim-rest/Rujukan/RS/Peserta/{noKartu}:
+  /Rujukan/RS/Peserta/{noKartu}:
     get:
       tags: [Rujukan]
       summary: Rujukan Berdasarkan Nomor Kartu (1 Record - Rumah Sakit)
@@ -898,7 +898,7 @@ paths:
                             example: "2017-02-24"
 
   # Endpoint pencarian rujukan multi record
-  /vclaim-rest/Rujukan/List/Peserta/{noKartu}:
+  /Rujukan/List/Peserta/{noKartu}:
     get:
       tags: [Rujukan]
       summary: Rujukan Berdasarkan Nomor Kartu (Multi Record - PCare)
@@ -1121,7 +1121,7 @@ paths:
                               type: string
                               example: "2017-02-25"
 
-  /vclaim-rest/Rujukan/RS/List/Peserta/{noKartu}:
+  /Rujukan/RS/List/Peserta/{noKartu}:
     get:
       tags: [Rujukan]
       summary: Rujukan Berdasarkan Nomor Kartu (Multi Record - Rumah Sakit)
@@ -1349,7 +1349,7 @@ paths:
   # ==========================================
 
   # Endpoint pembuatan rujukan
-  /vclaim-rest/Rujukan/insert:
+  /Rujukan/insert:
     post:
       tags: [Rujukan]
       summary: Insert Rujukan
@@ -1478,7 +1478,7 @@ paths:
                                 type: string
                                 example: "RS JIWA ULU GADUT"
 
-  /vclaim-rest/Rujukan/update:
+  /Rujukan/update:
     put:
       tags: [Rujukan]
       summary: Update Rujukan
@@ -1569,7 +1569,7 @@ paths:
                     type: string
                     example: "0301R0011117B000014"
 
-  /vclaim-rest/Rujukan/delete:
+  /Rujukan/delete:
     delete:
       tags: [Rujukan]
       summary: Delete Rujukan
@@ -1633,7 +1633,7 @@ paths:
                     example: "0301R0011117B000014"
 
   # Endpoint rujukan khusus
-  /vclaim-rest/Rujukan/Khusus/insert:
+  /Rujukan/Khusus/insert:
     post:
       tags: [Rujukan]
       summary: Insert Rujukan Khusus New
@@ -1734,7 +1734,7 @@ paths:
                             type: string
                             example: "2021-09-17"
 
-  /vclaim-rest/Rujukan/Khusus/delete:
+  /Rujukan/Khusus/delete:
     post:
       tags: [Rujukan]
       summary: Delete Rujukan Khusus New
@@ -1807,7 +1807,7 @@ paths:
                     type: string
                     example: "98865"
 
-  /vclaim-rest/Rujukan/Khusus/List/Bulan/{bulan}/Tahun/{tahun}:
+  /Rujukan/Khusus/List/Bulan/{bulan}/Tahun/{tahun}:
     get:
       tags: [Rujukan]
       summary: List Rujukan Khusus New
@@ -1899,7 +1899,7 @@ paths:
                               example: "2021-06-19"
 
   # Endpoint rujukan 2.0
-  /vclaim-rest/Rujukan/2.0/insert:
+  /Rujukan/2.0/insert:
     post:
       tags: [Rujukan]
       summary: Insert Rujukan 2.0 New
@@ -2073,7 +2073,7 @@ paths:
                                 type: string
                                 example: "PEGAMBIRAN"
 
-  /vclaim-rest/Rujukan/2.0/Update:
+  /Rujukan/2.0/Update:
     put:
       tags: [Rujukan]
       summary: Update Rujukan 2.0 New
@@ -2170,7 +2170,7 @@ paths:
                     example: "0301R0011117B000014"
 
   # Endpoint referensi rujukan
-  /vclaim-rest/Rujukan/ListSpesialistik/PPKRujukan/{kodePPK}/TglRujukan/{tglRujukan}:
+  /Rujukan/ListSpesialistik/PPKRujukan/{kodePPK}/TglRujukan/{tglRujukan}:
     get:
       tags: [Rujukan]
       summary: List Spesialistik Rujukan New
@@ -2256,7 +2256,7 @@ paths:
                               type: string
                               example: "0,00"
 
-  /vclaim-rest/Rujukan/ListSarana/PPKRujukan/{kodePPK}:
+  /Rujukan/ListSarana/PPKRujukan/{kodePPK}:
     get:
       tags: [Rujukan]
       summary: List Sarana New
@@ -2326,7 +2326,7 @@ paths:
                               example: "Rekam Medik"
 
   # Endpoint rujukan keluar
-  /vclaim-rest/Rujukan/Keluar/List/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
+  /Rujukan/Keluar/List/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
     get:
       tags: [Rujukan]
       summary: List Rujukan Keluar RS New
@@ -2422,7 +2422,7 @@ paths:
                               type: string
                               example: "RSUD SAWERIGADING PALOPO"
 
-  /vclaim-rest/Rujukan/Keluar/{noRujukan}:
+  /Rujukan/Keluar/{noRujukan}:
     get:
       tags: [Rujukan]
       summary: Data Rujukan Keluar RS Berdasarkan Nomor Rujukan New
@@ -2543,7 +2543,7 @@ paths:
                             type: string
                             example: "OBGYN"
 
-  /vclaim-rest/Rujukan/JumlahSEP/{jenisRujukan}/{noRujukan}:
+  /Rujukan/JumlahSEP/{jenisRujukan}/{noRujukan}:
     get:
       tags: [Rujukan]
       summary: Data Jumlah SEP Rujukan New

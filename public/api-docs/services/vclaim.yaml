@@ -58,57 +58,57 @@ tags:
 
 paths:
   # LPK
-  /vclaim-rest/LPK/insert:
+  /LPK/insert:
     post:
-      $ref: './vclaim/lpk.yaml#/paths/~1vclaim-rest~1LPK~1insert/post'
-  /vclaim-rest/LPK/update:
+      $ref: './vclaim/lpk.yaml#/paths/~1LPK~1insert/post'
+  /LPK/update:
     put:
-      $ref: './vclaim/lpk.yaml#/paths/~1vclaim-rest~1LPK~1update/put'
-  /vclaim-rest/LPK/delete:
+      $ref: './vclaim/lpk.yaml#/paths/~1LPK~1update/put'
+  /LPK/delete:
     delete:
-      $ref: './vclaim/lpk.yaml#/paths/~1vclaim-rest~1LPK~1delete/delete'
-  /vclaim-rest/LPK/TglMasuk/{tglMasuk}/JnsPelayanan/{jnsPelayanan}:
+      $ref: './vclaim/lpk.yaml#/paths/~1LPK~1delete/delete'
+  /LPK/TglMasuk/{tglMasuk}/JnsPelayanan/{jnsPelayanan}:
     get:
-      $ref: './vclaim/lpk.yaml#/paths/~1vclaim-rest~1LPK~1TglMasuk~1{tglMasuk}~1JnsPelayanan~1{jnsPelayanan}/get'
+      $ref: './vclaim/lpk.yaml#/paths/~1LPK~1TglMasuk~1{tglMasuk}~1JnsPelayanan~1{jnsPelayanan}/get'
 
   # Peserta
-  /vclaim-rest/Peserta/nokartu/{noKartu}/tglSEP/{tglSEP}:
+  /Peserta/nokartu/{noKartu}/tglSEP/{tglSEP}:
     get:
-      $ref: './vclaim/peserta.yaml#/paths/~1vclaim-rest~1Peserta~1nokartu~1{noKartu}~1tglSEP~1{tglSEP}/get'
-  /vclaim-rest/Peserta/nik/{nik}/tglSEP/{tglSEP}:
+      $ref: './vclaim/peserta.yaml#/paths/~1Peserta~1nokartu~1{noKartu}~1tglSEP~1{tglSEP}/get'
+  /Peserta/nik/{nik}/tglSEP/{tglSEP}:
     get:
-      $ref: './vclaim/peserta.yaml#/paths/~1vclaim-rest~1Peserta~1nik~1{nik}~1tglSEP~1{tglSEP}/get'
+      $ref: './vclaim/peserta.yaml#/paths/~1Peserta~1nik~1{nik}~1tglSEP~1{tglSEP}/get'
 
   # Monitoring (tambahkan semua endpoint monitoring sesuai file modular)
-  /vclaim-rest/Monitoring/Kunjungan/Tanggal/{tanggal}/JnsPelayanan/{jnsPelayanan}:
+  /Monitoring/Kunjungan/Tanggal/{tanggal}/JnsPelayanan/{jnsPelayanan}:
     get:
-      $ref: './vclaim/monitoring.yaml#/paths/~1vclaim-rest~1Monitoring~1Kunjungan~1Tanggal~1{tanggal}~1JnsPelayanan~1{jnsPelayanan}/get'
-  /vclaim-rest/Monitoring/Klaim/Tanggal/{tanggal}/JnsPelayanan/{jnsPelayanan}/Status/{status}:
+      $ref: './vclaim/monitoring.yaml#/paths/~1Monitoring~1Kunjungan~1Tanggal~1{tanggal}~1JnsPelayanan~1{jnsPelayanan}/get'
+  /Monitoring/Klaim/Tanggal/{tanggal}/JnsPelayanan/{jnsPelayanan}/Status/{status}:
     get:
-      $ref: './vclaim/monitoring.yaml#/paths/~1vclaim-rest~1Monitoring~1Klaim~1Tanggal~1{tanggal}~1JnsPelayanan~1{jnsPelayanan}~1Status~1{status}/get'
-  /vclaim-rest/monitoring/HistoriPelayanan/NoKartu/{noKartu}/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
+      $ref: './vclaim/monitoring.yaml#/paths/~1Monitoring~1Klaim~1Tanggal~1{tanggal}~1JnsPelayanan~1{jnsPelayanan}~1Status~1{status}/get'
+  /monitoring/HistoriPelayanan/NoKartu/{noKartu}/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
     get:
-      $ref: './vclaim/monitoring.yaml#/paths/~1vclaim-rest~1monitoring~1HistoriPelayanan~1NoKartu~1{noKartu}~1tglMulai~1{tglMulai}~1tglAkhir~1{tglAkhir}/get'
-  /vclaim-rest/monitoring/JasaRaharja/JnsPelayanan/{jnsPelayanan}/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
+      $ref: './vclaim/monitoring.yaml#/paths/~1monitoring~1HistoriPelayanan~1NoKartu~1{noKartu}~1tglMulai~1{tglMulai}~1tglAkhir~1{tglAkhir}/get'
+  /monitoring/JasaRaharja/JnsPelayanan/{jnsPelayanan}/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
     get:
-      $ref: './vclaim/monitoring.yaml#/paths/~1vclaim-rest~1monitoring~1JasaRaharja~1JnsPelayanan~1{jnsPelayanan}~1tglMulai~1{tglMulai}~1tglAkhir~1{tglAkhir}/get'
+      $ref: './vclaim/monitoring.yaml#/paths/~1monitoring~1JasaRaharja~1JnsPelayanan~1{jnsPelayanan}~1tglMulai~1{tglMulai}~1tglAkhir~1{tglAkhir}/get'
 
   # PRB (tambahkan semua endpoint PRB sesuai file modular)
-  /vclaim-rest/PRB/insert:
+  /PRB/insert:
     post:
-      $ref: './vclaim/prb.yaml#/paths/~1vclaim-rest~1PRB~1insert/post'
-  /vclaim-rest/PRB/Update:
+      $ref: './vclaim/prb.yaml#/paths/~1PRB~1insert/post'
+  /PRB/Update:
     put:
-      $ref: './vclaim/prb.yaml#/paths/~1vclaim-rest~1PRB~1Update/put'
-  /vclaim-rest/PRB/Delete:
+      $ref: './vclaim/prb.yaml#/paths/~1PRB~1Update/put'
+  /PRB/Delete:
     delete:
-      $ref: './vclaim/prb.yaml#/paths/~1vclaim-rest~1PRB~1Delete/delete'
-  /vclaim-rest/prb/{noSrb}/nosep/{noSep}:
+      $ref: './vclaim/prb.yaml#/paths/~1PRB~1Delete/delete'
+  /prb/{noSrb}/nosep/{noSep}:
     get:
-      $ref: './vclaim/prb.yaml#/paths/~1vclaim-rest~1prb~1{noSrb}~1nosep~1{noSep}/get'
-  /vclaim-rest/prb/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
+      $ref: './vclaim/prb.yaml#/paths/~1prb~1{noSrb}~1nosep~1{noSep}/get'
+  /prb/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
     get:
-      $ref: './vclaim/prb.yaml#/paths/~1vclaim-rest~1prb~1tglMulai~1{tglMulai}~1tglAkhir~1{tglAkhir}/get'
+      $ref: './vclaim/prb.yaml#/paths/~1prb~1tglMulai~1{tglMulai}~1tglAkhir~1{tglAkhir}/get'
 
   # Referensi (tambahkan semua endpoint referensi sesuai file modular)
   /referensi/diagnosa/{parameter}:
@@ -161,167 +161,167 @@ paths:
       $ref: './vclaim/referensi.yaml#/paths/~1referensi~1pascapulang/get'
 
   # Rencana Kontrol
-  /vclaim-rest/RencanaKontrol/insert:
+  /RencanaKontrol/insert:
     post:
-      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1vclaim-rest~1RencanaKontrol~1insert/post'
-  /vclaim-rest/RencanaKontrol/Update:
+      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1RencanaKontrol~1insert/post'
+  /RencanaKontrol/Update:
     put:
-      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1vclaim-rest~1RencanaKontrol~1Update/put'
-  /vclaim-rest/RencanaKontrol/Delete:
+      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1RencanaKontrol~1Update/put'
+  /RencanaKontrol/Delete:
     delete:
-      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1vclaim-rest~1RencanaKontrol~1Delete/delete'
-  /vclaim-rest/RencanaKontrol/InsertSPRI:
+      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1RencanaKontrol~1Delete/delete'
+  /RencanaKontrol/InsertSPRI:
     post:
-      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1vclaim-rest~1RencanaKontrol~1InsertSPRI/post'
-  /vclaim-rest/RencanaKontrol/UpdateSPRI:
+      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1RencanaKontrol~1InsertSPRI/post'
+  /RencanaKontrol/UpdateSPRI:
     put:
-      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1vclaim-rest~1RencanaKontrol~1UpdateSPRI/put'
-  /vclaim-rest/RencanaKontrol/nosep/{noSEP}:
+      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1RencanaKontrol~1UpdateSPRI/put'
+  /RencanaKontrol/nosep/{noSEP}:
     get:
-      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1vclaim-rest~1RencanaKontrol~1nosep~1{noSEP}/get'
-  /vclaim-rest/RencanaKontrol/noSuratKontrol/{noSuratKontrol}:
+      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1RencanaKontrol~1nosep~1{noSEP}/get'
+  /RencanaKontrol/noSuratKontrol/{noSuratKontrol}:
     get:
-      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1vclaim-rest~1RencanaKontrol~1noSuratKontrol~1{noSuratKontrol}/get'
-  /vclaim-rest/RencanaKontrol/ListRencanaKontrol/Bulan/{bulan}/Tahun/{tahun}/Nokartu/{noKartu}/filter/{filter}:
+      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1RencanaKontrol~1noSuratKontrol~1{noSuratKontrol}/get'
+  /RencanaKontrol/ListRencanaKontrol/Bulan/{bulan}/Tahun/{tahun}/Nokartu/{noKartu}/filter/{filter}:
     get:
-      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1vclaim-rest~1RencanaKontrol~1ListRencanaKontrol~1Bulan~1{bulan}~1Tahun~1{tahun}~1Nokartu~1{noKartu}~1filter~1{filter}/get'
-  /vclaim-rest/RencanaKontrol/ListRencanaKontrol/tglAwal/{tglAwal}/tglAkhir/{tglAkhir}/filter/{filter}:
+      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1RencanaKontrol~1ListRencanaKontrol~1Bulan~1{bulan}~1Tahun~1{tahun}~1Nokartu~1{noKartu}~1filter~1{filter}/get'
+  /RencanaKontrol/ListRencanaKontrol/tglAwal/{tglAwal}/tglAkhir/{tglAkhir}/filter/{filter}:
     get:
-      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1vclaim-rest~1RencanaKontrol~1ListRencanaKontrol~1tglAwal~1{tglAwal}~1tglAkhir~1{tglAkhir}~1filter~1{filter}/get'
-  /vclaim-rest/RencanaKontrol/ListSpesialistik/JnsKontrol/{jnsKontrol}/nomor/{nomor}/TglRencanaKontrol/{tglRencanaKontrol}:
+      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1RencanaKontrol~1ListRencanaKontrol~1tglAwal~1{tglAwal}~1tglAkhir~1{tglAkhir}~1filter~1{filter}/get'
+  /RencanaKontrol/ListSpesialistik/JnsKontrol/{jnsKontrol}/nomor/{nomor}/TglRencanaKontrol/{tglRencanaKontrol}:
     get:
-      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1vclaim-rest~1RencanaKontrol~1ListSpesialistik~1JnsKontrol~1{jnsKontrol}~1nomor~1{nomor}~1TglRencanaKontrol~1{tglRencanaKontrol}/get'
-  /vclaim-rest/RencanaKontrol/JadwalPraktekDokter/JnsKontrol/{jnsKontrol}/KdPoli/{kdPoli}/TglRencanaKontrol/{tglRencanaKontrol}:
+      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1RencanaKontrol~1ListSpesialistik~1JnsKontrol~1{jnsKontrol}~1nomor~1{nomor}~1TglRencanaKontrol~1{tglRencanaKontrol}/get'
+  /RencanaKontrol/JadwalPraktekDokter/JnsKontrol/{jnsKontrol}/KdPoli/{kdPoli}/TglRencanaKontrol/{tglRencanaKontrol}:
     get:
-      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1vclaim-rest~1RencanaKontrol~1JadwalPraktekDokter~1JnsKontrol~1{jnsKontrol}~1KdPoli~1{kdPoli}~1TglRencanaKontrol~1{tglRencanaKontrol}/get'
+      $ref: './vclaim/rencana-kontrol.yaml#/paths/~1RencanaKontrol~1JadwalPraktekDokter~1JnsKontrol~1{jnsKontrol}~1KdPoli~1{kdPoli}~1TglRencanaKontrol~1{tglRencanaKontrol}/get'
 
 
 # Rujukan
-  /vclaim-rest/Rujukan/{noRujukan}:
+  /Rujukan/{noRujukan}:
     get:
-      $ref: './vclaim/rujukan.yaml#/paths/~1vclaim-rest~1Rujukan~1{noRujukan}/get'
-  /vclaim-rest/Rujukan/RS/{noRujukan}:
+      $ref: './vclaim/rujukan.yaml#/paths/~1Rujukan~1{noRujukan}/get'
+  /Rujukan/RS/{noRujukan}:
     get:
-      $ref: './vclaim/rujukan.yaml#/paths/~1vclaim-rest~1Rujukan~1RS~1{noRujukan}/get'
-  /vclaim-rest/Rujukan/Peserta/{noKartu}:
+      $ref: './vclaim/rujukan.yaml#/paths/~1Rujukan~1RS~1{noRujukan}/get'
+  /Rujukan/Peserta/{noKartu}:
     get:
-      $ref: './vclaim/rujukan.yaml#/paths/~1vclaim-rest~1Rujukan~1Peserta~1{noKartu}/get'
-  /vclaim-rest/Rujukan/RS/Peserta/{noKartu}:
+      $ref: './vclaim/rujukan.yaml#/paths/~1Rujukan~1Peserta~1{noKartu}/get'
+  /Rujukan/RS/Peserta/{noKartu}:
     get:
-      $ref: './vclaim/rujukan.yaml#/paths/~1vclaim-rest~1Rujukan~1RS~1Peserta~1{noKartu}/get'
-  /vclaim-rest/Rujukan/List/Peserta/{noKartu}:
+      $ref: './vclaim/rujukan.yaml#/paths/~1Rujukan~1RS~1Peserta~1{noKartu}/get'
+  /Rujukan/List/Peserta/{noKartu}:
     get:
-      $ref: './vclaim/rujukan.yaml#/paths/~1vclaim-rest~1Rujukan~1List~1Peserta~1{noKartu}/get'
-  /vclaim-rest/Rujukan/RS/List/Peserta/{noKartu}:
+      $ref: './vclaim/rujukan.yaml#/paths/~1Rujukan~1List~1Peserta~1{noKartu}/get'
+  /Rujukan/RS/List/Peserta/{noKartu}:
     get:
-      $ref: './vclaim/rujukan.yaml#/paths/~1vclaim-rest~1Rujukan~1RS~1List~1Peserta~1{noKartu}/get'
-  /vclaim-rest/Rujukan/insert:
+      $ref: './vclaim/rujukan.yaml#/paths/~1Rujukan~1RS~1List~1Peserta~1{noKartu}/get'
+  /Rujukan/insert:
     post:
-      $ref: './vclaim/rujukan.yaml#/paths/~1vclaim-rest~1Rujukan~1insert/post'
-  /vclaim-rest/Rujukan/update:
+      $ref: './vclaim/rujukan.yaml#/paths/~1Rujukan~1insert/post'
+  /Rujukan/update:
     put:
-      $ref: './vclaim/rujukan.yaml#/paths/~1vclaim-rest~1Rujukan~1update/put'
-  /vclaim-rest/Rujukan/delete:
+      $ref: './vclaim/rujukan.yaml#/paths/~1Rujukan~1update/put'
+  /Rujukan/delete:
     delete:
-      $ref: './vclaim/rujukan.yaml#/paths/~1vclaim-rest~1Rujukan~1delete/delete'
-  /vclaim-rest/Rujukan/Khusus/insert:
+      $ref: './vclaim/rujukan.yaml#/paths/~1Rujukan~1delete/delete'
+  /Rujukan/Khusus/insert:
     post:
-      $ref: './vclaim/rujukan.yaml#/paths/~1vclaim-rest~1Rujukan~1Khusus~1insert/post'
-  /vclaim-rest/Rujukan/Khusus/delete:
+      $ref: './vclaim/rujukan.yaml#/paths/~1Rujukan~1Khusus~1insert/post'
+  /Rujukan/Khusus/delete:
     post:
-      $ref: './vclaim/rujukan.yaml#/paths/~1vclaim-rest~1Rujukan~1Khusus~1delete/post'
-  /vclaim-rest/Rujukan/Khusus/List/Bulan/{bulan}/Tahun/{tahun}:
+      $ref: './vclaim/rujukan.yaml#/paths/~1Rujukan~1Khusus~1delete/post'
+  /Rujukan/Khusus/List/Bulan/{bulan}/Tahun/{tahun}:
     get:
-      $ref: './vclaim/rujukan.yaml#/paths/~1vclaim-rest~1Rujukan~1Khusus~1List~1Bulan~1{bulan}~1Tahun~1{tahun}/get'
-  /vclaim-rest/Rujukan/2.0/insert:
+      $ref: './vclaim/rujukan.yaml#/paths/~1Rujukan~1Khusus~1List~1Bulan~1{bulan}~1Tahun~1{tahun}/get'
+  /Rujukan/2.0/insert:
     post:
-      $ref: './vclaim/rujukan.yaml#/paths/~1vclaim-rest~1Rujukan~12.0~1insert/post'
-  /vclaim-rest/Rujukan/2.0/Update:
+      $ref: './vclaim/rujukan.yaml#/paths/~1Rujukan~12.0~1insert/post'
+  /Rujukan/2.0/Update:
     put:
-      $ref: './vclaim/rujukan.yaml#/paths/~1vclaim-rest~1Rujukan~12.0~1Update/put'
-  /vclaim-rest/Rujukan/ListSpesialistik/PPKRujukan/{kodePPK}/TglRujukan/{tglRujukan}:
+      $ref: './vclaim/rujukan.yaml#/paths/~1Rujukan~12.0~1Update/put'
+  /Rujukan/ListSpesialistik/PPKRujukan/{kodePPK}/TglRujukan/{tglRujukan}:
     get:
-      $ref: './vclaim/rujukan.yaml#/paths/~1vclaim-rest~1Rujukan~1ListSpesialistik~1PPKRujukan~1{kodePPK}~1TglRujukan~1{tglRujukan}/get'
-  /vclaim-rest/Rujukan/ListSarana/PPKRujukan/{kodePPK}:
+      $ref: './vclaim/rujukan.yaml#/paths/~1Rujukan~1ListSpesialistik~1PPKRujukan~1{kodePPK}~1TglRujukan~1{tglRujukan}/get'
+  /Rujukan/ListSarana/PPKRujukan/{kodePPK}:
     get:
-      $ref: './vclaim/rujukan.yaml#/paths/~1vclaim-rest~1Rujukan~1ListSarana~1PPKRujukan~1{kodePPK}/get'
-  /vclaim-rest/Rujukan/Keluar/List/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
+      $ref: './vclaim/rujukan.yaml#/paths/~1Rujukan~1ListSarana~1PPKRujukan~1{kodePPK}/get'
+  /Rujukan/Keluar/List/tglMulai/{tglMulai}/tglAkhir/{tglAkhir}:
     get:
-      $ref: './vclaim/rujukan.yaml#/paths/~1vclaim-rest~1Rujukan~1Keluar~1List~1tglMulai~1{tglMulai}~1tglAkhir~1{tglAkhir}/get'
-  /vclaim-rest/Rujukan/Keluar/{noRujukan}:
+      $ref: './vclaim/rujukan.yaml#/paths/~1Rujukan~1Keluar~1List~1tglMulai~1{tglMulai}~1tglAkhir~1{tglAkhir}/get'
+  /Rujukan/Keluar/{noRujukan}:
     get:
-      $ref: './vclaim/rujukan.yaml#/paths/~1vclaim-rest~1Rujukan~1Keluar~1{noRujukan}/get'
-  /vclaim-rest/Rujukan/JumlahSEP/{jenisRujukan}/{noRujukan}:
+      $ref: './vclaim/rujukan.yaml#/paths/~1Rujukan~1Keluar~1{noRujukan}/get'
+  /Rujukan/JumlahSEP/{jenisRujukan}/{noRujukan}:
     get:
-      $ref: './vclaim/rujukan.yaml#/paths/~1vclaim-rest~1Rujukan~1JumlahSEP~1{jenisRujukan}~1{noRujukan}/get'
+      $ref: './vclaim/rujukan.yaml#/paths/~1Rujukan~1JumlahSEP~1{jenisRujukan}~1{noRujukan}/get'
 
   # SEP
-  /vclaim-rest/SEP/1.1/insert:
+  /SEP/1.1/insert:
     post:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1SEP~11.1~1insert/post'
-  /vclaim-rest/SEP/1.1/Update:
+      $ref: './vclaim/sep.yaml#/paths/~1SEP~11.1~1insert/post'
+  /SEP/1.1/Update:
     put:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1SEP~11.1~1Update/put'
-  /vclaim-rest/SEP/Delete:
+      $ref: './vclaim/sep.yaml#/paths/~1SEP~11.1~1Update/put'
+  /SEP/Delete:
     delete:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1SEP~1Delete/delete'
-  /vclaim-rest/SEP/{noSep}:
+      $ref: './vclaim/sep.yaml#/paths/~1SEP~1Delete/delete'
+  /SEP/{noSep}:
     get:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1SEP~1{noSep}/get'
-  /vclaim-rest/Rujukan/lastsep/norujukan/{noRujukan}:
+      $ref: './vclaim/sep.yaml#/paths/~1SEP~1{noSep}/get'
+  /Rujukan/lastsep/norujukan/{noRujukan}:
     get:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1Rujukan~1lastsep~1norujukan~1{noRujukan}/get'
-  /vclaim-rest/SEP/2.0/insert:
+      $ref: './vclaim/sep.yaml#/paths/~1Rujukan~1lastsep~1norujukan~1{noRujukan}/get'
+  /SEP/2.0/insert:
     post:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1SEP~12.0~1insert/post'
-  /vclaim-rest/SEP/2.0/update:
+      $ref: './vclaim/sep.yaml#/paths/~1SEP~12.0~1insert/post'
+  /SEP/2.0/update:
     put:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1SEP~12.0~1update/put'
-  /vclaim-rest/SEP/2.0/delete:
+      $ref: './vclaim/sep.yaml#/paths/~1SEP~12.0~1update/put'
+  /SEP/2.0/delete:
     delete:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1SEP~12.0~1delete/delete'
-  /vclaim-rest/sep/JasaRaharja/Suplesi/{noKartu}/tglPelayanan/{tglPelayanan}:
+      $ref: './vclaim/sep.yaml#/paths/~1SEP~12.0~1delete/delete'
+  /sep/JasaRaharja/Suplesi/{noKartu}/tglPelayanan/{tglPelayanan}:
     get:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1sep~1JasaRaharja~1Suplesi~1{noKartu}~1tglPelayanan~1{tglPelayanan}/get'
-  /vclaim-rest/sep/KllInduk/List/{noKartu}:
+      $ref: './vclaim/sep.yaml#/paths/~1sep~1JasaRaharja~1Suplesi~1{noKartu}~1tglPelayanan~1{tglPelayanan}/get'
+  /sep/KllInduk/List/{noKartu}:
     get:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1sep~1KllInduk~1List~1{noKartu}/get'
-  /vclaim-rest/Sep/pengajuanSEP:
+      $ref: './vclaim/sep.yaml#/paths/~1sep~1KllInduk~1List~1{noKartu}/get'
+  /Sep/pengajuanSEP:
     post:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1Sep~1pengajuanSEP/post'
-  /vclaim-rest/Sep/aprovalSEP:
+      $ref: './vclaim/sep.yaml#/paths/~1Sep~1pengajuanSEP/post'
+  /Sep/aprovalSEP:
     post:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1Sep~1aprovalSEP/post'
-  /vclaim-rest/Sep/persetujuanSEP/list/bulan/{bulan}/tahun/{tahun}:
+      $ref: './vclaim/sep.yaml#/paths/~1Sep~1aprovalSEP/post'
+  /Sep/persetujuanSEP/list/bulan/{bulan}/tahun/{tahun}:
     get:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1Sep~1persetujuanSEP~1list~1bulan~1{bulan}~1tahun~1{tahun}/get'
-  /vclaim-rest/Sep/updtglplg:
+      $ref: './vclaim/sep.yaml#/paths/~1Sep~1persetujuanSEP~1list~1bulan~1{bulan}~1tahun~1{tahun}/get'
+  /Sep/updtglplg:
     put:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1Sep~1updtglplg/put'
-  /vclaim-rest/SEP/2.0/updtglplg:
+      $ref: './vclaim/sep.yaml#/paths/~1Sep~1updtglplg/put'
+  /SEP/2.0/updtglplg:
     put:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1SEP~12.0~1updtglplg/put'
-  /vclaim-rest/Sep/updtglplg/list/bulan/{bulan}/tahun/{tahun}/{filter}:
+      $ref: './vclaim/sep.yaml#/paths/~1SEP~12.0~1updtglplg/put'
+  /Sep/updtglplg/list/bulan/{bulan}/tahun/{tahun}/{filter}:
     get:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1Sep~1updtglplg~1list~1bulan~1{bulan}~1tahun~1{tahun}~1{filter}/get'
-  /vclaim-rest/sep/cbg/{noSep}:
+      $ref: './vclaim/sep.yaml#/paths/~1Sep~1updtglplg~1list~1bulan~1{bulan}~1tahun~1{tahun}~1{filter}/get'
+  /sep/cbg/{noSep}:
     get:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1sep~1cbg~1{noSep}/get'
-  /vclaim-rest/SEP/Internal/{noSep}:
+      $ref: './vclaim/sep.yaml#/paths/~1sep~1cbg~1{noSep}/get'
+  /SEP/Internal/{noSep}:
     get:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1SEP~1Internal~1{noSep}/get'
-  /vclaim-rest/SEP/Internal/delete:
+      $ref: './vclaim/sep.yaml#/paths/~1SEP~1Internal~1{noSep}/get'
+  /SEP/Internal/delete:
     delete:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1SEP~1Internal~1delete/delete'
-  /vclaim-rest/SEP/FingerPrint/Peserta/{noKartu}/TglPelayanan/{tglPelayanan}:
+      $ref: './vclaim/sep.yaml#/paths/~1SEP~1Internal~1delete/delete'
+  /SEP/FingerPrint/Peserta/{noKartu}/TglPelayanan/{tglPelayanan}:
     get:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1SEP~1FingerPrint~1Peserta~1{noKartu}~1TglPelayanan~1{tglPelayanan}/get'
-  /vclaim-rest/SEP/FingerPrint/List/Peserta/TglPelayanan/{tglPelayanan}:
+      $ref: './vclaim/sep.yaml#/paths/~1SEP~1FingerPrint~1Peserta~1{noKartu}~1TglPelayanan~1{tglPelayanan}/get'
+  /SEP/FingerPrint/List/Peserta/TglPelayanan/{tglPelayanan}:
     get:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1SEP~1FingerPrint~1List~1Peserta~1TglPelayanan~1{tglPelayanan}/get'
-  /vclaim-rest/SEP/FingerPrint/randomquestion/faskesterdaftar/nokapst/{noKartu}/tglsep/{tglPelayanan}:
+      $ref: './vclaim/sep.yaml#/paths/~1SEP~1FingerPrint~1List~1Peserta~1TglPelayanan~1{tglPelayanan}/get'
+  /SEP/FingerPrint/randomquestion/faskesterdaftar/nokapst/{noKartu}/tglsep/{tglPelayanan}:
     get:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1SEP~1FingerPrint~1randomquestion~1faskesterdaftar~1nokapst~1{noKartu}~1tglsep~1{tglPelayanan}/get'
-  /vclaim-rest/SEP/FingerPrint/randomanswer:
+      $ref: './vclaim/sep.yaml#/paths/~1SEP~1FingerPrint~1randomquestion~1faskesterdaftar~1nokapst~1{noKartu}~1tglsep~1{tglPelayanan}/get'
+  /SEP/FingerPrint/randomanswer:
     post:
-      $ref: './vclaim/sep.yaml#/paths/~1vclaim-rest~1SEP~1FingerPrint~1randomanswer/post'
+      $ref: './vclaim/sep.yaml#/paths/~1SEP~1FingerPrint~1randomanswer/post'

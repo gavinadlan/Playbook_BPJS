@@ -112,7 +112,7 @@ paths:
       $ref: './pcare/kelompok.yaml#/paths/~1kelompok~1peserta~1{eduId}~1{noKartu}/delete'
 
   # Kesadaran
-  /pcare-rest-dev/kesadaran:
+  /kesadaran:
     get:
       $ref: './pcare/kesadaran.yaml#/paths/~1pcare-rest-dev~1kesadaran/get'
 

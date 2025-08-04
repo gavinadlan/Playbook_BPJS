@@ -712,7 +712,7 @@ paths:
             type: string
             pattern: '^[0-9]{2}-[0-9]{2}-[0-9]{4}$'
           description: Bulan dalam format dd-mm-yyyy
-          example: "01-01-2016"
+          example: 01-01-2016
         - name: x-cons-id
           in: header
           required: true
@@ -1566,7 +1566,7 @@ paths:
                 metaData:
                   message: OK
                   code: 200
-  /pcare-rest-dev/kesadaran:
+  /kesadaran:
     get:
       tags:
         - Kesadaran
@@ -1576,6 +1576,14 @@ paths:
 
         ## URL Format
         `{Base URL}/{Service Name}/kesadaran`
+
+        ## Authentication
+        Semua request memerlukan header authentication yang valid dari BPJS Kesehatan:
+        - `x-cons-id`: Consumer ID dari BPJS
+        - `x-timestamp`: Unix timestamp saat ini
+        - `x-signature`: HMAC-256 signature
+        - `x-authorization`: Base64 encoded authorization
+        - `user_key`: User key untuk akses webservice
 
         ## Response
         Mengembalikan daftar tingkat kesadaran yang tersedia:
@@ -1670,6 +1678,57 @@ paths:
                 metaData:
                   message: OK
                   code: 200
+        '403':
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Authentication failed
+              example:
+                error: Authentication failed
+        '408':
+          description: Request timeout
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type:
+                      - 'null'
+                      - object
+                  metaData:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: REQUEST_TIMEOUT
+                      code:
+                        type: integer
+                        example: 408
+                required:
+                  - metaData
+              example:
+                response: null
+                metaData:
+                  message: REQUEST_TIMEOUT
+                  code: 408
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+              example:
+                error: Internal server error
   '/kunjungan/rujukan/{noKunjungan}':
     get:
       tags:

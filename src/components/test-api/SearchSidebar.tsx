@@ -47,8 +47,8 @@ export default function SearchSidebar({
               key={service.name}
               className={`whitespace-nowrap px-4 py-2 rounded-full border text-sm font-medium transition-colors flex-shrink-0 ${
                 selectedService === service.name.toLowerCase()
-                  ? 'bg-blue-600 text-white border-blue-600 shadow'
-                  : 'bg-white text-blue-700 border-blue-200 hover:bg-blue-50'
+                  ? 'bg-[#27447C] text-white border-[#27447C] shadow'
+                  : 'bg-white text-[#27447C] border-[#27447C]/30 hover:bg-[#27447C]/10'
               }`}
               onClick={() => onServiceChange(service.name.toLowerCase())}
             >
@@ -58,7 +58,7 @@ export default function SearchSidebar({
         </div>
         {/* Search Endpoint */}
         <div className="mt-3 mb-2">
-          <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-blue-200">
+          <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-[#27447C]/50">
             <Search className="w-4 h-4 text-gray-400" />
             <input
               type="text"
@@ -90,13 +90,13 @@ export default function SearchSidebar({
             ) : (
               Object.entries(groupedResults).map(([service, endpoints]) => (
                 <div key={service}>
-                  <div className="px-4 py-2 text-xs font-bold text-blue-700 bg-blue-50 border-b border-blue-100 sticky top-0 z-10">
+                  <div className="px-4 py-2 text-xs font-bold text-[#27447C] bg-[#27447C]/10 border-b border-[#27447C]/20 sticky top-0 z-10">
                     {service}
                   </div>
                   {endpoints.map((ep, idx) => (
                     <div
                       key={ep.service + ep.path + ep.method + idx}
-                      className="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b last:border-b-0 flex flex-col gap-1"
+                      className="px-4 py-2 hover:bg-[#27447C]/5 cursor-pointer border-b last:border-b-0 flex flex-col gap-1"
                       onClick={() => onEndpointClick(ep)}
                     >
                       <div className="flex items-center gap-2 text-xs text-gray-700">
@@ -104,7 +104,7 @@ export default function SearchSidebar({
                         <span className="font-mono">{ep.path}</span>
                       </div>
                       <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <Badge className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded">{ep.service}</Badge>
+                        <Badge className="bg-[#27447C]/20 text-[#27447C] px-2 py-0.5 rounded">{ep.service}</Badge>
                         {ep.summary && <span className="text-gray-400">{ep.summary}</span>}
                       </div>
                     </div>
@@ -168,7 +168,7 @@ export default function SearchSidebar({
                   key={service.name}
                   className={`p-3 rounded-lg border cursor-pointer transition-colors flex flex-col gap-1 ${
                     selectedService === service.name.toLowerCase()
-                      ? 'bg-blue-50 border-blue-300 shadow'
+                      ? 'bg-[#27447C]/10 border-[#27447C]/30 shadow'
                       : 'hover:bg-gray-50 border-gray-200'
                   }`}
                   onClick={() => onServiceChange(service.name.toLowerCase())}
@@ -197,7 +197,7 @@ export default function SearchSidebar({
         </Card>
         {/* Search Endpoint (desktop) */}
         <div className="mb-4 relative">
-          <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-blue-200">
+          <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-[#27447C]/50">
             <Search className="w-4 h-4 text-gray-400" />
             <input
               type="text"
@@ -228,13 +228,13 @@ export default function SearchSidebar({
               ) : (
                 Object.entries(groupedResults).map(([service, endpoints]) => (
                   <div key={service}>
-                    <div className="px-4 py-2 text-xs font-bold text-blue-700 bg-blue-50 border-b border-blue-100 sticky top-0 z-10">
+                    <div className="px-4 py-2 text-xs font-bold text-[#27447C] bg-[#27447C]/10 border-b border-[#27447C]/20 sticky top-0 z-10">
                       {service}
                     </div>
                     {endpoints.map((ep, idx) => (
                       <div
                         key={ep.service + ep.path + ep.method + idx}
-                        className="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b last:border-b-0 flex flex-col gap-1"
+                        className="px-4 py-2 hover:bg-[#27447C]/5 cursor-pointer border-b last:border-b-0 flex flex-col gap-1"
                         onClick={() => onEndpointClick(ep)}
                       >
                         <div className="flex items-center gap-2 text-xs text-gray-700">
@@ -242,7 +242,7 @@ export default function SearchSidebar({
                           <span className="font-mono">{ep.path}</span>
                         </div>
                         <div className="flex items-center gap-2 text-xs text-gray-500">
-                          <Badge className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded">{ep.service}</Badge>
+                          <Badge className="bg-[#27447C]/20 text-[#27447C] px-2 py-0.5 rounded">{ep.service}</Badge>
                           {ep.summary && <span className="text-gray-400">{ep.summary}</span>}
                         </div>
                       </div>

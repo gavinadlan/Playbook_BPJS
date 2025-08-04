@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert-dialog';
-import { Info, Lock, LogIn, FileText, AlertCircle, CheckCircle } from 'lucide-react';
+import { Info, Lock, LogIn, FileText, AlertCircle, CheckCircle, Shield } from 'lucide-react';
 import { usePKSStatus } from '@/hooks/usePKSStatus';
 
 interface ProtectedTestApiProps {
@@ -14,7 +14,7 @@ interface ProtectedTestApiProps {
 }
 
 export default function ProtectedTestApi({ children }: ProtectedTestApiProps) {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, isAdmin } = useAuth();
   const router = useRouter();
   const { status: pksStatus, loading: pksLoading, pksData } = usePKSStatus();
 
@@ -27,6 +27,7 @@ export default function ProtectedTestApi({ children }: ProtectedTestApiProps) {
   // Debug log
   if (typeof window !== 'undefined') {
     console.log('[PKS DEBUG] user:', user);
+    console.log('[PKS DEBUG] isAdmin:', isAdmin);
     console.log('[PKS DEBUG] pksData:', pksData);
     console.log('[PKS DEBUG] pksStatus:', pksStatus);
   }
@@ -74,7 +75,12 @@ export default function ProtectedTestApi({ children }: ProtectedTestApiProps) {
     );
   }
 
-  // Cek status PKS
+  // Admin dapat langsung mengakses Test API tanpa perlu PKS
+  if (isAdmin) {
+    return <>{children}</>;
+  }
+
+  // Cek status PKS hanya untuk user non-admin
   if (pksStatus === 'no_submission' || !pksData || pksData.length === 0) {
     return (
       <div className="container mx-auto px-4 py-8">

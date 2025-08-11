@@ -39,6 +39,7 @@ export const EditUserModal = ({
     name: "",
     email: "",
     role: "USER" as "USER" | "ADMIN",
+    isVerified: false,
     password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -51,6 +52,7 @@ export const EditUserModal = ({
         name: user.name,
         email: user.email,
         role: user.role,
+        isVerified: user.isVerified,
         password: "",
       });
       setErrors({});
@@ -91,6 +93,7 @@ export const EditUserModal = ({
       if (formData.name !== user.name) updateData.name = formData.name;
       if (formData.email !== user.email) updateData.email = formData.email;
       if (formData.role !== user.role) updateData.role = formData.role;
+      if (formData.isVerified !== user.isVerified) updateData.isVerified = formData.isVerified;
       if (formData.password.trim()) updateData.password = formData.password;
 
       // Jika tidak ada perubahan
@@ -122,6 +125,7 @@ export const EditUserModal = ({
           name: "",
           email: "",
           role: "USER",
+          isVerified: false,
           password: "",
         });
         setErrors({});
@@ -188,6 +192,25 @@ export const EditUserModal = ({
               <SelectContent>
                 <SelectItem value="USER">USER</SelectItem>
                 <SelectItem value="ADMIN">ADMIN</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="isVerified">Status Verifikasi Email</Label>
+            <Select
+              value={formData.isVerified ? "true" : "false"}
+              onValueChange={(value: string) =>
+                setFormData({ ...formData, isVerified: value === "true" })
+              }
+              disabled={isLoading}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="true">Terverifikasi</SelectItem>
+                <SelectItem value="false">Belum Terverifikasi</SelectItem>
               </SelectContent>
             </Select>
           </div>

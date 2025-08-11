@@ -42,6 +42,7 @@ export const UpdateUserSchema = z.object({
   name: z.string().min(3, "Nama minimal 3 karakter").optional(),
   email: z.string().email("Email tidak valid").optional(),
   role: z.enum(["USER", "ADMIN"]).optional(),
+  isVerified: z.boolean().optional(),
   password: z
     .string()
     .min(6, "Password minimal 6 karakter")

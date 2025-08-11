@@ -131,6 +131,7 @@ export const UsersTable = ({ data, onUserUpdated }: UsersTableProps) => {
               <TableHead>Nama</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Role</TableHead>
+              <TableHead>Verifikasi</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Terakhir Dikunjungi</TableHead>
               <TableHead>Dibuat Pada</TableHead>
@@ -140,7 +141,7 @@ export const UsersTable = ({ data, onUserUpdated }: UsersTableProps) => {
           <TableBody>
             {data.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center">
+                <TableCell colSpan={8} className="h-24 text-center">
                   Tidak ada user yang ditemukan.
                 </TableCell>
               </TableRow>
@@ -151,6 +152,11 @@ export const UsersTable = ({ data, onUserUpdated }: UsersTableProps) => {
                   <TableCell>{user.email}</TableCell>
                   <TableCell>
                     <StatusBadge status={getRoleBadge(user.role)} />
+                  </TableCell>
+                  <TableCell>
+                    <StatusBadge 
+                      status={user.isVerified ? "Verified" : "Unverified"} 
+                    />
                   </TableCell>
                   <TableCell>
                     <StatusBadge status={getUserStatus(user.lastVisited)} />

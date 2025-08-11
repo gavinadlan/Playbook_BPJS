@@ -136,7 +136,7 @@ export const fetchUserById = async (id: number): Promise<User> => {
 export const updateUser = async (
   id: number,
   userData: Partial<
-    Pick<User, "name" | "email" | "role"> & { password?: string }
+    Pick<User, "name" | "email" | "role" | "isVerified"> & { password?: string }
   >
 ): Promise<User> => {
   try {

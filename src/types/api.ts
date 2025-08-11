@@ -60,6 +60,7 @@ export interface User {
   name: string;
   email: string;
   role: "USER" | "ADMIN";
+  isVerified: boolean;
   lastVisited: string | null;
   createdAt: string;
 }
@@ -161,6 +162,7 @@ export const UserResponseSchema = z.object({
   name: z.string(),
   email: z.string(),
   role: z.enum(["USER", "ADMIN"]),
+  isVerified: z.boolean(),
   lastVisited: z.string().nullable(),
   createdAt: z.string(),
 });

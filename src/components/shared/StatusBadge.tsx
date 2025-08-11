@@ -25,7 +25,9 @@ type StatusType =
   | "Admin"
   | "User"
   | "admin"
-  | "user";
+  | "user"
+  | "Verified"
+  | "Unverified";
 
 interface StatusBadgeProps {
   status: StatusType;
@@ -115,6 +117,18 @@ const statusConfig: Record<
     icon: <UserCheck className="h-4 w-4 mr-1" />,
   },
   Inactive: {
+    label: "Belum Verifikasi",
+    className: "bg-gray-100 text-gray-800",
+    icon: <UserX className="h-4 w-4 mr-1" />,
+  },
+
+  // Email verification status
+  Verified: {
+    label: "Terverifikasi",
+    className: "bg-green-100 text-green-800",
+    icon: <UserCheck className="h-4 w-4 mr-1" />,
+  },
+  Unverified: {
     label: "Belum Verifikasi",
     className: "bg-gray-100 text-gray-800",
     icon: <UserX className="h-4 w-4 mr-1" />,

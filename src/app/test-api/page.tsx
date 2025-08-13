@@ -1,15 +1,17 @@
 'use client';
 
+import { Suspense } from 'react';
 import ProtectedTestApi from '@/components/test-api/ProtectedTestApi';
 import SearchSidebar from '@/components/test-api/SearchSidebar';
 import ApiDocumentation from '@/components/test-api/ApiDocumentation';
 import { useTestApi } from '@/hooks/useTestApi';
+import Loader from '@/components/ui/loading';
 
 // Import CSS untuk Swagger UI
 import 'swagger-ui-react/swagger-ui.css';
 import './swagger-custom.css';
 
-export default function TestApiPage() {
+function TestApiContent() {
   const {
     // State
     selectedService,
@@ -77,5 +79,17 @@ export default function TestApiPage() {
         </div>
       </div>
     </ProtectedTestApi>
+  );
+}
+
+export default function TestApiPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader />
+      </div>
+    }>
+      <TestApiContent />
+    </Suspense>
   );
 } 

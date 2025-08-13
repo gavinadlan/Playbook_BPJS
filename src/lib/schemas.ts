@@ -66,3 +66,15 @@ export const PengajuanPKSSchema = z.object({
       "Format file harus PDF, DOC, atau DOCX"
     ),
 });
+
+// ===== SCHEMA SIMPLE UNTUK API TESTING =====
+
+// Schema untuk header API BPJS Kesehatan
+export const ApiHeaderSchema = z.object({
+  'x-cons-id': z.string().min(1, "Consumer ID wajib diisi"),
+  'x-timestamp': z.string().min(1, "Timestamp wajib diisi"),
+  'x-signature': z.string().min(1, "Signature wajib diisi"),
+  'user_key': z.string().min(1, "User key wajib diisi"),
+  'Content-Type': z.string().default("application/json"),
+  'Authorization': z.string().optional(),
+});

@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import AuthLayout from "@/components/auth/AuthLayout";
-import Alert from "@/components/ui/Alert";
+import { Alert } from "@/components/ui/alert-component";
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
   const [status, setStatus] = useState<"loading" | "success" | "error">(
     "loading"
   );
@@ -68,10 +68,19 @@ export default function VerifyEmailPage() {
     >
       {showAlert && (
         <Alert
-          type={status === "success" ? "success" : "error"}
-          message={message}
-          onClose={() => setShowAlert(false)}
-        />
+          variant={status === "success" ? "default" : "destructive"}
+          className="mb-4"
+        >
+          <div className="flex items-center justify-between">
+            <p>{message}</p>
+            <button
+              onClick={() => setShowAlert(false)}
+              className="text-gray-500 hover:text-gray-700"
+            >
+              ✕
+            </button>
+          </div>
+        </Alert>
       )}
 
       <div className="text-center">
@@ -124,5 +133,17 @@ export default function VerifyEmailPage() {
         )}
       </div>
     </AuthLayout>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[rgb(73,163,90)]"></div>
+      </div>
+    }>
+      <VerifyEmailContent />
+    </Suspense>
   );
 }

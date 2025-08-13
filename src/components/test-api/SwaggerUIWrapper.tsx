@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Loader from '@/components/ui/loading';
+import { useApiValidation } from '@/hooks/useApiValidation';
 
 // Dynamic import untuk Swagger UI
 const SwaggerUI = dynamic(() => import('swagger-ui-react'), { ssr: false });
@@ -23,6 +24,9 @@ interface SwaggerUIWrapperProps {
 function SwaggerUIWrapper(props: SwaggerUIWrapperProps) {
   const { targetPath, targetMethod, searchEndpoint, ...swaggerProps } = props;
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Simple validation hook
+  const validation = useApiValidation();
 
   // Reset loading state when URL changes
   useEffect(() => {
@@ -32,6 +36,25 @@ function SwaggerUIWrapper(props: SwaggerUIWrapperProps) {
     }, 1500); // 1.5 detik, adjust jika perlu
     return () => clearTimeout(timeout);
   }, [props.url]);
+
+  // Enhanced request interceptor with simple header validation
+  const enhancedRequestInterceptor = (request: any) => {
+    // Validate headers if they exist
+    if (request.headers && Object.keys(request.headers).length > 0) {
+      const headerValidation = validation.validateHeaders(request.headers);
+      if (!headerValidation.isValid) {
+        console.warn('Header validation failed:', headerValidation.errors);
+        // Bisa tambahkan toast atau notifikasi error di sini
+      }
+    }
+
+    // Call original request interceptor if provided
+    if (props.requestInterceptor) {
+      return props.requestInterceptor(request);
+    }
+    
+    return request;
+  };
 
   // Function to scroll to specific endpoint (by path & method)
   useEffect(() => {
@@ -160,7 +183,10 @@ function SwaggerUIWrapper(props: SwaggerUIWrapperProps) {
           <Loader />
         </div>
       )}
-      <SwaggerUI {...swaggerProps} />
+      <SwaggerUI 
+        {...swaggerProps} 
+        requestInterceptor={enhancedRequestInterceptor}
+      />
     </div>
   );
 }

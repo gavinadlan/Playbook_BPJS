@@ -10,19 +10,6 @@ servers:
     description: Proxy Backend Local
 
 paths:
-  # ============================== SIGNATURE ==============================
-  /auth/signature:
-    get:
-      $ref: './icare/create-signature-fkrtl.yaml#/paths/~1auth~1signature/get'
-  /auth/signature-fktp:
-    get:
-      $ref: './icare/create-signature-fktp.yaml#/paths/~1auth~1signature/get'
-
-  # ============================== DECRYPT ==============================
-  /decrypt:
-    get:
-      $ref: './icare/decrypt.yaml#/paths/~1decrypt/get'
-
   # ============================== KATALOG I-CARE ==============================
   /{serviceName}/api/rs/validate:
     post:

@@ -68,15 +68,6 @@ tags:
     description: Data referensi prognosa
 
 paths:
-  # Create Signature
-  /auth/signature:
-    get:
-      $ref: './pcare/create-signature.yaml#/paths/~1auth~1signature/get'
-
-  # Decrypt
-  /decrypt:
-    post:
-      $ref: './pcare/decrypt.yaml#/paths/~1decrypt/post'
 
   # Diagnosa
   /diagnosa/{keyword}/{start}/{limit}:

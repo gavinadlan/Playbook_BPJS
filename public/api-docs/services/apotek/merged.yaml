@@ -8,7 +8,7 @@ servers:
   - url: 'http://localhost:3001/api/bpjs/apotek-rest-dev'
     description: Proxy Backend Local
 paths:
-  '/{serviceName}/referensi/dpho':
+  '/referensi/dpho':
     get:
       tags:
         - Referensi
@@ -16,12 +16,6 @@ paths:
       description: Mendapatkan daftar obat DPHO
       operationId: getDPHO
       parameters:
-        - name: serviceName
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Nama service
         - name: x-cons-id
           in: header
           required: true
@@ -114,7 +108,7 @@ paths:
                 metaData:
                   code: '200'
                   message: OK
-  '/{serviceName}/referensi/poli/{parameter}':
+  '/referensi/poli/{parameter}':
     get:
       tags:
         - Referensi
@@ -122,12 +116,6 @@ paths:
       description: Mendapatkan daftar poli berdasarkan kode atau nama
       operationId: getPoli
       parameters:
-        - name: serviceName
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Nama service
         - name: parameter
           in: path
           required: true
@@ -181,7 +169,7 @@ paths:
                               type: string
                               description: Nama poli
                   metaData:
-                    $ref: '#/paths/~1%7BserviceName%7D~1referensi~1dpho/get/responses/200/content/application~1json/schema/properties/metaData'
+                    $ref: '#/paths/~1referensi~1dpho/get/responses/200/content/application~1json/schema/properties/metaData'
               example:
                 response:
                   poli:
@@ -192,7 +180,7 @@ paths:
                 metaData:
                   code: '200'
                   message: OK
-  '/{serviceName}/referensi/ppk/{jenisFaskes}/{namaFaskes}':
+  '/referensi/ppk/{jenisFaskes}/{namaFaskes}':
     get:
       tags:
         - Referensi
@@ -200,12 +188,6 @@ paths:
       description: Pencarian data fasilitas kesehatan berdasarkan jenis dan nama
       operationId: getFaskes
       parameters:
-        - name: serviceName
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Nama service
         - name: jenisFaskes
           in: path
           required: true
@@ -268,7 +250,7 @@ paths:
                               type: string
                               description: Nama fasilitas kesehatan
                   metaData:
-                    $ref: '#/paths/~1%7BserviceName%7D~1referensi~1dpho/get/responses/200/content/application~1json/schema/properties/metaData'
+                    $ref: '#/paths/~1referensi~1dpho/get/responses/200/content/application~1json/schema/properties/metaData'
               example:
                 response:
                   faskes:
@@ -279,7 +261,7 @@ paths:
                 metaData:
                   code: '200'
                   message: OK
-  '/{serviceName}/referensi/settingppk/read/{kodeApotek}':
+  '/referensi/settingppk/read/{kodeApotek}':
     get:
       tags:
         - Referensi
@@ -287,12 +269,6 @@ paths:
       description: Pencarian setting apotek berdasarkan kode apotek
       operationId: getSettingApotek
       parameters:
-        - name: serviceName
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Nama service
         - name: kodeApotek
           in: path
           required: true
@@ -374,7 +350,7 @@ paths:
                         type: string
                         description: Status check stock (True/False)
                   metaData:
-                    $ref: '#/paths/~1%7BserviceName%7D~1referensi~1dpho/get/responses/200/content/application~1json/schema/properties/metaData'
+                    $ref: '#/paths/~1referensi~1dpho/get/responses/200/content/application~1json/schema/properties/metaData'
               example:
                 response:
                   kode: 0112A017
@@ -393,7 +369,7 @@ paths:
                 metaData:
                   code: '200'
                   message: OK
-  '/{serviceName}/referensi/spesialistik':
+  '/referensi/spesialistik':
     get:
       tags:
         - Referensi
@@ -401,12 +377,6 @@ paths:
       description: Pencarian data spesialistik
       operationId: getSpesialistik
       parameters:
-        - name: serviceName
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Nama service
         - name: x-cons-id
           in: header
           required: true
@@ -454,7 +424,7 @@ paths:
                               type: string
                               description: Nama spesialistik
                   metaData:
-                    $ref: '#/paths/~1%7BserviceName%7D~1referensi~1dpho/get/responses/200/content/application~1json/schema/properties/metaData'
+                    $ref: '#/paths/~1referensi~1dpho/get/responses/200/content/application~1json/schema/properties/metaData'
               example:
                 response:
                   list:
@@ -465,7 +435,7 @@ paths:
                 metaData:
                   code: '200'
                   message: OK
-  '/{serviceName}/referensi/obat/{kodeJenisObat}/{tglResep}/{filterPencarian}':
+  '/referensi/obat/{kodeJenisObat}/{tglResep}/{filterPencarian}':
     get:
       tags:
         - Referensi
@@ -473,12 +443,6 @@ paths:
       description: 'Pencarian obat berdasarkan jenis, tanggal resep, dan filter'
       operationId: getObat
       parameters:
-        - name: serviceName
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Nama service
         - name: kodeJenisObat
           in: path
           required: true
@@ -548,7 +512,7 @@ paths:
                               type: string
                               description: Harga obat
                   metaData:
-                    $ref: '#/paths/~1%7BserviceName%7D~1referensi~1dpho/get/responses/200/content/application~1json/schema/properties/metaData'
+                    $ref: '#/paths/~1referensi~1dpho/get/responses/200/content/application~1json/schema/properties/metaData'
               example:
                 response:
                   list:
@@ -561,7 +525,7 @@ paths:
                 metaData:
                   code: '200'
                   message: OK
-  '/{serviceName}/obatnonracikan/v3/insert':
+  '/obatnonracikan/v3/insert':
     post:
       tags:
         - Penyimpanan Obat
@@ -569,12 +533,6 @@ paths:
       description: Simpan data obat non racikan
       operationId: insertObatNonRacikan
       parameters:
-        - name: serviceName
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Nama service
         - name: x-cons-id
           in: header
           required: true
@@ -674,7 +632,7 @@ paths:
                     nullable: true
                     description: Response data
                   metaData:
-                    $ref: '#/paths/~1%7BserviceName%7D~1obatracikan~1v3~1insert/post/responses/200/content/application~1json/schema/properties/metaData'
+                    $ref: '#/paths/~1obatracikan~1v3~1insert/post/responses/200/content/application~1json/schema/properties/metaData'
               example:
                 response: null
                 metaData:
@@ -684,7 +642,7 @@ paths:
           description: Bad Request
         '500':
           description: Internal Server Error
-  '/{serviceName}/obatracikan/v3/insert':
+  '/obatracikan/v3/insert':
     post:
       tags:
         - Penyimpanan Obat
@@ -692,12 +650,6 @@ paths:
       description: Simpan data obat racikan
       operationId: insertObatRacikan
       parameters:
-        - name: serviceName
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Nama service
         - name: x-cons-id
           in: header
           required: true
@@ -826,7 +778,7 @@ paths:
           description: Bad Request
         '500':
           description: Internal Server Error
-  '/{serviceName}/pelayanan/obat/hapus':
+  '/pelayanan/obat/hapus':
     delete:
       tags:
         - Pelayanan Obat
@@ -834,12 +786,6 @@ paths:
       description: Menghapus data pelayanan obat
       operationId: hapusPelayananObat
       parameters:
-        - name: serviceName
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Nama service
         - name: nosepapotek
           in: query
           required: true
@@ -915,7 +861,7 @@ paths:
           description: Bad Request
         '500':
           description: Internal Server Error
-  '/{serviceName}/obat/daftar/{nomorKunjungan}':
+  '/obat/daftar/{nomorKunjungan}':
     get:
       tags:
         - Pelayanan Obat
@@ -923,12 +869,6 @@ paths:
       description: Mendapatkan daftar pelayanan obat berdasarkan nomor kunjungan/SEP
       operationId: daftarPelayananObat
       parameters:
-        - name: serviceName
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Nama service
         - name: nomorKunjungan
           in: path
           required: true
@@ -1032,12 +972,12 @@ paths:
                                   type: string
                                   example: '2797'
                   metaData:
-                    $ref: '#/paths/~1%7BserviceName%7D~1pelayanan~1obat~1hapus/delete/responses/200/content/application~1json/schema/properties/metaData'
+                    $ref: '#/paths/~1pelayanan~1obat~1hapus/delete/responses/200/content/application~1json/schema/properties/metaData'
         '400':
           description: Bad Request
         '500':
           description: Internal Server Error
-  '/{serviceName}/riwayatobat/{tglAwal}/{tglAkhir}/{noKartu}':
+  '/riwayatobat/{tglAwal}/{tglAkhir}/{noKartu}':
     get:
       tags:
         - Pelayanan Obat
@@ -1045,12 +985,6 @@ paths:
       description: Mendapatkan riwayat pelayanan obat berdasarkan periode dan nomor kartu
       operationId: riwayatPelayananObat
       parameters:
-        - name: serviceName
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Nama service
         - name: tglAwal
           in: path
           required: true
@@ -1144,12 +1078,12 @@ paths:
                                   type: string
                                   example: '46.00'
                   metaData:
-                    $ref: '#/paths/~1%7BserviceName%7D~1pelayanan~1obat~1hapus/delete/responses/200/content/application~1json/schema/properties/metaData'
+                    $ref: '#/paths/~1pelayanan~1obat~1hapus/delete/responses/200/content/application~1json/schema/properties/metaData'
         '400':
           description: Bad Request
         '500':
           description: Internal Server Error
-  '/{serviceName}/sjpresep/v3/insert':
+  '/sjpresep/v3/insert':
     post:
       tags:
         - Resep
@@ -1157,12 +1091,6 @@ paths:
       description: Menyimpan data resep obat
       operationId: simpanResep
       parameters:
-        - name: serviceName
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Nama service
         - name: x-cons-id
           in: header
           required: true
@@ -1297,7 +1225,7 @@ paths:
                         type: string
                         format: date
                   metaData:
-                    $ref: '#/paths/~1%7BserviceName%7D~1daftarresep/post/responses/200/content/application~1json/schema/properties/metaData'
+                    $ref: '#/paths/~1daftarresep/post/responses/200/content/application~1json/schema/properties/metaData'
                 example:
                   response:
                     noSep_Kunjungan: 1202R0010318V000092
@@ -1318,7 +1246,7 @@ paths:
           description: Bad Request
         '500':
           description: Internal Server Error
-  '/{serviceName}/hapusresep':
+  '/hapusresep':
     delete:
       tags:
         - Resep
@@ -1326,12 +1254,6 @@ paths:
       description: Menghapus data resep obat
       operationId: hapusResep
       parameters:
-        - name: serviceName
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Nama service
         - name: nosjp
           in: query
           required: true
@@ -1383,7 +1305,7 @@ paths:
                 type: object
                 properties:
                   metaData:
-                    $ref: '#/paths/~1%7BserviceName%7D~1daftarresep/post/responses/200/content/application~1json/schema/properties/metaData'
+                    $ref: '#/paths/~1daftarresep/post/responses/200/content/application~1json/schema/properties/metaData'
                   response:
                     type: string
                     nullable: true
@@ -1396,7 +1318,7 @@ paths:
           description: Bad Request
         '500':
           description: Internal Server Error
-  '/{serviceName}/daftarresep':
+  '/daftarresep':
     post:
       tags:
         - Resep
@@ -1404,12 +1326,6 @@ paths:
       description: Mendapatkan daftar resep berdasarkan filter
       operationId: daftarResep
       parameters:
-        - name: serviceName
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Nama service
         - name: x-cons-id
           in: header
           required: true
@@ -1545,7 +1461,7 @@ paths:
           description: Bad Request
         '500':
           description: Internal Server Error
-  '/{serviceName}/sep/{nomorKunjungan}':
+  '/sep/{nomorKunjungan}':
     get:
       tags:
         - SEP
@@ -1553,12 +1469,6 @@ paths:
       description: Mendapatkan data berdasarkan nomor kunjungan/SEP
       operationId: cariSEP
       parameters:
-        - name: serviceName
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Nama service
         - name: nomorKunjungan
           in: path
           required: true
@@ -1712,7 +1622,7 @@ paths:
           description: Data tidak ditemukan
         '500':
           description: Internal Server Error
-  '/{serviceName}/monitoring/klaim/{bulan}/{tahun}/{jenisObat}/{status}':
+  '/monitoring/klaim/{bulan}/{tahun}/{jenisObat}/{status}':
     get:
       tags:
         - Monitoring
@@ -1720,12 +1630,6 @@ paths:
       description: Mendapatkan data klaim obat berdasarkan filter
       operationId: dataKlaim
       parameters:
-        - name: serviceName
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Nama service
         - name: bulan
           in: path
           required: true

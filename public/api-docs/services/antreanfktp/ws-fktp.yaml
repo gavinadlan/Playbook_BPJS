@@ -22,30 +22,6 @@ paths:
           name: x-password
           required: true
           schema: {type: string}
-        - name: x-cons-id
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Cons ID
-        - name: x-timestamp
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Timestamp
-        - name: x-signature
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Signature
-        - name: user_key
-          in: header
-          required: true
-          schema:
-            type: string
-          description: User Key
       responses:
         '200':
           description: OK
@@ -76,30 +52,6 @@ paths:
           name: tanggalperiksa
           required: true
           schema: {type: string, format: date}
-        - name: x-cons-id
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Cons ID
-        - name: x-timestamp
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Timestamp
-        - name: x-signature
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Signature
-        - name: user_key
-          in: header
-          required: true
-          schema:
-            type: string
-          description: User Key
       responses:
         '200':
           description: OK
@@ -127,30 +79,6 @@ paths:
           name: x-username
           required: true
           schema: {type: string}
-        - name: x-cons-id
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Cons ID
-        - name: x-timestamp
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Timestamp
-        - name: x-signature
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Signature
-        - name: user_key
-          in: header
-          required: true
-          schema:
-            type: string
-          description: User Key
       requestBody:
         required: true
         content:
@@ -201,30 +129,6 @@ paths:
           name: tanggalperiksa
           required: true
           schema: {type: string, format: date}
-        - name: x-cons-id
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Cons ID
-        - name: x-timestamp
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Timestamp
-        - name: x-signature
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Signature
-        - name: user_key
-          in: header
-          required: true
-          schema:
-            type: string
-          description: User Key
       responses:
         '200':
           description: OK
@@ -252,30 +156,6 @@ paths:
           name: x-username
           required: true
           schema: {type: string}
-        - name: x-cons-id
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Cons ID
-        - name: x-timestamp
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Timestamp
-        - name: x-signature
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Signature
-        - name: user_key
-          in: header
-          required: true
-          schema:
-            type: string
-          description: User Key
       requestBody:
         required: true
         content:
@@ -319,30 +199,6 @@ paths:
           name: x-username
           required: true
           schema: {type: string}
-        - name: x-cons-id
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Cons ID
-        - name: x-timestamp
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Timestamp
-        - name: x-signature
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Signature
-        - name: user_key
-          in: header
-          required: true
-          schema:
-            type: string
-          description: User Key
       requestBody:
         required: true
         content:
@@ -372,30 +228,6 @@ paths:
           name: x-username
           required: true
           schema: {type: string}
-        - name: x-cons-id
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Cons ID
-        - name: x-timestamp
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Timestamp
-        - name: x-signature
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Signature
-        - name: user_key
-          in: header
-          required: true
-          schema:
-            type: string
-          description: User Key
       requestBody:
         required: true
         content:
@@ -446,30 +278,6 @@ paths:
           name: tanggalperiksa
           required: true
           schema: {type: string, format: date}
-        - name: x-cons-id
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Cons ID
-        - name: x-timestamp
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Timestamp
-        - name: x-signature
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Signature
-        - name: user_key
-          in: header
-          required: true
-          schema:
-            type: string
-          description: User Key
       responses:
         '200':
           description: OK
@@ -513,30 +321,6 @@ paths:
           name: x-username
           required: true
           schema: {type: string}
-        - name: x-cons-id
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Cons ID
-        - name: x-timestamp
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Timestamp
-        - name: x-signature
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Signature
-        - name: user_key
-          in: header
-          required: true
-          schema:
-            type: string
-          description: User Key
       requestBody:
         required: true
         content:

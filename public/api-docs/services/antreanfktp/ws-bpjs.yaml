@@ -9,16 +9,12 @@ tags:
   - name: Web Service Antrean - BPJS
     description: Diakses oleh sistem FKTP
 paths:
-  /{serviceName}/ref/poli/tanggal/{tanggal}:
+  /ref/poli/tanggal/{tanggal}:
     get:
       tags: [Web Service Antrean - BPJS]
       summary: Referensi Poli
       description: Melihat referensi poli
       parameters:
-        - in: path
-          name: serviceName
-          required: true
-          schema: {type: string}
         - in: path
           name: tanggal
           required: true
@@ -55,16 +51,12 @@ paths:
                     - namapoli: "POLI GIGI & MULUT"
                       kodepoli: "002"
 
-  /{serviceName}/ref/dokter/kodepoli/{kodepoli}/tanggal/{tanggal}:
+  /ref/dokter/kodepoli/{kodepoli}/tanggal/{tanggal}:
     get:
       tags: [Web Service Antrean - BPJS]
       summary: Referensi Dokter
       description: Melihat list dokter per poli
       parameters:
-        - in: path
-          name: serviceName
-          required: true
-          schema: {type: string}
         - in: path
           name: kodepoli
           required: true
@@ -107,16 +99,12 @@ paths:
                       jampraktek: "12:00-16:00"
                       kapasitas: 60
 
-  /{serviceName}/antrean/add:
+  /antrean/add:
     post:
       tags: [Web Service Antrean - BPJS]
       summary: Tambah Antrean
       description: Menambah antrean baru
       parameters:
-        - in: path
-          name: serviceName
-          required: true
-          schema: {type: string}
         - in: header
           name: x-cons-id
           required: true
@@ -202,16 +190,12 @@ paths:
               example:
                 metadata: {message: "Ok", code: 200}
 
-  /{serviceName}/antrean/panggil:
+  /antrean/panggil:
     post:
       tags: [Web Service Antrean - BPJS]
       summary: Update Status/Panggil Antrean
       description: Update status antrean hadir/tidak hadir
       parameters:
-        - in: path
-          name: serviceName
-          required: true
-          schema: {type: string}
         - in: header
           name: x-cons-id
           required: true
@@ -263,16 +247,12 @@ paths:
               example:
                 metadata: {message: "Ok", code: 200}
 
-  /{serviceName}/antrean/batal:
+  /antrean/batal:
     post:
       tags: [Web Service Antrean - BPJS]
       summary: Batal Antrean
       description: Membatalkan antrean pasien
       parameters:
-        - in: path
-          name: serviceName
-          required: true
-          schema: {type: string}
         - in: header
           name: x-cons-id
           required: true

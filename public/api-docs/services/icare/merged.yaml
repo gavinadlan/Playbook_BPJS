@@ -8,7 +8,7 @@ servers:
   - url: 'http://localhost:3001/api/bpjs/ihs_dev'
     description: Proxy Backend Local
 paths:
-  '/{serviceName}/api/rs/validate':
+  '/api/rs/validate':
     post:
       tags:
         - FKRTL
@@ -36,12 +36,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: serviceName
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Nama service
       requestBody:
         required: true
         content:
@@ -99,7 +93,7 @@ paths:
           description: Bad Request
         '500':
           description: Internal Server Error
-  '/{serviceName}/api/pcare/validate':
+  '/api/pcare/validate':
     post:
       tags:
         - FKTP
@@ -132,12 +126,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: serviceName
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Nama service
       requestBody:
         required: true
         content:

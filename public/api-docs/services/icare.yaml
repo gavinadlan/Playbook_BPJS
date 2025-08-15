@@ -11,9 +11,9 @@ servers:
 
 paths:
   # ============================== KATALOG I-CARE ==============================
-  /{serviceName}/api/rs/validate:
+  /api/rs/validate:
     post:
-      $ref: './icare/i-care.yaml#/paths/~1{serviceName}~1api~1rs~1validate/post'
-  /{serviceName}/api/pcare/validate:
+      $ref: './icare/i-care.yaml#/paths/~1api~1rs~1validate/post'
+  /api/pcare/validate:
     post:
-      $ref: './icare/i-care.yaml#/paths/~1{serviceName}~1api~1pcare~1validate/post'
+      $ref: './icare/i-care.yaml#/paths/~1api~1pcare~1validate/post'

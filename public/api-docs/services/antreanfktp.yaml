@@ -11,21 +11,21 @@ servers:
 
 paths:
   # ============================== WEB SERVICE BPJS (Diakses oleh Sistem FKTP) ==============================
-  /{serviceName}/ref/poli/tanggal/{tanggal}:
+  /ref/poli/tanggal/{tanggal}:
     get:
-      $ref: './antreanfktp/ws-bpjs.yaml#/paths/~1{serviceName}~1ref~1poli~1tanggal~1{tanggal}/get'
-  /{serviceName}/ref/dokter/kodepoli/{kodepoli}/tanggal/{tanggal}:
+      $ref: './antreanfktp/ws-bpjs.yaml#/paths/~1ref~1poli~1tanggal~1{tanggal}/get'
+  /ref/dokter/kodepoli/{kodepoli}/tanggal/{tanggal}:
     get:
-      $ref: './antreanfktp/ws-bpjs.yaml#/paths/~1{serviceName}~1ref~1dokter~1kodepoli~1{kodepoli}~1tanggal~1{tanggal}/get'
-  /{serviceName}/antrean/add:
+      $ref: './antreanfktp/ws-bpjs.yaml#/paths/~1ref~1dokter~1kodepoli~1{kodepoli}~1tanggal~1{tanggal}/get'
+  /antrean/add:
     post:
-      $ref: './antreanfktp/ws-bpjs.yaml#/paths/~1{serviceName}~1antrean~1add/post'
-  /{serviceName}/antrean/panggil:
+      $ref: './antreanfktp/ws-bpjs.yaml#/paths/~1antrean~1add/post'
+  /antrean/panggil:
     post:
-      $ref: './antreanfktp/ws-bpjs.yaml#/paths/~1{serviceName}~1antrean~1panggil/post'
-  /{serviceName}/antrean/batal:
+      $ref: './antreanfktp/ws-bpjs.yaml#/paths/~1antrean~1panggil/post'
+  /antrean/batal/bpjs:
     post:
-      $ref: './antreanfktp/ws-bpjs.yaml#/paths/~1{serviceName}~1antrean~1batal/post'
+      $ref: './antreanfktp/ws-bpjs.yaml#/paths/~1antrean~1batal/post'
 
   # ============================== WEB SERVICE FKTP (Diakses oleh Mobile JKN) ==============================
   /auth:

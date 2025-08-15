@@ -11,43 +11,43 @@ servers:
 
 paths:
   # ============================== REFERENSI ==============================
-  /{serviceName}/referensi/dpho:
+  /referensi/dpho:
     get:
-      $ref: './apotek/referensi.yaml#/paths/~1{serviceName}~1referensi~1dpho/get'
-  /{serviceName}/referensi/poli/{parameter}:
+      $ref: './apotek/referensi.yaml#/paths/~1referensi~1dpho/get'
+  /referensi/poli/{parameter}:
     get:
-      $ref: './apotek/referensi.yaml#/paths/~1{serviceName}~1referensi~1poli~1{parameter}/get'
-  /{serviceName}/referensi/ppk/{jenisFaskes}/{namaFaskes}:
+      $ref: './apotek/referensi.yaml#/paths/~1referensi~1poli~1{parameter}/get'
+  /referensi/ppk/{jenisFaskes}/{namaFaskes}:
     get:
-      $ref: './apotek/referensi.yaml#/paths/~1{serviceName}~1referensi~1ppk~1{jenisFaskes}~1{namaFaskes}/get'
-  /{serviceName}/referensi/settingppk/read/{kodeApotek}:
+      $ref: './apotek/referensi.yaml#/paths/~1referensi~1ppk~1{jenisFaskes}~1{namaFaskes}/get'
+  /referensi/settingppk/read/{kodeApotek}:
     get:
-      $ref: './apotek/referensi.yaml#/paths/~1{serviceName}~1referensi~1settingppk~1read~1{kodeApotek}/get'
-  /{serviceName}/referensi/spesialistik:
+      $ref: './apotek/referensi.yaml#/paths/~1referensi~1settingppk~1read~1{kodeApotek}/get'
+  /referensi/spesialistik:
     get:
-      $ref: './apotek/referensi.yaml#/paths/~1{serviceName}~1referensi~1spesialistik/get'
-  /{serviceName}/referensi/obat/{kodeJenisObat}/{tglResep}/{filterPencarian}:
+      $ref: './apotek/referensi.yaml#/paths/~1referensi~1spesialistik/get'
+  /referensi/obat/{kodeJenisObat}/{tglResep}/{filterPencarian}:
     get:
-      $ref: './apotek/referensi.yaml#/paths/~1{serviceName}~1referensi~1obat~1{kodeJenisObat}~1{tglResep}~1{filterPencarian}/get'
+      $ref: './apotek/referensi.yaml#/paths/~1referensi~1obat~1{kodeJenisObat}~1{tglResep}~1{filterPencarian}/get'
 
   # ============================== OBAT ==============================
-  /{serviceName}/obatnonracikan/v3/insert:
+  /obatnonracikan/v3/insert:
     post:
-      $ref: './apotek/obat.yaml#/paths/~1{serviceName}~1obatnonracikan~1v3~1insert/post'
-  /{serviceName}/obatracikan/v3/insert:
+      $ref: './apotek/obat.yaml#/paths/~1obatnonracikan~1v3~1insert/post'
+  /obatracikan/v3/insert:
     post:
-      $ref: './apotek/obat.yaml#/paths/~1{serviceName}~1obatracikan~1v3~1insert/post'
+      $ref: './apotek/obat.yaml#/paths/~1obatracikan~1v3~1insert/post'
 
   # ============================== PELAYANAN OBAT ==============================
-  /{serviceName}/pelayanan/obat/hapus:
+  /pelayanan/obat/hapus:
     delete:
-      $ref: './apotek/pelayanan-obat.yaml#/paths/~1{serviceName}~1pelayanan~1obat~1hapus/delete'
-  /{serviceName}/obat/daftar/{nomorKunjungan}:
+      $ref: './apotek/pelayanan-obat.yaml#/paths/~1pelayanan~1obat~1hapus/delete'
+  /obat/daftar/{nomorKunjungan}:
     get:
-      $ref: './apotek/pelayanan-obat.yaml#/paths/~1{serviceName}~1obat~1daftar~1{nomorKunjungan}/get'
-  /{serviceName}/riwayatobat/{tglAwal}/{tglAkhir}/{noKartu}:
+      $ref: './apotek/pelayanan-obat.yaml#/paths/~1obat~1daftar~1{nomorKunjungan}/get'
+  /riwayatobat/{tglAwal}/{tglAkhir}/{noKartu}:
     get:
-      $ref: './apotek/pelayanan-obat.yaml#/paths/~1{serviceName}~1riwayatobat~1{tglAwal}~1{tglAkhir}~1{noKartu}/get'
+      $ref: './apotek/pelayanan-obat.yaml#/paths/~1riwayatobat~1{tglAwal}~1{tglAkhir}~1{noKartu}/get'
 
   # ============================== RESEP ==============================
   /{serviceName}/sjpresep/v3/insert:

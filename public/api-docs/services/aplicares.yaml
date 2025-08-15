@@ -5,7 +5,7 @@ info:
   description: Layanan Aplicares untuk manajemen aplikasi dan ketersediaan kamar
 
 servers:
-  - url: http://localhost:3001/api/bpjs/aplicares
+  - url: http://localhost:3001/api/bpjs
     description: Proxy Backend Local
 
 tags:

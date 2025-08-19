@@ -49,12 +49,6 @@ paths:
           schema:
             type: string
           description: Generated signature dengan pola HMAC-256
-        - name: user_key
-          in: header
-          required: true
-          schema:
-            type: string
-          description: User key untuk akses webservice
       requestBody:
         required: true
         content:
@@ -88,12 +82,6 @@ paths:
           schema:
             type: string
           description: Generated signature dengan pola HMAC-256
-        - name: user_key
-          in: header
-          required: true
-          schema:
-            type: string
-          description: User key untuk akses webservice
       requestBody:
         required: true
         content:
@@ -127,12 +115,6 @@ paths:
           schema:
             type: string
           description: Generated signature dengan pola HMAC-256
-        - name: user_key
-          in: header
-          required: true
-          schema:
-            type: string
-          description: User key untuk akses webservice
       requestBody:
         required: true
         content:
@@ -166,12 +148,6 @@ paths:
           schema:
             type: string
           description: Generated signature dengan pola HMAC-256
-        - name: user_key
-          in: header
-          required: true
-          schema:
-            type: string
-          description: User key untuk akses webservice
       requestBody:
         required: true
         content:
@@ -205,12 +181,6 @@ paths:
           schema:
             type: string
           description: Generated signature dengan pola HMAC-256
-        - name: user_key
-          in: header
-          required: true
-          schema:
-            type: string
-          description: User key untuk akses webservice
       requestBody:
         required: true
         content:
@@ -244,12 +214,6 @@ paths:
           schema:
             type: string
           description: Generated signature dengan pola HMAC-256
-        - name: user_key
-          in: header
-          required: true
-          schema:
-            type: string
-          description: User key untuk akses webservice
       requestBody:
         required: true
         content:
@@ -283,12 +247,6 @@ paths:
           schema:
             type: string
           description: Generated signature dengan pola HMAC-256
-        - name: user_key
-          in: header
-          required: true
-          schema:
-            type: string
-          description: User key untuk akses webservice
       requestBody:
         required: true
         content:
@@ -322,12 +280,6 @@ paths:
           schema:
             type: string
           description: Generated signature dengan pola HMAC-256
-        - name: user_key
-          in: header
-          required: true
-          schema:
-            type: string
-          description: User key untuk akses webservice
       requestBody:
         required: true
         content:
@@ -361,12 +313,6 @@ paths:
           schema:
             type: string
           description: Generated signature dengan pola HMAC-256
-        - name: user_key
-          in: header
-          required: true
-          schema:
-            type: string
-          description: User key untuk akses webservice
       requestBody:
         required: true
         content:
@@ -400,12 +346,6 @@ paths:
           schema:
             type: string
           description: Generated signature dengan pola HMAC-256
-        - name: user_key
-          in: header
-          required: true
-          schema:
-            type: string
-          description: User key untuk akses webservice
       requestBody:
         required: true
         content:
@@ -439,12 +379,6 @@ paths:
           schema:
             type: string
           description: Generated signature dengan pola HMAC-256
-        - name: user_key
-          in: header
-          required: true
-          schema:
-            type: string
-          description: User key untuk akses webservice
       requestBody:
         required: true
         content:
@@ -538,16 +472,10 @@ components:
       in: header
       name: X-signature
       description: Generated signature dengan pola HMAC-256
-    rekamMedisUserKey:
-      type: apiKey
-      in: header
-      name: user_key
-      description: User key untuk akses webservice
 security:
   - rekamMedisAuth: []
   - rekamMedisTimestamp: []
   - rekamMedisSignature: []
-  - rekamMedisUserKey: []
 servers:
   - url: http://localhost:3001/api/bpjs/erekammedis_dev
     description: Proxy Backend Local

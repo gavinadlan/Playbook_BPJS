@@ -33,8 +33,6 @@ Frontend untuk **API Playbook BPJS Kesehatan** — sebuah platform dokumentasi d
 - **Embla Carousel**, **React Resizable Panels** (komponen UI tambahan)
 - **React Syntax Highlighter** (dokumentasi kode)
 - **Sonner** (toast notification)
-- **Vaul**, **CMDK**, **Radix UI Components**, dan utilitas UX lainnya
-- **Next Themes** untuk mode gelap/terang _(opsional jika aktif)_
 
 ### Backend (Terhubung)
 
@@ -43,7 +41,6 @@ Frontend untuk **API Playbook BPJS Kesehatan** — sebuah platform dokumentasi d
 - **Email Service (SMTP)** untuk kirim token
 - **Token Verifikasi (JWT / UUID)** untuk aktivasi akun & reset password
 - **Role-based Auth** (admin/mitra)
-- **API Key System** untuk akses API
 
 ## 🚀 Cara Menjalankan
 
